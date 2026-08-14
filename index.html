@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D FPS Game</title>
+    <style>
+        /* Remove default browser margins and prevent scrolling */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: black;
+        }
+        
+        /* Container to hold the SVG game */
+        .game-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Make the SVG fill the screen */
+        .game-container object {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- The data attribute points to your file. The space in the filename is handled correctly inside quotes. -->
+        <object type="image/svg+xml" data="3d fps.svg" id="game-svg">
+            Your browser does not support SVG.
+        </object>
+    </div>
+
+    <script>
+        // Automatically set focus to the game object so keyboard controls work immediately
+        window.onload = function() {
+            var game = document.getElementById('game-svg');
+            if (game) {
+                game.focus();
+            }
+        };
+    </script>
+</body>
+</html>
