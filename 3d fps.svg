@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="800" height="600" viewBox="0 0 800 600" onload="initGame()">
+  <script type="text/javascript"><![CDATA[
+    // --- Global State ---
+    let player = { x: 0, y: 1.6, z: 0, yaw: 0, pitch: 0, walkPhase: 0, speed: 0, vy: 0 };
+    let cam = { x: 0, y: 1.6, z: 0, yaw: 0, pitch: 0 };
+    let isThirdPerson = false;
+    let keys = {};
+    let touchControls = { up: 0, down: 0, left: 0, right: 0 };
+    let fireFlash = 0;
+    let lastTime = 0;
+    let scene, atonRaG, ui, floorJade, floorYellow;
+    let prevGamepad = { view: false };
+    
+    // Combat State
+    let enemies = [];
+    let bullets = [];
+    let particles = [];
+
+    // --- Pre-Allocated Memory Pools ---
+    let vertPool = new Array(10000);
+    for(let i=0; i<10000; i++) vertPool[i] = { x:0, y:0, z:0 };
+    let vertIdx = 0;
+
+    let invaderVerts = new Array(81);
+    for(let i=0; i<81; i++) invaderVerts[i] = { fx:0, fy:0, fz:0, bx:0, by:0, bz:0 };
+
+    let pathPool = [], circlePool = [], rectPool = [];
+
+    function getPoolEl(pool, tag, parent, idx) {
+      let el;
+      if (idx < pool.length) {
+        el = pool[idx];
+      } else {
+        el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+        pool.push(el);
+      }
+      parent.appendChild(el); // Re-append to ensure correct draw order
+      el.style.display = '';
+      return el;
+    }
+
+    // --- Initialization ---
+    function initGame() {
+      scene = document.getElementById('entityLayer');
+      atonRaG = document.getElementById('atonRa');
+      floorJade = document.getElementById('floorJade');
+      floorYellow = document.getElementById('floorYellow');
+      let svgEl = document.querySelector('svg');
+      
+      // Spawn Enemies
+      for(let i=0; i<20; i++) {
+        enemies.push({
+          x: -12 + (i % 5) * 6,
+          y: 1.0,
+          z: 10 + Math.floor(i / 5) * 5, 
+          fireCD: Math.random() * 300 + 100,
+          movePhase: i * 0.5
+        });
+      }
+      
+      // Keyboard Input
+      document.addEventListener('keydown', (e) => {
+        keys[e.key.toLowerCase()] = true;
+        if (e.key.toLowerCase() === 'v') toggleView();
+        if (e.key === ' ') fire();
+        if (['w','a','s','d',' ','arrowup','arrowdown','arrowleft','arrowright'].includes(e.key.toLowerCase())) e.preventDefault();
+      });
+      document.addEventListener('keyup', (e) => { keys[e.key.toLowerCase()] = false; });
+
+      // Touch UI Bindings
+      bindTouch('btnUp', () => touchControls.up = 1, () => touchControls.up = 0);
+      bindTouch('btnDown', () => touchControls.down = 1, () => touchControls.down = 0);
+      bindTouch('btnLeft', () => touchControls.left = 1, () => touchControls.left = 0);
+      bindTouch('btnRight', () => touchControls.right = 1, () => touchControls.right = 0);
+      bindTouch('btnFire', () => fire(), () => {});
+      bindTouch('btnView', () => toggleView(), () => {});
+
+      // Mouse Look
+      document.addEventListener('mousemove', (e) => {
+        if (document.pointerLockElement) {
+          player.yaw += e.movementX * 0.002;
+          player.pitch -= e.movementY * 0.002;
+          player.pitch = Math.max(-1.2, Math.min(1.2, player.pitch));
+        }
+      });
+      
+      svgEl.addEventListener('click', (e) => {
+        if (e.target.id.startsWith('btn')) return;
+        if (!document.pointerLockElement) svgEl.requestPointerLock();
+      });
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    function bindTouch(id, onDown, onUp) {
+      let el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('mousedown', (e) => { e.preventDefault(); onDown(); });
+      el.addEventListener('mouseup', (e) => { e.preventDefault(); onUp(); });
+      el.addEventListener('touchstart', (e) => { e.preventDefault(); onDown(); }, { passive: false });
+      el.addEventListener('touchend', (e) => { e.preventDefault(); onUp(); }, { passive: false });
+    }
+
+    function toggleView() { isThirdPerson = !isThirdPerson; }
+    function fire() {
+      if (fireFlash <= 0) {
+        fireFlash = 10;
+        let dirX = Math.sin(player.yaw) * Math.cos(player.pitch);
+        let dirY = -Math.sin(player.pitch);
+        let dirZ = Math.cos(player.yaw) * Math.cos(player.pitch);
+        bullets.push({
+          x: player.x, y: player.y + 0.4, z: player.z,
+          dx: dirX * 0.6, dy: dirY * 0.6, dz: dirZ * 0.6,
+          color: 'yellow', life: 60, owner: 'player'
+        });
+      }
+    }
+
+    // --- Game Loop ---
+    function gameLoop(timestamp) {
+      let dt = (timestamp - lastTime) / 16.66; 
+      if (dt > 3) dt = 3; // Clamp dt
+      lastTime = timestamp;
+      update(dt);
+      render();
+      requestAnimationFrame(gameLoop);
+    }
+
+    // --- Update Logic ---
+    function update(dt) {
+      let ix = 0, iy = 0, turn = 0, look = 0;
+
+      if (keys['w']) iy += 1; if (keys['s']) iy -= 1;
+      if (keys['a']) ix -= 1; if (keys['d']) ix += 1;
+      if (keys['q']) turn -= 0.05; if (keys['e']) turn += 0.05;
+      if (keys['arrowup']) look += 0.03; if (keys['arrowdown']) look -= 0.03;
+
+      iy += touchControls.up - touchControls.down;
+      ix += touchControls.right - touchControls.left;
+
+      let gp = navigator.getGamepads()[0];
+      if (gp) {
+        let lx = gp.axes[0] || 0, ly = gp.axes[1] || 0;
+        let rx = gp.axes[2] || 0, ry = gp.axes[3] || 0;
+        if (Math.abs(lx) < 0.15) lx = 0; if (Math.abs(ly) < 0.15) ly = 0;
+        if (Math.abs(rx) < 0.15) rx = 0; if (Math.abs(ry) < 0.15) ry = 0;
+        iy -= ly; ix += lx;
+        turn += rx * 0.05; look -= ry * 0.03;
+        if (gp.buttons[12] && gp.buttons[12].pressed) iy += 1;
+        if (gp.buttons[13] && gp.buttons[13].pressed) iy -= 1;
+        if (gp.buttons[14] && gp.buttons[14].pressed) ix -= 1;
+        if (gp.buttons[15] && gp.buttons[15].pressed) ix += 1;
+        if (gp.buttons[0] && gp.buttons[0].pressed) fire(); 
+        let yPressed = gp.buttons[3] && gp.buttons[3].pressed;
+        if (yPressed && !prevGamepad.view) toggleView();
+        prevGamepad.view = yPressed;
+      }
+
+      player.yaw += turn * dt;
+      player.pitch += look * dt;
+      player.pitch = Math.max(-1.2, Math.min(1.2, player.pitch));
+
+      let mag = Math.sqrt(ix*ix + iy*iy);
+      if (mag > 1) { ix /= mag; iy /= mag; }
+      let speed = 0.15;
+      let forward = [Math.sin(player.yaw), Math.cos(player.yaw)];
+      let right = [Math.cos(player.yaw), -Math.sin(player.yaw)];
+      let vx = forward[0] * iy + right[0] * ix;
+      let vz = forward[1] * iy + right[1] * ix;
+      player.x += vx * speed * dt;
+      player.z += vz * speed * dt;
+      player.speed = Math.sqrt(vx*vx + vz*vz);
+
+      if (player.speed > 0.01) player.walkPhase += 0.2 * dt;
+      else player.walkPhase += 0.02 * dt; 
+
+      if (isThirdPerson) {
+        let camDist = 4;
+        cam.x = player.x - Math.sin(player.yaw) * camDist;
+        cam.z = player.z - Math.cos(player.yaw) * camDist;
+        cam.y = player.y + 1.0;
+        cam.yaw = player.yaw;
+        cam.pitch = player.pitch - 0.2;
+      } else {
+        cam.x = player.x; cam.y = player.y; cam.z = player.z;
+        cam.yaw = player.yaw; cam.pitch = player.pitch;
+      }
+
+      if (fireFlash > 0) fireFlash -= dt;
+
+      let activeEnemyBullets = 0;
+      for(let b of bullets) if(b.owner === 'enemy') activeEnemyBullets++;
+
+      for(let e of enemies) {
+        e.movePhase += 0.02 * dt;
+        e.x += Math.sin(e.movePhase) * 0.02 * dt;
+        e.z -= 0.005 * dt; 
+        e.fireCD -= dt;
+        if(e.fireCD <= 0) {
+          e.fireCD = Math.random() * 300 + 150;
+          if(activeEnemyBullets < 5) {
+            activeEnemyBullets++;
+            let dx = player.x - e.x, dy = (player.y+0.4) - e.y, dz = player.z - e.z;
+            let dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+            bullets.push({
+              x: e.x, y: e.y, z: e.z,
+              dx: (dx/dist) * 0.3, dy: (dy/dist) * 0.3, dz: (dz/dist) * 0.3,
+              color: 'red', life: 120, owner: 'enemy'
+            });
+          }
+        }
+      }
+
+      for(let i=bullets.length-1; i>=0; i--) {
+        let b = bullets[i];
+        b.x += b.dx * dt; b.y += b.dy * dt; b.z += b.dz * dt;
+        b.life -= dt;
+        if(b.life <= 0) { bullets.splice(i,1); continue; }
+        
+        if(b.owner == 'player') {
+          for(let j=enemies.length-1; j>=0; j--) {
+            let e = enemies[j];
+            let dx = b.x - e.x, dy = b.y - e.y, dz = b.z - e.z;
+            if(dx*dx + dy*dy + dz*dz < 6.0) { 
+              spawnParticles(e.x, e.y, e.z, '#90EE90');
+              enemies.splice(j, 1);
+              bullets.splice(i, 1);
+              break;
+            }
+          }
+        } else if(b.owner == 'enemy') {
+          let dx = b.x - player.x, dy = b.y - (player.y+0.4), dz = b.z - player.z;
+          if(dx*dx + dy*dy + dz*dz < 0.8) {
+            spawnParticles(player.x, player.y+0.4, player.z, '#FF0000');
+            bullets.splice(i, 1);
+          }
+        }
+      }
+
+      for(let i=particles.length-1; i>=0; i--) {
+        let p = particles[i];
+        p.x += p.dx * dt; p.y += p.dy * dt; p.z += p.dz * dt;
+        p.life -= dt;
+        if(p.life <= 0) particles.splice(i,1);
+      }
+    }
+
+    function spawnParticles(x, y, z, color) {
+      for(let i=0; i<10; i++) { 
+        particles.push({
+          x: x, y: y, z: z,
+          dx: (Math.random()-0.5) * 0.4,
+          dy: (Math.random()-0.5) * 0.4,
+          dz: (Math.random()-0.5) * 0.4,
+          life: 30, color: color
+        });
+      }
+    }
+
+    // --- 3D Math & Projection ---
+    function project(x, y, z) {
+      let dx = x - cam.x, dy = y - cam.y, dz = z - cam.z;
+      let cosY = Math.cos(cam.yaw), sinY = Math.sin(cam.yaw);
+      let rx = dx * cosY + dz * sinY;
+      let rz = -dx * sinY + dz * cosY;
+      let ry = dy;
+      let cosP = Math.cos(cam.pitch), sinP = Math.sin(cam.pitch);
+      let ry2 = ry * cosP - rz * sinP;
+      let rz2 = ry * sinP + rz * cosP;
+      if (rz2 <= 0.1) return null;
+      
+      let v = vertPool[vertIdx++];
+      v.x = (rx / rz2) * 400 + 400;
+      v.y = (-ry2 / rz2) * 400 + 300;
+      v.z = rz2;
+      return v;
+    }
+
+    // --- Rendering ---
+    function render() {
+      vertIdx = 0; // Reset vertex pool
+      let R = 2.0;
+      
+      // 1. Floor Hexagons (Merged into 2 Paths for massive performance)
+      let pHexX = Math.round(cam.x / (1.5 * R));
+      let pHexZ = Math.round(cam.z / (Math.sqrt(3) * R));
+      let jadeArr = [], yellowArr = [];
+      
+      for (let i = pHexX - 8; i <= pHexX + 8; i++) {
+        for (let j = pHexZ - 8; j <= pHexZ + 8; j++) {
+          let cx = i * 1.5 * R;
+          let cz = j * Math.sqrt(3) * R + (i % 2) * (Math.sqrt(3) * R / 2);
+          
+          let v0 = project(cx + R, 0, cz);
+          let v1 = project(cx + R*0.5, 0, cz + R*0.866);
+          let v2 = project(cx - R*0.5, 0, cz + R*0.866);
+          let v3 = project(cx - R, 0, cz);
+          let v4 = project(cx - R*0.5, 0, cz - R*0.866);
+          let v5 = project(cx + R*0.5, 0, cz - R*0.866);
+          
+          if(v0 && v1 && v2 && v3 && v4 && v5) {
+            let hash = (i * 73856093) ^ (j * 19349663);
+            let pathStr = `M${v0.x.toFixed(1)},${v0.y.toFixed(1)} L${v1.x.toFixed(1)},${v1.y.toFixed(1)} L${v2.x.toFixed(1)},${v2.y.toFixed(1)} L${v3.x.toFixed(1)},${v3.y.toFixed(1)} L${v4.x.toFixed(1)},${v4.y.toFixed(1)} L${v5.x.toFixed(1)},${v5.y.toFixed(1)} Z`;
+            if (hash & 1) yellowArr.push(pathStr);
+            else jadeArr.push(pathStr);
+          }
+        }
+      }
+      floorJade.setAttribute('d', jadeArr.join(' '));
+      floorYellow.setAttribute('d', yellowArr.join(' '));
+
+      // 2. Sort Entities (Enemies, Bullets, Particles)
+      let drawList = [];
+      for(let e of enemies) drawList.push({type: 0, z: e.z, data: e});
+      for(let b of bullets) drawList.push({type: 1, z: b.z, data: b});
+      for(let p of particles) drawList.push({type: 2, z: p.z, data: p});
+      drawList.sort((a, b) => b.z - a.z);
+      
+      let pathIdx = 0, circleIdx = 0, rectIdx = 0;
+      let invaderPattern = [
+        "00100100", "00011000", "00111100", "01100110", 
+        "11111111", "10100101", "10100101", "00011000"
+      ];
+      
+      // 3. Render Entities back-to-front
+      for(let item of drawList) {
+        if(item.type === 0) { // Enemy
+          let e = item.data;
+          let s = 0.4; 
+          
+          // Project 81 grid vertices once per enemy
+          let vIdx = 0;
+          for(let r=0; r<9; r++) {
+            for(let c=0; c<9; c++) {
+              let lx = e.x + (c - 4) * s;
+              let ly = e.y + (4 - r) * s;
+              let vf = project(lx, ly, e.z);
+              let vb = project(lx, ly, e.z - s);
+              if(vf && vb) {
+                invaderVerts[vIdx].fx = vf.x; invaderVerts[vIdx].fy = vf.y; invaderVerts[vIdx].fz = vf.z;
+                invaderVerts[vIdx].bx = vb.x; invaderVerts[vIdx].by = vb.y; invaderVerts[vIdx].bz = vb.z;
+              } else {
+                invaderVerts[vIdx].fz = -1; // Invalid
+              }
+              vIdx++;
+            }
+          }
+          
+          let frontArr = [], eyesArr = [], topArr = [], bottomArr = [], leftArr = [], rightArr = [];
+          for(let r=0; r<8; r++) {
+            for(let c=0; c<8; c++) {
+              if(invaderPattern[r][c] === '1') {
+                let tl = invaderVerts[r*9+c];
+                let tr = invaderVerts[r*9+c+1];
+                let bl = invaderVerts[(r+1)*9+c];
+                let br = invaderVerts[(r+1)*9+c+1];
+                
+                if(tl.fz < 0 || tr.fz < 0 || bl.fz < 0 || br.fz < 0) continue;
+                
+                let isEye = (r === 0 && (c === 2 || c === 5));
+                let pStr = `M${tl.fx},${tl.fy} L${tr.fx},${tr.fy} L${br.fx},${br.fy} L${bl.fx},${bl.fy} Z`;
+                if(isEye) eyesArr.push(pStr);
+                else frontArr.push(pStr);
+                
+                let hasTop = (r > 0 && invaderPattern[r-1][c] === '1');
+                let hasBottom = (r < 7 && invaderPattern[r+1][c] === '1');
+                let hasLeft = (c > 0 && invaderPattern[r][c-1] === '1');
+                let hasRight = (c < 7 && invaderPattern[r][c+1] === '1');
+                
+                if(!hasTop) topArr.push(`M${tl.fx},${tl.fy} L${tr.fx},${tr.fy} L${tr.bx},${tr.by} L${tl.bx},${tl.by} Z`);
+                if(!hasBottom) bottomArr.push(`M${bl.fx},${bl.fy} L${br.fx},${br.fy} L${br.bx},${br.by} L${bl.bx},${bl.by} Z`);
+                if(!hasLeft) leftArr.push(`M${tl.fx},${tl.fy} L${bl.fx},${bl.fy} L${bl.bx},${bl.by} L${tl.bx},${tl.by} Z`);
+                if(!hasRight) rightArr.push(`M${tr.fx},${tr.fy} L${br.fx},${br.fy} L${br.bx},${br.by} L${tr.bx},${tr.by} Z`);
+              }
+            }
+          }
+          
+          if(frontArr.length) { let p = getPoolEl(pathPool, 'path', scene, pathIdx++); p.setAttribute('d', frontArr.join(' ')); p.setAttribute('fill', '#90EE90'); p.setAttribute('stroke', '#000'); p.setAttribute('stroke-width', '0.5'); }
+          if(eyesArr.length) { let p = getPoolEl(pathPool, 'path', scene, pathIdx++); p.setAttribute('d', eyesArr.join(' ')); p.setAttribute('fill', '#FF0000'); p.setAttribute('stroke', 'none'); }
+          if(topArr.length) { let p = getPoolEl(pathPool, 'path', scene, pathIdx++); p.setAttribute('d', topArr.join(' ')); p.setAttribute('fill', '#B3FFB3'); p.setAttribute('stroke', 'none'); }
+          if(bottomArr.length) { let p = getPoolEl(pathPool, 'path', scene, pathIdx++); p.setAttribute('d', bottomArr.join(' ')); p.setAttribute('fill', '#5BA66B'); p.setAttribute('stroke', 'none'); }
+          if(leftArr.length) { let p = getPoolEl(pathPool, 'path', scene, pathIdx++); p.setAttribute('d', leftArr.join(' ')); p.setAttribute('fill', '#76C786'); p.setAttribute('stroke', 'none'); }
+          if(rightArr.length) { let p = getPoolEl(pathPool, 'path', scene, pathIdx++); p.setAttribute('d', rightArr.join(' ')); p.setAttribute('fill', '#76C786'); p.setAttribute('stroke', 'none'); }
+          
+        } else if(item.type === 1) { // Bullet
+          let b = item.data;
+          let v = project(b.x, b.y, b.z);
+          if(v) {
+            let el = getPoolEl(circlePool, 'circle', scene, circleIdx++);
+            el.setAttribute('cx', v.x); el.setAttribute('cy', v.y);
+            el.setAttribute('r', (0.3 * 400 / v.z)); el.setAttribute('fill', b.color);
+          }
+        } else if(item.type === 2) { // Particle
+          let pt = item.data;
+          let v = project(pt.x, pt.y, pt.z);
+          if(v) {
+            let el = getPoolEl(rectPool, 'rect', scene, rectIdx++);
+            let s = (0.15 * 400 / v.z);
+            el.setAttribute('x', v.x - s/2); el.setAttribute('y', v.y - s/2);
+            el.setAttribute('width', s); el.setAttribute('height', s);
+            el.setAttribute('fill', pt.color); el.setAttribute('opacity', pt.life/30);
+          }
+        }
+      }
+
+      // Hide unused pool elements
+      for (let i = pathIdx; i < pathPool.length; i++) pathPool[i].style.display = 'none';
+      for (let i = circleIdx; i < circlePool.length; i++) circlePool[i].style.display = 'none';
+      for (let i = rectIdx; i < rectPool.length; i++) rectPool[i].style.display = 'none';
+
+      // 4. ATON RA Character Rendering
+      let svgStr = "";
+      if (isThirdPerson) {
+        let charProj = project(player.x, 0, player.z); 
+        if (charProj) {
+          let s = Math.min(400 / charProj.z, 10) * 0.133; 
+          let baseX = charProj.x;
+          let baseY = charProj.y;
+          
+          let wp = player.walkPhase;
+          let walkMod = player.speed > 0.01 ? 1.0 : 0.1;
+          
+          let legPhaseR = Math.sin(wp);
+          let legPhaseL = Math.sin(wp + Math.PI);
+          let armPhaseR = Math.sin(wp + Math.PI);
+          let armPhaseL = Math.sin(wp);
+          
+          let rLegSwing = legPhaseR * 6 * s * walkMod;
+          let lLegSwing = legPhaseL * 6 * s * walkMod;
+          let rLegLift = Math.max(0, legPhaseR) * 4 * s * walkMod;
+          let lLegLift = Math.max(0, legPhaseL) * 4 * s * walkMod;
+          let rArmSwing = armPhaseR * 5 * s * walkMod;
+          let lArmSwing = armPhaseL * 5 * s * walkMod;
+          let bob = Math.abs(Math.sin(wp * 2)) * 2 * s * walkMod;
+          let floatY = -bob;
+          
+          svgStr += `<circle cx="${baseX}" cy="${baseY - 30 * s + floatY}" r="${10 * s}" fill="#000000" />`;
+          let headY = baseY - 50 * s + floatY;
+          svgStr += `<circle cx="${baseX}" cy="${headY}" r="${7 * s}" fill="#000000" />`;
+          svgStr += `<ellipse cx="${baseX}" cy="${headY}" rx="${5 * s}" ry="${1.5 * s}" fill="#FF0000" />`;
+          
+          svgStr += `<circle cx="${baseX - 6 * s + rLegSwing}" cy="${baseY + 5 * s - rLegLift + floatY}" r="${4 * s}" fill="#050505" />`;
+          svgStr += `<circle cx="${baseX - 6 * s + rLegSwing}" cy="${baseY - 5 * s - rLegLift + floatY}" r="${5 * s}" fill="#050505" />`;
+          svgStr += `<circle cx="${baseX - 6 * s + rLegSwing}" cy="${baseY - 15 * s - rLegLift + floatY}" r="${5 * s}" fill="#050505" />`;
+          svgStr += `<polygon points="${baseX - 6*s + rLegSwing - 5*s},${baseY + 8*s - rLegLift + floatY} ${baseX - 6*s + rLegSwing + 5*s},${baseY + 8*s - rLegLift + floatY} ${baseX - 6*s + rLegSwing + 8*s},${baseY + 12*s - rLegLift + floatY} ${baseX - 6*s + rLegSwing},${baseY + 14*s - rLegLift + floatY} ${baseX - 6*s + rLegSwing - 8*s},${baseY + 12*s - rLegLift + floatY}" fill="#000000" />`;
+          
+          svgStr += `<circle cx="${baseX + 6 * s + lLegSwing}" cy="${baseY + 5 * s - lLegLift + floatY}" r="${4 * s}" fill="#050505" />`;
+          svgStr += `<circle cx="${baseX + 6 * s + lLegSwing}" cy="${baseY - 5 * s - lLegLift + floatY}" r="${5 * s}" fill="#050505" />`;
+          svgStr += `<circle cx="${baseX + 6 * s + lLegSwing}" cy="${baseY - 15 * s - lLegLift + floatY}" r="${5 * s}" fill="#050505" />`;
+          svgStr += `<polygon points="${baseX + 6*s + lLegSwing - 5*s},${baseY + 8*s - lLegLift + floatY} ${baseX + 6*s + lLegSwing + 5*s},${baseY + 8*s - lLegLift + floatY} ${baseX + 6*s + lLegSwing + 8*s},${baseY + 12*s - lLegLift + floatY} ${baseX + 6*s + lLegSwing},${baseY + 14*s - lLegLift + floatY} ${baseX + 6*s + lLegSwing - 8*s},${baseY + 12*s - lLegLift + floatY}" fill="#000000" />`;
+          
+          svgStr += `<circle cx="${baseX - 14 * s + rArmSwing}" cy="${baseY - 35 * s + floatY}" r="${4 * s}" fill="#050505" />`;
+          svgStr += `<circle cx="${baseX - 14 * s + rArmSwing}" cy="${baseY - 28 * s + floatY}" r="${4.5 * s}" fill="#050505" />`;
+          svgStr += `<circle cx="${baseX - 14 * s + rArmSwing}" cy="${baseY - 22 * s + floatY}" r="${5 * s}" fill="#050505" />`;
+          
+          svgStr += `<circle cx="${baseX + 14 * s + lArmSwing}" cy="${baseY - 35 * s + floatY}" r="${4 * s}" fill="#050505" />`;
+          svgStr += `<circle cx="${baseX + 14 * s + lArmSwing}" cy="${baseY - 28 * s + floatY}" r="${4.5 * s}" fill="#050505" />`;
+          svgStr += `<circle cx="${baseX + 14 * s + lArmSwing}" cy="${baseY - 22 * s + floatY}" r="${5 * s}" fill="#050505" />`;
+        }
+      } else {
+        svgStr += `<rect x="550" y="400" width="150" height="40" fill="#222" rx="10" transform="rotate(-15 600 420)" />`;
+        svgStr += `<rect x="620" y="380" width="30" height="50" fill="#111" rx="5" transform="rotate(-15 600 420)" />`;
+        if (fireFlash > 0) {
+          svgStr += `<circle cx="650" cy="380" r="${fireFlash * 4}" fill="orange" opacity="${fireFlash / 10}" />`;
+          svgStr += `<circle cx="650" cy="380" r="${fireFlash * 2}" fill="yellow" opacity="${fireFlash / 5}" />`;
+        }
+        svgStr += `<line x1="395" y1="300" x2="405" y2="300" stroke="white" stroke-width="2" />`;
+        svgStr += `<line x1="400" y1="295" x2="400" y2="305" stroke="white" stroke-width="2" />`;
+      }
+      atonRaG.innerHTML = svgStr;
+    }
+  ]]></script>
+  
+  <rect id="sky" x="0" y="0" width="800" height="600" fill="#87CEEB" />
+  
+  <g id="floorLayer">
+    <path id="floorJade" fill="#A8E6CF" stroke="#000" stroke-width="0.5" />
+    <path id="floorYellow" fill="#FFD700" stroke="#000" stroke-width="0.5" />
+  </g>
+  
+  <g id="entityLayer"></g>
+  <g id="atonRa"></g>
+  
+  <g id="ui">
+    <g id="dpad" opacity="0.4">
+      <rect id="btnUp" x="20" y="490" width="40" height="40" fill="white" rx="5" />
+      <rect id="btnDown" x="20" y="535" width="40" height="40" fill="white" rx="5" />
+      <rect id="btnLeft" x="0" y="512" width="40" height="40" fill="white" rx="5" />
+      <rect id="btnRight" x="60" y="512" width="40" height="40" fill="white" rx="5" />
+      <text x="40" y="515" font-family="sans-serif" font-size="12" text-anchor="middle" fill="black">W</text>
+      <text x="40" y="560" font-family="sans-serif" font-size="12" text-anchor="middle" fill="black">S</text>
+      <text x="20" y="537" font-family="sans-serif" font-size="12" text-anchor="middle" fill="black">A</text>
+      <text x="80" y="537" font-family="sans-serif" font-size="12" text-anchor="middle" fill="black">D</text>
+    </g>
+    
+    <g id="actions" opacity="0.4">
+      <circle id="btnFire" cx="740" cy="540" r="30" fill="red" />
+      <text x="740" y="545" font-family="sans-serif" font-size="14" text-anchor="middle" fill="white">FIRE</text>
+      <rect id="btnView" x="700" y="20" width="80" height="30" fill="gray" rx="5" />
+      <text x="740" y="40" font-family="sans-serif" font-size="12" text-anchor="middle" fill="white">VIEW (V)</text>
+    </g>
+    
+    <text x="400" y="20" font-family="sans-serif" font-size="14" text-anchor="middle" fill="black" opacity="0.6">
+      WASD/Stick to Move. Right Stick/Q:E or Mouse to look. Click to lock mouse. Space/A to Fire. V/Y to Toggle View.
+    </text>
+  </g>
+</svg>
