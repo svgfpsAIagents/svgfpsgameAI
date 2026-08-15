@@ -11,6 +11,10 @@
       <stop offset="0%" stop-color="#f33" />
       <stop offset="100%" stop-color="#500" />
     </radialGradient>
+    <radialGradient id="crystalGrad" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#e066ff" />
+      <stop offset="100%" stop-color="#6b0f9b" />
+    </radialGradient>
   </defs>
 
   <script type="text/javascript"><![CDATA[
@@ -25,10 +29,16 @@
     let scene, atonRaG, ui, floorJade, floorYellow;
     let prevGamepad = { view: false };
     
+    // Game Loop State
+    let isGameOver = false;
+    let wave = 1;
+    let protection = 50;
+    
     // Combat State
     let enemies = [];
     let bullets = [];
     let particles = [];
+    let crystals = [];
 
     // --- Pre-Allocated Memory Pools ---
     let vertPool = new Array(10000);
@@ -99,15 +109,8 @@
       floorYellow = document.getElementById('floorYellow');
       let svgEl = document.querySelector('svg');
       
-      for(let i=0; i<20; i++) {
-        enemies.push({
-          x: -12 + (i % 5) * 6,
-          y: 1.0,
-          z: 10 + Math.floor(i / 5) * 5, 
-          fireCD: Math.random() * 300 + 100,
-          movePhase: i * 0.5
-        });
-      }
+      spawnWave(wave);
+      for(let i=0; i<3; i++) spawnCrystal();
       
       document.addEventListener('keydown', (e) => {
         keys[e.key.toLowerCase()] = true;
@@ -132,12 +135,62 @@
         }
       });
       
+      // Click Restart
       svgEl.addEventListener('click', (e) => {
+        if (isGameOver) {
+          restartGame();
+          return;
+        }
         if (e.target.id.startsWith('btn')) return;
         if (!document.pointerLockElement) svgEl.requestPointerLock();
       });
 
+      // Touch Restart (Explicit for mobile)
+      svgEl.addEventListener('touchstart', (e) => {
+        if (isGameOver) {
+          e.preventDefault();
+          restartGame();
+        }
+      }, { passive: false });
+
       requestAnimationFrame(gameLoop);
+    }
+    
+    function restartGame() {
+      isGameOver = false;
+      wave = 1;
+      protection = 50;
+      enemies = [];
+      bullets = [];
+      particles = [];
+      crystals = [];
+      player.x = 0; player.z = 0; player.yaw = 0; player.pitch = 0;
+      spawnWave(wave);
+      for(let i=0; i<3; i++) spawnCrystal();
+      document.getElementById('gameOverScreen').style.display = 'none';
+    }
+
+    function spawnWave(w) {
+      let count = 20 + (w - 1) * 5;
+      for(let i=0; i<count; i++) {
+        enemies.push({
+          x: -15 + (i % 5) * 6,
+          y: 1.0,
+          z: 10 + Math.floor(i / 5) * 5, 
+          fireCD: Math.random() * 300 + 100,
+          movePhase: i * 0.5
+        });
+      }
+    }
+
+    function spawnCrystal() {
+      let ang = Math.random() * Math.PI * 2;
+      let dist = 5 + Math.random() * 10;
+      crystals.push({
+        x: player.x + Math.cos(ang) * dist,
+        z: player.z + Math.sin(ang) * dist,
+        phase: Math.random() * 6.28
+      });
     }
 
     function bindTouch(id, onDown, onUp) {
@@ -151,7 +204,7 @@
 
     function toggleView() { isThirdPerson = !isThirdPerson; }
     function fire() {
-      if (fireFlash <= 0) {
+      if (fireFlash <= 0 && !isGameOver) {
         fireFlash = 10;
         let dirX = Math.sin(player.yaw) * Math.cos(player.pitch);
         let dirY = -Math.sin(player.pitch);
@@ -168,7 +221,21 @@
       let dt = (timestamp - lastTime) / 16.66; 
       if (dt > 3) dt = 3; 
       lastTime = timestamp;
-      update(dt);
+      
+      // Added: Gamepad Restart Polling when Game Over
+      if (isGameOver) {
+        let gp = navigator.getGamepads()[0];
+        if (gp) {
+          if ((gp.buttons[0] && gp.buttons[0].pressed) || 
+              (gp.buttons[5] && gp.buttons[5].pressed) || 
+              (gp.buttons[7] && gp.buttons[7].pressed)) {
+            restartGame();
+          }
+        }
+      } else {
+        update(dt);
+      }
+      
       render();
       requestAnimationFrame(gameLoop);
     }
@@ -289,6 +356,12 @@
           if(dx*dx + dy*dy + dz*dz < 0.8) {
             spawnParticles(player.x, player.y+0.4, player.z, '#FF0000');
             bullets.splice(i, 1);
+            protection -= 5;
+            if (protection <= 0) {
+              protection = 0;
+              isGameOver = true;
+              document.getElementById('gameOverScreen').style.display = 'block';
+            }
           }
         }
       }
@@ -298,6 +371,26 @@
         p.x += p.dx * dt; p.y += p.dy * dt; p.z += p.dz * dt;
         p.life -= dt;
         if(p.life <= 0) particles.splice(i,1);
+      }
+
+      // Update Crystals and Collision
+      for(let i=crystals.length-1; i>=0; i--) {
+        let c = crystals[i];
+        c.phase += 0.05 * dt;
+        let dx = player.x - c.x;
+        let dz = player.z - c.z;
+        if(dx*dx + dz*dz < 1.5) {
+          protection = Math.min(100, protection + 20);
+          spawnParticles(c.x, 1.0, c.z, '#e066ff');
+          crystals.splice(i, 1);
+          spawnCrystal(); // Spawn a new one elsewhere
+        }
+      }
+
+      // Wave Progression
+      if (enemies.length === 0) {
+        wave++;
+        spawnWave(wave);
       }
     }
 
@@ -366,6 +459,7 @@
       for(let e of enemies) drawList.push({type: 0, z: e.z, data: e});
       for(let b of bullets) drawList.push({type: 1, z: b.z, data: b});
       for(let p of particles) drawList.push({type: 2, z: p.z, data: p});
+      for(let c of crystals) drawList.push({type: 3, z: c.z, data: c});
       drawList.sort((a, b) => b.z - a.z);
       
       let pathIdx = 0, circleIdx = 0, rectIdx = 0;
@@ -391,7 +485,6 @@
             for(let c=0; c<9; c++) {
               let lx = e.x + (c - 4) * s;
               let ly = e.y + (4 - r) * s;
-              // FIX: Correct Front (vf) and Back (vb) Z coordinates to fix missing front panels
               let vf = project(lx, ly, e.z - s);
               let vb = project(lx, ly, e.z + s);
               if(vf && vb) {
@@ -418,11 +511,9 @@
                 let isEye = (r === 0 && (c === 2 || c === 5));
                 let pStr = `M${tl.fx},${tl.fy} L${tr.fx},${tr.fy} L${br.fx},${br.fy} L${bl.fx},${bl.fy} Z`;
                 
-                // Draw Front Panel!
                 if(isEye) eyesArr.push(pStr);
                 else frontArr.push(pStr);
                 
-                // Side Panels Culling & Generation
                 let hasTop = (r > 0 && invaderPattern[r-1][c] === '1');
                 let hasBottom = (r < 7 && invaderPattern[r+1][c] === '1');
                 let hasLeft = (c > 0 && invaderPattern[r][c-1] === '1');
@@ -436,7 +527,6 @@
             }
           }
           
-          // Correct Draw Order to guarantee solid cubes (Back to Front)
           if(backArr.length) { let p = getPoolEl(pathPool, 'path', scene, pathIdx++); p.setAttribute('d', backArr.join(' ')); p.setAttribute('fill', '#2d5a36'); p.setAttribute('stroke', 'none'); }
           if(bottomArr.length) { let p = getPoolEl(pathPool, 'path', scene, pathIdx++); p.setAttribute('d', bottomArr.join(' ')); p.setAttribute('fill', '#5BA66B'); p.setAttribute('stroke', '#003300'); p.setAttribute('stroke-width', '0.5'); p.setAttribute('stroke-linejoin', 'round'); }
           if(topArr.length) { let p = getPoolEl(pathPool, 'path', scene, pathIdx++); p.setAttribute('d', topArr.join(' ')); p.setAttribute('fill', '#B3FFB3'); p.setAttribute('stroke', '#003300'); p.setAttribute('stroke-width', '0.5'); p.setAttribute('stroke-linejoin', 'round'); }
@@ -463,6 +553,25 @@
             el.setAttribute('width', s); el.setAttribute('height', s);
             el.setAttribute('fill', pt.color); el.setAttribute('opacity', pt.life/30);
           }
+        } else if(item.type === 3) { // Purple Crystal
+          let c = item.data;
+          let v = project(c.x, 0.5 + Math.sin(c.phase) * 0.2, c.z);
+          if(v) {
+            let r = 0.6 * 400 / v.z;
+            let path = `M${v.x},${v.y-r} L${v.x+r*0.7},${v.y} L${v.x},${v.y+r} L${v.x-r*0.7},${v.y} Z`;
+            let p = getPoolEl(pathPool, 'path', scene, pathIdx++);
+            p.setAttribute('d', path);
+            p.setAttribute('fill', 'url(#crystalGrad)');
+            p.setAttribute('stroke', '#fff');
+            p.setAttribute('stroke-width', '1');
+            
+            // Inner highlight
+            let path2 = `M${v.x},${v.y-r*0.5} L${v.x+r*0.3},${v.y} L${v.x},${v.y+r*0.5} L${v.x-r*0.3},${v.y} Z`;
+            let p2 = getPoolEl(pathPool, 'path', scene, pathIdx++);
+            p2.setAttribute('d', path2);
+            p2.setAttribute('fill', '#e066ff');
+            p2.setAttribute('stroke', 'none');
+          }
         }
       }
 
@@ -484,7 +593,6 @@
           let fwd = player.fwd || 0;
           let strafe = player.strafe || 0;
           
-          // Anthropomorphic Proportions
           let strideLen = 12 * s * (Math.abs(fwd) + Math.abs(strafe));
           if(strideLen > 15 * s) strideLen = 15 * s;
           let lift = 12 * s;
@@ -492,7 +600,6 @@
           let phaseL = wp;
           let phaseR = wp + Math.PI;
 
-          // Hip and Shoulder anchors
           let hipLX = baseX - 6 * s;
           let hipRX = baseX + 6 * s;
           let hipY = baseY - 20 * s;
@@ -501,7 +608,6 @@
           let shoulderRX = baseX + 12 * s;
           let shoulderY = baseY - 35 * s;
 
-          // IK Targets for Legs
           let footLX = hipLX + Math.sin(phaseL) * strideLen;
           let footLY = baseY + Math.cos(phaseL) * strideLen * 0.5;
           let footLiftL = Math.max(0, Math.cos(phaseL)) * lift;
@@ -512,7 +618,6 @@
           let footLiftR = Math.max(0, Math.cos(phaseR)) * lift;
           let legR = ik2D(hipRX, hipY, 14 * s, 14 * s, footRX, footRY - footLiftR, 1);
 
-          // IK Targets for Arms (Opposite Phase)
           let handLX = shoulderLX - Math.sin(phaseL) * strideLen * 0.5;
           let handLY = baseY - 15 * s - Math.cos(phaseL) * strideLen * 0.25;
           let handLiftL = Math.max(0, Math.cos(phaseL)) * lift * 0.5;
@@ -526,39 +631,32 @@
           let bob = Math.abs(Math.sin(wp * 2)) * 2 * s * walkMod;
           let floatY = -bob;
           
-          // Draw Back Leg (Solid Blocky Rects + Spherical Joints)
           svgStr += makeLimb(hipRX, hipY + floatY, legR.jx, legR.jy + floatY, 6*s, "#111");
           svgStr += makeLimb(legR.jx, legR.jy + floatY, legR.tx, legR.ty + floatY, 6*s, "#111");
           svgStr += `<circle cx="${legR.jx}" cy="${legR.jy + floatY}" r="${5*s}" fill="url(#sphereGrad)" />`;
           svgStr += `<ellipse cx="${legR.tx}" cy="${legR.ty + 2*s + floatY}" rx="${8*s}" ry="${4*s}" fill="#000" />`;
           
-          // Draw Back Arm
           svgStr += makeLimb(shoulderRX, shoulderY + floatY, armR.jx, armR.jy + floatY, 5*s, "#111");
           svgStr += makeLimb(armR.jx, armR.jy + floatY, armR.tx, armR.ty + floatY, 5*s, "#111");
           svgStr += `<circle cx="${armR.jx}" cy="${armR.jy + floatY}" r="${4*s}" fill="url(#sphereGrad)" />`;
           svgStr += `<circle cx="${armR.tx}" cy="${armR.ty + floatY}" r="${5*s}" fill="url(#sphereGrad)" />`;
           
-          // Draw Big Floating Torso Sphere
           svgStr += `<circle cx="${baseX}" cy="${baseY - 30 * s + floatY}" r="${15 * s}" fill="url(#sphereGrad)" />`;
           
-          // Draw Floating Head Sphere
           svgStr += `<circle cx="${baseX}" cy="${baseY - 55 * s + floatY}" r="${8 * s}" fill="url(#sphereGrad)" />`;
           svgStr += `<circle cx="${baseX}" cy="${baseY - 62 * s + floatY}" r="${4 * s}" fill="url(#redSphereGrad)" />`;
 
-          // Draw Front Leg
           svgStr += makeLimb(hipLX, hipY + floatY, legL.jx, legL.jy + floatY, 6*s, "#111");
           svgStr += makeLimb(legL.jx, legL.jy + floatY, legL.tx, legL.ty + floatY, 6*s, "#111");
           svgStr += `<circle cx="${legL.jx}" cy="${legL.jy + floatY}" r="${5*s}" fill="url(#sphereGrad)" />`;
           svgStr += `<ellipse cx="${legL.tx}" cy="${legL.ty + 2*s + floatY}" rx="${8*s}" ry="${4*s}" fill="#000" />`;
 
-          // Draw Front Arm
           svgStr += makeLimb(shoulderLX, shoulderY + floatY, armL.jx, armL.jy + floatY, 5*s, "#111");
           svgStr += makeLimb(armL.jx, armL.jy + floatY, armL.tx, armL.ty + floatY, 5*s, "#111");
           svgStr += `<circle cx="${armL.jx}" cy="${armL.jy + floatY}" r="${4*s}" fill="url(#sphereGrad)" />`;
           svgStr += `<circle cx="${armL.tx}" cy="${armL.ty + floatY}" r="${5*s}" fill="url(#sphereGrad)" />`;
         }
       } else {
-        // First Person Gun
         svgStr += `<rect x="550" y="400" width="150" height="40" fill="#222" rx="10" transform="rotate(-15 600 420)" />`;
         svgStr += `<rect x="620" y="380" width="30" height="50" fill="#111" rx="5" transform="rotate(-15 600 420)" />`;
         if (fireFlash > 0) {
@@ -569,6 +667,10 @@
         svgStr += `<line x1="400" y1="295" x2="400" y2="305" stroke="white" stroke-width="2" />`;
       }
       atonRaG.innerHTML = svgStr;
+      
+      // Update UI Text
+      document.getElementById('waveText').textContent = "WAVE: " + wave;
+      document.getElementById('protText').textContent = "PROTECTION: " + protection + "/100";
     }
   ]]></script>
   
@@ -583,6 +685,9 @@
   <g id="atonRa"></g>
   
   <g id="ui">
+    <text id="waveText" x="10" y="25" fill="black" font-family="sans-serif" font-weight="bold" font-size="16">WAVE: 1</text>
+    <text id="protText" x="10" y="45" fill="purple" font-family="sans-serif" font-weight="bold" font-size="16">PROTECTION: 50/100</text>
+    
     <g id="dpad" opacity="0.4">
       <rect id="btnUp" x="20" y="490" width="40" height="40" fill="white" rx="5" />
       <rect id="btnDown" x="20" y="535" width="40" height="40" fill="white" rx="5" />
@@ -601,8 +706,14 @@
       <text x="740" y="40" font-family="sans-serif" font-size="12" text-anchor="middle" fill="white">VIEW (V)</text>
     </g>
     
-    <text x="400" y="20" font-family="sans-serif" font-size="14" text-anchor="middle" fill="black" opacity="0.6">
-      WASD/Stick to Move. Right Stick/Q:E or Mouse to look. Click to lock mouse. Space/A/RB/RT to Fire. V/Y to Toggle View.
+    <text x="400" y="580" font-family="sans-serif" font-size="12" text-anchor="middle" fill="black" opacity="0.6">
+      WASD/Stick to Move. Space/A/RB/RT to Fire. Collect Purple Crystals. Survive the Waves!
     </text>
+
+    <g id="gameOverScreen" style="display:none">
+      <rect x="0" y="0" width="800" height="600" fill="black" opacity="0.7"/>
+      <text x="400" y="280" text-anchor="middle" fill="red" font-family="sans-serif" font-size="64" font-weight="bold">GAME OVER</text>
+      <text x="400" y="340" text-anchor="middle" fill="white" font-family="sans-serif" font-size="24">Click / Touch / Trigger to Restart</text>
+    </g>
   </g>
 </svg>
