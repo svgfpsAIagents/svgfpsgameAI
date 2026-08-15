@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="800" height="600" viewBox="0 0 800 600" onload="initGame()">
+  <defs>
+    <!-- Gradients to make the spheres look 3D like the drawing -->
+    <radialGradient id="sphereGrad" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#444" />
+      <stop offset="100%" stop-color="#000" />
+    </radialGradient>
+    <radialGradient id="redSphereGrad" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#f33" />
+      <stop offset="100%" stop-color="#500" />
+    </radialGradient>
+  </defs>
+
   <script type="text/javascript"><![CDATA[
     // --- Global State ---
-    let player = { x: 0, y: 1.6, z: 0, yaw: 0, pitch: 0, walkPhase: 0, speed: 0, vy: 0 };
+    let player = { x: 0, y: 1.6, z: 0, yaw: 0, pitch: 0, walkPhase: 0, speed: 0, vy: 0, fwd: 0, strafe: 0 };
     let cam = { x: 0, y: 1.6, z: 0, yaw: 0, pitch: 0 };
     let isThirdPerson = false;
     let keys = {};
@@ -36,9 +48,47 @@
         el = document.createElementNS("http://www.w3.org/2000/svg", tag);
         pool.push(el);
       }
-      parent.appendChild(el); // Re-append to ensure correct draw order
+      parent.appendChild(el);
       el.style.display = '';
       return el;
+    }
+
+    // --- 2D Inverse Kinematics Math ---
+    function ik2D(ax, ay, len1, len2, tx, ty, bend) {
+      let dx = tx - ax, dy = ty - ay;
+      let dist = Math.hypot(dx, dy);
+      let maxDist = len1 + len2 - 0.01;
+      if (dist > maxDist) {
+        dist = maxDist;
+        dx = (dx / dist) * maxDist;
+        dy = (dy / dist) * maxDist;
+        tx = ax + dx;
+        ty = ay + dy;
+      }
+      let minDist = Math.abs(len1 - len2) + 0.01;
+      if (dist < minDist) dist = minDist;
+
+      let cosA = (len1*len1 + dist*dist - len2*len2) / (2 * len1 * dist);
+      cosA = Math.max(-1, Math.min(1, cosA));
+      let angleA = Math.acos(cosA);
+
+      let baseAngle = Math.atan2(dy, dx);
+      let jointAngle = baseAngle + bend * angleA;
+
+      let jx = ax + Math.cos(jointAngle) * len1;
+      let jy = ay + Math.sin(jointAngle) * len1;
+
+      return { jx, jy, tx, ty };
+    }
+
+    // Helper to generate solid blocky limbs for Aton Ra
+    function makeLimb(x1, y1, x2, y2, w, color) {
+      let angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+      let len = Math.hypot(x2 - x1, y2 - y1);
+      let str = `<g transform="translate(${x1}, ${y1}) rotate(${angle})">`;
+      str += `<rect x="0" y="${-w/2}" width="${len}" height="${w}" fill="${color}" rx="${w*0.2}"/>`;
+      str += `</g>`;
+      return str;
     }
 
     // --- Initialization ---
@@ -49,7 +99,6 @@
       floorYellow = document.getElementById('floorYellow');
       let svgEl = document.querySelector('svg');
       
-      // Spawn Enemies
       for(let i=0; i<20; i++) {
         enemies.push({
           x: -12 + (i % 5) * 6,
@@ -60,7 +109,6 @@
         });
       }
       
-      // Keyboard Input
       document.addEventListener('keydown', (e) => {
         keys[e.key.toLowerCase()] = true;
         if (e.key.toLowerCase() === 'v') toggleView();
@@ -69,7 +117,6 @@
       });
       document.addEventListener('keyup', (e) => { keys[e.key.toLowerCase()] = false; });
 
-      // Touch UI Bindings
       bindTouch('btnUp', () => touchControls.up = 1, () => touchControls.up = 0);
       bindTouch('btnDown', () => touchControls.down = 1, () => touchControls.down = 0);
       bindTouch('btnLeft', () => touchControls.left = 1, () => touchControls.left = 0);
@@ -77,7 +124,6 @@
       bindTouch('btnFire', () => fire(), () => {});
       bindTouch('btnView', () => toggleView(), () => {});
 
-      // Mouse Look
       document.addEventListener('mousemove', (e) => {
         if (document.pointerLockElement) {
           player.yaw += e.movementX * 0.002;
@@ -118,17 +164,15 @@
       }
     }
 
-    // --- Game Loop ---
     function gameLoop(timestamp) {
       let dt = (timestamp - lastTime) / 16.66; 
-      if (dt > 3) dt = 3; // Clamp dt
+      if (dt > 3) dt = 3; 
       lastTime = timestamp;
       update(dt);
       render();
       requestAnimationFrame(gameLoop);
     }
 
-    // --- Update Logic ---
     function update(dt) {
       let ix = 0, iy = 0, turn = 0, look = 0;
 
@@ -152,7 +196,14 @@
         if (gp.buttons[13] && gp.buttons[13].pressed) iy -= 1;
         if (gp.buttons[14] && gp.buttons[14].pressed) ix -= 1;
         if (gp.buttons[15] && gp.buttons[15].pressed) ix += 1;
-        if (gp.buttons[0] && gp.buttons[0].pressed) fire(); 
+        
+        // Fire with A (0), Right Bumper (5), or Right Trigger (7)
+        if ((gp.buttons[0] && gp.buttons[0].pressed) || 
+            (gp.buttons[5] && gp.buttons[5].pressed) || 
+            (gp.buttons[7] && gp.buttons[7].pressed)) {
+          fire(); 
+        }
+        
         let yPressed = gp.buttons[3] && gp.buttons[3].pressed;
         if (yPressed && !prevGamepad.view) toggleView();
         prevGamepad.view = yPressed;
@@ -172,6 +223,9 @@
       player.x += vx * speed * dt;
       player.z += vz * speed * dt;
       player.speed = Math.sqrt(vx*vx + vz*vz);
+      
+      player.fwd = iy;
+      player.strafe = ix;
 
       if (player.speed > 0.01) player.walkPhase += 0.2 * dt;
       else player.walkPhase += 0.02 * dt; 
@@ -259,7 +313,6 @@
       }
     }
 
-    // --- 3D Math & Projection ---
     function project(x, y, z) {
       let dx = x - cam.x, dy = y - cam.y, dz = z - cam.z;
       let cosY = Math.cos(cam.yaw), sinY = Math.sin(cam.yaw);
@@ -278,12 +331,10 @@
       return v;
     }
 
-    // --- Rendering ---
     function render() {
-      vertIdx = 0; // Reset vertex pool
+      vertIdx = 0; 
       let R = 2.0;
       
-      // 1. Floor Hexagons (Merged into 2 Paths for massive performance)
       let pHexX = Math.round(cam.x / (1.5 * R));
       let pHexZ = Math.round(cam.z / (Math.sqrt(3) * R));
       let jadeArr = [], yellowArr = [];
@@ -311,7 +362,6 @@
       floorJade.setAttribute('d', jadeArr.join(' '));
       floorYellow.setAttribute('d', yellowArr.join(' '));
 
-      // 2. Sort Entities (Enemies, Bullets, Particles)
       let drawList = [];
       for(let e of enemies) drawList.push({type: 0, z: e.z, data: e});
       for(let b of bullets) drawList.push({type: 1, z: b.z, data: b});
@@ -319,36 +369,42 @@
       drawList.sort((a, b) => b.z - a.z);
       
       let pathIdx = 0, circleIdx = 0, rectIdx = 0;
+      
       let invaderPattern = [
-        "00100100", "00011000", "00111100", "01100110", 
-        "11111111", "10100101", "10100101", "00011000"
+        "00100100", 
+        "00010100", 
+        "00111100", 
+        "01100110", 
+        "11111111", 
+        "10111101", 
+        "10100101", 
+        "00011000"
       ];
       
-      // 3. Render Entities back-to-front
       for(let item of drawList) {
-        if(item.type === 0) { // Enemy
+        if(item.type === 0) { 
           let e = item.data;
           let s = 0.4; 
           
-          // Project 81 grid vertices once per enemy
           let vIdx = 0;
           for(let r=0; r<9; r++) {
             for(let c=0; c<9; c++) {
               let lx = e.x + (c - 4) * s;
               let ly = e.y + (4 - r) * s;
-              let vf = project(lx, ly, e.z);
-              let vb = project(lx, ly, e.z - s);
+              // FIX: Correct Front (vf) and Back (vb) Z coordinates to fix missing front panels
+              let vf = project(lx, ly, e.z - s);
+              let vb = project(lx, ly, e.z + s);
               if(vf && vb) {
                 invaderVerts[vIdx].fx = vf.x; invaderVerts[vIdx].fy = vf.y; invaderVerts[vIdx].fz = vf.z;
                 invaderVerts[vIdx].bx = vb.x; invaderVerts[vIdx].by = vb.y; invaderVerts[vIdx].bz = vb.z;
               } else {
-                invaderVerts[vIdx].fz = -1; // Invalid
+                invaderVerts[vIdx].fz = -1; 
               }
               vIdx++;
             }
           }
           
-          let frontArr = [], eyesArr = [], topArr = [], bottomArr = [], leftArr = [], rightArr = [];
+          let backArr = [], bottomArr = [], topArr = [], leftArr = [], rightArr = [], frontArr = [], eyesArr = [];
           for(let r=0; r<8; r++) {
             for(let c=0; c<8; c++) {
               if(invaderPattern[r][c] === '1') {
@@ -361,9 +417,12 @@
                 
                 let isEye = (r === 0 && (c === 2 || c === 5));
                 let pStr = `M${tl.fx},${tl.fy} L${tr.fx},${tr.fy} L${br.fx},${br.fy} L${bl.fx},${bl.fy} Z`;
+                
+                // Draw Front Panel!
                 if(isEye) eyesArr.push(pStr);
                 else frontArr.push(pStr);
                 
+                // Side Panels Culling & Generation
                 let hasTop = (r > 0 && invaderPattern[r-1][c] === '1');
                 let hasBottom = (r < 7 && invaderPattern[r+1][c] === '1');
                 let hasLeft = (c > 0 && invaderPattern[r][c-1] === '1');
@@ -377,14 +436,16 @@
             }
           }
           
-          if(frontArr.length) { let p = getPoolEl(pathPool, 'path', scene, pathIdx++); p.setAttribute('d', frontArr.join(' ')); p.setAttribute('fill', '#90EE90'); p.setAttribute('stroke', '#000'); p.setAttribute('stroke-width', '0.5'); }
+          // Correct Draw Order to guarantee solid cubes (Back to Front)
+          if(backArr.length) { let p = getPoolEl(pathPool, 'path', scene, pathIdx++); p.setAttribute('d', backArr.join(' ')); p.setAttribute('fill', '#2d5a36'); p.setAttribute('stroke', 'none'); }
+          if(bottomArr.length) { let p = getPoolEl(pathPool, 'path', scene, pathIdx++); p.setAttribute('d', bottomArr.join(' ')); p.setAttribute('fill', '#5BA66B'); p.setAttribute('stroke', '#003300'); p.setAttribute('stroke-width', '0.5'); p.setAttribute('stroke-linejoin', 'round'); }
+          if(topArr.length) { let p = getPoolEl(pathPool, 'path', scene, pathIdx++); p.setAttribute('d', topArr.join(' ')); p.setAttribute('fill', '#B3FFB3'); p.setAttribute('stroke', '#003300'); p.setAttribute('stroke-width', '0.5'); p.setAttribute('stroke-linejoin', 'round'); }
+          if(leftArr.length) { let p = getPoolEl(pathPool, 'path', scene, pathIdx++); p.setAttribute('d', leftArr.join(' ')); p.setAttribute('fill', '#76C786'); p.setAttribute('stroke', '#003300'); p.setAttribute('stroke-width', '0.5'); p.setAttribute('stroke-linejoin', 'round'); }
+          if(rightArr.length) { let p = getPoolEl(pathPool, 'path', scene, pathIdx++); p.setAttribute('d', rightArr.join(' ')); p.setAttribute('fill', '#76C786'); p.setAttribute('stroke', '#003300'); p.setAttribute('stroke-width', '0.5'); p.setAttribute('stroke-linejoin', 'round'); }
+          if(frontArr.length) { let p = getPoolEl(pathPool, 'path', scene, pathIdx++); p.setAttribute('d', frontArr.join(' ')); p.setAttribute('fill', '#90EE90'); p.setAttribute('stroke', '#003300'); p.setAttribute('stroke-width', '0.5'); p.setAttribute('stroke-linejoin', 'round'); }
           if(eyesArr.length) { let p = getPoolEl(pathPool, 'path', scene, pathIdx++); p.setAttribute('d', eyesArr.join(' ')); p.setAttribute('fill', '#FF0000'); p.setAttribute('stroke', 'none'); }
-          if(topArr.length) { let p = getPoolEl(pathPool, 'path', scene, pathIdx++); p.setAttribute('d', topArr.join(' ')); p.setAttribute('fill', '#B3FFB3'); p.setAttribute('stroke', 'none'); }
-          if(bottomArr.length) { let p = getPoolEl(pathPool, 'path', scene, pathIdx++); p.setAttribute('d', bottomArr.join(' ')); p.setAttribute('fill', '#5BA66B'); p.setAttribute('stroke', 'none'); }
-          if(leftArr.length) { let p = getPoolEl(pathPool, 'path', scene, pathIdx++); p.setAttribute('d', leftArr.join(' ')); p.setAttribute('fill', '#76C786'); p.setAttribute('stroke', 'none'); }
-          if(rightArr.length) { let p = getPoolEl(pathPool, 'path', scene, pathIdx++); p.setAttribute('d', rightArr.join(' ')); p.setAttribute('fill', '#76C786'); p.setAttribute('stroke', 'none'); }
           
-        } else if(item.type === 1) { // Bullet
+        } else if(item.type === 1) { 
           let b = item.data;
           let v = project(b.x, b.y, b.z);
           if(v) {
@@ -392,7 +453,7 @@
             el.setAttribute('cx', v.x); el.setAttribute('cy', v.y);
             el.setAttribute('r', (0.3 * 400 / v.z)); el.setAttribute('fill', b.color);
           }
-        } else if(item.type === 2) { // Particle
+        } else if(item.type === 2) { 
           let pt = item.data;
           let v = project(pt.x, pt.y, pt.z);
           if(v) {
@@ -405,12 +466,11 @@
         }
       }
 
-      // Hide unused pool elements
       for (let i = pathIdx; i < pathPool.length; i++) pathPool[i].style.display = 'none';
       for (let i = circleIdx; i < circlePool.length; i++) circlePool[i].style.display = 'none';
       for (let i = rectIdx; i < rectPool.length; i++) rectPool[i].style.display = 'none';
 
-      // 4. ATON RA Character Rendering
+      // --- ATON RA Character Rendering (Anthropomorphic Human IK) ---
       let svgStr = "";
       if (isThirdPerson) {
         let charProj = project(player.x, 0, player.z); 
@@ -421,45 +481,84 @@
           
           let wp = player.walkPhase;
           let walkMod = player.speed > 0.01 ? 1.0 : 0.1;
+          let fwd = player.fwd || 0;
+          let strafe = player.strafe || 0;
           
-          let legPhaseR = Math.sin(wp);
-          let legPhaseL = Math.sin(wp + Math.PI);
-          let armPhaseR = Math.sin(wp + Math.PI);
-          let armPhaseL = Math.sin(wp);
+          // Anthropomorphic Proportions
+          let strideLen = 12 * s * (Math.abs(fwd) + Math.abs(strafe));
+          if(strideLen > 15 * s) strideLen = 15 * s;
+          let lift = 12 * s;
           
-          let rLegSwing = legPhaseR * 6 * s * walkMod;
-          let lLegSwing = legPhaseL * 6 * s * walkMod;
-          let rLegLift = Math.max(0, legPhaseR) * 4 * s * walkMod;
-          let lLegLift = Math.max(0, legPhaseL) * 4 * s * walkMod;
-          let rArmSwing = armPhaseR * 5 * s * walkMod;
-          let lArmSwing = armPhaseL * 5 * s * walkMod;
+          let phaseL = wp;
+          let phaseR = wp + Math.PI;
+
+          // Hip and Shoulder anchors
+          let hipLX = baseX - 6 * s;
+          let hipRX = baseX + 6 * s;
+          let hipY = baseY - 20 * s;
+
+          let shoulderLX = baseX - 12 * s;
+          let shoulderRX = baseX + 12 * s;
+          let shoulderY = baseY - 35 * s;
+
+          // IK Targets for Legs
+          let footLX = hipLX + Math.sin(phaseL) * strideLen;
+          let footLY = baseY + Math.cos(phaseL) * strideLen * 0.5;
+          let footLiftL = Math.max(0, Math.cos(phaseL)) * lift;
+          let legL = ik2D(hipLX, hipY, 14 * s, 14 * s, footLX, footLY - footLiftL, -1);
+
+          let footRX = hipRX + Math.sin(phaseR) * strideLen;
+          let footRY = baseY + Math.cos(phaseR) * strideLen * 0.5;
+          let footLiftR = Math.max(0, Math.cos(phaseR)) * lift;
+          let legR = ik2D(hipRX, hipY, 14 * s, 14 * s, footRX, footRY - footLiftR, 1);
+
+          // IK Targets for Arms (Opposite Phase)
+          let handLX = shoulderLX - Math.sin(phaseL) * strideLen * 0.5;
+          let handLY = baseY - 15 * s - Math.cos(phaseL) * strideLen * 0.25;
+          let handLiftL = Math.max(0, Math.cos(phaseL)) * lift * 0.5;
+          let armL = ik2D(shoulderLX, shoulderY, 12 * s, 12 * s, handLX, handLY - handLiftL, 1);
+
+          let handRX = shoulderRX - Math.sin(phaseR) * strideLen * 0.5;
+          let handRY = baseY - 15 * s - Math.cos(phaseR) * strideLen * 0.25;
+          let handLiftR = Math.max(0, Math.cos(phaseR)) * lift * 0.5;
+          let armR = ik2D(shoulderRX, shoulderY, 12 * s, 12 * s, handRX, handRY - handLiftR, -1);
+
           let bob = Math.abs(Math.sin(wp * 2)) * 2 * s * walkMod;
           let floatY = -bob;
           
-          svgStr += `<circle cx="${baseX}" cy="${baseY - 30 * s + floatY}" r="${10 * s}" fill="#000000" />`;
-          let headY = baseY - 50 * s + floatY;
-          svgStr += `<circle cx="${baseX}" cy="${headY}" r="${7 * s}" fill="#000000" />`;
-          svgStr += `<ellipse cx="${baseX}" cy="${headY}" rx="${5 * s}" ry="${1.5 * s}" fill="#FF0000" />`;
+          // Draw Back Leg (Solid Blocky Rects + Spherical Joints)
+          svgStr += makeLimb(hipRX, hipY + floatY, legR.jx, legR.jy + floatY, 6*s, "#111");
+          svgStr += makeLimb(legR.jx, legR.jy + floatY, legR.tx, legR.ty + floatY, 6*s, "#111");
+          svgStr += `<circle cx="${legR.jx}" cy="${legR.jy + floatY}" r="${5*s}" fill="url(#sphereGrad)" />`;
+          svgStr += `<ellipse cx="${legR.tx}" cy="${legR.ty + 2*s + floatY}" rx="${8*s}" ry="${4*s}" fill="#000" />`;
           
-          svgStr += `<circle cx="${baseX - 6 * s + rLegSwing}" cy="${baseY + 5 * s - rLegLift + floatY}" r="${4 * s}" fill="#050505" />`;
-          svgStr += `<circle cx="${baseX - 6 * s + rLegSwing}" cy="${baseY - 5 * s - rLegLift + floatY}" r="${5 * s}" fill="#050505" />`;
-          svgStr += `<circle cx="${baseX - 6 * s + rLegSwing}" cy="${baseY - 15 * s - rLegLift + floatY}" r="${5 * s}" fill="#050505" />`;
-          svgStr += `<polygon points="${baseX - 6*s + rLegSwing - 5*s},${baseY + 8*s - rLegLift + floatY} ${baseX - 6*s + rLegSwing + 5*s},${baseY + 8*s - rLegLift + floatY} ${baseX - 6*s + rLegSwing + 8*s},${baseY + 12*s - rLegLift + floatY} ${baseX - 6*s + rLegSwing},${baseY + 14*s - rLegLift + floatY} ${baseX - 6*s + rLegSwing - 8*s},${baseY + 12*s - rLegLift + floatY}" fill="#000000" />`;
+          // Draw Back Arm
+          svgStr += makeLimb(shoulderRX, shoulderY + floatY, armR.jx, armR.jy + floatY, 5*s, "#111");
+          svgStr += makeLimb(armR.jx, armR.jy + floatY, armR.tx, armR.ty + floatY, 5*s, "#111");
+          svgStr += `<circle cx="${armR.jx}" cy="${armR.jy + floatY}" r="${4*s}" fill="url(#sphereGrad)" />`;
+          svgStr += `<circle cx="${armR.tx}" cy="${armR.ty + floatY}" r="${5*s}" fill="url(#sphereGrad)" />`;
           
-          svgStr += `<circle cx="${baseX + 6 * s + lLegSwing}" cy="${baseY + 5 * s - lLegLift + floatY}" r="${4 * s}" fill="#050505" />`;
-          svgStr += `<circle cx="${baseX + 6 * s + lLegSwing}" cy="${baseY - 5 * s - lLegLift + floatY}" r="${5 * s}" fill="#050505" />`;
-          svgStr += `<circle cx="${baseX + 6 * s + lLegSwing}" cy="${baseY - 15 * s - lLegLift + floatY}" r="${5 * s}" fill="#050505" />`;
-          svgStr += `<polygon points="${baseX + 6*s + lLegSwing - 5*s},${baseY + 8*s - lLegLift + floatY} ${baseX + 6*s + lLegSwing + 5*s},${baseY + 8*s - lLegLift + floatY} ${baseX + 6*s + lLegSwing + 8*s},${baseY + 12*s - lLegLift + floatY} ${baseX + 6*s + lLegSwing},${baseY + 14*s - lLegLift + floatY} ${baseX + 6*s + lLegSwing - 8*s},${baseY + 12*s - lLegLift + floatY}" fill="#000000" />`;
+          // Draw Big Floating Torso Sphere
+          svgStr += `<circle cx="${baseX}" cy="${baseY - 30 * s + floatY}" r="${15 * s}" fill="url(#sphereGrad)" />`;
           
-          svgStr += `<circle cx="${baseX - 14 * s + rArmSwing}" cy="${baseY - 35 * s + floatY}" r="${4 * s}" fill="#050505" />`;
-          svgStr += `<circle cx="${baseX - 14 * s + rArmSwing}" cy="${baseY - 28 * s + floatY}" r="${4.5 * s}" fill="#050505" />`;
-          svgStr += `<circle cx="${baseX - 14 * s + rArmSwing}" cy="${baseY - 22 * s + floatY}" r="${5 * s}" fill="#050505" />`;
-          
-          svgStr += `<circle cx="${baseX + 14 * s + lArmSwing}" cy="${baseY - 35 * s + floatY}" r="${4 * s}" fill="#050505" />`;
-          svgStr += `<circle cx="${baseX + 14 * s + lArmSwing}" cy="${baseY - 28 * s + floatY}" r="${4.5 * s}" fill="#050505" />`;
-          svgStr += `<circle cx="${baseX + 14 * s + lArmSwing}" cy="${baseY - 22 * s + floatY}" r="${5 * s}" fill="#050505" />`;
+          // Draw Floating Head Sphere
+          svgStr += `<circle cx="${baseX}" cy="${baseY - 55 * s + floatY}" r="${8 * s}" fill="url(#sphereGrad)" />`;
+          svgStr += `<circle cx="${baseX}" cy="${baseY - 62 * s + floatY}" r="${4 * s}" fill="url(#redSphereGrad)" />`;
+
+          // Draw Front Leg
+          svgStr += makeLimb(hipLX, hipY + floatY, legL.jx, legL.jy + floatY, 6*s, "#111");
+          svgStr += makeLimb(legL.jx, legL.jy + floatY, legL.tx, legL.ty + floatY, 6*s, "#111");
+          svgStr += `<circle cx="${legL.jx}" cy="${legL.jy + floatY}" r="${5*s}" fill="url(#sphereGrad)" />`;
+          svgStr += `<ellipse cx="${legL.tx}" cy="${legL.ty + 2*s + floatY}" rx="${8*s}" ry="${4*s}" fill="#000" />`;
+
+          // Draw Front Arm
+          svgStr += makeLimb(shoulderLX, shoulderY + floatY, armL.jx, armL.jy + floatY, 5*s, "#111");
+          svgStr += makeLimb(armL.jx, armL.jy + floatY, armL.tx, armL.ty + floatY, 5*s, "#111");
+          svgStr += `<circle cx="${armL.jx}" cy="${armL.jy + floatY}" r="${4*s}" fill="url(#sphereGrad)" />`;
+          svgStr += `<circle cx="${armL.tx}" cy="${armL.ty + floatY}" r="${5*s}" fill="url(#sphereGrad)" />`;
         }
       } else {
+        // First Person Gun
         svgStr += `<rect x="550" y="400" width="150" height="40" fill="#222" rx="10" transform="rotate(-15 600 420)" />`;
         svgStr += `<rect x="620" y="380" width="30" height="50" fill="#111" rx="5" transform="rotate(-15 600 420)" />`;
         if (fireFlash > 0) {
@@ -503,7 +602,7 @@
     </g>
     
     <text x="400" y="20" font-family="sans-serif" font-size="14" text-anchor="middle" fill="black" opacity="0.6">
-      WASD/Stick to Move. Right Stick/Q:E or Mouse to look. Click to lock mouse. Space/A to Fire. V/Y to Toggle View.
+      WASD/Stick to Move. Right Stick/Q:E or Mouse to look. Click to lock mouse. Space/A/RB/RT to Fire. V/Y to Toggle View.
     </text>
   </g>
 </svg>
