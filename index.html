@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D FPS Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vector Game Engine</title>
     <style>
         /* Remove default browser margins and prevent scrolling */
         html, body {
@@ -12,42 +12,240 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: black;
+            background-color: #000000;
+            font-family: 'Courier New', Courier, monospace;
+            color: #00FF00;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            touch-action: none;
         }
-        
-        /* Container to hold the SVG game */
-        .game-container {
+
+        /* --- MAIN MENU STYLES --- */
+        #menu-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             width: 100vw;
             height: 100vh;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            margin-bottom: 30px;
+            opacity: 0.7;
+            border-bottom: 1px solid #00FF00;
+            padding-bottom: 5px;
+        }
+
+        /* Game Option Cards - Smaller and Side-by-Side */
+        .options-wrapper {
+            display: flex;
+            flex-wrap: wrap; /* Allows wrapping on very small screens, but sits side-by-side on normal displays */
+            justify-content: center;
+            align-items: stretch;
+            gap: 25px; /* Tighter gap between cards */
+        }
+
+        .game-card {
+            width: 220px; /* Reduced width */
+            height: 280px; /* Reduced height */
+            border: 2px solid #00FF00;
+            background-color: #001100;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px; /* Reduced padding */
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+            box-sizing: border-box;
+        }
+
+        .game-card:hover, .game-card:active {
+            background-color: #002200;
+            box-shadow: 0 0 25px rgba(0, 255, 0, 0.6);
+            transform: translateY(-3px);
+        }
+
+        .card-title {
+            font-size: 1.1rem; /* Smaller font */
+            font-weight: bold;
+            text-shadow: 0 0 5px #00FF00;
+        }
+
+        .card-preview {
+            width: 100%;
+            flex-grow: 1;
             display: flex;
             justify-content: center;
             align-items: center;
         }
         
-        /* Make the SVG fill the screen */
-        .game-container object {
+        /* Simple CSS vector graphics for menu icons */
+        .icon-solid {
+            width: 50px; /* Smaller icon */
+            height: 50px;
+            border: 2px solid #00FF00;
+            transform: rotate(45deg);
+            box-shadow: 4px 4px 0px #00FF00;
+        }
+        .icon-wireframe {
+            width: 60px; /* Smaller icon */
+            height: 60px;
+            border: 1px solid #00FF00;
+            position: relative;
+            transform: rotateX(45deg) rotateZ(45deg);
+            box-shadow: 1px 1px 0 #00FF00, 2px 2px 0 #00FF00, 3px 3px 0 #00FF00, 4px 4px 0 #00FF00;
+        }
+
+        .card-desc {
+            font-size: 0.8rem; /* Smaller font */
+            line-height: 1.3;
+        }
+
+        .blink {
+            animation: blinker 1s linear infinite;
+            font-size: 0.7rem;
+            margin-top: 8px;
+        }
+        @keyframes blinker { 50% { opacity: 0; } }
+
+        /* --- GAME CONTAINER STYLES --- */
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        #game-container object {
             width: 100%;
             height: 100%;
             border: none;
         }
+
+        /* Exit button overlay */
+        #exit-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #00FF00;
+            color: #00FF00;
+            font-family: inherit;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            z-index: 100;
+            display: none;
+        }
+        #exit-btn:hover, #exit-btn:active {
+            background-color: #00FF00;
+            color: #000;
+        }
     </style>
 </head>
 <body>
-    <div class="game-container">
-        <!-- The data attribute points to your file. The space in the filename is handled correctly inside quotes. -->
-        <object type="image/svg+xml" data="3d fps.svg" id="game-svg">
+
+    <!-- MAIN MENU -->
+    <div id="menu-container">
+        <h1>VECTOR SYSTEM</h1>
+        <div class="subtitle">SELECT GAME MODULE</div>
+        
+        <div class="options-wrapper">
+            <!-- Option 1: Solid 3D FPS -->
+            <div class="game-card" id="btn-solid">
+                <div class="card-title">3D FPS</div>
+                <div class="card-preview">
+                    <div class="icon-solid"></div>
+                </div>
+                <div class="card-desc">
+                    Standard Render<br>
+                    Solid Geometry & Textures
+                </div>
+                <div class="blink">[ TAP TO START ]</div>
+            </div>
+
+            <!-- Option 2: Wireframe Oscilloscope -->
+            <div class="game-card" id="btn-wireframe">
+                <div class="card-title">OSCILLOSCOPE FPS</div>
+                <div class="card-preview">
+                    <div class="icon-wireframe"></div>
+                </div>
+                <div class="card-desc">
+                    Wireframe Vector<br>
+                    Buckyball Enemies & Hex Grid
+                </div>
+                <div class="blink">[ TAP TO START ]</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GAME VIEW -->
+    <div id="game-container">
+        <button id="exit-btn">&lt; EXIT</button>
+        <object type="image/svg+xml" data="" id="game-svg">
             Your browser does not support SVG.
         </object>
     </div>
 
     <script>
-        // Automatically set focus to the game object so keyboard controls work immediately
-        window.onload = function() {
-            var game = document.getElementById('game-svg');
-            if (game) {
-                game.focus();
-            }
-        };
+        const menuContainer = document.getElementById('menu-container');
+        const gameContainer = document.getElementById('game-container');
+        const gameSvg = document.getElementById('game-svg');
+        const exitBtn = document.getElementById('exit-btn');
+
+        // Function to load the selected game
+        function loadGame(gameFile) {
+            gameSvg.setAttribute('data', gameFile);
+            menuContainer.style.display = 'none';
+            gameContainer.style.display = 'flex';
+            exitBtn.style.display = 'block';
+            
+            // Automatically set focus to the game object so keyboard controls work immediately
+            setTimeout(() => {
+                gameSvg.focus();
+            }, 100);
+        }
+
+        // Function to return to the menu
+        function backToMenu() {
+            gameSvg.setAttribute('data', ''); // Unload game to save memory
+            gameContainer.style.display = 'none';
+            exitBtn.style.display = 'none';
+            menuContainer.style.display = 'flex';
+        }
+
+        // Event Listeners for Menu Buttons (supports click and touch)
+        document.getElementById('btn-solid').addEventListener('click', () => loadGame('3d fps.svg'));
+        document.getElementById('btn-wireframe').addEventListener('click', () => loadGame('oscgame.svg'));
+
+        // Event Listener for Exit Button
+        exitBtn.addEventListener('click', backToMenu);
+        
+        // Prevent default touch behavior on buttons to avoid double firing
+        document.querySelectorAll('.game-card, #exit-btn').forEach(el => {
+            el.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                el.click();
+            }, { passive: false });
+        });
     </script>
 </body>
 </html>
