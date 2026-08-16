@@ -36,39 +36,40 @@
         }
 
         h1 {
-            font-size: 2.2rem;
+            font-size: 2rem;
             margin-bottom: 5px;
             text-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00;
             letter-spacing: 2px;
         }
 
         .subtitle {
-            font-size: 1rem;
+            font-size: 0.9rem;
             margin-bottom: 30px;
             opacity: 0.7;
             border-bottom: 1px solid #00FF00;
             padding-bottom: 5px;
         }
 
-        /* Game Option Cards - Smaller and Side-by-Side */
+        /* Game Option Cards - Strictly Side-by-Side and Smaller */
         .options-wrapper {
             display: flex;
-            flex-wrap: wrap; /* Allows wrapping on very small screens, but sits side-by-side on normal displays */
+            flex-wrap: nowrap; /* Forces side-by-side */
             justify-content: center;
             align-items: stretch;
-            gap: 25px; /* Tighter gap between cards */
+            gap: 20px;
+            max-width: 95vw;
         }
 
         .game-card {
-            width: 220px; /* Reduced width */
-            height: 280px; /* Reduced height */
+            width: 160px; /* Further reduced width */
+            height: 220px; /* Further reduced height */
             border: 2px solid #00FF00;
             background-color: #001100;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            padding: 15px; /* Reduced padding */
+            padding: 10px;
             cursor: pointer;
             transition: all 0.2s ease;
             box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
@@ -82,7 +83,7 @@
         }
 
         .card-title {
-            font-size: 1.1rem; /* Smaller font */
+            font-size: 0.9rem;
             font-weight: bold;
             text-shadow: 0 0 5px #00FF00;
         }
@@ -97,15 +98,15 @@
         
         /* Simple CSS vector graphics for menu icons */
         .icon-solid {
-            width: 50px; /* Smaller icon */
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border: 2px solid #00FF00;
             transform: rotate(45deg);
             box-shadow: 4px 4px 0px #00FF00;
         }
         .icon-wireframe {
-            width: 60px; /* Smaller icon */
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border: 1px solid #00FF00;
             position: relative;
             transform: rotateX(45deg) rotateZ(45deg);
@@ -113,14 +114,14 @@
         }
 
         .card-desc {
-            font-size: 0.8rem; /* Smaller font */
-            line-height: 1.3;
+            font-size: 0.7rem;
+            line-height: 1.2;
         }
 
         .blink {
             animation: blinker 1s linear infinite;
-            font-size: 0.7rem;
-            margin-top: 8px;
+            font-size: 0.6rem;
+            margin-top: 5px;
         }
         @keyframes blinker { 50% { opacity: 0; } }
 
@@ -140,17 +141,17 @@
             border: none;
         }
 
-        /* Exit button overlay */
+        /* Exit button overlay - 1/3 the original size */
         #exit-btn {
             position: absolute;
-            top: 15px;
-            left: 15px;
+            top: 5px;
+            left: 5px;
             background: rgba(0, 0, 0, 0.7);
             border: 1px solid #00FF00;
             color: #00FF00;
             font-family: inherit;
-            padding: 6px 12px;
-            font-size: 0.9rem;
+            padding: 2px 5px; /* Reduced padding */
+            font-size: 0.55rem; /* Reduced font size significantly */
             cursor: pointer;
             z-index: 100;
             display: none;
@@ -177,20 +178,20 @@
                 </div>
                 <div class="card-desc">
                     Standard Render<br>
-                    Solid Geometry & Textures
+                    Solid Geometry
                 </div>
                 <div class="blink">[ TAP TO START ]</div>
             </div>
 
             <!-- Option 2: Wireframe Oscilloscope -->
             <div class="game-card" id="btn-wireframe">
-                <div class="card-title">OSCILLOSCOPE FPS</div>
+                <div class="card-title">OSCILLOSCOPE</div>
                 <div class="card-preview">
                     <div class="icon-wireframe"></div>
                 </div>
                 <div class="card-desc">
                     Wireframe Vector<br>
-                    Buckyball Enemies & Hex Grid
+                    Hex & Buckyball
                 </div>
                 <div class="blink">[ TAP TO START ]</div>
             </div>
