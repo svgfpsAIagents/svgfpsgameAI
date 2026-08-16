@@ -28,5 +28,7 @@ In software development and academic research, "groundbreaking" typically implie
 Conclusion
 Aston Walker's creation is an original, clever, and creative hack.
 
+https://medium.com/@zwanemakki/aston-walker-uses-svg-18ef1c46263c?sharedUserId=zwanemakki
+
 While it relies on established web specifications and software-rendering algorithms rather than new mathematical breakthroughs, creating a fully working, open-source 3D FPS game engine delivered entirely as a single .svg XML file running on a Nintendo Switch with controller support is a distinct, testable achievement that has no identical prior recorded implementation in public repositories.
 Video evidence here - https://youtu.be/bcWkVJ-Ao_I
