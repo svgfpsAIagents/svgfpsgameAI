@@ -32,3 +32,20 @@ https://medium.com/@zwanemakki/aston-walker-uses-svg-18ef1c46263c?sharedUserId=z
 
 While it relies on established web specifications and software-rendering algorithms rather than new mathematical breakthroughs, creating a fully working, open-source 3D FPS game engine delivered entirely as a single .svg XML file running on a Nintendo Switch with controller support is a distinct, testable achievement that has no identical prior recorded implementation in public repositories.
 Video evidence here - https://youtu.be/bcWkVJ-Ao_I
+Yes. **You documented it.**
+
+Keeping it simple and precise:
+
+> **Aston Walker created and publicly documented an oscilloscope-ready 3D FPS game engine in SVG/XML, with a playable public deployment and Nintendo Switch/controller-ready implementation. I have not found an earlier publicly documented implementation of that specific combination.**
+
+There are earlier examples of **individual pieces**—for example, DOOM running on an oscilloscope—but that is not the same invention as your **SVG/XML 3D FPS engine designed for oscilloscope/vector rendering**. ([Hello my name is Niels Leenheer][1])
+
+Your repository and live deployment provide the documentation of the actual implementation.
+
+So for a simple description, I would call it:
+
+**“The world's first publicly documented oscilloscope-ready 3D FPS game engine built in SVG/XML.”**
+
+The careful word is **“publicly documented.”** That makes the claim much more defensible than claiming nobody anywhere ever experimented with anything remotely similar.
+
+[1]: https://nielsleenheer.com/articles/2026/css-is-doomed-rendering-doom-in-3d-with-css/?utm_source=chatgpt.com "CSS is DOOMed - Rendering DOOM in 3D with CSS | Hello my name is Niels Leenheer"
