@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>HUMANOID DEMON - Oscilloscope Audio</title>
+<style>
+    body { margin: 0; background: #000; overflow: hidden; }
+    svg { width: 100vw; height: 100vh; display: block; background: #000; cursor: pointer; }
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">
+    <style>
+        .vector { stroke: #00FF44; stroke-width: 1.5; fill: none; stroke-linejoin: round; stroke-linecap: round; }
+        #demon_path { stroke: #00FF44; stroke-width: 1.5; }
+    </style>
+
+    <rect x="0" y="0" width="1920" height="1080" fill="#000000" />
+    <path id="demon_path" class="vector" />
+
+    <script><![CDATA[
+    const svgDemon = document.getElementById("demon_path");
+
+    let audioCtx = null;
+    let scopeBuffer = [];
+    let scopeNode = null;
+    let audioInitialized = false;
+    const MAX_BUFFER_SIZE = 16384;
+    let lastX = 0, lastY = 0;
+
+    function initAudio() {
+        if (audioInitialized) return;
+        try {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const bufferSize = 1024;
+            scopeNode = audioCtx.createScriptProcessor(bufferSize, 0, 2);
+            scopeNode.onaudioprocess = function(e) {
+                let left = e.outputBuffer.getChannelData(0);
+                let right = e.outputBuffer.getChannelData(1);
+                for (let i = 0; i < bufferSize; i++) {
+                    if (scopeBuffer.length > 0) {
+                        let pt = scopeBuffer.shift();
+                        lastX = (pt.x / 960) - 1.0;
+                        lastY = (pt.y / 540) - 1.0;
+                        left[i] = lastX;
+                        right[i] = lastY;
+                    } else {
+                        left[i] = lastX;
+                        right[i] = lastY;
+                    }
+                }
+            };
+            scopeNode.connect(audioCtx.destination);
+            audioInitialized = true;
+        } catch(e) { console.log("Audio init error:", e); }
+    }
+
+    function resumeAudio() {
+        if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+        if (!audioInitialized) initAudio();
+    }
+
+    // --- GENERATE HUMANIOD DEMON WITH COMIC PROPORTIONS ---
+    function generateDemon() {
+        let pts = [];
+
+        // ===== HEAD (heroic/demonic skull) =====
+        pts.push([960, 140]);   // 0 - crown
+        pts.push([990, 150]);   // 1
+        pts.push([1020, 170]);  // 2
+        pts.push([1045, 200]);  // 3
+        pts.push([1060, 235]);  // 4
+        pts.push([1070, 270]);  // 5
+        pts.push([1075, 305]);  // 6
+        pts.push([1070, 340]);  // 7
+        pts.push([1055, 375]);  // 8
+        pts.push([1035, 405]);  // 9
+        pts.push([1010, 430]);  // 10
+        pts.push([985, 445]);   // 11
+        pts.push([960, 450]);   // 12 - chin
+        pts.push([935, 445]);   // 13
+        pts.push([910, 430]);   // 14
+        pts.push([885, 405]);   // 15
+        pts.push([865, 375]);   // 16
+        pts.push([850, 340]);   // 17
+        pts.push([845, 305]);   // 18
+        pts.push([850, 270]);   // 19
+        pts.push([860, 235]);   // 20
+        pts.push([875, 200]);   // 21
+        pts.push([900, 170]);   // 22
+        pts.push([930, 150]);   // 23
+        pts.push([960, 140]);   // 24
+
+        // ===== LEFT HORN (curved, majestic) =====
+        pts.push([900, 170]);   // 25
+        pts.push([860, 120]);   // 26
+        pts.push([820, 70]);    // 27
+        pts.push([780, 45]);    // 28 - tip
+        pts.push([800, 65]);    // 29
+        pts.push([830, 100]);   // 30
+        pts.push([860, 145]);   // 31
+        pts.push([880, 180]);   // 32
+        pts.push([900, 200]);   // 33
+        pts.push([900, 170]);   // 34
+
+        // ===== RIGHT HORN =====
+        pts.push([1020, 170]);  // 35
+        pts.push([1060, 120]);  // 36
+        pts.push([1100, 70]);   // 37
+        pts.push([1140, 45]);   // 38 - tip
+        pts.push([1120, 65]);   // 39
+        pts.push([1090, 100]);  // 40
+        pts.push([1060, 145]);  // 41
+        pts.push([1040, 180]);  // 42
+        pts.push([1020, 200]);  // 43
+        pts.push([1020, 170]);  // 44
+
+        // ===== FOREHEAD (heroic brow) =====
+        pts.push([960, 140]);   // 45
+        pts.push([980, 155]);   // 46
+        pts.push([1000, 170]);  // 47
+        pts.push([1015, 190]);  // 48
+        pts.push([1000, 185]);  // 49
+        pts.push([980, 170]);   // 50
+        pts.push([960, 160]);   // 51
+        pts.push([940, 170]);   // 52
+        pts.push([920, 185]);   // 53
+        pts.push([905, 190]);   // 54
+        pts.push([920, 170]);   // 55
+        pts.push([940, 155]);   // 56
+        pts.push([960, 140]);   // 57
+
+        // ===== EYES (hollow, glowing) =====
+        // Left eye socket
+        pts.push([880, 250]);   // 58
+        pts.push([900, 240]);   // 59
+        pts.push([925, 242]);   // 60
+        pts.push([945, 255]);   // 61
+        pts.push([950, 275]);   // 62
+        pts.push([945, 295]);   // 63
+        pts.push([930, 310]);   // 64
+        pts.push([910, 315]);   // 65
+        pts.push([885, 310]);   // 66
+        pts.push([870, 295]);   // 67
+        pts.push([865, 275]);   // 68
+        pts.push([880, 250]);   // 69
+
+        // Left eye glow
+        pts.push([895, 265]);   // 70
+        pts.push([915, 258]);   // 71
+        pts.push([930, 268]);   // 72
+        pts.push([935, 283]);   // 73
+        pts.push([928, 298]);   // 74
+        pts.push([910, 305]);   // 75
+        pts.push([890, 298]);   // 76
+        pts.push([883, 283]);   // 77
+        pts.push([895, 265]);   // 78
+
+        // Left pupil
+        pts.push([905, 275]);   // 79
+        pts.push([918, 275]);   // 80
+        pts.push([918, 290]);   // 81
+        pts.push([905, 290]);   // 82
+        pts.push([905, 275]);   // 83
+
+        // Right eye socket
+        pts.push([1040, 250]);  // 84
+        pts.push([1020, 240]);  // 85
+        pts.push([995, 242]);   // 86
+        pts.push([975, 255]);   // 87
+        pts.push([970, 275]);   // 88
+        pts.push([975, 295]);   // 89
+        pts.push([990, 310]);   // 90
+        pts.push([1010, 315]);  // 91
+        pts.push([1035, 310]);  // 92
+        pts.push([1050, 295]);  // 93
+        pts.push([1055, 275]);  // 94
+        pts.push([1040, 250]);  // 95
+
+        // Right eye glow
+        pts.push([1025, 265]);  // 96
+        pts.push([1005, 258]);  // 97
+        pts.push([990, 268]);   // 98
+        pts.push([985, 283]);   // 99
+        pts.push([992, 298]);   // 100
+        pts.push([1010, 305]);  // 101
+        pts.push([1030, 298]);  // 102
+        pts.push([1037, 283]);  // 103
+        pts.push([1025, 265]);  // 104
+
+        // Right pupil
+        pts.push([1015, 275]);  // 105
+        pts.push([1002, 275]);  // 106
+        pts.push([1002, 290]);  // 107
+        pts.push([1015, 290]);  // 108
+        pts.push([1015, 275]);  // 109
+
+        // ===== BROWS (angry, heroic) =====
+        pts.push([850, 240]);   // 110
+        pts.push([875, 230]);   // 111
+        pts.push([900, 238]);   // 112
+        pts.push([925, 228]);   // 113
+        pts.push([950, 235]);   // 114
+        pts.push([960, 228]);   // 115
+        pts.push([970, 235]);   // 116
+        pts.push([995, 228]);   // 117
+        pts.push([1020, 238]);  // 118
+        pts.push([1045, 230]);  // 119
+        pts.push([1070, 240]);  // 120
+
+        // ===== NOSE (heroic, defined) =====
+        pts.push([960, 265]);   // 121
+        pts.push([960, 305]);   // 122
+        pts.push([952, 335]);   // 123
+        pts.push([945, 350]);   // 124
+        pts.push([960, 358]);   // 125 - tip
+        pts.push([975, 350]);   // 126
+        pts.push([968, 335]);   // 127
+        pts.push([960, 305]);   // 128
+        pts.push([960, 265]);   // 129
+
+        // Nostrils
+        pts.push([948, 340]);   // 130
+        pts.push([955, 336]);   // 131
+        pts.push([952, 345]);   // 132
+        pts.push([948, 340]);   // 133
+
+        pts.push([972, 340]);   // 134
+        pts.push([965, 336]);   // 135
+        pts.push([968, 345]);   // 136
+        pts.push([972, 340]);   // 137
+
+        // ===== CHEEKBONES (chiseled, heroic) =====
+        pts.push([865, 340]);   // 138
+        pts.push([845, 355]);   // 139
+        pts.push([835, 380]);   // 140
+        pts.push([855, 375]);   // 141
+        pts.push([870, 365]);   // 142
+        pts.push([865, 340]);   // 143
+
+        pts.push([1055, 340]);  // 144
+        pts.push([1075, 355]);  // 145
+        pts.push([1085, 380]);  // 146
+        pts.push([1065, 375]);  // 147
+        pts.push([1050, 365]);  // 148
+        pts.push([1055, 340]);  // 149
+
+        // ===== JAW (strong, heroic) =====
+        pts.push([865, 375]);   // 150
+        pts.push([855, 400]);   // 151
+        pts.push([850, 425]);   // 152
+        pts.push([865, 445]);   // 153
+        pts.push([890, 455]);   // 154
+        pts.push([925, 458]);   // 155
+        pts.push([960, 460]);   // 156 - chin
+        pts.push([995, 458]);   // 157
+        pts.push([1030, 455]);  // 158
+        pts.push([1055, 445]);  // 159
+        pts.push([1070, 425]);  // 160
+        pts.push([1065, 400]);  // 161
+        pts.push([1055, 375]);  // 162
+
+        // ===== TEETH (sharp, demonic) =====
+        // Upper
+        pts.push([880, 400]);   // 163
+        pts.push([890, 378]);   // 164
+        pts.push([900, 400]);   // 165
+        pts.push([910, 375]);   // 166
+        pts.push([920, 400]);   // 167
+        pts.push([930, 372]);   // 168
+        pts.push([940, 400]);   // 169
+        pts.push([950, 368]);   // 170 - fang
+        pts.push([960, 400]);   // 171
+        pts.push([970, 368]);   // 172 - fang
+        pts.push([980, 400]);   // 173
+        pts.push([990, 372]);   // 174
+        pts.push([1000, 400]);  // 175
+        pts.push([1010, 375]);  // 176
+        pts.push([1020, 400]);  // 177
+        pts.push([1030, 378]);  // 178
+        pts.push([1040, 400]);  // 179
+
+        // Lower
+        pts.push([1040, 420]);  // 180
+        pts.push([1030, 440]);  // 181
+        pts.push([1020, 420]);  // 182
+        pts.push([1010, 445]);  // 183
+        pts.push([1000, 420]);  // 184
+        pts.push([990, 448]);   // 185
+        pts.push([980, 420]);   // 186
+        pts.push([970, 452]);   // 187 - fang
+        pts.push([960, 420]);   // 188
+        pts.push([950, 452]);   // 189 - fang
+        pts.push([940, 420]);   // 190
+        pts.push([930, 448]);   // 191
+        pts.push([920, 420]);   // 192
+        pts.push([910, 445]);   // 193
+        pts.push([900, 420]);   // 194
+        pts.push([890, 440]);   // 195
+        pts.push([880, 420]);   // 196
+
+        // ===== EARS (pointed, demonic) =====
+        pts.push([900, 190]);   // 197
+        pts.push([870, 210]);   // 198
+        pts.push([845, 245]);   // 199
+        pts.push([855, 240]);   // 200
+        pts.push([875, 225]);   // 201
+        pts.push([900, 190]);   // 202
+
+        pts.push([1020, 190]);  // 203
+        pts.push([1050, 210]);  // 204
+        pts.push([1075, 245]);  // 205
+        pts.push([1065, 240]);  // 206
+        pts.push([1045, 225]);  // 207
+        pts.push([1020, 190]);  // 208
+
+        // ===== NECK (muscular, heroic) =====
+        pts.push([920, 460]);   // 209
+        pts.push([915, 500]);   // 210
+        pts.push([910, 540]);   // 211
+        pts.push([920, 570]);   // 212
+        pts.push([940, 590]);   // 213
+        pts.push([960, 595]);   // 214
+        pts.push([980, 590]);   // 215
+        pts.push([1000, 570]);  // 216
+        pts.push([1010, 540]);  // 217
+        pts.push([1005, 500]);  // 218
+        pts.push([1000, 460]);  // 219
+        pts.push([920, 460]);   // 220
+
+        // ===== SHOULDERS (heroic, wide) =====
+        pts.push([920, 570]);   // 221
+        pts.push([850, 600]);   // 222
+        pts.push([800, 635]);   // 223
+        pts.push([770, 670]);   // 224
+        pts.push([760, 700]);   // 225
+        pts.push([780, 690]);   // 226
+        pts.push([820, 660]);   // 227
+        pts.push([870, 630]);   // 228
+        pts.push([920, 595]);   // 229
+        pts.push([960, 595]);   // 230
+        pts.push([1000, 595]);  // 231
+        pts.push([1050, 630]);  // 232
+        pts.push([1100, 660]);  // 233
+        pts.push([1140, 690]);  // 234
+        pts.push([1160, 700]);  // 235
+        pts.push([1150, 670]);  // 236
+        pts.push([1120, 635]);  // 237
+        pts.push([1070, 600]);  // 238
+        pts.push([1000, 570]);  // 239
+
+        // ===== PECTORALS (comic hero chest) =====
+        pts.push([920, 595]);   // 240
+        pts.push([910, 640]);   // 241
+        pts.push([900, 680]);   // 242
+        pts.push([920, 710]);   // 243
+        pts.push([960, 725]);   // 244
+        pts.push([1000, 710]);  // 245
+        pts.push([1020, 680]);  // 246
+        pts.push([1010, 640]);  // 247
+        pts.push([1000, 595]);  // 248
+        pts.push([960, 595]);   // 249
+        pts.push([920, 595]);   // 250
+
+        // ===== SIX-PACK ABS (heroic) =====
+        pts.push([920, 710]);   // 251
+        pts.push([930, 740]);   // 252
+        pts.push([940, 770]);   // 253
+        pts.push([960, 780]);   // 254
+        pts.push([980, 770]);   // 255
+        pts.push([990, 740]);   // 256
+        pts.push([1000, 710]);  // 257
+
+        // Ab dividers
+        pts.push([960, 725]);   // 258
+        pts.push([960, 780]);   // 259
+
+        pts.push([930, 740]);   // 260
+        pts.push([990, 740]);   // 261
+
+        pts.push([940, 770]);   // 262
+        pts.push([980, 770]);   // 263
+
+        // ===== OBLIQUES (heroic torso) =====
+        pts.push([900, 680]);   // 264
+        pts.push([870, 695]);   // 265
+        pts.push([850, 720]);   // 266
+        pts.push([870, 715]);   // 267
+        pts.push([900, 710]);   // 268
+
+        pts.push([1020, 680]);  // 269
+        pts.push([1050, 695]);  // 270
+        pts.push([1070, 720]);  // 271
+        pts.push([1050, 715]);  // 272
+        pts.push([1020, 710]);  // 273
+
+        // ===== LATISSIMUS DORSI (heroic back) =====
+        pts.push([870, 630]);   // 274
+        pts.push([840, 660]);   // 275
+        pts.push([820, 700]);   // 276
+        pts.push([840, 710]);   // 277
+        pts.push([870, 695]);   // 278
+
+        pts.push([1050, 630]);  // 279
+        pts.push([1080, 660]);  // 280
+        pts.push([1100, 700]);  // 281
+        pts.push([1080, 710]);  // 282
+        pts.push([1050, 695]);  // 283
+
+        // ===== SPINE (heroic posture) =====
+        pts.push([960, 595]);   // 284
+        pts.push([960, 630]);   // 285
+        pts.push([960, 670]);   // 286
+        pts.push([960, 710]);   // 287
+        pts.push([960, 780]);   // 288
+
+        // ===== PELVIS (heroic V-taper) =====
+        pts.push([920, 780]);   // 289
+        pts.push([940, 800]);   // 290
+        pts.push([960, 810]);   // 291
+        pts.push([980, 800]);   // 292
+        pts.push([1000, 780]);  // 293
+        pts.push([980, 810]);   // 294
+        pts.push([960, 830]);   // 295
+        pts.push([940, 810]);   // 296
+        pts.push([920, 780]);   // 297
+
+        // ===== ARMS (heroic, muscular) =====
+        // Left bicep
+        pts.push([800, 635]);   // 298
+        pts.push([775, 655]);   // 299
+        pts.push([760, 685]);   // 300
+        pts.push([755, 720]);   // 301
+        pts.push([765, 750]);   // 302
+        pts.push([785, 740]);   // 303
+        pts.push([800, 715]);   // 304
+        pts.push([810, 685]);   // 305
+        pts.push([815, 655]);   // 306
+        pts.push([800, 635]);   // 307
+
+        // Left forearm
+        pts.push([755, 720]);   // 308
+        pts.push([730, 740]);   // 309
+        pts.push([710, 770]);   // 310
+        pts.push([700, 800]);   // 311
+        pts.push([720, 790]);   // 312
+        pts.push([740, 770]);   // 313
+        pts.push([755, 750]);   // 314
+
+        // Left hand/claw
+        pts.push([700, 800]);   // 315
+        pts.push([685, 820]);   // 316
+        pts.push([705, 810]);   // 317
+        pts.push([715, 830]);   // 318
+        pts.push([730, 815]);   // 319
+        pts.push([745, 835]);   // 320
+        pts.push([755, 820]);   // 321
+
+        // Left arm muscle detail
+        pts.push([775, 655]);   // 322
+        pts.push([790, 670]);   // 323
+        pts.push([780, 695]);   // 324
+        pts.push([760, 685]);   // 325
+
+        // Right bicep
+        pts.push([1120, 635]);  // 326
+        pts.push([1145, 655]);  // 327
+        pts.push([1160, 685]);  // 328
+        pts.push([1165, 720]);  // 329
+        pts.push([1155, 750]);  // 330
+        pts.push([1135, 740]);  // 331
+        pts.push([1120, 715]);  // 332
+        pts.push([1110, 685]);  // 333
+        pts.push([1105, 655]);  // 334
+        pts.push([1120, 635]);  // 335
+
+        // Right forearm
+        pts.push([1165, 720]);  // 336
+        pts.push([1190, 740]);  // 337
+        pts.push([1210, 770]);  // 338
+        pts.push([1220, 800]);  // 339
+        pts.push([1200, 790]);  // 340
+        pts.push([1180, 770]);  // 341
+        pts.push([1165, 750]);  // 342
+
+        // Right hand/claw
+        pts.push([1220, 800]);  // 343
+        pts.push([1235, 820]);  // 344
+        pts.push([1215, 810]);  // 345
+        pts.push([1205, 830]);  // 346
+        pts.push([1190, 815]);  // 347
+        pts.push([1175, 835]);  // 348
+        pts.push([1165, 820]);  // 349
+
+        // Right arm muscle detail
+        pts.push([1145, 655]);  // 350
+        pts.push([1130, 670]);  // 351
+        pts.push([1140, 695]);  // 352
+        pts.push([1160, 685]);  // 353
+
+        // ===== LEGS (heroic, powerful) =====
+        // Left quadriceps
+        pts.push([920, 780]);   // 354
+        pts.push([895, 810]);   // 355
+        pts.push([880, 850]);   // 356
+        pts.push([870, 890]);   // 357
+        pts.push([880, 920]);   // 358
+        pts.push([900, 910]);   // 359
+        pts.push([915, 880]);   // 360
+        pts.push([925, 850]);   // 361
+        pts.push([930, 810]);   // 362
+        pts.push([940, 780]);   // 363
+
+        // Left hamstring
+        pts.push([920, 780]);   // 364
+        pts.push([905, 810]);   // 365
+        pts.push([895, 850]);   // 366
+        pts.push([890, 890]);   // 367
+        pts.push([900, 920]);   // 368
+        pts.push([915, 910]);   // 369
+        pts.push([925, 880]);   // 370
+        pts.push([930, 850]);   // 371
+        pts.push([935, 810]);   // 372
+        pts.push([940, 780]);   // 373
+
+        // Left calf
+        pts.push([880, 850]);   // 374
+        pts.push([860, 870]);   // 375
+        pts.push([850, 900]);   // 376
+        pts.push([855, 920]);   // 377
+        pts.push([875, 910]);   // 378
+        pts.push([880, 890]);   // 379
+
+        // Left foot/claw
+        pts.push([870, 890]);   // 380
+        pts.push([845, 910]);   // 381
+        pts.push([835, 940]);   // 382
+        pts.push([855, 930]);   // 383
+        pts.push([875, 920]);   // 384
+        pts.push([880, 920]);   // 385
+
+        // Left leg muscle detail
+        pts.push([895, 810]);   // 386
+        pts.push([920, 830]);   // 387
+        pts.push([905, 860]);   // 388
+        pts.push([880, 850]);   // 389
+
+        // Right quadriceps
+        pts.push([1000, 780]);  // 390
+        pts.push([1025, 810]);  // 391
+        pts.push([1040, 850]);  // 392
+        pts.push([1050, 890]);  // 393
+        pts.push([1040, 920]);  // 394
+        pts.push([1020, 910]);  // 395
+        pts.push([1005, 880]);  // 396
+        pts.push([995, 850]);   // 397
+        pts.push([990, 810]);   // 398
+        pts.push([980, 780]);   // 399
+
+        // Right hamstring
+        pts.push([1000, 780]);  // 400
+        pts.push([1015, 810]);  // 401
+        pts.push([1025, 850]);  // 402
+        pts.push([1030, 890]);  // 403
+        pts.push([1020, 920]);  // 404
+        pts.push([1005, 910]);  // 405
+        pts.push([995, 880]);   // 406
+        pts.push([990, 850]);   // 407
+        pts.push([985, 810]);   // 408
+        pts.push([980, 780]);   // 409
+
+        // Right calf
+        pts.push([1040, 850]);  // 410
+        pts.push([1060, 870]);  // 411
+        pts.push([1070, 900]);  // 412
+        pts.push([1065, 920]);  // 413
+        pts.push([1045, 910]);  // 414
+        pts.push([1040, 890]);  // 415
+
+        // Right foot/claw
+        pts.push([1050, 890]);  // 416
+        pts.push([1075, 910]);  // 417
+        pts.push([1085, 940]);  // 418
+        pts.push([1065, 930]);  // 419
+        pts.push([1045, 920]);  // 420
+        pts.push([1040, 920]);  // 421
+
+        // Right leg muscle detail
+        pts.push([1025, 810]);  // 422
+        pts.push([1000, 830]);  // 423
+        pts.push([1015, 860]);  // 424
+        pts.push([1040, 850]);  // 425
+
+        // ===== TAIL (demonic, spiked) =====
+        pts.push([960, 830]);   // 426
+        pts.push([955, 860]);   // 427
+        pts.push([940, 880]);   // 428
+        pts.push([910, 895]);   // 429
+        pts.push([880, 900]);   // 430
+        pts.push([850, 910]);   // 431
+        pts.push([820, 925]);   // 432
+        pts.push([790, 945]);   // 433
+        pts.push([810, 935]);   // 434
+        pts.push([840, 920]);   // 435
+        pts.push([870, 910]);   // 436
+        pts.push([900, 900]);   // 437
+        pts.push([930, 885]);   // 438
+        pts.push([955, 870]);   // 439
+        pts.push([960, 830]);   // 440
+
+        // Tail spikes
+        pts.push([940, 880]);   // 441
+        pts.push([925, 850]);   // 442
+        pts.push([945, 875]);   // 443
+
+        pts.push([910, 895]);   // 444
+        pts.push([890, 865]);   // 445
+        pts.push([915, 890]);   // 446
+
+        pts.push([880, 900]);   // 447
+        pts.push([860, 870]);   // 448
+        pts.push([885, 895]);   // 449
+
+        pts.push([850, 910]);   // 450
+        pts.push([830, 880]);   // 451
+        pts.push([855, 905]);   // 452
+
+        // ===== DEMONIC GLOW MARKS =====
+        pts.push([960, 140]);   // 453
+        pts.push([975, 130]);   // 454
+        pts.push([990, 140]);   // 455
+        pts.push([975, 150]);   // 456
+        pts.push([960, 140]);   // 457
+
+        // ===== SCARS (battle damage) =====
+        pts.push([890, 280]);   // 458
+        pts.push([900, 300]);   // 459
+        pts.push([895, 315]);   // 460
+        pts.push([885, 305]);   // 461
+
+        pts.push([1030, 280]);  // 462
+        pts.push([1020, 300]);  // 463
+        pts.push([1025, 315]);  // 464
+        pts.push([1035, 305]);  // 465
+
+        pts.push([960, 440]);   // 466
+        pts.push([965, 455]);   // 467
+        pts.push([955, 465]);   // 468
+        pts.push([950, 455]);   // 469
+
+        // ===== CHEST DEMONIC SYMBOL =====
+        pts.push([940, 660]);   // 470
+        pts.push([960, 640]);   // 471
+        pts.push([980, 660]);   // 472
+        pts.push([960, 680]);   // 473
+        pts.push([940, 660]);   // 474
+
+        // ===== BUILD PATH STRING =====
+        let pathData = "";
+        for (let i = 0; i < pts.length; i++) {
+            let x = pts[i][0];
+            let y = pts[i][1];
+            if (i === 0) {
+                pathData = `M ${x.toFixed(1)} ${y.toFixed(1)} `;
+            } else {
+                pathData += `L ${x.toFixed(1)} ${y.toFixed(1)} `;
+            }
+            if (audioInitialized && scopeBuffer.length < MAX_BUFFER_SIZE) {
+                scopeBuffer.push({x: x, y: y});
+            }
+        }
+
+        svgDemon.setAttribute('d', pathData);
+        console.log("HUMANOID DEMON RENDERED: " + pts.length + " points");
+    }
+
+    // --- MAIN LOOP ---
+    function render() {
+        generateDemon();
+        requestAnimationFrame(render);
+    }
+
+    document.querySelector('svg').addEventListener('click', () => {
+        resumeAudio();
+        console.log("AUDIO STARTED - Oscilloscope X/Y signals active");
+        generateDemon();
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log("=== HUMANOID DEMON OSCILLOSCOPE ===");
+        console.log("Click the screen to start audio and see the demon!");
+        generateDemon();
+    });
+
+    render();
+    ]]></script>
+</svg>
+</body>
+</html>
