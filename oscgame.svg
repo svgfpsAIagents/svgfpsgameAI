@@ -30,11 +30,22 @@
             stroke: #44FF66;
             stroke-width: 1.5;
         }
+        #energy_path {
+            stroke: #FF4400;
+            stroke-width: 1.5;
+        }
     </style>
 
     <defs>
         <filter id="bulletGlow" x="-100%" y="-100%" width="300%" height="300%">
             <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/>
+            <feMerge>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+        <filter id="energyGlow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="3.0" result="blur"/>
             <feMerge>
                 <feMergeNode in="blur"/>
                 <feMergeNode in="SourceGraphic"/>
@@ -50,6 +61,7 @@
     <path id="entity_path" class="vector" />
     <path id="player_path" class="vector" />
     <path id="bullet_path" class="vector" filter="url(#bulletGlow)" />
+    <path id="energy_path" class="vector" filter="url(#energyGlow)" />
     <path id="text_path" class="vector" />
     
     <!-- HUD Layer -->
@@ -68,11 +80,12 @@
     </g>
 
     <script type="application/ecmascript"><![CDATA[
-    // --- FULL 3D SVG OSCILLOSCOPE ENGINE (v4.3 - Hold Position Fix) ---
+    // --- FULL 3D SVG OSCILLOSCOPE ENGINE (v4.3 - Hold Position Fix + MONSTER) ---
     const svgWorld = document.getElementById("world_path");
     const svgEntity = document.getElementById("entity_path");
     const svgPlayer = document.getElementById("player_path");
     const svgBullet = document.getElementById("bullet_path");
+    const svgEnergy = document.getElementById("energy_path");
     const svgText = document.getElementById("text_path");
     const leftKnob = document.getElementById("left_knob");
     const rightKnob = document.getElementById("right_knob");
@@ -145,6 +158,7 @@
         scale(s) { return new Vec3(this.x * s, this.y * s, this.z * s); }
         length() { return Math.sqrt(this.x*this.x + this.y*this.y + this.z*this.z); }
         normalize() { const l = this.length(); return l > 0 ? new Vec3(this.x/l, this.y/l, this.z/l) : new Vec3(0,0,0); }
+        cross(v) { return new Vec3(this.y*v.z - this.z*v.y, this.z*v.x - this.x*v.z, this.x*v.y - this.y*v.x); }
     }
 
     // --- CAMERA & PROJECTION ---
@@ -186,6 +200,7 @@
     let entityPathData = "";
     let playerPathData = "";
     let bulletPathData = "";
+    let energyPathData = "";
     let textPathData = "";
     
     let audioSampleCounter = 0;
@@ -199,6 +214,7 @@
             if (target === "entity") entityPathData += seg;
             else if (target === "player") playerPathData += seg;
             else if (target === "bullet") bulletPathData += seg;
+            else if (target === "energy") energyPathData += seg;
             else worldPathData += seg;
             
             if (audioInitialized && scopeBuffer.length < MAX_BUFFER_SIZE) {
@@ -443,11 +459,367 @@
         drawLine(coreR, coreTip, "bullet");
     }
 
+    // --- MUSCULAR MONSTER ENEMY (3D Wireframe with Z-depth) ---
+    function drawMuscularMonster(pos, size, time) {
+        let s = size;
+        let walkPhase = time * 0.004;
+        let legSwing = Math.sin(walkPhase) * 0.3 * s;
+        let armSwing = Math.sin(walkPhase + Math.PI) * 0.3 * s;
+        let zOffset = 0.3 * s;
+        
+        // HEAD
+        let head = [
+            new Vec3(-0.5*s, 2.0*s, 0), new Vec3(0, 2.6*s, 0), new Vec3(0.5*s, 2.0*s, 0),
+            new Vec3(0.6*s, 1.6*s, 0), new Vec3(0.5*s, 1.2*s, 0), new Vec3(0, 1.0*s, 0),
+            new Vec3(-0.5*s, 1.2*s, 0), new Vec3(-0.6*s, 1.6*s, 0)
+        ];
+        let headZ = head.map(v => new Vec3(v.x, v.y, v.z + zOffset * 0.5));
+        
+        // HORNS
+        let horns = [
+            new Vec3(-0.5*s, 2.0*s, 0), new Vec3(-0.7*s, 2.8*s, 0), new Vec3(-0.9*s, 3.3*s, 0),
+            new Vec3(0.5*s, 2.0*s, 0), new Vec3(0.7*s, 2.8*s, 0), new Vec3(0.9*s, 3.3*s, 0)
+        ];
+        let hornsZ = horns.map(v => new Vec3(v.x, v.y, v.z + zOffset * 0.3));
+        
+        // NECK
+        let neck = [
+            new Vec3(-0.45*s, 1.0*s, 0), new Vec3(0, 0.9*s, 0), new Vec3(0.45*s, 1.0*s, 0)
+        ];
+        let neckZ = neck.map(v => new Vec3(v.x, v.y, v.z + zOffset * 0.4));
+        
+        // SHOULDERS
+        let shoulders = [
+            new Vec3(-0.7*s, 0.9*s, 0), new Vec3(-1.0*s, 0.7*s, 0), new Vec3(-1.2*s, 0.4*s, 0),
+            new Vec3(0.7*s, 0.9*s, 0), new Vec3(1.0*s, 0.7*s, 0), new Vec3(1.2*s, 0.4*s, 0)
+        ];
+        let shouldersZ = shoulders.map(v => new Vec3(v.x, v.y, v.z + zOffset * 0.3));
+        
+        // CHEST
+        let chest = [
+            new Vec3(-0.5*s, 0.5*s, 0), new Vec3(0, 0.4*s, 0), new Vec3(0.5*s, 0.5*s, 0),
+            new Vec3(-0.5*s, 0.5*s, zOffset), new Vec3(0, 0.4*s, zOffset), new Vec3(0.5*s, 0.5*s, zOffset)
+        ];
+        
+        // ABS
+        let abs = [
+            new Vec3(-0.45*s, 0.15*s, 0), new Vec3(0, 0.05*s, 0), new Vec3(0.45*s, 0.15*s, 0),
+            new Vec3(-0.45*s, -0.15*s, 0), new Vec3(0, -0.25*s, 0), new Vec3(0.45*s, -0.15*s, 0),
+            new Vec3(-0.45*s, -0.45*s, 0), new Vec3(0, -0.55*s, 0), new Vec3(0.45*s, -0.45*s, 0)
+        ];
+        let absZ = abs.map(v => new Vec3(v.x, v.y, v.z + zOffset * 0.3));
+        
+        // HIPS
+        let hips = [
+            new Vec3(-0.5*s, -0.6*s, 0), new Vec3(0, -0.7*s, 0), new Vec3(0.5*s, -0.6*s, 0)
+        ];
+        let hipsZ = hips.map(v => new Vec3(v.x, v.y, v.z + zOffset * 0.3));
+        
+        // LEFT ARM
+        let lArm = [
+            new Vec3(-1.0*s, 0.7*s + armSwing*0.3, 0),
+            new Vec3(-1.3*s, 0.2*s + armSwing*0.5, 0),
+            new Vec3(-1.5*s, -0.3*s + armSwing*0.7, 0),
+            new Vec3(-1.4*s, -0.8*s + armSwing*0.5, 0)
+        ];
+        let lArmZ = lArm.map(v => new Vec3(v.x, v.y, v.z + zOffset * 0.2));
+        
+        // RIGHT ARM
+        let rArm = [
+            new Vec3(1.0*s, 0.7*s - armSwing*0.3, 0),
+            new Vec3(1.3*s, 0.2*s - armSwing*0.5, 0),
+            new Vec3(1.5*s, -0.3*s - armSwing*0.7, 0),
+            new Vec3(1.4*s, -0.8*s - armSwing*0.5, 0)
+        ];
+        let rArmZ = rArm.map(v => new Vec3(v.x, v.y, v.z + zOffset * 0.2));
+        
+        // LEFT LEG
+        let lLeg = [
+            new Vec3(-0.4*s, -0.7*s, 0),
+            new Vec3(-0.6*s, -1.2*s + legSwing*0.5, 0),
+            new Vec3(-0.5*s, -1.8*s + legSwing*0.7, 0),
+            new Vec3(-0.3*s, -2.2*s + legSwing*0.5, 0)
+        ];
+        let lLegZ = lLeg.map(v => new Vec3(v.x, v.y, v.z + zOffset * 0.2));
+        
+        // RIGHT LEG
+        let rLeg = [
+            new Vec3(0.4*s, -0.7*s, 0),
+            new Vec3(0.6*s, -1.2*s - legSwing*0.5, 0),
+            new Vec3(0.5*s, -1.8*s - legSwing*0.7, 0),
+            new Vec3(0.3*s, -2.2*s - legSwing*0.5, 0)
+        ];
+        let rLegZ = rLeg.map(v => new Vec3(v.x, v.y, v.z + zOffset * 0.2));
+        
+        // ZIGZAG MOUTH
+        let mouth = [];
+        for (let i = -5; i <= 5; i++) {
+            let x = i * 0.09 * s;
+            let y = 1.3 * s + (i % 2 === 0 ? 0 : -0.1 * s);
+            mouth.push(new Vec3(x, y, 0));
+        }
+        let mouthZ = mouth.map(v => new Vec3(v.x, v.y, v.z + zOffset * 0.2));
+        
+        // EYES
+        let eyes = [
+            new Vec3(-0.2*s, 1.8*s, zOffset * 0.8),
+            new Vec3(0.2*s, 1.8*s, zOffset * 0.8)
+        ];
+        
+        // SPIKES
+        let spikes = [
+            new Vec3(-0.8*s, 1.2*s, zOffset * 0.5),
+            new Vec3(-1.0*s, 0.8*s, zOffset * 0.5),
+            new Vec3(0.8*s, 1.2*s, zOffset * 0.5),
+            new Vec3(1.0*s, 0.8*s, zOffset * 0.5)
+        ];
+        
+        // TAIL
+        let tail = [
+            new Vec3(0, -0.7*s, zOffset * 0.3),
+            new Vec3(0.2*s, -0.9*s, zOffset * 0.6),
+            new Vec3(0.3*s, -1.2*s, zOffset * 0.8),
+            new Vec3(0.1*s, -1.5*s, zOffset * 0.5)
+        ];
+        
+        // Translate to position
+        let translate = (verts) => verts.map(v => new Vec3(pos.x + v.x, pos.y + v.y, pos.z + v.z));
+        
+        let h = translate(head);
+        let hz = translate(headZ);
+        let horn = translate(horns);
+        let hornz = translate(hornsZ);
+        let n = translate(neck);
+        let nz = translate(neckZ);
+        let sh = translate(shoulders);
+        let shz = translate(shouldersZ);
+        let ch = translate(chest);
+        let a = translate(abs);
+        let az = translate(absZ);
+        let hp = translate(hips);
+        let hpz = translate(hipsZ);
+        let la = translate(lArm);
+        let laz = translate(lArmZ);
+        let ra = translate(rArm);
+        let raz = translate(rArmZ);
+        let ll = translate(lLeg);
+        let llz = translate(lLegZ);
+        let rl = translate(rLeg);
+        let rlz = translate(rLegZ);
+        let m = translate(mouth);
+        let mz = translate(mouthZ);
+        let e = translate(eyes);
+        let sp = translate(spikes);
+        let t = translate(tail);
+        
+        // DRAW HEAD
+        for (let i = 0; i < h.length; i++) {
+            let next = (i + 1) % h.length;
+            drawLine(h[i], h[next], "entity");
+            drawLine(h[i], hz[i], "entity");
+            drawLine(h[next], hz[next], "entity");
+            drawLine(hz[i], hz[next], "entity");
+        }
+        
+        // DRAW HORNS
+        drawLine(horn[0], horn[1], "entity");
+        drawLine(horn[1], horn[2], "entity");
+        drawLine(horn[3], horn[4], "entity");
+        drawLine(horn[4], horn[5], "entity");
+        drawLine(horn[0], hornz[0], "entity");
+        drawLine(horn[2], hornz[2], "entity");
+        drawLine(horn[3], hornz[3], "entity");
+        drawLine(horn[5], hornz[5], "entity");
+        drawLine(hornz[0], hornz[1], "entity");
+        drawLine(hornz[1], hornz[2], "entity");
+        drawLine(hornz[3], hornz[4], "entity");
+        drawLine(hornz[4], hornz[5], "entity");
+        
+        // DRAW NECK
+        for (let i = 0; i < n.length; i++) {
+            drawLine(n[i], nz[i], "entity");
+            drawLine(h[5], n[i], "entity");
+            drawLine(hz[5], nz[i], "entity");
+        }
+        drawLine(n[0], n[1], "entity");
+        drawLine(n[1], n[2], "entity");
+        drawLine(nz[0], nz[1], "entity");
+        drawLine(nz[1], nz[2], "entity");
+        
+        // DRAW SHOULDERS
+        for (let i = 0; i < sh.length; i++) {
+            drawLine(sh[i], shz[i], "entity");
+            if (i < n.length) {
+                drawLine(n[i], sh[i], "entity");
+                drawLine(nz[i], shz[i], "entity");
+            }
+        }
+        drawLine(sh[0], sh[1], "entity");
+        drawLine(sh[1], sh[2], "entity");
+        drawLine(sh[3], sh[4], "entity");
+        drawLine(sh[4], sh[5], "entity");
+        drawLine(shz[0], shz[1], "entity");
+        drawLine(shz[1], shz[2], "entity");
+        drawLine(shz[3], shz[4], "entity");
+        drawLine(shz[4], shz[5], "entity");
+        
+        // DRAW CHEST
+        for (let i = 0; i < 3; i++) {
+            drawLine(ch[i], ch[i+3], "entity");
+            drawLine(n[i], ch[i], "entity");
+            drawLine(nz[i], ch[i+3], "entity");
+        }
+        drawLine(ch[0], ch[1], "entity");
+        drawLine(ch[1], ch[2], "entity");
+        drawLine(ch[3], ch[4], "entity");
+        drawLine(ch[4], ch[5], "entity");
+        drawLine(ch[0], ch[2], "entity");
+        drawLine(ch[3], ch[5], "entity");
+        
+        // DRAW ABS
+        for (let i = 0; i < 3; i++) {
+            let idx = i * 3;
+            drawLine(ch[i], a[idx], "entity");
+            drawLine(ch[i+3], az[idx], "entity");
+            drawLine(a[idx], a[idx+1], "entity");
+            drawLine(a[idx+1], a[idx+2], "entity");
+            drawLine(az[idx], az[idx+1], "entity");
+            drawLine(az[idx+1], az[idx+2], "entity");
+            drawLine(a[idx], az[idx], "entity");
+            drawLine(a[idx+1], az[idx+1], "entity");
+            drawLine(a[idx+2], az[idx+2], "entity");
+            if (i > 0) {
+                let prev = (i-1) * 3;
+                drawLine(a[prev], a[idx], "entity");
+                drawLine(a[prev+1], a[idx+1], "entity");
+                drawLine(a[prev+2], a[idx+2], "entity");
+                drawLine(az[prev], az[idx], "entity");
+                drawLine(az[prev+1], az[idx+1], "entity");
+                drawLine(az[prev+2], az[idx+2], "entity");
+            }
+        }
+        
+        // DRAW HIPS
+        for (let i = 0; i < hp.length; i++) {
+            drawLine(hp[i], hpz[i], "entity");
+            drawLine(a[6+i], hp[i], "entity");
+            drawLine(az[6+i], hpz[i], "entity");
+        }
+        drawLine(hp[0], hp[1], "entity");
+        drawLine(hp[1], hp[2], "entity");
+        drawLine(hpz[0], hpz[1], "entity");
+        drawLine(hpz[1], hpz[2], "entity");
+        
+        // DRAW ARMS
+        for (let i = 0; i < la.length; i++) {
+            drawLine(la[i], laz[i], "entity");
+            if (i < la.length - 1) {
+                drawLine(la[i], la[i+1], "entity");
+                drawLine(laz[i], laz[i+1], "entity");
+            }
+        }
+        drawLine(sh[2], la[0], "entity");
+        drawLine(shz[2], laz[0], "entity");
+        
+        for (let i = 0; i < ra.length; i++) {
+            drawLine(ra[i], raz[i], "entity");
+            if (i < ra.length - 1) {
+                drawLine(ra[i], ra[i+1], "entity");
+                drawLine(raz[i], raz[i+1], "entity");
+            }
+        }
+        drawLine(sh[5], ra[0], "entity");
+        drawLine(shz[5], raz[0], "entity");
+        
+        // DRAW LEGS
+        for (let i = 0; i < ll.length; i++) {
+            drawLine(ll[i], llz[i], "entity");
+            if (i < ll.length - 1) {
+                drawLine(ll[i], ll[i+1], "entity");
+                drawLine(llz[i], llz[i+1], "entity");
+            }
+        }
+        drawLine(hp[0], ll[0], "entity");
+        drawLine(hpz[0], llz[0], "entity");
+        
+        for (let i = 0; i < rl.length; i++) {
+            drawLine(rl[i], rlz[i], "entity");
+            if (i < rl.length - 1) {
+                drawLine(rl[i], rl[i+1], "entity");
+                drawLine(rlz[i], rlz[i+1], "entity");
+            }
+        }
+        drawLine(hp[2], rl[0], "entity");
+        drawLine(hpz[2], rlz[0], "entity");
+        
+        // DRAW MOUTH
+        for (let i = 0; i < m.length - 1; i++) {
+            drawLine(m[i], m[i+1], "entity");
+            drawLine(mz[i], mz[i+1], "entity");
+            drawLine(m[i], mz[i], "entity");
+        }
+        
+        // DRAW EYES
+        drawLine(e[0], new Vec3(e[0].x - 0.08*s, e[0].y, e[0].z), "entity");
+        drawLine(e[1], new Vec3(e[1].x + 0.08*s, e[1].y, e[1].z), "entity");
+        drawLine(e[0], new Vec3(e[0].x, e[0].y - 0.08*s, e[0].z), "entity");
+        drawLine(e[1], new Vec3(e[1].x, e[1].y - 0.08*s, e[1].z), "entity");
+        
+        // DRAW SPIKES
+        drawLine(sp[0], sp[1], "entity");
+        drawLine(sp[2], sp[3], "entity");
+        drawLine(sp[0], new Vec3(sp[0].x, sp[0].y - 0.2*s, sp[0].z), "entity");
+        drawLine(sp[2], new Vec3(sp[2].x, sp[2].y - 0.2*s, sp[2].z), "entity");
+        
+        // DRAW TAIL
+        for (let i = 0; i < t.length - 1; i++) {
+            drawLine(t[i], t[i+1], "entity");
+        }
+        drawLine(hp[1], t[0], "entity");
+        drawLine(hpz[1], new Vec3(t[0].x, t[0].y, t[0].z - zOffset * 0.3), "entity");
+    }
+
+    // --- DODECAHEDRON ENERGY BALL ---
+    function drawEnergyBall(pos, size, time) {
+        let s = size;
+        let verts = [];
+        let goldenRatio = 1.618;
+        let dirs = [
+            [1,1,1], [1,1,-1], [1,-1,1], [1,-1,-1],
+            [-1,1,1], [-1,1,-1], [-1,-1,1], [-1,-1,-1],
+            [0, goldenRatio, 1/goldenRatio], [0, goldenRatio, -1/goldenRatio],
+            [0, -goldenRatio, 1/goldenRatio], [0, -goldenRatio, -1/goldenRatio],
+            [1/goldenRatio, 0, goldenRatio], [1/goldenRatio, 0, -goldenRatio],
+            [-1/goldenRatio, 0, goldenRatio], [-1/goldenRatio, 0, -goldenRatio],
+            [goldenRatio, 1/goldenRatio, 0], [goldenRatio, -1/goldenRatio, 0],
+            [-goldenRatio, 1/goldenRatio, 0], [-goldenRatio, -1/goldenRatio, 0]
+        ];
+        
+        dirs.forEach(d => {
+            let len = Math.sqrt(d[0]*d[0] + d[1]*d[1] + d[2]*d[2]);
+            verts.push(new Vec3(
+                pos.x + (d[0]/len) * s,
+                pos.y + (d[1]/len) * s,
+                pos.z + (d[2]/len) * s
+            ));
+        });
+        
+        for (let i = 0; i < verts.length; i++) {
+            for (let j = i+1; j < verts.length; j++) {
+                let dist = verts[i].sub(verts[j]).length();
+                if (dist < size * 1.2) {
+                    drawLine(verts[i], verts[j], "energy");
+                }
+            }
+        }
+    }
+
     // --- GAME STATE ---
     let player = { hp: 100, ammo: 30, score: 0, isThirdPerson: false };
     let enemies = [];
     let crystals = [];
     let bullets = [];
+    let energyBalls = [];
     let wave = 1;
     let enemiesToSpawn = 0;
     let spawnTimer = 0;
@@ -464,7 +836,10 @@
         let angle = Math.random() * Math.PI * 2;
         let dist = 15 + Math.random() * 5;
         
-        let isFlyer = (enemiesSpawnedThisWave === 3);
+        // 33% chance for each type: flyer, crawler, monster
+        let typeRand = Math.random();
+        let isFlyer = (enemiesSpawnedThisWave === 3) || (typeRand < 0.33);
+        let isMonster = (typeRand >= 0.33 && typeRand < 0.66) && wave > 1;
         
         if(isFlyer) {
             enemies.push({
@@ -474,6 +849,17 @@
                 speed: 0.01 + wave * 0.002,
                 hp: 3,
                 baseY: 4
+            });
+        } else if(isMonster) {
+            enemies.push({
+                type: 'monster',
+                pos: new Vec3(Math.cos(angle) * dist, 0.8, Math.sin(angle) * dist),
+                size: 1.2 + wave * 0.08,
+                speed: 0.015 + wave * 0.003,
+                hp: 4 + Math.floor(wave / 2),
+                attackTimer: 0,
+                attackCooldown: 80 + Math.floor(Math.random() * 60),
+                walkPhase: Math.random() * Math.PI * 2
             });
         } else {
             enemies.push({
@@ -701,7 +1087,7 @@
         enemies.forEach((e, idx) => {
             if(e.hp <= 0) {
                 enemies.splice(idx, 1);
-                player.score += (e.type === 'flyer' ? 300 : 100);
+                player.score += (e.type === 'flyer' ? 300 : (e.type === 'monster' ? 500 : 100));
                 if(Math.random() > 0.5) {
                     crystals.push({ pos: e.pos, size: 0.8 });
                 }
@@ -732,14 +1118,37 @@
 
             e.pos = e.pos.add(moveDir.scale(e.speed));
             
+            // MONSTER specific logic
+            if(e.type === 'monster') {
+                e.pos.y = 0.8 + Math.sin(Date.now() * 0.002 + idx) * 0.1;
+                e.walkPhase = (e.walkPhase || 0) + 0.05;
+                
+                e.attackTimer = (e.attackTimer || 0) + 1;
+                if(e.attackTimer > e.attackCooldown) {
+                    let distToPlayer = e.pos.sub(cam.pos).length();
+                    if(distToPlayer < 25) {
+                        let dirToPlayer = cam.pos.sub(e.pos).normalize();
+                        energyBalls.push({
+                            pos: new Vec3(e.pos.x, e.pos.y + 0.5, e.pos.z),
+                            dir: dirToPlayer,
+                            speed: 0.04 + wave * 0.005,
+                            life: 100,
+                            size: 0.4 + wave * 0.03
+                        });
+                        e.attackTimer = 0;
+                        e.attackCooldown = 70 + Math.floor(Math.random() * 60);
+                    }
+                }
+            }
+            
             if(e.type === 'flyer') {
                 e.pos.y = e.baseY + Math.sin(Date.now() * 0.002 + idx) * 1.5;
-            } else {
+            } else if(e.type === 'crawler') {
                 e.pos.y = 1 + Math.sin(Date.now()*0.005 + idx)*0.2;
             }
             
             if (e.pos.sub(cam.pos).length() < 1.5) {
-                player.hp -= 1;
+                player.hp -= (e.type === 'monster' ? 3 : 1);
             }
         });
     }
@@ -766,6 +1175,21 @@
         });
     }
 
+    function updateEnergyBalls() {
+        energyBalls.forEach((b, idx) => {
+            b.pos = b.pos.add(b.dir.scale(b.speed));
+            b.life--;
+            
+            if(b.pos.sub(cam.pos).length() < 1.0) {
+                player.hp -= 5;
+                energyBalls.splice(idx, 1);
+                return;
+            }
+            
+            if(b.life <= 0) energyBalls.splice(idx, 1);
+        });
+    }
+
     function updateCrystals() {
         crystals.forEach((c, idx) => {
             c.pos.y = 0.5 + Math.sin(Date.now()*0.003)*0.2;
@@ -783,12 +1207,14 @@
         updatePlayer();
         updateEnemies();
         updateBullets();
+        updateEnergyBalls();
         updateCrystals();
 
         worldPathData = "";
         entityPathData = "";
         playerPathData = "";
         bulletPathData = "";
+        energyPathData = "";
         textPathData = "";
         
         audioSampleCounter = 0;
@@ -807,11 +1233,14 @@
         }
 
         // Draw Enemies
+        let time = Date.now();
         enemies.forEach(e => {
             if(e.type === 'flyer') {
-                drawTruncatedIcosahedron(e.pos, e.size, Date.now());
+                drawTruncatedIcosahedron(e.pos, e.size, time);
+            } else if(e.type === 'monster') {
+                drawMuscularMonster(e.pos, e.size, time);
             } else {
-                drawMenacingCrawler(e.pos, e.size, Date.now());
+                drawMenacingCrawler(e.pos, e.size, time);
             }
         });
         
@@ -821,6 +1250,11 @@
         // Draw Bullets
         bullets.forEach(b => {
             drawTriangleBullet(b);
+        });
+
+        // Draw Energy Balls
+        energyBalls.forEach(b => {
+            drawEnergyBall(b.pos, b.size, time);
         });
 
         // Draw Vector Text
@@ -835,6 +1269,7 @@
         svgEntity.setAttribute('d', entityPathData);
         svgPlayer.setAttribute('d', playerPathData);
         svgBullet.setAttribute('d', bulletPathData);
+        svgEnergy.setAttribute('d', energyPathData);
         svgText.setAttribute('d', textPathData);
 
         requestAnimationFrame(render);
@@ -842,6 +1277,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         console.log("Click/touch the screen to start audio and game");
+        console.log("MUSCULAR MONSTER ADDED - Spawns after wave 1, fires energy balls!");
     });
 
     render();
