@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" style="background-color:#000000; width:100vw; height:100vh; display:block; touch-action: none;">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" style="background-color:#000000; width:100vw; height:100vh; display:block; touch-action: none;">
     <style>
         .ui-line {
             stroke: #00FF00;
@@ -54,7 +54,7 @@
     </defs>
 
     <!-- Black Background -->
-    <rect x="0" y="0" width="800" height="600" fill="#000000" />
+    <rect x="0" y="0" width="1920" height="1080" fill="#000000" />
 
     <!-- Main Vector Beam Paths -->
     <path id="world_path" class="vector" />
@@ -67,16 +67,16 @@
     <!-- HUD Layer -->
     <g id="hud" style="pointer-events: none;">
         <!-- Crosshair -->
-        <path id="crosshair" fill="none" stroke="#00FF00" stroke-width="1" d="M 390,300 L 410,300 M 400,290 L 400,310" />
+        <path id="crosshair" fill="none" stroke="#00FF00" stroke-width="1" d="M 950,540 L 970,540 M 960,530 L 960,550" />
     </g>
 
     <!-- Touch Controls -->
     <g id="touch_ui">
-        <circle id="left_knob" cx="100" cy="450" r="30" />
-        <circle id="right_knob" cx="700" cy="450" r="30" />
+        <circle id="left_knob" cx="200" cy="900" r="40" />
+        <circle id="right_knob" cx="1720" cy="900" r="40" />
         <!-- Transparent capture areas -->
-        <rect class="touch-area" x="0" y="0" width="400" height="600" id="left_touch" />
-        <rect class="touch-area" x="400" y="0" width="400" height="600" id="right_touch" />
+        <rect class="touch-area" x="0" y="0" width="960" height="1080" id="left_touch" />
+        <rect class="touch-area" x="960" y="0" width="960" height="1080" id="right_touch" />
     </g>
 
     <script type="application/ecmascript"><![CDATA[
@@ -116,9 +116,9 @@
                     for (let i = 0; i < bufferSize; i++) {
                         if (scopeBuffer.length > 0) {
                             let pt = scopeBuffer.shift();
-                            // Normalize to -1.0 to 1.0 and store as last known
-                            lastKnownX = (pt.x / 400) - 1.0;
-                            lastKnownY = (pt.y / 300) - 1.0;
+                            // Normalize to -1.0 to 1.0 with 1080p scaling
+                            lastKnownX = (pt.x / 960) - 1.0;
+                            lastKnownY = (pt.y / 540) - 1.0;
                             left[i] = lastKnownX;
                             right[i] = lastKnownY;
                         } else {
@@ -188,9 +188,9 @@
 
         if (fz <= cam.near) return null;
 
-        let scale = 400 / (fz * Math.tan((cam.fov * Math.PI / 180) / 2));
-        let sx = 400 + (rx * scale);
-        let sy = 300 - (ry * scale);
+        let scale = 960 / (fz * Math.tan((cam.fov * Math.PI / 180) / 2));
+        let sx = 960 + (rx * scale);
+        let sy = 540 - (ry * scale);
 
         return { x: sx, y: sy, depth: fz };
     }
@@ -878,8 +878,8 @@
     let mouseLocked = false;
     let gamepadConnected = false;
     let leftTouchId = null, rightTouchId = null;
-    let leftTouchStart = {x: 100, y: 450};
-    let rightTouchStart = {x: 700, y: 450};
+    let leftTouchStart = {x: 200, y: 900};
+    let rightTouchStart = {x: 1720, y: 900};
     let leftTouchMove = {x: 0, y: 0};
     let rightTouchMove = {x: 0, y: 0};
 
@@ -917,12 +917,12 @@
         e.preventDefault();
         resumeAudio();
         for(let t of e.changedTouches) {
-            if(t.clientX < 400 && leftTouchId === null) {
+            if(t.clientX < 960 && leftTouchId === null) {
                 leftTouchId = t.identifier;
                 leftTouchStart = {x: t.clientX, y: t.clientY};
                 leftKnob.setAttribute("cx", leftTouchStart.x);
                 leftKnob.setAttribute("cy", leftTouchStart.y);
-            } else if(t.clientX >= 400 && rightTouchId === null) {
+            } else if(t.clientX >= 960 && rightTouchId === null) {
                 rightTouchId = t.identifier;
                 rightTouchStart = {x: t.clientX, y: t.clientY};
                 rightKnob.setAttribute("cx", rightTouchStart.x);
@@ -936,12 +936,12 @@
         for(let t of e.changedTouches) {
             if(t.identifier === leftTouchId) {
                 leftTouchMove = {x: t.clientX - leftTouchStart.x, y: t.clientY - leftTouchStart.y};
-                leftKnob.setAttribute("cx", leftTouchStart.x + Math.max(-40, Math.min(40, leftTouchMove.x)));
-                leftKnob.setAttribute("cy", leftTouchStart.y + Math.max(-40, Math.min(40, leftTouchMove.y)));
+                leftKnob.setAttribute("cx", leftTouchStart.x + Math.max(-60, Math.min(60, leftTouchMove.x)));
+                leftKnob.setAttribute("cy", leftTouchStart.y + Math.max(-60, Math.min(60, leftTouchMove.y)));
             } else if(t.identifier === rightTouchId) {
                 rightTouchMove = {x: t.clientX - rightTouchStart.x, y: t.clientY - rightTouchStart.y};
-                rightKnob.setAttribute("cx", rightTouchStart.x + Math.max(-40, Math.min(40, rightTouchMove.x)));
-                rightKnob.setAttribute("cy", rightTouchStart.y + Math.max(-40, Math.min(40, rightTouchMove.y)));
+                rightKnob.setAttribute("cx", rightTouchStart.x + Math.max(-60, Math.min(60, rightTouchMove.x)));
+                rightKnob.setAttribute("cy", rightTouchStart.y + Math.max(-60, Math.min(60, rightTouchMove.y)));
                 cam.yaw += rightTouchMove.x * 0.002;
                 cam.pitch -= rightTouchMove.y * 0.002;
                 if (cam.pitch > 1.5) cam.pitch = 1.5;
@@ -1257,13 +1257,13 @@
             drawEnergyBall(b.pos, b.size, time);
         });
 
-        // Draw Vector Text
-        drawVectorText("SYS: OSCILLOSCOPE", 20, 30, 2);
-        drawVectorText("HP: " + player.hp, 660, 30, 2);
-        drawVectorText("AMMO: " + Math.floor(player.ammo), 20, 580, 2);
-        drawVectorText("SCORE: " + player.score, 660, 580, 2);
-        drawVectorText("WAVE: " + wave, 350, 30, 2);
-        drawVectorText("MODE: " + (player.isThirdPerson ? "3RD PERSON" : "1ST PERSON"), 340, 580, 2);
+        // Draw Vector Text - 1080p adjusted positions
+        drawVectorText("SYS: OSCILLOSCOPE", 40, 40, 2.5);
+        drawVectorText("HP: " + player.hp, 1740, 40, 2.5);
+        drawVectorText("AMMO: " + Math.floor(player.ammo), 40, 1040, 2.5);
+        drawVectorText("SCORE: " + player.score, 1740, 1040, 2.5);
+        drawVectorText("WAVE: " + wave, 920, 40, 2.5);
+        drawVectorText("MODE: " + (player.isThirdPerson ? "3RD PERSON" : "1ST PERSON"), 880, 1040, 2.5);
 
         svgWorld.setAttribute('d', worldPathData);
         svgEntity.setAttribute('d', entityPathData);
@@ -1278,6 +1278,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         console.log("Click/touch the screen to start audio and game");
         console.log("MUSCULAR MONSTER ADDED - Spawns after wave 1, fires energy balls!");
+        console.log("1080p FULL RESOLUTION - All systems optimized for 1920x1080");
     });
 
     render();
