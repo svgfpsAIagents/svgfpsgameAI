@@ -68,7 +68,7 @@
     </g>
 
     <script type="application/ecmascript"><![CDATA[
-    // --- FULL 3D SVG OSCILLOSCOPE ENGINE (v4.2 - Fixed Audio) ---
+    // --- FULL 3D SVG OSCILLOSCOPE ENGINE (v4.3 - Hold Position Fix) ---
     const svgWorld = document.getElementById("world_path");
     const svgEntity = document.getElementById("entity_path");
     const svgPlayer = document.getElementById("player_path");
@@ -77,46 +77,52 @@
     const leftKnob = document.getElementById("left_knob");
     const rightKnob = document.getElementById("right_knob");
 
-    // --- WEB AUDIO API SETUP WITH BUFFER LIMITING ---
+    // --- WEB AUDIO API SETUP WITH HOLD POSITION ---
     let audioCtx = null;
     let scopeBuffer = [];
     let scopeNode = null;
     let audioInitialized = false;
-    const MAX_BUFFER_SIZE = 8192; // Limit buffer size to prevent overload
-    let audioFrameCount = 0;
+    const MAX_BUFFER_SIZE = 16384;
+    
+    // --- LAST KNOWN POSITION HOLD (ELIMINATES CENTER SNAP) ---
+    let lastKnownX = 0;
+    let lastKnownY = 0;
 
     function initAudio() {
         if (audioInitialized) return;
         try {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const bufferSize = 1024; // Smaller buffer for faster response
+            const bufferSize = 1024;
             
             scopeNode = audioCtx.createScriptProcessor(bufferSize, 0, 2);
             scopeNode.onaudioprocess = function(e) {
                 let left = e.outputBuffer.getChannelData(0);
                 let right = e.outputBuffer.getChannelData(1);
                 
-                // Only process if we have data
                 if (scopeBuffer.length > 0) {
                     for (let i = 0; i < bufferSize; i++) {
                         if (scopeBuffer.length > 0) {
                             let pt = scopeBuffer.shift();
-                            left[i] = (pt.x / 400) - 1.0;
-                            right[i] = (pt.y / 300) - 1.0;
+                            // Normalize to -1.0 to 1.0 and store as last known
+                            lastKnownX = (pt.x / 400) - 1.0;
+                            lastKnownY = (pt.y / 300) - 1.0;
+                            left[i] = lastKnownX;
+                            right[i] = lastKnownY;
                         } else {
-                            left[i] = 0;
-                            right[i] = 0;
+                            // HOLD the last position instead of snapping to 0
+                            left[i] = lastKnownX;
+                            right[i] = lastKnownY;
                         }
                     }
                 } else {
-                    // Silence when no data
-                    left.fill(0);
-                    right.fill(0);
+                    // HOLD the last position instead of snapping to 0
+                    left.fill(lastKnownX);
+                    right.fill(lastKnownY);
                 }
             };
             scopeNode.connect(audioCtx.destination);
             audioInitialized = true;
-            console.log("Audio initialized for oscilloscope output.");
+            console.log("Audio initialized - HOLD POSITION active.");
         } catch(e) {
             console.log("Audio initialization failed:", e);
         }
@@ -182,9 +188,8 @@
     let bulletPathData = "";
     let textPathData = "";
     
-    // Frame counter for audio sampling
     let audioSampleCounter = 0;
-    const AUDIO_SAMPLE_RATE = 2; // Only send 1/2 of points to audio
+    const AUDIO_SAMPLE_RATE = 2;
 
     function drawLine(p1, p2, target = "world") {
         let s1 = project(p1);
@@ -196,9 +201,7 @@
             else if (target === "bullet") bulletPathData += seg;
             else worldPathData += seg;
             
-            // --- CAPTURE COORDINATES FOR AUDIO OUTPUT (with sampling) ---
             if (audioInitialized && scopeBuffer.length < MAX_BUFFER_SIZE) {
-                // Only sample every N points to prevent buffer overload
                 if (audioSampleCounter % AUDIO_SAMPLE_RATE === 0) {
                     scopeBuffer.push({x: s1.x, y: s1.y});
                     scopeBuffer.push({x: s2.x, y: s2.y});
@@ -400,9 +403,7 @@
         }
     }
 
-    // =============================================================
-    // STAR WARS VECTOR TRIANGLE BOLT RENDERER
-    // =============================================================
+    // --- STAR WARS VECTOR TRIANGLE BOLT RENDERER ---
     function drawTriangleBullet(b) {
         if (b.trail && b.trail.length > 0) {
             for (let i = 0; i < b.trail.length; i++) {
@@ -790,7 +791,6 @@
         bulletPathData = "";
         textPathData = "";
         
-        // Reset audio sample counter for this frame
         audioSampleCounter = 0;
 
         // Draw Hex Floor
@@ -840,9 +840,7 @@
         requestAnimationFrame(render);
     }
 
-    // Auto-initialize on page load
     document.addEventListener('DOMContentLoaded', () => {
-        // Don't auto-init audio - wait for user interaction
         console.log("Click/touch the screen to start audio and game");
     });
 
