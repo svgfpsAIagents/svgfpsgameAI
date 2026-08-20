@@ -68,8 +68,7 @@
     </g>
 
     <script type="application/ecmascript"><![CDATA[
-    // --- FULL 3D SVG OSCILLOSCOPE ENGINE (v4.1 - Buckyball Fix) ---
-    // --- + Star Wars Dual Triangle Bolt Shooting Mechanic ---
+    // --- FULL 3D SVG OSCILLOSCOPE ENGINE (v4.2 - Fixed Audio) ---
     const svgWorld = document.getElementById("world_path");
     const svgEntity = document.getElementById("entity_path");
     const svgPlayer = document.getElementById("player_path");
@@ -77,6 +76,60 @@
     const svgText = document.getElementById("text_path");
     const leftKnob = document.getElementById("left_knob");
     const rightKnob = document.getElementById("right_knob");
+
+    // --- WEB AUDIO API SETUP WITH BUFFER LIMITING ---
+    let audioCtx = null;
+    let scopeBuffer = [];
+    let scopeNode = null;
+    let audioInitialized = false;
+    const MAX_BUFFER_SIZE = 8192; // Limit buffer size to prevent overload
+    let audioFrameCount = 0;
+
+    function initAudio() {
+        if (audioInitialized) return;
+        try {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const bufferSize = 1024; // Smaller buffer for faster response
+            
+            scopeNode = audioCtx.createScriptProcessor(bufferSize, 0, 2);
+            scopeNode.onaudioprocess = function(e) {
+                let left = e.outputBuffer.getChannelData(0);
+                let right = e.outputBuffer.getChannelData(1);
+                
+                // Only process if we have data
+                if (scopeBuffer.length > 0) {
+                    for (let i = 0; i < bufferSize; i++) {
+                        if (scopeBuffer.length > 0) {
+                            let pt = scopeBuffer.shift();
+                            left[i] = (pt.x / 400) - 1.0;
+                            right[i] = (pt.y / 300) - 1.0;
+                        } else {
+                            left[i] = 0;
+                            right[i] = 0;
+                        }
+                    }
+                } else {
+                    // Silence when no data
+                    left.fill(0);
+                    right.fill(0);
+                }
+            };
+            scopeNode.connect(audioCtx.destination);
+            audioInitialized = true;
+            console.log("Audio initialized for oscilloscope output.");
+        } catch(e) {
+            console.log("Audio initialization failed:", e);
+        }
+    }
+
+    function resumeAudio() {
+        if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        if (!audioInitialized) {
+            initAudio();
+        }
+    }
 
     // --- MATH LIBRARY ---
     class Vec3 {
@@ -128,6 +181,10 @@
     let playerPathData = "";
     let bulletPathData = "";
     let textPathData = "";
+    
+    // Frame counter for audio sampling
+    let audioSampleCounter = 0;
+    const AUDIO_SAMPLE_RATE = 2; // Only send 1/2 of points to audio
 
     function drawLine(p1, p2, target = "world") {
         let s1 = project(p1);
@@ -138,6 +195,16 @@
             else if (target === "player") playerPathData += seg;
             else if (target === "bullet") bulletPathData += seg;
             else worldPathData += seg;
+            
+            // --- CAPTURE COORDINATES FOR AUDIO OUTPUT (with sampling) ---
+            if (audioInitialized && scopeBuffer.length < MAX_BUFFER_SIZE) {
+                // Only sample every N points to prevent buffer overload
+                if (audioSampleCounter % AUDIO_SAMPLE_RATE === 0) {
+                    scopeBuffer.push({x: s1.x, y: s1.y});
+                    scopeBuffer.push({x: s2.x, y: s2.y});
+                }
+                audioSampleCounter++;
+            }
         }
     }
 
@@ -335,10 +402,8 @@
 
     // =============================================================
     // STAR WARS VECTOR TRIANGLE BOLT RENDERER
-    // 3D arrowhead triangle pointed at target + inner core + trail
     // =============================================================
     function drawTriangleBullet(b) {
-        // --- Trail streaks behind the bolt ---
         if (b.trail && b.trail.length > 0) {
             for (let i = 0; i < b.trail.length; i++) {
                 let tNext = (i < b.trail.length - 1) ? b.trail[i + 1] : b.pos;
@@ -346,7 +411,6 @@
             }
         }
 
-        // --- Compute right-axis perpendicular to bullet direction ---
         let d = b.dir.normalize();
         let refUp = new Vec3(0, 1, 0);
         if (Math.abs(d.y) > 0.9) refUp = new Vec3(1, 0, 0);
@@ -356,7 +420,6 @@
             d.x * refUp.y - d.y * refUp.x
         ).normalize();
 
-        // --- Outer arrowhead TRIANGLE pointed at target ---
         let tip = b.pos.add(d.scale(1.1));
         let baseCenter = b.pos.sub(d.scale(0.2));
         let bw = 0.28;
@@ -369,7 +432,6 @@
         drawLine(notch, baseR, "bullet");
         drawLine(baseR, tip, "bullet");
 
-        // --- Inner bright core triangle ---
         let coreTip = b.pos.add(d.scale(0.8));
         let coreBase = b.pos.add(d.scale(0.0));
         let cw = 0.08;
@@ -444,6 +506,7 @@
     
     const svgEl = document.querySelector('svg');
     svgEl.addEventListener('click', () => {
+        resumeAudio();
         if(!mouseLocked) svgEl.requestPointerLock();
         shoot();
     });
@@ -465,6 +528,7 @@
 
     function handleTouchStart(e) {
         e.preventDefault();
+        resumeAudio();
         for(let t of e.changedTouches) {
             if(t.clientX < 400 && leftTouchId === null) {
                 leftTouchId = t.identifier;
@@ -555,16 +619,12 @@
     }
 
     // --- SHOOTING LOGIC ---
-    // TWO triangle bolts from left/right cannon offsets converging at target
     let shootCooldown = 0;
     function shoot() {
         if(player.ammo <= 0 || shootCooldown > 0) return;
         player.ammo--;
         shootCooldown = 8;
         
-        // FIXED: Correct 3D aiming direction
-        // Using standard spherical coordinates: yaw (horizontal) and pitch (vertical)
-        // Positive pitch looks up, and the bullet should go where the crosshair points.
         let dir = new Vec3(
             Math.sin(cam.yaw) * Math.cos(cam.pitch),
             Math.sin(cam.pitch),
@@ -575,7 +635,6 @@
         let cannonOffset = 0.5;
         let convergence = 0.012;
 
-        // Left cannon bolt — from bottom-left, angled slightly right to converge
         let leftDir = dir.add(camRight.scale(convergence)).normalize();
         bullets.push({
             pos: cam.pos.add(dir.scale(0.8)).sub(camRight.scale(cannonOffset)).add(new Vec3(0, -0.15, 0)),
@@ -584,7 +643,6 @@
             trail: []
         });
 
-        // Right cannon bolt — from bottom-right, angled slightly left to converge
         let rightDir = dir.sub(camRight.scale(convergence)).normalize();
         bullets.push({
             pos: cam.pos.add(dir.scale(0.8)).add(camRight.scale(cannonOffset)).add(new Vec3(0, -0.15, 0)),
@@ -731,6 +789,9 @@
         playerPathData = "";
         bulletPathData = "";
         textPathData = "";
+        
+        // Reset audio sample counter for this frame
+        audioSampleCounter = 0;
 
         // Draw Hex Floor
         floorLines.forEach(line => drawLine(line.p1, line.p2, "world"));
@@ -757,7 +818,7 @@
         // Draw Crystals
         crystals.forEach(c => drawCrystal(c.pos, c.size));
 
-        // Draw Bullets — Star Wars Dual Triangle Bolts
+        // Draw Bullets
         bullets.forEach(b => {
             drawTriangleBullet(b);
         });
@@ -778,6 +839,12 @@
 
         requestAnimationFrame(render);
     }
+
+    // Auto-initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        // Don't auto-init audio - wait for user interaction
+        console.log("Click/touch the screen to start audio and game");
+    });
 
     render();
     ]]></script>
