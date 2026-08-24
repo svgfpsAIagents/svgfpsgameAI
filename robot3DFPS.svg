@@ -2,6 +2,7 @@
   <!-- ============================================================ -->
   <!-- CITY ASSAULT - Pure SVG 3D FPS with Oscilloscope Output      -->
   <!-- Enhanced: Drones, Waves, Health Crystals, Truncated Icosahedra-->
+  <!-- Added: Speedrun Timer (HH:MM:SS) for competition/recording   -->
   <!-- ============================================================ -->
   <defs>
     <!-- Sky gradient: dark green-black vertical fade -->
@@ -143,6 +144,7 @@
    COMBAT: Ray-sphere hit detection, ray-box occlusion, tracer rounds
    AI: Robots: patrol/chase/attack | Drones: fly_low/fly_high/loiter
    WAVES: 10 waves, escalating robot+drone counts, color themes
+   TIMER: HH:MM:SS speedrun timer for competition/recording
    AUDIO: Oscilloscope X/Y output on Web Audio stereo channels
    INPUT: Mouse (pointer lock), WASD, Xbox controller (Gamepad API)
    ================================================================== */
@@ -156,11 +158,11 @@ var SVG_NS = "http://www.w3.org/2000/svg";
 var ARENA = 1000, EYE_H = 40, MOVE_SPD = 200, SENS = 0.003;
 var HEX_SIZE = 85;
 var HEX_SQRT3 = Math.sqrt(3);
-var MAX_POLYS = 1200;       /* increased for drone faces */
+var MAX_POLYS = 1200;
 var MAX_HEXES = 120;
 var MAX_TRACERS = 12;
 var MAX_IMPACTS = 12;
-var MAX_BLASTS = 10;        /* max simultaneous blast waves */
+var MAX_BLASTS = 10;
 var MAX_HEALTH_CRYSTALS = 8;
 
 // ===================== DOM REFERENCES =====================
@@ -186,13 +188,13 @@ var keys = {};
 var buildings = [], crystals = [], enemies = [], eBullets = [];
 var tracers = [], impacts = [];
 
-// --- NEW: Drone state ---
+// --- Drone state ---
 var drones = [];
-// --- NEW: Blast wave state ---
+// --- Blast wave state ---
 var blastWaves = [];
-// --- NEW: Purple health crystal state ---
+// --- Purple health crystal state ---
 var healthCrystals = [];
-// --- NEW: Wave system state ---
+// --- Wave system state ---
 var wave = 1;
 var waveRobotsSpawned = 0, waveDronesSpawned = 0;
 var waveRobotsTotal = 20, waveDronesTotal = 10;
@@ -202,8 +204,26 @@ var waveTextTimer = 3.0;
 var waveActive = true;
 var victory = false;
 
+// --- Speedrun timer: seconds elapsed since game start ---
+var gameTime = 0;
+
 // --- Camera transform cache (perf optimization) ---
 var camSinYaw = 0, camCosYaw = 1, camSinPitch = 0, camCosPitch = 1;
+
+// ===================== TIMER UTILITY =====================
+// Formats a number of seconds into HH:MM:SS string with zero-padding.
+// Used for the speedrun competition timer visible on HUD, victory, and
+// game-over screens so players can record and compare clear times.
+function formatTime(totalSeconds) {
+  var s = Math.floor(totalSeconds);
+  var h = Math.floor(s / 3600);
+  var m = Math.floor((s % 3600) / 60);
+  var sec = s % 60;
+  var hh = h < 10 ? "0" + h : "" + h;
+  var mm = m < 10 ? "0" + m : "" + m;
+  var ss = sec < 10 ? "0" + sec : "" + sec;
+  return hh + ":" + mm + ":" + ss;
+}
 
 // ===================== OSCILLOSCOPE AUDIO SYSTEM =====================
 var audioCtx = null;
@@ -298,7 +318,6 @@ function rotY(v, a) {
 }
 
 // ===================== CAMERA TRANSFORM =====================
-// Uses cached sin/cos for performance
 function worldToCam(p) {
   var dx = p.x - cam.x, dy = p.y - cam.y, dz = p.z - cam.z;
   var rx = dx * camCosYaw + dz * camSinYaw;
@@ -361,31 +380,23 @@ function makeOcta(size) {
 }
 
 // ===================== TRUNCATED ICOSAHEDRON GEOMETRY =====================
-// Generates a squashed truncated icosahedron for drone mesh.
-// Method: truncate an icosahedron at 1/3 edge points to get
-// 60 vertices, 12 pentagonal faces, 20 hexagonal faces.
-// Y axis is squashed by squashY factor for disc/drone shape.
 function makeTruncIco(size, squashY) {
   var phi = (1 + Math.sqrt(5)) / 2;
-  // Standard icosahedron: 12 vertices
   var icoV = [
     v3(-1, phi, 0), v3(1, phi, 0), v3(-1, -phi, 0), v3(1, -phi, 0),
     v3(0, -1, phi), v3(0, 1, phi), v3(0, -1, -phi), v3(0, 1, -phi),
     v3(phi, 0, -1), v3(phi, 0, 1), v3(-phi, 0, -1), v3(-phi, 0, 1)
   ];
-  // Normalize to unit circumradius
   for (var i = 0; i < 12; i++) {
     var l = vLen(icoV[i]);
     icoV[i] = v3(icoV[i].x/l, icoV[i].y/l, icoV[i].z/l);
   }
-  // 20 triangular faces (CCW winding from outside)
   var icoF = [
     [0,11,5],[0,5,1],[0,1,7],[0,7,10],[0,10,11],
     [1,5,9],[5,11,4],[11,10,2],[10,7,6],[7,1,8],
     [3,9,4],[3,4,2],[3,2,6],[3,6,8],[3,8,9],
     [4,9,5],[2,4,11],[6,2,10],[8,6,7],[9,8,1]
   ];
-  // Extract 30 unique edges
   var edgeMap = {};
   var icoEdges = [];
   for (var fi = 0; fi < 20; fi++) {
@@ -399,14 +410,12 @@ function makeTruncIco(size, squashY) {
       }
     }
   }
-  // Cut each edge at t=1/3 and t=2/3 to get 60 vertices
-  var cutVerts = []; // unsquashed cut point positions
-  var edgeToCuts = {}; // edgeKey -> [cutIndex_nearMin, cutIndex_nearMax]
+  var cutVerts = [];
+  var edgeToCuts = {};
   for (var ei = 0; ei < icoEdges.length; ei++) {
     var ea = icoEdges[ei][0], eb = icoEdges[ei][1];
     var va = icoV[ea], vb = icoV[eb];
     var key = Math.min(ea,eb) + ',' + Math.max(ea,eb);
-    // Cut point at 1/3 from min-end, 2/3 from min-end
     var cp1 = v3(
       va.x + (vb.x-va.x)*0.333,
       va.y + (vb.y-va.y)*0.333,
@@ -421,30 +430,26 @@ function makeTruncIco(size, squashY) {
     cutVerts.push(cp1);
     cutVerts.push(cp2);
   }
-  // Build vertex-to-edge adjacency for icosahedron
   var vertEdges = [];
   for (var i = 0; i < 12; i++) vertEdges[i] = [];
   for (var ei = 0; ei < icoEdges.length; ei++) {
     vertEdges[icoEdges[ei][0]].push(ei);
     vertEdges[icoEdges[ei][1]].push(ei);
   }
-  // Build 12 pentagons: one per icosahedron vertex
   var pentagons = [];
   for (var vi = 0; vi < 12; vi++) {
     var pent = [];
-    var vEdges = vertEdges[vi]; // 5 edges
+    var vEdges = vertEdges[vi];
     for (var ei = 0; ei < vEdges.length; ei++) {
       var edge = icoEdges[vEdges[ei]];
       var key = Math.min(edge[0],edge[1]) + ',' + Math.max(edge[0],edge[1]);
       var cuts = edgeToCuts[key];
-      // Pick cut point closer to vertex vi
       if (edge[0] === vi) {
-        pent.push(cuts[0]); // t=0.333 is closer to edge[0]
+        pent.push(cuts[0]);
       } else {
-        pent.push(cuts[1]); // t=0.666 is closer to edge[1]
+        pent.push(cuts[1]);
       }
     }
-    // Sort CCW around vertex normal (viewed from outside)
     var center = icoV[vi];
     var nrm = vNorm(center);
     var up = Math.abs(nrm.y) < 0.9 ? v3(0,1,0) : v3(1,0,0);
@@ -459,7 +464,6 @@ function makeTruncIco(size, squashY) {
     });
     pentagons.push(pent);
   }
-  // Build 20 hexagons: one per icosahedron face
   var hexagons = [];
   for (var fi = 0; fi < 20; fi++) {
     var fc = icoF[fi];
@@ -468,19 +472,16 @@ function makeTruncIco(size, squashY) {
       var a = fc[ei], b = fc[(ei+1)%3];
       var key = Math.min(a,b) + ',' + Math.max(a,b);
       var cuts = edgeToCuts[key];
-      // Face traverses edge a->b direction
-      // If a is the min vertex, direction matches stored order
       if (a === Math.min(a, b)) {
-        hex.push(cuts[0]); // near a
-        hex.push(cuts[1]); // near b
+        hex.push(cuts[0]);
+        hex.push(cuts[1]);
       } else {
-        hex.push(cuts[1]); // near a (which is max, so cuts[1] at t=0.666)
-        hex.push(cuts[0]); // near b (which is min)
+        hex.push(cuts[1]);
+        hex.push(cuts[0]);
       }
     }
     hexagons.push(hex);
   }
-  // Apply scale and squash to create final vertices
   var verts = [];
   for (var i = 0; i < cutVerts.length; i++) {
     verts.push(v3(
@@ -489,12 +490,10 @@ function makeTruncIco(size, squashY) {
       cutVerts[i].z * size
     ));
   }
-  // Build face list with normals and safety check
   var faces = [];
   function addFace(idx) {
     var v0 = verts[idx[0]], v1 = verts[idx[1]], v2 = verts[idx[2]];
     var n = vNorm(vCross(vSub(v1, v0), vSub(v2, v0)));
-    // Safety: ensure normal points outward (away from origin)
     var fcx = 0, fcy = 0, fcz = 0;
     for (var j = 0; j < idx.length; j++) {
       fcx += verts[idx[j]].x; fcy += verts[idx[j]].y; fcz += verts[idx[j]].z;
@@ -511,7 +510,6 @@ function makeTruncIco(size, squashY) {
   return { v: verts, f: faces };
 }
 
-// Precompute drone base geometry once
 var droneBaseGeo = null;
 function getDroneGeo() {
   if (!droneBaseGeo) droneBaseGeo = makeTruncIco(3.0, 0.35);
@@ -591,7 +589,6 @@ for (var ii = 0; ii < MAX_IMPACTS; ii++) {
   gFX.appendChild(ic);
   impactElems.push(ic);
 }
-// --- NEW: Blast wave polygon elements ---
 var blastElems = [];
 for (var bi = 0; bi < MAX_BLASTS; bi++) {
   var bp = document.createElementNS(SVG_NS, "polygon");
@@ -606,22 +603,18 @@ for (var bi = 0; bi < MAX_BLASTS; bi++) {
 }
 
 // ===================== WAVE SYSTEM =====================
-// Returns color theme {r,g,b,stroke} for a given wave number
 function getWaveTheme(w) {
   if (w <= 4) return { r: 0, g: 255, b: 0, stroke: "#00ff00" };
   if (w <= 7) return { r: 255, g: 255, b: 0, stroke: "#ffff00" };
   return { r: 255, g: 0, b: 0, stroke: "#ff0000" };
 }
-// Returns max robot and drone counts for a given wave
 function getWaveConfig(w) {
   var maxR = 20 + (w - 1) * 5;
   var maxD = 10 + (w - 1) * 5;
   return { maxRobots: maxR, maxDrones: maxD };
 }
-// Update wave-based spawning logic
 function updateWaveSpawning(dt) {
   if (victory) return;
-  // Between waves: count down pause
   if (wavePauseTimer > 0) {
     wavePauseTimer -= dt;
     if (wavePauseTimer <= 0) {
@@ -629,14 +622,11 @@ function updateWaveSpawning(dt) {
     }
     return;
   }
-  // Wave text fade
   if (waveTextTimer > 0) waveTextTimer -= dt;
-  // Staggered spawn timer
   spawnTimer -= dt;
   if (spawnTimer <= 0) {
-    spawnTimer = 1.8; // spawn interval in seconds
+    spawnTimer = 1.8;
     var cfg = getWaveConfig(wave);
-    // Prioritize robots first, then drones
     if (waveRobotsSpawned < cfg.maxRobots && enemies.length < 15) {
       spawnEnemy();
       waveRobotsSpawned++;
@@ -645,10 +635,8 @@ function updateWaveSpawning(dt) {
       waveDronesSpawned++;
     }
   }
-  // Check if wave is complete
   if (checkWaveComplete()) {
     if (wave >= 10) {
-      // Victory!
       victory = true;
       score += 5000;
       return;
@@ -657,7 +645,6 @@ function updateWaveSpawning(dt) {
     score += wave * 500;
   }
 }
-// Check if all wave enemies are spawned and killed
 function checkWaveComplete() {
   var cfg = getWaveConfig(wave);
   return waveRobotsSpawned >= cfg.maxRobots &&
@@ -665,7 +652,6 @@ function checkWaveComplete() {
          enemies.length === 0 &&
          drones.length === 0;
 }
-// Advance to next wave
 function advanceWave() {
   wave++;
   waveRobotsSpawned = 0;
@@ -674,7 +660,7 @@ function advanceWave() {
   var cfg = getWaveConfig(wave);
   waveRobotsTotal = cfg.maxRobots;
   waveDronesTotal = cfg.maxDrones;
-  spawnTimer = 0.5; // quick first spawn
+  spawnTimer = 0.5;
 }
 
 // ===================== WORLD GENERATION =====================
@@ -689,13 +675,13 @@ function generateWorld() {
   buildings = []; crystals = []; enemies = []; eBullets = [];
   tracers = []; impacts = []; drones = []; blastWaves = [];
   healthCrystals = [];
-  // Reset wave state
   wave = 1; waveRobotsSpawned = 0; waveDronesSpawned = 0;
   var cfg = getWaveConfig(1);
   waveRobotsTotal = cfg.maxRobots; waveDronesTotal = cfg.maxDrones;
   spawnTimer = 0.5; wavePauseTimer = 0; waveTextTimer = 3.0;
   waveActive = true; victory = false;
-  // Generate buildings on a grid with jitter
+  // Reset speedrun timer to zero on new game
+  gameTime = 0;
   var positions = [];
   var gridStep = 280;
   for (var gx = -3; gx <= 3; gx++) {
@@ -719,7 +705,6 @@ function generateWorld() {
     if (Math.random() < 0.15) bh = 380 + Math.random() * 200;
     buildings.push({ x: bx, z: bz, hx: bw / 2, hz: bd / 2, h: bh });
   }
-  // Spawn 15 green ammo crystals
   for (var i = 0; i < 15; i++) {
     var cx, cz, tries = 0;
     do {
@@ -729,7 +714,6 @@ function generateWorld() {
     } while (isNearBuilding(cx, cz, 30) && tries < 100);
     crystals.push({ x: cx, y: 22, z: cz, alive: true, spin: Math.random() * 6.28 });
   }
-  // --- NEW: Spawn 8 purple health crystals ---
   for (var i = 0; i < MAX_HEALTH_CRYSTALS; i++) {
     healthCrystals.push({ x: 0, y: 22, z: 0, alive: false, spin: Math.random() * 6.28 });
     spawnHealthCrystal(i);
@@ -760,21 +744,19 @@ function spawnEnemy() {
 }
 
 // ===================== DRONE SPAWNING =====================
-// Drones are fast-moving truncated icosahedron robots that fly
-// at different altitudes, loiter, then stop and drop bombs.
 function spawnDrone() {
   var dx, dz, dy;
   var mode = Math.random();
-  var aiMode; // "fly_low", "fly_high", or "loiter"
+  var aiMode;
   if (mode < 0.35) {
     aiMode = "fly_low";
-    dy = 30 + Math.random() * 30; // y = 30-60
+    dy = 30 + Math.random() * 30;
   } else if (mode < 0.7) {
     aiMode = "fly_high";
-    dy = 120 + Math.random() * 80; // y = 120-200
+    dy = 120 + Math.random() * 80;
   } else {
     aiMode = "loiter";
-    dy = 60 + Math.random() * 40; // y = 60-100
+    dy = 60 + Math.random() * 40;
   }
   for (var t = 0; t < 80; t++) {
     var ang = Math.random() * 6.2832;
@@ -785,7 +767,6 @@ function spawnDrone() {
     dz = Math.max(-ARENA + 50, Math.min(ARENA - 50, dz));
     if (!isNearBuilding(dx, dz, 20)) break;
   }
-  // Pick a target position to fly to
   var tAng = Math.random() * 6.2832;
   var tDist = 100 + Math.random() * 300;
   var tx = dx + Math.cos(tAng) * tDist;
@@ -796,12 +777,12 @@ function spawnDrone() {
     x: dx, y: dy, z: dz,
     targetX: tx, targetY: dy, targetZ: tz,
     yaw: Math.random() * 6.2832,
-    hp: 50, // 2 hits to kill
+    hp: 50,
     aiMode: aiMode,
-    state: "moving", // "moving", "hovering", "bombing"
+    state: "moving",
     hoverTimer: 2.0 + Math.random() * 3.0,
     bombTimer: 0.8,
-    speed: 280 + Math.random() * 150, // fast movement
+    speed: 280 + Math.random() * 150,
     bobPhase: Math.random() * 6.28
   });
 }
@@ -915,21 +896,17 @@ function updateEnemies(dt) {
 }
 
 // ===================== DRONE AI =====================
-// Drones fly fast, stop, drop bombs creating red hex blast waves.
-// Three AI modes: fly_low (y=30-60), fly_high (y=120-200), loiter (no bomb).
 function updateDrones(dt) {
   for (var i = drones.length - 1; i >= 0; i--) {
     var d = drones[i];
     d.bobPhase += dt * 3;
-    var bob = Math.sin(d.bobPhase) * 1.5; // gentle hover bob
+    var bob = Math.sin(d.bobPhase) * 1.5;
     if (d.state === "moving") {
-      // Fly toward target position at high speed
       var tdx = d.targetX - d.x;
       var tdy = (d.targetY + bob) - d.y;
       var tdz = d.targetZ - d.z;
       var tdist = Math.sqrt(tdx*tdx + tdy*tdy + tdz*tdz);
       if (tdist < 5) {
-        // Arrived at target
         d.state = "hovering";
         d.hoverTimer = 1.5 + Math.random() * 2.5;
       } else {
@@ -937,50 +914,40 @@ function updateDrones(dt) {
         d.x += (tdx / tdist) * spd;
         d.y += (tdy / tdist) * spd;
         d.z += (tdz / tdist) * spd;
-        // Face direction of travel
         d.yaw = Math.atan2(tdx, tdz);
       }
     } else if (d.state === "hovering") {
-      // Loiter in place with gentle bob
       d.hoverTimer -= dt;
       if (d.hoverTimer <= 0) {
         if (d.aiMode === "loiter") {
-          // Loiter mode: pick new target, no bomb
           pickNewDroneTarget(d);
           d.state = "moving";
         } else {
-          // fly_low or fly_high: drop bomb
           d.state = "bombing";
           d.bombTimer = 0.6;
         }
       }
     } else if (d.state === "bombing") {
-      // Brief pause, then drop bomb
       d.bombTimer -= dt;
       if (d.bombTimer <= 0) {
-        // Create blast wave at drone's XZ position on ground
         blastWaves.push({
           x: d.x, y: 0, z: d.z,
           radius: 0, maxRadius: 50 + Math.random() * 20,
           life: 0.8, maxLife: 0.8,
           damageApplied: false
         });
-        // Pick new target and move
         pickNewDroneTarget(d);
         d.state = "moving";
       }
     }
-    // Clamp position to arena
     d.x = Math.max(-ARENA + 30, Math.min(ARENA - 30, d.x));
     d.z = Math.max(-ARENA + 30, Math.min(ARENA - 30, d.z));
     d.y = Math.max(15, Math.min(250, d.y));
-    // Remove dead drones
     if (d.hp <= 0) {
       score += 500; kills++; drones.splice(i, 1);
     }
   }
 }
-// Pick a new random target position for a drone based on its AI mode
 function pickNewDroneTarget(d) {
   var tAng = Math.random() * 6.2832;
   var tDist = 80 + Math.random() * 350;
@@ -990,7 +957,6 @@ function pickNewDroneTarget(d) {
   tz = Math.max(-ARENA + 50, Math.min(ARENA - 50, tz));
   d.targetX = tx;
   d.targetZ = tz;
-  // Set target altitude based on AI mode
   if (d.aiMode === "fly_low") {
     d.targetY = 30 + Math.random() * 30;
   } else if (d.aiMode === "fly_high") {
@@ -1018,14 +984,11 @@ function updateEnemyBullets(dt) {
 }
 
 // ===================== BLAST WAVE UPDATE =====================
-// Red expanding hexagon blast waves from drone bombs.
-// Damages player if within radius.
 function updateBlastWaves(dt) {
   for (var i = blastWaves.length - 1; i >= 0; i--) {
     var bw = blastWaves[i];
     bw.life -= dt;
     bw.radius = bw.maxRadius * (1 - bw.life / bw.maxLife);
-    // Apply damage once when player is in range
     if (!bw.damageApplied && bw.radius > 5) {
       var pdx = cam.x - bw.x, pdz = cam.z - bw.z;
       var pDist = Math.sqrt(pdx*pdx + pdz*pdz);
@@ -1078,7 +1041,6 @@ function playerShoot() {
     Math.sin(cam.pitch),
     Math.cos(cam.yaw) * Math.cos(cam.pitch)
   );
-  // Check robot hits (ray-sphere, radius 22)
   var bestDist = FAR, hitEn = null;
   for (var i = 0; i < enemies.length; i++) {
     var e = enemies[i];
@@ -1091,7 +1053,6 @@ function playerShoot() {
       if (t > 1 && t < bestDist) { bestDist = t; hitEn = e; }
     }
   }
-  // --- NEW: Check drone hits (ray-sphere, radius 18) ---
   var hitDrone = null;
   var bestDroneDist = FAR;
   for (var i = 0; i < drones.length; i++) {
@@ -1105,13 +1066,11 @@ function playerShoot() {
       if (t > 1 && t < bestDroneDist) { bestDroneDist = t; hitDrone = dr; }
     }
   }
-  // Check building occlusion
   var buildDist = FAR;
   for (var i = 0; i < buildings.length; i++) {
     var t = rayBoxHit(cam, dir, buildings[i]);
     if (t > 1 && t < buildDist) buildDist = t;
   }
-  // Determine what was hit (closest unoccluded target)
   var finalDist, hitPoint, didHitEnemy = false;
   var droneHitCloser = hitDrone && bestDroneDist < bestDist;
   if (hitEn && !droneHitCloser && bestDist < buildDist) {
@@ -1199,23 +1158,18 @@ function buildEnemyMesh(e) {
 }
 
 // ===================== DRONE MESH BUILDER =====================
-// Builds the squashed truncated icosahedron mesh for a drone,
-// transformed to world position with yaw rotation and hover bob.
 function buildDroneMesh(d) {
   var geo = getDroneGeo();
   var faces = [];
   var bob = Math.sin(d.bobPhase) * 1.5;
   var cy = Math.cos(d.yaw), sy = Math.sin(d.yaw);
-  // Transform each vertex: rotate by yaw, translate to position
   var wv = [];
   for (var j = 0; j < geo.v.length; j++) {
     var gv = geo.v[j];
-    // Rotate around Y by drone yaw
     var rx = gv.x * cy + gv.z * sy;
     var rz = -gv.x * sy + gv.z * cy;
     wv.push(v3(rx + d.x, gv.y + d.y + bob, rz + d.z));
   }
-  // Transform normals
   for (var j = 0; j < geo.f.length; j++) {
     var fn = geo.f[j].n;
     var rnx = fn.x * cy + fn.z * sy;
@@ -1254,7 +1208,6 @@ function processFace(wVerts, indices, wNormal, fillCol, strokeCol, strokeW) {
 function collectFaces() {
   var allFaces = [];
   var theme = getWaveTheme(wave);
-  // --- Buildings (always green, environmental) ---
   for (var bi = 0; bi < buildings.length; bi++) {
     var b = buildings[bi];
     var bdx = b.x - cam.x, bdz = b.z - cam.z;
@@ -1270,7 +1223,6 @@ function collectFaces() {
       if (r) allFaces.push(r);
     }
   }
-  // --- Green ammo crystals (unchanged) ---
   for (var ci = 0; ci < crystals.length; ci++) {
     var cr = crystals[ci];
     if (!cr.alive) continue;
@@ -1292,7 +1244,6 @@ function collectFaces() {
       var r = processFace(rVerts, oct.f[j].i, rNorms[j], "#000000", "#00ff88", 1.5);
       if (r) allFaces.push(r);
     }
-    // Pickup detection
     var pdx = cr.x - cam.x, pdz = cr.z - cam.z;
     if (Math.sqrt(pdx * pdx + pdz * pdz) < 30) {
       cr.alive = false; score += 100; ammo += 8;
@@ -1308,7 +1259,6 @@ function collectFaces() {
       })(ci);
     }
   }
-  // --- NEW: Purple health crystals ---
   for (var ci = 0; ci < healthCrystals.length; ci++) {
     var hcr = healthCrystals[ci];
     if (!hcr.alive) continue;
@@ -1330,7 +1280,6 @@ function collectFaces() {
       var r = processFace(hRV, hOct.f[j].i, hRN[j], "#000000", "#cc00ff", 1.8);
       if (r) allFaces.push(r);
     }
-    // Health crystal pickup: +500 HP
     var hpd = hcr.x - cam.x, hpz = hcr.z - cam.z;
     if (Math.sqrt(hpd * hpd + hpz * hpz) < 35) {
       hcr.alive = false;
@@ -1341,14 +1290,12 @@ function collectFaces() {
       })(ci);
     }
   }
-  // --- Enemy robots (wave-themed color) ---
   for (var ei = 0; ei < enemies.length; ei++) {
     var en = enemies[ei];
     var edx = en.x - cam.x, edz = en.z - cam.z;
     var eDist = Math.sqrt(edx * edx + edz * edz);
     if (eDist > FAR) continue;
     var eB = Math.max(0.15, 1.0 - eDist / FAR);
-    // Use wave theme color for robots
     var eR = Math.floor(theme.r * eB);
     var eG = Math.floor(theme.g * eB);
     var eBv = Math.floor(theme.b * eB);
@@ -1360,7 +1307,6 @@ function collectFaces() {
       if (r) allFaces.push(r);
     }
   }
-  // --- NEW: Drones (always red vector edges, black faces) ---
   for (var di = 0; di < drones.length; di++) {
     var dr = drones[di];
     var ddx = dr.x - cam.x, ddz = dr.z - cam.z;
@@ -1377,7 +1323,6 @@ function collectFaces() {
       if (r) allFaces.push(r);
     }
   }
-  // --- Enemy bullets (red octahedra) ---
   for (var bi2 = 0; bi2 < eBullets.length; bi2++) {
     var bul = eBullets[bi2];
     if (Math.sqrt((bul.x-cam.x)*(bul.x-cam.x)+(bul.z-cam.z)*(bul.z-cam.z)) > FAR) continue;
@@ -1390,13 +1335,11 @@ function collectFaces() {
       if (r) allFaces.push(r);
     }
   }
-  // Depth sort: far to near (painter's algorithm)
   allFaces.sort(function(a, b) { return b.d - a.d; });
   return allFaces;
 }
 
 // ===================== BRIGHT HEX FLOOR RENDERING =====================
-// Floor color changes with wave theme: green(1-4), yellow(5-7), red(8-10)
 function renderHexFloor() {
   var groundNorm = normToCam(v3(0, 1, 0));
   if (groundNorm.z > 0.01) {
@@ -1437,18 +1380,15 @@ function renderHexFloor() {
         hexElems[i].setAttribute("display", "none");
         continue;
       }
-      // Wave-themed brightness falloff
       var avgD = depthSum / 6;
       var br = Math.max(0.08, 1.0 - avgD / FAR);
       var cR = Math.floor(theme.r * br * 0.15);
       var cG = Math.floor(25 + theme.g * br * 0.9);
       var cB = Math.floor(10 + theme.b * br * 0.18);
-      // Clamp to valid range
       cR = Math.min(255, Math.max(0, cR));
       cG = Math.min(255, Math.max(0, cG));
       cB = Math.min(255, Math.max(0, cB));
       var sCol = "rgb(" + cR + "," + cG + "," + cB + ")";
-      // Alternating tile fill for checkerboard pattern
       var cI = Math.round(hc.x / (HEX_SIZE * 1.5));
       var rI = Math.round(hc.z / (HEX_SIZE * HEX_SQRT3));
       var fillC = ((cI + rI) % 2 === 0) ? "#041208" : "#020e05";
@@ -1457,7 +1397,6 @@ function renderHexFloor() {
       hexElems[i].setAttribute("stroke", sCol);
       hexElems[i].setAttribute("stroke-width", String(0.7 + br * 1.1));
       hexElems[i].removeAttribute("display");
-      // Push hex edges to oscilloscope (every 4th hex)
       if (i % 4 === 0) {
         for (var j = 0; j < 6; j++) {
           var j2 = (j + 1) % 6;
@@ -1486,7 +1425,6 @@ function renderScene() {
       pe.setAttribute("stroke", f.sc);
       pe.setAttribute("stroke-width", String(f.sw));
       pe.removeAttribute("display");
-      // Push polygon edges to oscilloscope (every 3rd poly to save budget)
       if (i % 3 === 0) {
         for (var j = 0; j < f.sv.length; j++) {
           var j2 = (j + 1) % f.sv.length;
@@ -1501,7 +1439,6 @@ function renderScene() {
 
 // ===================== FX RENDERING =====================
 function renderFX() {
-  // --- Tracers ---
   for (var i = 0; i < MAX_TRACERS; i++) {
     var tl = tracerElems[i];
     if (i < tracers.length) {
@@ -1525,7 +1462,6 @@ function renderFX() {
       tl.setAttribute("display", "none");
     }
   }
-  // --- Impacts ---
   for (var i = 0; i < MAX_IMPACTS; i++) {
     var ic = impactElems[i];
     if (i < impacts.length) {
@@ -1547,13 +1483,11 @@ function renderFX() {
       ic.setAttribute("display", "none");
     }
   }
-  // --- NEW: Blast wave hexagons ---
   for (var i = 0; i < MAX_BLASTS; i++) {
     var be = blastElems[i];
     if (i < blastWaves.length) {
       var bw = blastWaves[i];
       var alpha = bw.life / bw.maxLife;
-      // Build hexagon points at blast position and radius, on ground (y=0)
       var hexPts = "";
       var sArr = [];
       for (var j = 0; j < 6; j++) {
@@ -1574,7 +1508,6 @@ function renderFX() {
         be.setAttribute("stroke-opacity", String(alpha * 0.9));
         be.setAttribute("stroke-width", String(2 + (1 - alpha) * 3));
         be.removeAttribute("display");
-        // Oscilloscope output for blast hex
         for (var j = 0; j < 6; j++) {
           var j2 = (j + 1) % 6;
           oscLine(sArr[j].x, sArr[j].y, sArr[j2].x, sArr[j2].y);
@@ -1592,6 +1525,10 @@ function renderFX() {
 function renderHUD() {
   var h = "";
   var theme = getWaveTheme(wave);
+  // --- SPEEDRUN TIMER: top-center, always visible during gameplay ---
+  var timeStr = formatTime(gameTime);
+  h += '<rect x="498" y="28" width="204" height="30" rx="4" fill="#0a0a0a" stroke="#00ff00" stroke-width="1" opacity="0.85"/>';
+  h += '<text x="600" y="49" text-anchor="middle" fill="#00ff00" font-size="18" font-family="monospace" font-weight="bold" letter-spacing="2">' + timeStr + '</text>';
   // Crosshair
   h += '<line x1="588" y1="400" x2="612" y2="400" stroke="#00ff00" stroke-width="1.5" opacity="0.8"/>';
   h += '<line x1="600" y1="388" x2="600" y2="412" stroke="#00ff00" stroke-width="1.5" opacity="0.8"/>';
@@ -1631,10 +1568,9 @@ function renderHUD() {
   h += '<text x="20" y="86" fill="#00cc00" font-size="15" font-family="monospace">SCORE ' + score + '</text>';
   h += '<text x="20" y="106" fill="#009900" font-size="13" font-family="monospace">KILLS ' + kills + '</text>';
   h += '<text x="20" y="126" fill="#007700" font-size="11" font-family="monospace">ENEMIES ' + enemies.length + '  DRONES ' + drones.length + '</text>';
-  // --- NEW: Wave display ---
+  // Wave display
   h += '<rect x="20" y="140" width="204" height="42" rx="3" fill="#0a0a0a" stroke="' + theme.stroke + '" stroke-width="1" opacity="0.8"/>';
   h += '<text x="122" y="157" text-anchor="middle" fill="' + theme.stroke + '" font-size="14" font-family="monospace" font-weight="bold">WAVE ' + wave + ' / 10</text>';
-  // Wave progress bar
   var cfg = getWaveConfig(wave);
   var totalWave = cfg.maxRobots + cfg.maxDrones;
   var spawned = waveRobotsSpawned + waveDronesSpawned;
@@ -1643,10 +1579,9 @@ function renderHUD() {
   h += '<rect x="22" y="164" width="200" height="12" rx="2" fill="#111111"/>';
   h += '<rect x="22" y="164" width="' + progW + '" height="12" rx="2" fill="' + theme.stroke + '" opacity="0.5"/>';
   h += '<text x="122" y="174" text-anchor="middle" fill="#ffffff" font-size="8" font-family="monospace" opacity="0.8">' + killed + '/' + totalWave + '</text>';
-  // Wave announcement text (fades in/out)
+  // Wave announcement text
   if (waveTextTimer > 0) {
-    var wta = Math.min(1, waveTextTimer / 0.5) * Math.min(1, (3.0 - (3.0 - waveTextTimer)) > 2.5 ? 1 : (waveTextTimer - 0.5) / 0.5);
-    wta = Math.min(1, waveTextTimer, (3.0 - waveTextTimer + 0.5));
+    var wta = Math.min(1, waveTextTimer / 0.5);
     if (waveTextTimer > 2.5) wta = (3.0 - waveTextTimer + 0.5);
     else wta = Math.min(1, waveTextTimer / 0.5);
     wta = Math.max(0, Math.min(1, wta));
@@ -1654,13 +1589,15 @@ function renderHUD() {
     var subText = wave <= 4 ? "GREEN PHASE" : wave <= 7 ? "YELLOW PHASE" : "RED PHASE";
     h += '<text x="600" y="352" text-anchor="middle" fill="' + theme.stroke + '" font-size="16" font-family="monospace" opacity="' + (wta * 0.7) + '">' + subText + '</text>';
   }
-  // --- NEW: Victory text ---
+  // Victory screen with final time
   if (victory) {
-    h += '<rect x="250" y="280" width="700" height="180" rx="8" fill="#030303" stroke="#00ff00" stroke-width="2" opacity="0.95"/>';
-    h += '<text x="600" y="340" text-anchor="middle" fill="#00ff00" font-size="40" font-family="monospace" font-weight="bold" filter="url(#glowSoft)">MISSION COMPLETE</text>';
-    h += '<text x="600" y="380" text-anchor="middle" fill="#00cc00" font-size="20" font-family="monospace">ALL 10 WAVES CLEARED</text>';
-    h += '<text x="600" y="415" text-anchor="middle" fill="#009900" font-size="18" font-family="monospace">FINAL SCORE: ' + score + '  KILLS: ' + kills + '</text>';
-    h += '<text x="600" y="445" text-anchor="middle" fill="#007700" font-size="14" font-family="monospace">CLICK TO PLAY AGAIN</text>';
+    var finalTimeStr = formatTime(gameTime);
+    h += '<rect x="250" y="260" width="700" height="220" rx="8" fill="#030303" stroke="#00ff00" stroke-width="2" opacity="0.95"/>';
+    h += '<text x="600" y="310" text-anchor="middle" fill="#00ff00" font-size="40" font-family="monospace" font-weight="bold" filter="url(#glowSoft)">MISSION COMPLETE</text>';
+    h += '<text x="600" y="350" text-anchor="middle" fill="#00cc00" font-size="20" font-family="monospace">ALL 10 WAVES CLEARED</text>';
+    h += '<text x="600" y="385" text-anchor="middle" fill="#00ff00" font-size="24" font-family="monospace" font-weight="bold">CLEAR TIME: ' + finalTimeStr + '</text>';
+    h += '<text x="600" y="420" text-anchor="middle" fill="#009900" font-size="18" font-family="monospace">FINAL SCORE: ' + score + '  KILLS: ' + kills + '</text>';
+    h += '<text x="600" y="460" text-anchor="middle" fill="#007700" font-size="14" font-family="monospace">CLICK TO PLAY AGAIN</text>';
   }
   // Weapon display with muzzle flash
   var recoil = fireCD > 0.1 ? 8 : 0;
@@ -1690,7 +1627,6 @@ function renderHUD() {
     var bw = b.hx * mmK * 2, bd = b.hz * mmK * 2;
     h += '<rect x="' + (bx - bw * 0.5) + '" y="' + (bz - bd * 0.5) + '" width="' + bw + '" height="' + bd + '" fill="#002200" stroke="#005500" stroke-width="0.5"/>';
   }
-  // Enemy dots on minimap
   for (var i = 0; i < enemies.length; i++) {
     var e = enemies[i];
     var ex = mmX + mmS * 0.5 + (e.x - cam.x) * mmK;
@@ -1698,7 +1634,6 @@ function renderHUD() {
     if (ex < mmX || ex > mmX + mmS || ez < mmY || ez > mmY + mmS) continue;
     h += '<circle cx="' + ex + '" cy="' + ez + '" r="2.5" fill="' + theme.stroke + '"/>';
   }
-  // Drone dots on minimap (red, slightly larger)
   for (var i = 0; i < drones.length; i++) {
     var dr = drones[i];
     var drx = mmX + mmS * 0.5 + (dr.x - cam.x) * mmK;
@@ -1706,7 +1641,6 @@ function renderHUD() {
     if (drx < mmX || drx > mmX + mmS || drz < mmY || drz > mmY + mmS) continue;
     h += '<circle cx="' + drx + '" cy="' + drz + '" r="3" fill="#ff0000" stroke="#ff6600" stroke-width="0.5"/>';
   }
-  // Green ammo crystals on minimap
   for (var i = 0; i < crystals.length; i++) {
     var cr = crystals[i];
     if (!cr.alive) continue;
@@ -1715,7 +1649,6 @@ function renderHUD() {
     if (cx2 < mmX || cx2 > mmX + mmS || cz2 < mmY || cz2 > mmY + mmS) continue;
     h += '<circle cx="' + cx2 + '" cy="' + cz2 + '" r="2" fill="#00ff88"/>';
   }
-  // Purple health crystals on minimap
   for (var i = 0; i < healthCrystals.length; i++) {
     var hcr = healthCrystals[i];
     if (!hcr.alive) continue;
@@ -1724,7 +1657,6 @@ function renderHUD() {
     if (hcx < mmX || hcx > mmX + mmS || hcz < mmY || hcz > mmY + mmS) continue;
     h += '<circle cx="' + hcx + '" cy="' + hcz + '" r="2.5" fill="#cc00ff"/>';
   }
-  // Player on minimap
   h += '<circle cx="' + (mmX + mmS * 0.5) + '" cy="' + (mmY + mmS * 0.5) + '" r="3.5" fill="#ffffff"/>';
   var pDirX = Math.sin(cam.yaw) * 15, pDirZ = Math.cos(cam.yaw) * 15;
   h += '<line x1="' + (mmX + mmS * 0.5) + '" y1="' + (mmY + mmS * 0.5) + '" x2="' + (mmX + mmS * 0.5 + pDirX) + '" y2="' + (mmY + mmS * 0.5 + pDirZ) + '" stroke="#ffffff" stroke-width="1.5"/>';
@@ -1862,9 +1794,10 @@ function gameOver() {
   active = false;
   try { document.exitPointerLock(); } catch (ex) {}
   gMenu.style.display = "";
+  var deathTimeStr = formatTime(gameTime);
   var ts = gMenu.querySelectorAll("text");
   ts[3].textContent = "MISSION FAILED";
-  ts[4].textContent = "SCORE: " + score + "  |  KILLS: " + kills + "  |  WAVE: " + wave;
+  ts[4].textContent = "TIME: " + deathTimeStr + "  SCORE: " + score + "  WAVE: " + wave;
   ts[5].textContent = "CLICK TO REDEPLOY";
   ts[6].textContent = "";
   ts[7].textContent = "";
@@ -1885,7 +1818,6 @@ function gameOver() {
 function gameLoop(t) {
   requestAnimationFrame(gameLoop);
   if (!active) {
-    // When not active, clear render layers
     if (gUI.innerHTML !== "") {
       for (var i = 0; i < MAX_HEXES; i++) hexElems[i].setAttribute("display", "none");
       for (var i = 0; i < MAX_POLYS; i++) polyElems[i].setAttribute("display", "none");
@@ -1898,7 +1830,6 @@ function gameLoop(t) {
     lastT = t;
     return;
   }
-  // Calculate delta time, cap to prevent spiral of death
   var dt = Math.min(0.05, (t - lastT) / 1000);
   if (lastT === 0) dt = 0.016;
   lastT = t;
@@ -1941,7 +1872,11 @@ function gameLoop(t) {
   shakeY = (Math.random() - 0.5) * shakeAmt * SH;
   // Kill feed trigger
   if (kills > prevKills) { killFeedT = 2.0; prevKills = kills; }
-  // --- NEW: Wave spawning system ---
+  // --- Increment speedrun timer (stops on victory) ---
+  if (!victory) {
+    gameTime += dt;
+  }
+  // Wave spawning system
   updateWaveSpawning(dt);
   // Update all game entities
   updateEnemies(dt);
