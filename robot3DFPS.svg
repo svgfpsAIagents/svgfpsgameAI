@@ -1,0 +1,1301 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" tabindex="0">
+  <!-- ============================================================ -->
+  <!-- CITY ASSAULT - Pure SVG 3D FPS with Oscilloscope Output    -->
+  <!-- ============================================================ -->
+  <defs>
+    <!-- Sky gradient: dark green-black vertical fade -->
+    <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#081210"/>
+      <stop offset="30%" stop-color="#060c0a"/>
+      <stop offset="60%" stop-color="#040a07"/>
+      <stop offset="100%" stop-color="#020504"/>
+    </linearGradient>
+    <!-- Scanline overlay pattern for CRT effect -->
+    <pattern id="scn" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="2" fill="#000" opacity="0.08"/>
+    </pattern>
+    <!-- Vignette: darkens edges of screen -->
+    <radialGradient id="vig" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="transparent"/>
+      <stop offset="60%" stop-color="#000" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.5"/>
+    </radialGradient>
+    <!-- Muzzle flash radial glow -->
+    <radialGradient id="mflash" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#aaffcc" stop-opacity="0.9"/>
+      <stop offset="40%" stop-color="#00ff00" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#00ff00" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Soft glow filter for title text -->
+    <filter id="glowSoft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <!-- Strong glow filter for highlights -->
+    <filter id="glowStrong" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <!-- Screen clipping rectangle -->
+    <clipPath id="screenClip">
+      <rect x="0" y="0" width="1200" height="800"/>
+    </clipPath>
+    <!-- Health bar gradient (high HP) -->
+    <linearGradient id="hpBarHi" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#00ff00"/>
+      <stop offset="100%" stop-color="#009900"/>
+    </linearGradient>
+    <!-- Health bar gradient (low HP) -->
+    <linearGradient id="hpBarLow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ff4400"/>
+      <stop offset="100%" stop-color="#cc0000"/>
+    </linearGradient>
+    <!-- Crystal pickup glow -->
+    <radialGradient id="crystalGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00ff88" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#00ff88" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Background hex tile pattern (decorative, behind 3D) -->
+    <pattern id="hexBg" width="20" height="17.32" patternUnits="userSpaceOnUse">
+      <polygon points="10,0 20,5.77 20,17.32 10,23.09 0,17.32 0,5.77"
+               fill="none" stroke="#002200" stroke-width="0.3" opacity="0.3"/>
+    </pattern>
+  </defs>
+  <!-- Background sky fill -->
+  <rect width="1200" height="800" fill="url(#skyG)"/>
+  <!-- Subtle background hex pattern decoration -->
+  <rect width="1200" height="800" fill="url(#hexBg)" opacity="0.12"/>
+  <!-- 3D render layer groups in strict z-order -->
+  <g id="FLR" clip-path="url(#screenClip)"></g>
+  <g id="W" clip-path="url(#screenClip)"></g>
+  <g id="FX" clip-path="url(#screenClip)"></g>
+  <!-- Post-processing overlays -->
+  <rect width="1200" height="800" fill="url(#scn)" pointer-events="none"/>
+  <rect width="1200" height="800" fill="url(#vig)" pointer-events="none"/>
+  <!-- HUD layer (always on top) -->
+  <g id="U"></g>
+  <!-- Damage flash red overlay -->
+  <rect id="FL" width="1200" height="800" fill="#ff0000" opacity="0" pointer-events="none"/>
+  <!-- Main menu overlay -->
+  <g id="M">
+    <rect x="280" y="130" width="640" height="540" rx="8" fill="#030303" stroke="#00ff00" stroke-width="2.5"/>
+    <rect x="285" y="135" width="630" height="530" rx="6" fill="none" stroke="#004400" stroke-width="0.5"/>
+    <line x1="310" y1="165" x2="890" y2="165" stroke="#003300" stroke-width="0.3"/>
+    <line x1="310" y1="645" x2="890" y2="645" stroke="#003300" stroke-width="0.3"/>
+    <!-- Title with glow -->
+    <text x="600" y="215" text-anchor="middle" fill="#00ff00" font-size="52" font-family="monospace" font-weight="bold" filter="url(#glowSoft)">CITY ASSAULT</text>
+    <text x="600" y="248" text-anchor="middle" fill="#008800" font-size="14" font-family="monospace" letter-spacing="3">SWAT ELIMINATION PROTOCOL</text>
+    <line x1="350" y1="264" x2="850" y2="264" stroke="#004400" stroke-width="0.5"/>
+    <!-- Deployment prompt -->
+    <text x="600" y="310" text-anchor="middle" fill="#00ff00" font-size="30" font-family="monospace" font-weight="bold" id="BT">CLICK TO DEPLOY</text>
+    <text x="600" y="338" text-anchor="middle" fill="#006600" font-size="12" font-family="monospace">Oscilloscope vector output on stereo audio channels</text>
+    <!-- Controls section -->
+    <line x1="350" y1="358" x2="850" y2="358" stroke="#003300" stroke-width="0.5"/>
+    <text x="600" y="382" text-anchor="middle" fill="#00cc00" font-size="15" font-family="monospace" font-weight="bold">CONTROLS</text>
+    <text x="600" y="408" text-anchor="middle" fill="#009900" font-size="13" font-family="monospace">WASD / Arrows = Move</text>
+    <text x="600" y="428" text-anchor="middle" fill="#009900" font-size="13" font-family="monospace">Mouse = Look (auto pointer lock on start)</text>
+    <text x="600" y="448" text-anchor="middle" fill="#009900" font-size="13" font-family="monospace">Left-Click = Shoot | R = Reload</text>
+    <text x="600" y="472" text-anchor="middle" fill="#008800" font-size="12" font-family="monospace">Xbox: LStick Move | RStick Look | RT Shoot | A Reload</text>
+    <!-- Features section -->
+    <line x1="350" y1="490" x2="850" y2="490" stroke="#003300" stroke-width="0.5"/>
+    <text x="600" y="512" text-anchor="middle" fill="#007700" font-size="12" font-family="monospace">Bright hexagonal floor grid with alternating tile pattern</text>
+    <text x="600" y="532" text-anchor="middle" fill="#006600" font-size="11" font-family="monospace">Solid black enemies with green wireframe outlines</text>
+    <text x="600" y="552" text-anchor="middle" fill="#005500" font-size="11" font-family="monospace">Tracer rounds. Screen shake. Hit markers. 30 skyscrapers</text>
+    <text x="600" y="572" text-anchor="middle" fill="#004400" font-size="11" font-family="monospace">Red enemy bullets. Full collision. Crystal ammo pickups</text>
+    <text x="600" y="592" text-anchor="middle" fill="#003300" font-size="10" font-family="monospace">All rendered lines output as X/Y to Web Audio oscilloscope</text>
+    <text x="600" y="610" text-anchor="middle" fill="#002200" font-size="10" font-family="monospace">Hold-position mode: no center snap when buffer empties</text>
+    <text x="600" y="630" text-anchor="middle" fill="#001a00" font-size="9" font-family="monospace">Connect L+R audio to oscilloscope for vector display</text>
+  </g>
+  <script><![CDATA[
+(function(){
+/* ==================================================================
+   CITY ASSAULT - 3D FPS rendered entirely in SVG
+   ==================================================================
+   RENDERING: Painter's algorithm, backface culling, perspective proj
+   WORLD: 30 buildings, 15 crystals, 10+ enemies, hex floor grid
+   COMBAT: Ray-sphere hit detection, ray-box occlusion, tracer rounds
+   AI: Patrol/chase/attack states with strafing and inaccuracy
+   AUDIO: Oscilloscope X/Y output on Web Audio stereo channels
+   INPUT: Mouse (pointer lock), WASD, Xbox controller (Gamepad API)
+   ================================================================== */
+
+// ===================== CONSTANTS =====================
+var SW = 1200, SH = 800;
+var FOV = Math.PI * 0.5;
+var BASE_FOCAL = 1.0 / Math.tan(FOV * 0.5);
+var NEAR = 1.0, FAR = 450;
+var SVG_NS = "http://www.w3.org/2000/svg";
+var ARENA = 1000, EYE_H = 40, MOVE_SPD = 200, SENS = 0.003;
+var HEX_SIZE = 85;
+var HEX_SQRT3 = Math.sqrt(3);
+var MAX_POLYS = 500;
+var MAX_HEXES = 120;
+var MAX_TRACERS = 12;
+var MAX_IMPACTS = 12;
+
+// ===================== DOM REFERENCES =====================
+var gFloor = document.getElementById("FLR");
+var gWorld = document.getElementById("W");
+var gFX = document.getElementById("FX");
+var gUI = document.getElementById("U");
+var gMenu = document.getElementById("M");
+var rFlash = document.getElementById("FL");
+var svgEl = document.documentElement;
+
+// ===================== GAME STATE =====================
+var active = false, lastT = 0, score = 0, health = 100;
+var ammo = 100, kills = 0, fireCD = 0, dmgT = 0, reloadT = 0;
+var mouseX = 0, mouseY = 0;
+var rDrag = false, rPrevX = 0, rPrevY = 0;
+var shakeAmt = 0, shakeX = 0, shakeY = 0;
+var fovKick = 0, effFocal = BASE_FOCAL;
+var hitMarkerT = 0, killFeedT = 0, prevKills = 0;
+var gamepadConnected = false;
+var cam = { x: 0, y: EYE_H, z: 0, yaw: 0, pitch: 0 };
+var keys = {};
+var buildings = [], crystals = [], enemies = [], eBullets = [];
+var tracers = [], impacts = [];
+
+// ===================== OSCILLOSCOPE AUDIO SYSTEM =====================
+// All drawn line X,Y coordinates are output through Web Audio
+// stereo channels. Left channel = X, Right channel = Y.
+// Hold-position: when ring buffer is empty, the LAST known
+// X,Y pair continues to be output (no snap to center/zero).
+var audioCtx = null;
+var oscProcessor = null;
+var OSC_RING_SIZE = 88200;
+var oscRingBuffer = null;
+var oscWritePos = 0;
+var oscReadPos = 0;
+var oscLastL = 0;
+var oscLastR = 0;
+var oscReady = false;
+var oscFramePts = 0;
+var OSC_MAX_PTS = 900;
+
+// Initialize Web Audio for oscilloscope output
+function initOscilloscope() {
+  if (oscReady) return;
+  try {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === "suspended") audioCtx.resume();
+    oscRingBuffer = new Float32Array(OSC_RING_SIZE * 2);
+    oscProcessor = audioCtx.createScriptProcessor(2048, 0, 2);
+    oscProcessor.onaudioprocess = function(e) {
+      var oL = e.outputBuffer.getChannelData(0);
+      var oR = e.outputBuffer.getChannelData(1);
+      for (var i = 0; i < oL.length; i++) {
+        if (oscReadPos !== oscWritePos) {
+          var idx = oscReadPos * 2;
+          oscLastL = oscRingBuffer[idx];
+          oscLastR = oscRingBuffer[idx + 1];
+          oL[i] = oscLastL;
+          oR[i] = oscLastR;
+          oscReadPos = (oscReadPos + 1) % OSC_RING_SIZE;
+        } else {
+          // HOLD POSITION: no center snap
+          oL[i] = oscLastL;
+          oR[i] = oscLastR;
+        }
+      }
+    };
+    oscProcessor.connect(audioCtx.destination);
+    oscReady = true;
+  } catch (ex) {}
+}
+
+// Resume suspended audio context (browser requirement)
+function resumeAudio() {
+  if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+}
+
+// Write one X,Y sample pair into the ring buffer
+function oscWrite(l, r) {
+  var nw = (oscWritePos + 1) % OSC_RING_SIZE;
+  if (nw === oscReadPos) oscReadPos = (oscReadPos + 1) % OSC_RING_SIZE;
+  oscRingBuffer[oscWritePos * 2] = l < -1 ? -1 : (l > 1 ? 1 : l);
+  oscRingBuffer[oscWritePos * 2 + 1] = r < -1 ? -1 : (r > 1 ? 1 : r);
+  oscWritePos = nw;
+}
+
+// Push a screen-space line segment to the oscilloscope buffer
+function oscLine(x1, y1, x2, y2) {
+  if (!oscReady || !active) return;
+  if (oscFramePts >= OSC_MAX_PTS) return;
+  oscWrite((x1 / SW) * 2 - 1, (y1 / SH) * 2 - 1);
+  oscWrite((x2 / SW) * 2 - 1, (y2 / SH) * 2 - 1);
+  oscFramePts += 2;
+}
+
+// Push a single screen-space point to the oscilloscope buffer
+function oscPoint(x, y) {
+  if (!oscReady || !active) return;
+  if (oscFramePts >= OSC_MAX_PTS) return;
+  oscWrite((x / SW) * 2 - 1, (y / SH) * 2 - 1);
+  oscFramePts += 1;
+}
+
+// Reset per-frame point budget counter
+function oscReset() { oscFramePts = 0; }
+
+// ===================== VECTOR MATH =====================
+function v3(x, y, z) { return { x: x, y: y, z: z }; }
+function vSub(a, b) { return v3(a.x - b.x, a.y - b.y, a.z - b.z); }
+function vDot(a, b) { return a.x * b.x + a.y * b.y + a.z * b.z; }
+function vCross(a, b) {
+  return v3(a.y*b.z - a.z*b.y, a.z*b.x - a.x*b.z, a.x*b.y - a.y*b.x);
+}
+function vLen(v) { return Math.sqrt(vDot(v, v)); }
+function vNorm(v) {
+  var l = vLen(v);
+  return l > 1e-9 ? v3(v.x / l, v.y / l, v.z / l) : v3(0, 0, 0);
+}
+function rotX(v, a) {
+  var c = Math.cos(a), s = Math.sin(a);
+  return v3(v.x, v.y * c - v.z * s, v.y * s + v.z * c);
+}
+function rotY(v, a) {
+  var c = Math.cos(a), s = Math.sin(a);
+  return v3(v.x * c + v.z * s, v.y, -v.x * s + v.z * c);
+}
+
+// ===================== CAMERA TRANSFORM =====================
+// World -> Camera: Rx(pitch) * Ry(-yaw) * (point - cam)
+function worldToCam(p) {
+  var dx = p.x - cam.x, dy = p.y - cam.y, dz = p.z - cam.z;
+  var cy = Math.cos(-cam.yaw), sy = Math.sin(-cam.yaw);
+  var rx = dx * cy + dz * sy;
+  var rz = -dx * sy + dz * cy;
+  var cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch);
+  var ry = dy * cp - rz * sp;
+  var rz2 = dy * sp + rz * cp;
+  return v3(rx, ry, rz2);
+}
+function normToCam(n) {
+  var cy = Math.cos(-cam.yaw), sy = Math.sin(-cam.yaw);
+  var nx = n.x * cy + n.z * sy;
+  var nz = -n.x * sy + n.z * cy;
+  var cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch);
+  var ny = n.y * cp - nz * sp;
+  var nz2 = n.y * sp + nz * cp;
+  return v3(nx, ny, nz2);
+}
+
+// ===================== PROJECTION =====================
+function project(cp) {
+  if (cp.z < NEAR) return null;
+  return {
+    x: cp.x * effFocal / cp.z * (SW * 0.5) + SW * 0.5,
+    y: -cp.y * effFocal / cp.z * (SH * 0.5) + SH * 0.5,
+    z: cp.z
+  };
+}
+
+// ===================== BOX GEOMETRY =====================
+function makeBox(cx, cy, cz, hx, hy, hz) {
+  var v = [
+    v3(cx-hx,cy-hy,cz-hz), v3(cx+hx,cy-hy,cz-hz),
+    v3(cx+hx,cy+hy,cz-hz), v3(cx-hx,cy+hy,cz-hz),
+    v3(cx-hx,cy-hy,cz+hz), v3(cx+hx,cy-hy,cz+hz),
+    v3(cx+hx,cy+hy,cz+hz), v3(cx-hx,cy+hy,cz+hz)
+  ];
+  var f = [
+    {i:[4,5,6,7],n:v3(0,0,1)}, {i:[1,0,3,2],n:v3(0,0,-1)},
+    {i:[0,4,7,3],n:v3(-1,0,0)}, {i:[5,1,2,6],n:v3(1,0,0)},
+    {i:[7,6,2,3],n:v3(0,1,0)}, {i:[0,1,5,4],n:v3(0,-1,0)}
+  ];
+  return { v: v, f: f };
+}
+
+// ===================== OCTAHEDRON GEOMETRY =====================
+function makeOcta(size) {
+  var v = [
+    v3(0,size,0), v3(0,-size,0), v3(size,0,0),
+    v3(-size,0,0), v3(0,0,size), v3(0,0,-size)
+  ];
+  var tris = [
+    [0,4,2],[0,2,5],[0,5,3],[0,3,4],
+    [1,2,4],[1,5,2],[1,3,5],[1,4,3]
+  ];
+  var f = [];
+  for (var i = 0; i < tris.length; i++) {
+    var a = vSub(v[tris[i][1]], v[tris[i][0]]);
+    var b = vSub(v[tris[i][2]], v[tris[i][0]]);
+    f.push({ i: tris[i], n: vNorm(vCross(a, b)) });
+  }
+  return { v: v, f: f };
+}
+
+// ===================== HEX GRID GEOMETRY =====================
+function hexVertices(cx, cz, size) {
+  var verts = [];
+  for (var i = 0; i < 6; i++) {
+    var angle = Math.PI / 3 * i;
+    verts.push(v3(cx + size * Math.cos(angle), 0, cz + size * Math.sin(angle)));
+  }
+  return verts;
+}
+function hexGridCenters(wx, wz, radius) {
+  var centers = [];
+  var colStep = HEX_SIZE * 1.5;
+  var rowStep = HEX_SIZE * HEX_SQRT3;
+  var maxCol = Math.ceil(radius / colStep);
+  var maxRow = Math.ceil(radius / rowStep);
+  var baseCol = Math.floor(wx / colStep);
+  var baseRow = Math.floor(wz / rowStep);
+  for (var q = baseCol - maxCol; q <= baseCol + maxCol; q++) {
+    for (var r = baseRow - maxRow; r <= baseRow + maxRow; r++) {
+      var hx = q * colStep;
+      var hz = r * rowStep + (Math.abs(q) % 2 === 1 ? rowStep * 0.5 : 0);
+      var dx = hx - wx, dz = hz - wz;
+      if (dx * dx + dz * dz < radius * radius) {
+        centers.push({ x: hx, z: hz });
+      }
+    }
+  }
+  return centers;
+}
+
+// ===================== PRE-ALLOCATE SVG ELEMENTS =====================
+var hexElems = [];
+for (var hi = 0; hi < MAX_HEXES; hi++) {
+  var he = document.createElementNS(SVG_NS, "polygon");
+  he.setAttribute("fill", "#040f08");
+  he.setAttribute("stroke", "#00ff00");
+  he.setAttribute("stroke-width", "1.2");
+  he.setAttribute("stroke-linejoin", "round");
+  he.setAttribute("display", "none");
+  gFloor.appendChild(he);
+  hexElems.push(he);
+}
+var polyElems = [];
+for (var pi = 0; pi < MAX_POLYS; pi++) {
+  var pe = document.createElementNS(SVG_NS, "polygon");
+  pe.setAttribute("fill", "#000000");
+  pe.setAttribute("stroke", "#00ff00");
+  pe.setAttribute("stroke-width", "1");
+  pe.setAttribute("stroke-linejoin", "round");
+  pe.setAttribute("display", "none");
+  gWorld.appendChild(pe);
+  polyElems.push(pe);
+}
+var tracerElems = [];
+for (var ti = 0; ti < MAX_TRACERS; ti++) {
+  var tl = document.createElementNS(SVG_NS, "line");
+  tl.setAttribute("stroke", "#00ff00");
+  tl.setAttribute("stroke-width", "2.5");
+  tl.setAttribute("stroke-linecap", "round");
+  tl.setAttribute("opacity", "0");
+  tl.setAttribute("display", "none");
+  gFX.appendChild(tl);
+  tracerElems.push(tl);
+}
+var impactElems = [];
+for (var ii = 0; ii < MAX_IMPACTS; ii++) {
+  var ic = document.createElementNS(SVG_NS, "circle");
+  ic.setAttribute("fill", "#00ff00");
+  ic.setAttribute("opacity", "0");
+  ic.setAttribute("display", "none");
+  gFX.appendChild(ic);
+  impactElems.push(ic);
+}
+
+// ===================== WORLD GENERATION =====================
+function isNearBuilding(x, z, margin) {
+  for (var i = 0; i < buildings.length; i++) {
+    var b = buildings[i];
+    if (Math.abs(x - b.x) < b.hx + margin && Math.abs(z - b.z) < b.hz + margin) return true;
+  }
+  return false;
+}
+function generateWorld() {
+  buildings = []; crystals = []; enemies = []; eBullets = [];
+  tracers = []; impacts = [];
+  var positions = [];
+  var gridStep = 280;
+  for (var gx = -3; gx <= 3; gx++) {
+    for (var gz = -3; gz <= 3; gz++) {
+      if (gx === 0 && gz === 0) continue;
+      positions.push({ gx: gx, gz: gz });
+    }
+  }
+  for (var i = positions.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = positions[i]; positions[i] = positions[j]; positions[j] = tmp;
+  }
+  var count = Math.min(30, positions.length);
+  for (var i = 0; i < count; i++) {
+    var p = positions[i];
+    var bx = p.gx * gridStep + (Math.random() - 0.5) * 60;
+    var bz = p.gz * gridStep + (Math.random() - 0.5) * 60;
+    var bw = 35 + Math.random() * 60;
+    var bd = 35 + Math.random() * 60;
+    var bh = 80 + Math.random() * 320;
+    if (Math.random() < 0.15) bh = 380 + Math.random() * 200;
+    buildings.push({ x: bx, z: bz, hx: bw / 2, hz: bd / 2, h: bh });
+  }
+  for (var i = 0; i < 15; i++) {
+    var cx, cz, tries = 0;
+    do {
+      cx = (Math.random() - 0.5) * 1800;
+      cz = (Math.random() - 0.5) * 1800;
+      tries++;
+    } while (isNearBuilding(cx, cz, 30) && tries < 100);
+    crystals.push({ x: cx, y: 22, z: cz, alive: true, spin: Math.random() * 6.28 });
+  }
+  for (var i = 0; i < 10; i++) spawnEnemy();
+}
+
+// ===================== ENEMY SPAWNING =====================
+function spawnEnemy() {
+  var ex, ez;
+  for (var t = 0; t < 80; t++) {
+    var ang = Math.random() * 6.2832;
+    var dist = 180 + Math.random() * 550;
+    ex = cam.x + Math.cos(ang) * dist;
+    ez = cam.z + Math.sin(ang) * dist;
+    ex = Math.max(-ARENA + 50, Math.min(ARENA - 50, ex));
+    ez = Math.max(-ARENA + 50, Math.min(ARENA - 50, ez));
+    if (!isNearBuilding(ex, ez, 15)) break;
+  }
+  enemies.push({
+    x: ex, z: ez, facing: Math.random() * 6.2832,
+    hp: 35, walkPhase: Math.random() * 6.2832,
+    walking: false, fireCD: 1.5 + Math.random() * 2,
+    state: "patrol",
+    patrolX: ex + (Math.random() - 0.5) * 300,
+    patrolZ: ez + (Math.random() - 0.5) * 300,
+    alertT: 0
+  });
+}
+
+// ===================== COLLISION DETECTION =====================
+function collideWithBuildings(x, z, radius) {
+  for (var i = 0; i < buildings.length; i++) {
+    var b = buildings[i];
+    var cx = Math.max(b.x - b.hx, Math.min(x, b.x + b.hx));
+    var cz = Math.max(b.z - b.hz, Math.min(z, b.z + b.hz));
+    var dx = x - cx, dz = z - cz;
+    var d = Math.sqrt(dx * dx + dz * dz);
+    if (d < radius) {
+      if (d > 0.001) {
+        var push = radius - d;
+        x += (dx / d) * push;
+        z += (dz / d) * push;
+      } else { x += radius; }
+    }
+  }
+  x = Math.max(-ARENA + 15, Math.min(ARENA - 15, x));
+  z = Math.max(-ARENA + 15, Math.min(ARENA - 15, z));
+  return { x: x, z: z };
+}
+function pointInBuilding(x, z) {
+  for (var i = 0; i < buildings.length; i++) {
+    var b = buildings[i];
+    if (x >= b.x - b.hx && x <= b.x + b.hx &&
+        z >= b.z - b.hz && z <= b.z + b.hz) return true;
+  }
+  return false;
+}
+
+// ===================== ENEMY AI =====================
+function enemyL2W(e, lx, ly, lz) {
+  var cf = Math.cos(e.facing), sf = Math.sin(e.facing);
+  return v3(e.x + lx * cf + lz * sf, ly, e.z - lx * sf + lz * cf);
+}
+function updateEnemies(dt) {
+  for (var i = enemies.length - 1; i >= 0; i--) {
+    var e = enemies[i];
+    var toX = cam.x - e.x, toZ = cam.z - e.z;
+    var dist = Math.sqrt(toX * toX + toZ * toZ);
+    if (dist < 380) {
+      e.state = dist < 200 ? "attack" : "chase";
+      e.alertT = 6;
+    } else if (e.alertT > 0) {
+      e.alertT -= dt; e.state = "chase";
+    } else { e.state = "patrol"; }
+    var mx = 0, mz = 0; e.walking = false;
+    if (e.state === "patrol") {
+      var pdx = e.patrolX - e.x, pdz = e.patrolZ - e.z;
+      var pd = Math.sqrt(pdx * pdx + pdz * pdz);
+      if (pd < 20) {
+        e.patrolX = e.x + (Math.random() - 0.5) * 300;
+        e.patrolZ = e.z + (Math.random() - 0.5) * 300;
+      } else {
+        mx = (pdx / pd) * 55 * dt; mz = (pdz / pd) * 55 * dt;
+        e.facing = Math.atan2(pdx, pdz); e.walking = true;
+      }
+    } else if (e.state === "chase") {
+      if (dist > 10) {
+        mx = (toX / dist) * 75 * dt; mz = (toZ / dist) * 75 * dt;
+        e.facing = Math.atan2(toX, toZ); e.walking = true;
+      }
+    } else if (e.state === "attack") {
+      e.facing = Math.atan2(toX, toZ);
+      var sa = e.facing + Math.PI * 0.5;
+      var sm = Math.sin(Date.now() * 0.002 + i * 1.7) * 45 * dt;
+      mx = Math.cos(sa) * sm; mz = Math.sin(sa) * sm;
+      e.walking = true;
+      e.fireCD -= dt;
+      if (e.fireCD <= 0) {
+        e.fireCD = 1.0 + Math.random() * 1.5;
+        var gt = enemyL2W(e, 11, 63, 16);
+        var dir = vNorm(vSub(cam, gt));
+        dir.x += (Math.random() - 0.5) * 0.12;
+        dir.y += (Math.random() - 0.5) * 0.08;
+        dir.z += (Math.random() - 0.5) * 0.12;
+        dir = vNorm(dir);
+        eBullets.push({
+          x: gt.x, y: gt.y, z: gt.z,
+          vx: dir.x * 280, vy: dir.y * 280, vz: dir.z * 280, life: 2.5
+        });
+      }
+    }
+    if (mx !== 0 || mz !== 0) {
+      var res = collideWithBuildings(e.x + mx, e.z + mz, 10);
+      e.x = res.x; e.z = res.z;
+    }
+    if (e.walking) e.walkPhase += dt * 8;
+    if (e.hp <= 0) {
+      score += 250; kills++; enemies.splice(i, 1);
+      setTimeout(spawnEnemy, 3000);
+    }
+  }
+}
+
+// ===================== ENEMY BULLETS =====================
+function updateEnemyBullets(dt) {
+  for (var i = eBullets.length - 1; i >= 0; i--) {
+    var b = eBullets[i];
+    b.x += b.vx * dt; b.y += b.vy * dt; b.z += b.vz * dt;
+    b.life -= dt;
+    var dx = b.x - cam.x, dy = b.y - cam.y, dz = b.z - cam.z;
+    if (dx*dx + dy*dy + dz*dz < 22*22) {
+      health -= 10; dmgT = 0.3; eBullets.splice(i, 1);
+      if (health <= 0) { health = 0; gameOver(); } continue;
+    }
+    if (pointInBuilding(b.x, b.z) || b.y < 0 || b.y > 250 || b.life <= 0) {
+      eBullets.splice(i, 1);
+    }
+  }
+}
+
+// ===================== RAY-BOX INTERSECTION =====================
+function rayBoxHit(origin, dir, b) {
+  var xMin = b.x - b.hx, xMax = b.x + b.hx;
+  var zMin = b.z - b.hz, zMax = b.z + b.hz;
+  var yMin = 0, yMax = b.h;
+  var tN = -1e9, tF = 1e9;
+  if (Math.abs(dir.x) > 1e-9) {
+    var t1 = (xMin - origin.x) / dir.x, t2 = (xMax - origin.x) / dir.x;
+    if (t1 > t2) { var tmp = t1; t1 = t2; t2 = tmp; }
+    tN = Math.max(tN, t1); tF = Math.min(tF, t2);
+  } else if (origin.x < xMin || origin.x > xMax) return -1;
+  if (Math.abs(dir.y) > 1e-9) {
+    var t1 = (yMin - origin.y) / dir.y, t2 = (yMax - origin.y) / dir.y;
+    if (t1 > t2) { var tmp = t1; t1 = t2; t2 = tmp; }
+    tN = Math.max(tN, t1); tF = Math.min(tF, t2);
+  } else if (origin.y < yMin || origin.y > yMax) return -1;
+  if (Math.abs(dir.z) > 1e-9) {
+    var t1 = (zMin - origin.z) / dir.z, t2 = (zMax - origin.z) / dir.z;
+    if (t1 > t2) { var tmp = t1; t1 = t2; t2 = tmp; }
+    tN = Math.max(tN, t1); tF = Math.min(tF, t2);
+  } else if (origin.z < zMin || origin.z > zMax) return -1;
+  if (tN > tF || tF < 0) return -1;
+  return tN > 0 ? tN : tF;
+}
+
+// ===================== PLAYER SHOOTING =====================
+function playerShoot() {
+  if (ammo <= 0 || fireCD > 0 || reloadT > 0) return;
+  ammo--; fireCD = 0.15;
+  shakeAmt = 0.035;
+  fovKick = 0.06;
+  var dir = v3(
+    Math.sin(cam.yaw) * Math.cos(cam.pitch),
+    Math.sin(cam.pitch),
+    Math.cos(cam.yaw) * Math.cos(cam.pitch)
+  );
+  var bestDist = FAR, hitEn = null;
+  for (var i = 0; i < enemies.length; i++) {
+    var e = enemies[i];
+    var oc = vSub(cam, v3(e.x, 50, e.z));
+    var a = vDot(dir, dir), b = 2 * vDot(oc, dir);
+    var c = vDot(oc, oc) - 22 * 22;
+    var disc = b * b - 4 * a * c;
+    if (disc >= 0) {
+      var t = (-b - Math.sqrt(disc)) / (2 * a);
+      if (t > 1 && t < bestDist) { bestDist = t; hitEn = e; }
+    }
+  }
+  var buildDist = FAR;
+  for (var i = 0; i < buildings.length; i++) {
+    var t = rayBoxHit(cam, dir, buildings[i]);
+    if (t > 1 && t < buildDist) buildDist = t;
+  }
+  var finalDist, hitPoint, didHitEnemy = false;
+  if (hitEn && bestDist < buildDist) {
+    finalDist = bestDist; didHitEnemy = true;
+    hitPoint = v3(cam.x + dir.x * bestDist, cam.y + dir.y * bestDist, cam.z + dir.z * bestDist);
+    hitEn.hp -= 28;
+    hitMarkerT = 0.25;
+  } else {
+    finalDist = Math.min(buildDist, FAR * 0.95);
+    hitPoint = v3(cam.x + dir.x * finalDist, cam.y + dir.y * finalDist, cam.z + dir.z * finalDist);
+  }
+  var gunTip = v3(
+    cam.x + Math.sin(cam.yaw) * 4 + Math.cos(cam.yaw) * 1.5,
+    cam.y - 10,
+    cam.z + Math.cos(cam.yaw) * 4 - Math.sin(cam.yaw) * 1.5
+  );
+  tracers.push({
+    sx: gunTip.x, sy: gunTip.y, sz: gunTip.z,
+    ex: hitPoint.x, ey: hitPoint.y, ez: hitPoint.z,
+    life: 0.12, maxLife: 0.12
+  });
+  if (!didHitEnemy) {
+    impacts.push({
+      x: hitPoint.x, y: hitPoint.y, z: hitPoint.z,
+      life: 0.15, maxLife: 0.15
+    });
+  }
+}
+
+// ===================== TRACER & IMPACT UPDATE =====================
+function updateTracersAndImpacts(dt) {
+  for (var i = tracers.length - 1; i >= 0; i--) {
+    tracers[i].life -= dt;
+    if (tracers[i].life <= 0) tracers.splice(i, 1);
+  }
+  for (var i = impacts.length - 1; i >= 0; i--) {
+    impacts[i].life -= dt;
+    if (impacts[i].life <= 0) impacts.splice(i, 1);
+  }
+  if (hitMarkerT > 0) hitMarkerT -= dt;
+  if (killFeedT > 0) killFeedT -= dt;
+}
+
+// ===================== SWAT SOLDIER MESH =====================
+function buildEnemyMesh(e) {
+  var faces = [];
+  var ph = e.walkPhase, stride = e.walking ? 12 : 0;
+  var llZ = Math.sin(ph) * stride;
+  var rlZ = Math.sin(ph + 3.1416) * stride;
+  var laZ = Math.sin(ph + 3.1416) * stride * 0.6;
+  var raZ = Math.sin(ph) * stride * 0.6;
+  var cf = Math.cos(e.facing), sf = Math.sin(e.facing);
+  function toW(lx, ly, lz) {
+    return v3(e.x + lx * cf + lz * sf, ly, e.z - lx * sf + lz * cf);
+  }
+  function toN(nx, ny, nz) {
+    return v3(nx * cf + nz * sf, ny, -nx * sf + nz * cf);
+  }
+  function addPart(cx, cy, cz, sx, sy, sz) {
+    var box = makeBox(cx, cy, cz, sx, sy, sz);
+    var wv = [];
+    for (var j = 0; j < 8; j++) wv.push(toW(box.v[j].x, box.v[j].y, box.v[j].z));
+    for (var j = 0; j < 6; j++) {
+      faces.push({ v: wv, i: box.f[j].i, n: toN(box.f[j].n.x, box.f[j].n.y, box.f[j].n.z) });
+    }
+  }
+  addPart(0, 70, 0, 7, 13, 5.5);
+  addPart(0, 93, 0, 5, 7, 5);
+  addPart(-5, 46, llZ*0.4, 4.2, 11, 4.2);
+  addPart(5, 46, rlZ*0.4, 4.2, 11, 4.2);
+  addPart(-5, 23, llZ*0.85, 3.5, 10, 3.5);
+  addPart(5, 23, rlZ*0.85, 3.5, 10, 3.5);
+  addPart(-12, 79, laZ*0.5, 3.2, 9, 3.2);
+  addPart(12, 79, raZ*0.5, 3.2, 9, 3.2);
+  addPart(-12, 63, laZ, 2.8, 8, 2.8);
+  addPart(12, 63, raZ, 2.8, 8, 2.8);
+  addPart(12, 63, raZ+14, 1.8, 2, 12);
+  addPart(12, 66, raZ+22, 1.2, 1.5, 6);
+  return faces;
+}
+
+// ===================== FACE PROCESSING =====================
+function processFace(wVerts, indices, wNormal, fillCol, strokeCol, strokeW) {
+  var cn = normToCam(wNormal);
+  if (cn.z > 0.01) return null;
+  var camVerts = [], depthSum = 0, allFront = true;
+  for (var k = 0; k < indices.length; k++) {
+    var cv = worldToCam(wVerts[indices[k]]);
+    camVerts.push(cv);
+    if (cv.z < NEAR) allFront = false;
+    depthSum += cv.z;
+  }
+  if (!allFront) return null;
+  var avgDepth = depthSum / indices.length;
+  if (avgDepth > FAR) return null;
+  var scrVerts = [], anyVisible = false;
+  for (var k = 0; k < camVerts.length; k++) {
+    var sv = project(camVerts[k]);
+    if (sv === null) return null;
+    scrVerts.push(sv);
+    if (sv.x > -300 && sv.x < SW + 300 && sv.y > -300 && sv.y < SH + 300) anyVisible = true;
+  }
+  if (!anyVisible) return null;
+  return { sv: scrVerts, fl: fillCol, sc: strokeCol, sw: strokeW, d: avgDepth };
+}
+
+// ===================== COLLECT ALL 3D FACES =====================
+function collectFaces() {
+  var allFaces = [];
+  for (var bi = 0; bi < buildings.length; bi++) {
+    var b = buildings[bi];
+    var bdx = b.x - cam.x, bdz = b.z - cam.z;
+    var bDist = Math.sqrt(bdx * bdx + bdz * bdz);
+    if (bDist > FAR + b.hx + b.hz) continue;
+    var box = makeBox(b.x, b.h * 0.5, b.z, b.hx, b.h * 0.5, b.hz);
+    var bright = Math.max(0.1, 1.0 - bDist / FAR);
+    var gVal = Math.floor(255 * bright);
+    var sCol = "rgb(0," + gVal + ",0)";
+    var sW = 0.6 + bright * 0.9;
+    for (var fi = 0; fi < 6; fi++) {
+      var r = processFace(box.v, box.f[fi].i, box.f[fi].n, "#000000", sCol, sW);
+      if (r) allFaces.push(r);
+    }
+  }
+  for (var ci = 0; ci < crystals.length; ci++) {
+    var cr = crystals[ci];
+    if (!cr.alive) continue;
+    var cdx = cr.x - cam.x, cdz = cr.z - cam.z;
+    if (Math.sqrt(cdx * cdx + cdz * cdz) > FAR) continue;
+    cr.spin += 0.02;
+    var bobY = 22 + Math.sin(Date.now() * 0.003 + cr.spin) * 6;
+    var oct = makeOcta(14);
+    var rVerts = [], rNorms = [];
+    for (var j = 0; j < oct.v.length; j++) {
+      var rv = rotY(oct.v[j], cr.spin); rv = rotX(rv, 0.3);
+      rVerts.push(v3(rv.x + cr.x, rv.y + bobY, rv.z + cr.z));
+    }
+    for (var j = 0; j < oct.f.length; j++) {
+      var rn = rotY(oct.f[j].n, cr.spin); rn = rotX(rn, 0.3);
+      rNorms.push(rn);
+    }
+    for (var j = 0; j < oct.f.length; j++) {
+      var r = processFace(rVerts, oct.f[j].i, rNorms[j], "#000000", "#00ff88", 1.5);
+      if (r) allFaces.push(r);
+    }
+    var pdx = cr.x - cam.x, pdz = cr.z - cam.z;
+    if (Math.sqrt(pdx * pdx + pdz * pdz) < 30) {
+      cr.alive = false; score += 100; ammo += 8;
+      setTimeout(function() {
+        var nx, nz, tries = 0;
+        do { nx = (Math.random()-0.5)*1800; nz = (Math.random()-0.5)*1800; tries++; }
+        while (isNearBuilding(nx, nz, 30) && tries < 100);
+        for (var j = 0; j < crystals.length; j++) {
+          if (!crystals[j].alive) { crystals[j].x = nx; crystals[j].z = nz; crystals[j].alive = true; break; }
+        }
+      }, 5000);
+    }
+  }
+  for (var ei = 0; ei < enemies.length; ei++) {
+    var en = enemies[ei];
+    var edx = en.x - cam.x, edz = en.z - cam.z;
+    var eDist = Math.sqrt(edx * edx + edz * edz);
+    if (eDist > FAR) continue;
+    var eB = Math.max(0.15, 1.0 - eDist / FAR);
+    var eG = Math.floor(255 * eB);
+    var eSC = "rgb(0," + eG + ",0)";
+    var eSW = 0.7 + eB * 0.8;
+    var eFaces = buildEnemyMesh(en);
+    for (var fj = 0; fj < eFaces.length; fj++) {
+      var r = processFace(eFaces[fj].v, eFaces[fj].i, eFaces[fj].n, "#000000", eSC, eSW);
+      if (r) allFaces.push(r);
+    }
+  }
+  for (var bi2 = 0; bi2 < eBullets.length; bi2++) {
+    var bul = eBullets[bi2];
+    if (Math.sqrt((bul.x-cam.x)*(bul.x-cam.x)+(bul.z-cam.z)*(bul.z-cam.z)) > FAR) continue;
+    var bOct = makeOcta(3.5);
+    var bV = [];
+    for (var j = 0; j < bOct.v.length; j++)
+      bV.push(v3(bOct.v[j].x+bul.x, bOct.v[j].y+bul.y, bOct.v[j].z+bul.z));
+    for (var j = 0; j < bOct.f.length; j++) {
+      var r = processFace(bV, bOct.f[j].i, bOct.f[j].n, "#000000", "#ff2200", 1.2);
+      if (r) allFaces.push(r);
+    }
+  }
+  allFaces.sort(function(a, b) { return b.d - a.d; });
+  return allFaces;
+}
+
+// ===================== BRIGHT HEX FLOOR RENDERING =====================
+function renderHexFloor() {
+  var groundNorm = normToCam(v3(0, 1, 0));
+  if (groundNorm.z > 0.01) {
+    for (var i = 0; i < MAX_HEXES; i++) hexElems[i].setAttribute("display", "none");
+    return;
+  }
+  var centers = hexGridCenters(cam.x, cam.z, FAR * 0.9);
+  for (var i = 0; i < MAX_HEXES; i++) {
+    if (i < centers.length) {
+      var hc = centers[i];
+      var verts = hexVertices(hc.x, hc.z, HEX_SIZE);
+      var camVerts = [];
+      var allFront = true;
+      var depthSum = 0;
+      for (var j = 0; j < 6; j++) {
+        var cv = worldToCam(verts[j]);
+        camVerts.push(cv);
+        if (cv.z < NEAR) allFront = false;
+        depthSum += cv.z;
+      }
+      if (!allFront || depthSum / 6 > FAR) {
+        hexElems[i].setAttribute("display", "none");
+        continue;
+      }
+      var scrPts = "";
+      var anyOnScreen = false;
+      var sArr = [];
+      for (var j = 0; j < 6; j++) {
+        var sv = project(camVerts[j]);
+        if (sv === null) { anyOnScreen = false; break; }
+        if (j > 0) scrPts += " ";
+        scrPts += sv.x.toFixed(1) + "," + sv.y.toFixed(1);
+        sArr.push(sv);
+        if (sv.x > -100 && sv.x < SW + 100 && sv.y > -100 && sv.y < SH + 100) anyOnScreen = true;
+      }
+      if (!anyOnScreen || sArr.length < 6) {
+        hexElems[i].setAttribute("display", "none");
+        continue;
+      }
+      // BRIGHT floor: green up to 255 at close range
+      var avgD = depthSum / 6;
+      var br = Math.max(0.08, 1.0 - avgD / FAR);
+      var gV = Math.floor(25 + 230 * br);
+      var gV2 = Math.floor(10 + 45 * br);
+      // Alternating tile fill for checkerboard pattern
+      var cI = Math.round(hc.x / (HEX_SIZE * 1.5));
+      var rI = Math.round(hc.z / (HEX_SIZE * HEX_SQRT3));
+      var fillC = ((cI + rI) % 2 === 0) ? "#041208" : "#020e05";
+      hexElems[i].setAttribute("points", scrPts);
+      hexElems[i].setAttribute("fill", fillC);
+      hexElems[i].setAttribute("stroke", "rgb(0," + gV + "," + gV2 + ")");
+      hexElems[i].setAttribute("stroke-width", String(0.7 + br * 1.1));
+      hexElems[i].removeAttribute("display");
+      // Push hex edges to oscilloscope (every 4th hex)
+      if (i % 4 === 0) {
+        for (var j = 0; j < 6; j++) {
+          var j2 = (j + 1) % 6;
+          oscLine(sArr[j].x, sArr[j].y, sArr[j2].x, sArr[j2].y);
+        }
+      }
+    } else {
+      hexElems[i].setAttribute("display", "none");
+    }
+  }
+}
+
+// ===================== 3D SCENE RENDERING =====================
+function renderScene() {
+  var faces = collectFaces();
+  var n = faces.length;
+  for (var i = 0; i < MAX_POLYS; i++) {
+    var pe = polyElems[i];
+    if (i < n) {
+      var f = faces[i];
+      var pts = f.sv[0].x.toFixed(1) + "," + f.sv[0].y.toFixed(1);
+      for (var j = 1; j < f.sv.length; j++)
+        pts += " " + f.sv[j].x.toFixed(1) + "," + f.sv[j].y.toFixed(1);
+      pe.setAttribute("points", pts);
+      pe.setAttribute("fill", f.fl);
+      pe.setAttribute("stroke", f.sc);
+      pe.setAttribute("stroke-width", String(f.sw));
+      pe.removeAttribute("display");
+      // Push polygon edges to oscilloscope
+      for (var j = 0; j < f.sv.length; j++) {
+        var j2 = (j + 1) % f.sv.length;
+        oscLine(f.sv[j].x, f.sv[j].y, f.sv[j2].x, f.sv[j2].y);
+      }
+    } else {
+      pe.setAttribute("display", "none");
+    }
+  }
+}
+
+// ===================== FX RENDERING =====================
+function renderFX() {
+  for (var i = 0; i < MAX_TRACERS; i++) {
+    var tl = tracerElems[i];
+    if (i < tracers.length) {
+      var tr = tracers[i];
+      var p1 = project(worldToCam(v3(tr.sx, tr.sy, tr.sz)));
+      var p2 = project(worldToCam(v3(tr.ex, tr.ey, tr.ez)));
+      if (p1 && p2) {
+        tl.setAttribute("x1", p1.x.toFixed(1));
+        tl.setAttribute("y1", p1.y.toFixed(1));
+        tl.setAttribute("x2", p2.x.toFixed(1));
+        tl.setAttribute("y2", p2.y.toFixed(1));
+        var alpha = (tr.life / tr.maxLife);
+        tl.setAttribute("opacity", String(alpha * 0.9));
+        tl.setAttribute("stroke-width", String(2 + alpha * 2));
+        tl.removeAttribute("display");
+        oscLine(p1.x, p1.y, p2.x, p2.y);
+      } else {
+        tl.setAttribute("display", "none");
+      }
+    } else {
+      tl.setAttribute("display", "none");
+    }
+  }
+  for (var i = 0; i < MAX_IMPACTS; i++) {
+    var ic = impactElems[i];
+    if (i < impacts.length) {
+      var imp = impacts[i];
+      var sp = project(worldToCam(v3(imp.x, imp.y, imp.z)));
+      if (sp) {
+        var alpha = imp.life / imp.maxLife;
+        var rad = Math.max(2, 15 * alpha);
+        ic.setAttribute("cx", sp.x.toFixed(1));
+        ic.setAttribute("cy", sp.y.toFixed(1));
+        ic.setAttribute("r", String(rad));
+        ic.setAttribute("opacity", String(alpha * 0.8));
+        ic.removeAttribute("display");
+        oscPoint(sp.x, sp.y);
+      } else {
+        ic.setAttribute("display", "none");
+      }
+    } else {
+      ic.setAttribute("display", "none");
+    }
+  }
+}
+
+// ===================== HUD RENDERING =====================
+function renderHUD() {
+  var h = "";
+  // Crosshair
+  h += '<line x1="588" y1="400" x2="612" y2="400" stroke="#00ff00" stroke-width="1.5" opacity="0.8"/>';
+  h += '<line x1="600" y1="388" x2="600" y2="412" stroke="#00ff00" stroke-width="1.5" opacity="0.8"/>';
+  h += '<circle cx="600" cy="400" r="5" fill="none" stroke="#00ff00" stroke-width="0.7" opacity="0.5"/>';
+  h += '<circle cx="600" cy="400" r="1.5" fill="#00ff00" opacity="0.9"/>';
+  oscLine(588, 400, 612, 400);
+  oscLine(600, 388, 600, 412);
+  // Hit marker
+  if (hitMarkerT > 0) {
+    var ha = hitMarkerT / 0.25;
+    var hs = 8 + (1 - ha) * 6;
+    h += '<line x1="'+(600-hs)+'" y1="'+(400-hs)+'" x2="'+(600+hs)+'" y2="'+(400+hs)+'" stroke="#ffffff" stroke-width="2.5" opacity="'+ha+'"/>';
+    h += '<line x1="'+(600+hs)+'" y1="'+(400-hs)+'" x2="'+(600-hs)+'" y2="'+(400+hs)+'" stroke="#ffffff" stroke-width="2.5" opacity="'+ha+'"/>';
+    oscLine(600-hs, 400-hs, 600+hs, 400+hs);
+    oscLine(600+hs, 400-hs, 600-hs, 400+hs);
+  }
+  // Kill feed
+  if (killFeedT > 0) {
+    var ka = Math.min(1, killFeedT / 0.3);
+    h += '<text x="600" y="370" text-anchor="middle" fill="#ff4400" font-size="18" font-family="monospace" font-weight="bold" opacity="'+ka+'">TARGET ELIMINATED +250</text>';
+  }
+  // Health bar
+  h += '<rect x="20" y="18" width="204" height="26" rx="3" fill="#0a0a0a" stroke="#00ff00" stroke-width="1.5"/>';
+  var hpW = Math.max(0, health * 2);
+  var hpC = health > 50 ? "#00cc00" : health > 25 ? "#cc8800" : "#cc0000";
+  h += '<rect x="22" y="20" width="' + hpW + '" height="22" rx="2" fill="' + hpC + '" opacity="0.5"/>';
+  h += '<text x="122" y="36" text-anchor="middle" fill="#00ff00" font-size="13" font-family="monospace" font-weight="bold">HP ' + health + '</text>';
+  oscLine(20, 18, 224, 18);
+  oscLine(224, 18, 224, 44);
+  oscLine(224, 44, 20, 44);
+  oscLine(20, 44, 20, 18);
+  // Ammo
+  var ammoTxt = "AMMO " + ammo;
+  if (reloadT > 0) ammoTxt += "  [RELOADING]";
+  h += '<text x="20" y="64" fill="#00ff00" font-size="15" font-family="monospace" font-weight="bold">' + ammoTxt + '</text>';
+  // Score and kills
+  h += '<text x="20" y="86" fill="#00cc00" font-size="15" font-family="monospace">SCORE ' + score + '</text>';
+  h += '<text x="20" y="106" fill="#009900" font-size="13" font-family="monospace">KILLS ' + kills + '</text>';
+  h += '<text x="20" y="126" fill="#007700" font-size="11" font-family="monospace">ENEMIES ' + enemies.length + '</text>';
+  // Weapon display with muzzle flash
+  var recoil = fireCD > 0.1 ? 8 : 0;
+  var wy = 695 - recoil;
+  h += '<rect x="555" y="' + wy + '" width="90" height="105" rx="6" fill="#0c0c0c" stroke="#00ff00" stroke-width="1.5"/>';
+  h += '<rect x="570" y="' + (wy - 35) + '" width="60" height="50" rx="4" fill="#080808" stroke="#00ff00" stroke-width="1"/>';
+  h += '<rect x="583" y="' + (wy - 60) + '" width="34" height="35" rx="3" fill="#060606" stroke="#00ff00" stroke-width="1"/>';
+  h += '<rect x="591" y="' + (wy - 80) + '" width="18" height="28" rx="2" fill="#040404" stroke="#00ff00" stroke-width="0.8"/>';
+  if (fireCD > 0.1) {
+    h += '<polygon points="590,' + (wy - 82) + ' 610,' + (wy - 82) + ' 600,' + (wy - 115) + '" fill="#00ff00" opacity="0.95"/>';
+    h += '<polygon points="593,' + (wy - 85) + ' 607,' + (wy - 85) + ' 600,' + (wy - 108) + '" fill="#aaffcc" opacity="0.7"/>';
+    h += '<polygon points="596,' + (wy - 87) + ' 604,' + (wy - 87) + ' 600,' + (wy - 100) + '" fill="#ffffff" opacity="0.5"/>';
+    h += '<circle cx="600" cy="' + (wy - 95) + '" r="8" fill="#00ff00" opacity="0.15"/>';
+  }
+  // Minimap
+  var mmX = SW - 190, mmY = 15, mmS = 170, mmK = mmS / 700;
+  h += '<rect x="' + mmX + '" y="' + mmY + '" width="' + mmS + '" height="' + mmS + '" rx="3" fill="#060a07" stroke="#00ff00" stroke-width="1" opacity="0.85"/>';
+  oscLine(mmX, mmY, mmX + mmS, mmY);
+  oscLine(mmX + mmS, mmY, mmX + mmS, mmY + mmS);
+  oscLine(mmX + mmS, mmY + mmS, mmX, mmY + mmS);
+  oscLine(mmX, mmY + mmS, mmX, mmY);
+  for (var i = 0; i < buildings.length; i++) {
+    var b = buildings[i];
+    var bx = mmX + mmS * 0.5 + (b.x - cam.x) * mmK;
+    var bz = mmY + mmS * 0.5 + (b.z - cam.z) * mmK;
+    if (bx < mmX - 40 || bx > mmX + mmS + 40 || bz < mmY - 40 || bz > mmY + mmS + 40) continue;
+    var bw = b.hx * mmK * 2, bd = b.hz * mmK * 2;
+    h += '<rect x="' + (bx - bw * 0.5) + '" y="' + (bz - bd * 0.5) + '" width="' + bw + '" height="' + bd + '" fill="#002200" stroke="#005500" stroke-width="0.5"/>';
+  }
+  for (var i = 0; i < enemies.length; i++) {
+    var e = enemies[i];
+    var ex = mmX + mmS * 0.5 + (e.x - cam.x) * mmK;
+    var ez = mmY + mmS * 0.5 + (e.z - cam.z) * mmK;
+    if (ex < mmX || ex > mmX + mmS || ez < mmY || ez > mmY + mmS) continue;
+    h += '<circle cx="' + ex + '" cy="' + ez + '" r="2.5" fill="#ff0000"/>';
+  }
+  for (var i = 0; i < crystals.length; i++) {
+    var cr = crystals[i];
+    if (!cr.alive) continue;
+    var cx2 = mmX + mmS * 0.5 + (cr.x - cam.x) * mmK;
+    var cz2 = mmY + mmS * 0.5 + (cr.z - cam.z) * mmK;
+    if (cx2 < mmX || cx2 > mmX + mmS || cz2 < mmY || cz2 > mmY + mmS) continue;
+    h += '<circle cx="' + cx2 + '" cy="' + cz2 + '" r="2" fill="#00ff88"/>';
+  }
+  h += '<circle cx="' + (mmX + mmS * 0.5) + '" cy="' + (mmY + mmS * 0.5) + '" r="3.5" fill="#ffffff"/>';
+  var pDirX = Math.sin(cam.yaw) * 15, pDirZ = Math.cos(cam.yaw) * 15;
+  h += '<line x1="' + (mmX + mmS * 0.5) + '" y1="' + (mmY + mmS * 0.5) + '" x2="' + (mmX + mmS * 0.5 + pDirX) + '" y2="' + (mmY + mmS * 0.5 + pDirZ) + '" stroke="#ffffff" stroke-width="1.5"/>';
+  h += '<text x="' + (mmX + mmS * 0.5) + '" y="' + (mmY + mmS + 15) + '" text-anchor="middle" fill="#006600" font-size="10" font-family="monospace">TACTICAL MAP</text>';
+  // Pointer lock lost warning
+  if (active && !document.pointerLockElement) {
+    h += '<rect x="310" y="752" width="580" height="30" rx="4" fill="#050505" stroke="#00ff00" stroke-width="0.8" opacity="0.9"/>';
+    h += '<text x="600" y="772" text-anchor="middle" fill="#00ff00" font-size="13" font-family="monospace">CLICK TO LOCK MOUSE | Left-Click Shoot | WASD Move | R Reload</text>';
+  }
+  // Gamepad connected indicator
+  if (gamepadConnected && active) {
+    h += '<rect x="1020" y="770" width="170" height="22" rx="3" fill="#040a04" stroke="#00ff00" stroke-width="0.7" opacity="0.8"/>';
+    h += '<text x="1105" y="785" text-anchor="middle" fill="#00ff00" font-size="10" font-family="monospace" opacity="0.9">XBOX GAMEPAD ACTIVE</text>';
+  }
+  // Oscilloscope active indicator
+  if (oscReady && active) {
+    h += '<rect x="10" y="770" width="110" height="22" rx="3" fill="#040a04" stroke="#00ff00" stroke-width="0.5" opacity="0.6"/>';
+    h += '<text x="65" y="785" text-anchor="middle" fill="#00cc00" font-size="9" font-family="monospace" opacity="0.8">OSC OUTPUT ON</text>';
+  }
+  // Compass heading
+  var deg = ((cam.yaw * 180 / Math.PI) % 360 + 360) % 360;
+  var compassDir = "N";
+  if (deg > 315 || deg <= 45) compassDir = "N";
+  else if (deg > 45 && deg <= 135) compassDir = "E";
+  else if (deg > 135 && deg <= 225) compassDir = "S";
+  else compassDir = "W";
+  h += '<text x="600" y="18" text-anchor="middle" fill="#005500" font-size="11" font-family="monospace" opacity="0.7">' + compassDir + ' ' + Math.round(deg) + '\u00B0</text>';
+  gUI.innerHTML = h;
+}
+
+// ===================== INPUT HANDLING =====================
+document.addEventListener("keydown", function(ev) {
+  keys[ev.key.toLowerCase()] = true;
+  if (ev.key.toLowerCase() === "r" && active && reloadT <= 0 && ammo < 100) reloadT = 1.8;
+});
+document.addEventListener("keyup", function(ev) { keys[ev.key.toLowerCase()] = false; });
+document.addEventListener("contextmenu", function(ev) { ev.preventDefault(); });
+document.addEventListener("mousedown", function(ev) {
+  // Click to start game
+  if (!active) { startGame(); return; }
+  // Left click: shoot and re-acquire pointer lock if lost
+  if (ev.button === 0) {
+    if (!document.pointerLockElement) {
+      try { svgEl.requestPointerLock(); } catch(ex) {}
+    }
+    playerShoot();
+  }
+  // Right click drag fallback for look (when pointer lock unavailable)
+  if (ev.button === 2) { rDrag = true; rPrevX = ev.clientX; rPrevY = ev.clientY; }
+});
+document.addEventListener("mouseup", function(ev) { if (ev.button === 2) rDrag = false; });
+document.addEventListener("mousemove", function(ev) {
+  if (!active) return;
+  // With pointer lock: movementX/Y work without any button held
+  if (document.pointerLockElement) {
+    mouseX += ev.movementX;
+    mouseY += ev.movementY;
+  // Fallback: right-click drag for look
+  } else if (rDrag) {
+    mouseX += ev.clientX - rPrevX;
+    mouseY += ev.clientY - rPrevY;
+    rPrevX = ev.clientX;
+    rPrevY = ev.clientY;
+  }
+});
+document.addEventListener("pointerlockchange", function() {
+  // Track pointer lock state for HUD display
+});
+
+// ===================== XBOX GAMEPAD SUPPORT =====================
+// Connection event tracking
+window.addEventListener("gamepadconnected", function(e) {
+  gamepadConnected = true;
+});
+window.addEventListener("gamepaddisconnected", function(e) {
+  var pads = navigator.getGamepads ? navigator.getGamepads() : [];
+  var anyFound = false;
+  for (var i = 0; i < pads.length; i++) { if (pads[i]) { anyFound = true; break; } }
+  gamepadConnected = anyFound;
+});
+
+function pollGamepad(dt) {
+  var gps = navigator.getGamepads ? navigator.getGamepads() : [];
+  var gp = gps[0]; if (!gp) return;
+  // Left stick: movement with deadzone
+  var DEAD = 0.18;
+  var lx = Math.abs(gp.axes[0]) > DEAD ? gp.axes[0] : 0;
+  var ly = Math.abs(gp.axes[1]) > DEAD ? gp.axes[1] : 0;
+  if (lx !== 0 || ly !== 0) {
+    var sinY = Math.sin(cam.yaw), cosY = Math.cos(cam.yaw);
+    var wx = (lx * cosY - ly * sinY) * MOVE_SPD * dt;
+    var wz = (-lx * sinY - ly * cosY) * MOVE_SPD * dt;
+    var res = collideWithBuildings(cam.x + wx, cam.z + wz, 12);
+    cam.x = res.x; cam.z = res.z;
+  }
+  // Right stick: camera look with deadzone
+  var rx = Math.abs(gp.axes[2]) > DEAD ? gp.axes[2] : 0;
+  var ry = Math.abs(gp.axes[3]) > DEAD ? gp.axes[3] : 0;
+  if (Math.abs(rx) > DEAD) cam.yaw += rx * 3.0 * dt;
+  if (Math.abs(ry) > DEAD) {
+    cam.pitch -= ry * 2.5 * dt;
+    cam.pitch = Math.max(-1.4, Math.min(1.4, cam.pitch));
+  }
+  // Right trigger (buttons[7]): shoot with analog threshold
+  if (gp.buttons[7] && gp.buttons[7].value > 0.3) playerShoot();
+  // A button (buttons[0]): reload
+  if (gp.buttons[0] && gp.buttons[0].pressed && reloadT <= 0 && ammo < 100) reloadT = 1.8;
+  // D-pad: alternative movement input
+  var dUp = gp.buttons[12] && gp.buttons[12].pressed;
+  var dDn = gp.buttons[13] && gp.buttons[13].pressed;
+  var dLt = gp.buttons[14] && gp.buttons[14].pressed;
+  var dRt = gp.buttons[15] && gp.buttons[15].pressed;
+  if (dUp || dDn || dLt || dRt) {
+    var dmx = 0, dmz = 0;
+    if (dUp) dmz += 1;
+    if (dDn) dmz -= 1;
+    if (dLt) dmx -= 1;
+    if (dRt) dmx += 1;
+    var sinY2 = Math.sin(cam.yaw), cosY2 = Math.cos(cam.yaw);
+    var dwx = (dmx * cosY2 + dmz * sinY2) * MOVE_SPD * dt * 0.7;
+    var dwz = (-dmx * sinY2 + dmz * cosY2) * MOVE_SPD * dt * 0.7;
+    var dres = collideWithBuildings(cam.x + dwx, cam.z + dwz, 12);
+    cam.x = dres.x; cam.z = dres.z;
+  }
+}
+
+// ===================== GAME STATE =====================
+function startGame() {
+  active = true;
+  gMenu.style.display = "none";
+  // Initialize oscilloscope audio on first user gesture
+  initOscilloscope();
+  resumeAudio();
+  // Auto-request pointer lock so mouse look works immediately
+  try {
+    if (svgEl.requestPointerLock) svgEl.requestPointerLock();
+    else if (svgEl.webkitRequestPointerLock) svgEl.webkitRequestPointerLock();
+  } catch (ex) {}
+}
+function gameOver() {
+  active = false;
+  try { document.exitPointerLock(); } catch (ex) {}
+  gMenu.style.display = "";
+  var ts = gMenu.querySelectorAll("text");
+  ts[3].textContent = "MISSION FAILED";
+  ts[4].textContent = "SCORE: " + score + "  |  KILLS: " + kills;
+  ts[5].textContent = "CLICK TO REDEPLOY";
+  ts[6].textContent = "";
+  ts[7].textContent = "";
+  ts[8].textContent = "";
+  ts[9].textContent = "";
+  ts[10].textContent = "";
+  ts[11].textContent = "";
+  ts[12].textContent = "";
+  health = 100; ammo = 100; score = 0; kills = 0; prevKills = 0;
+  cam.x = 0; cam.z = 0; cam.yaw = 0; cam.pitch = 0;
+  enemies.length = 0; eBullets.length = 0; reloadT = 0;
+  tracers.length = 0; impacts.length = 0; fireCD = 0;
+  for (var i = 0; i < crystals.length; i++) crystals[i].alive = true;
+  for (var i = 0; i < 10; i++) spawnEnemy();
+}
+
+// ===================== UPDATE LOOP =====================
+function update(dt) {
+  if (!active) return;
+  // Mouse look from accumulated movement deltas
+  cam.yaw += mouseX * SENS;
+  cam.pitch -= mouseY * SENS;
+  cam.pitch = Math.max(-1.4, Math.min(1.4, cam.pitch));
+  mouseX = 0; mouseY = 0;
+  // WASD / arrow key movement
+  var mx = 0, mz = 0;
+  if (keys["w"] || keys["arrowup"]) mz += 1;
+  if (keys["s"] || keys["arrowdown"]) mz -= 1;
+  if (keys["a"] || keys["arrowleft"]) mx -= 1;
+  if (keys["d"] || keys["arrowright"]) mx += 1;
+  if (mx !== 0 || mz !== 0) {
+    var len = Math.sqrt(mx * mx + mz * mz);
+    mx /= len; mz /= len;
+    var sinY = Math.sin(cam.yaw), cosY = Math.cos(cam.yaw);
+    var wx = (mx * cosY + mz * sinY) * MOVE_SPD * dt;
+    var wz = (-mx * sinY + mz * cosY) * MOVE_SPD * dt;
+    var res = collideWithBuildings(cam.x + wx, cam.z + wz, 12);
+    cam.x = res.x; cam.z = res.z;
+  }
+  // Cooldowns and timers
+  if (fireCD > 0) fireCD -= dt;
+  if (reloadT > 0) {
+    reloadT -= dt;
+    if (reloadT <= 0) { ammo = Math.min(100, ammo + 30); reloadT = 0; }
+  }
+  if (dmgT > 0) {
+    dmgT -= dt;
+    rFlash.setAttribute("opacity", String(Math.max(0, dmgT * 0.6)));
+  }
+  // Screen shake decay
+  if (shakeAmt > 0.001) {
+    shakeX = (Math.random() - 0.5) * shakeAmt * 2;
+    shakeY = (Math.random() - 0.5) * shakeAmt * 2;
+    shakeAmt *= 0.82;
+  } else { shakeAmt = 0; shakeX = 0; shakeY = 0; }
+  // FOV kick decay
+  if (fovKick > 0.001) { fovKick *= 0.8; } else { fovKick = 0; }
+  effFocal = 1.0 / Math.tan(FOV * 0.5 * (1 - fovKick));
+  // Kill feed trigger
+  if (kills > prevKills) { killFeedT = 1.5; prevKills = kills; }
+  // Xbox gamepad input
+  pollGamepad(dt);
+  // AI and physics
+  updateEnemies(dt);
+  updateEnemyBullets(dt);
+  updateTracersAndImpacts(dt);
+  // Maintain minimum enemy count
+  while (enemies.length < 10) spawnEnemy();
+}
+
+// ===================== GAME LOOP =====================
+function gameLoop(timestamp) {
+  var dt = Math.min((timestamp - lastT) / 1000, 0.05);
+  lastT = timestamp;
+  update(dt);
+  // Apply screen shake to camera for rendering only
+  var savedPitch = cam.pitch, savedYaw = cam.yaw;
+  cam.pitch += shakeY; cam.yaw += shakeX;
+  // Reset oscilloscope frame budget
+  oscReset();
+  // Render all layers
+  renderHexFloor();
+  renderScene();
+  renderFX();
+  // Restore camera after shake (HUD must not shake)
+  cam.pitch = savedPitch; cam.yaw = savedYaw;
+  // HUD on top
+  renderHUD();
+  requestAnimationFrame(gameLoop);
+}
+
+// ===================== INITIALIZATION =====================
+generateWorld();
+requestAnimationFrame(gameLoop);
+
+})();
+]]></script>
+</svg>
