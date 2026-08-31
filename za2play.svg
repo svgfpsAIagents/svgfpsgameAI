@@ -1,36 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- ================================================================
-//  OSCILLO-FIGHT : HEXARENA PROTOCOL  //  BUILD 4 (DUAL GAMEPAD)
+//  OSCILLO-FIGHT : HEXARENA PROTOCOL  //  BUILD 5 (ROSTER OVERHAUL)
 //  Single file 3D vector fighting game. Pure SVG + embedded script.
 //  1920x1080. Black faced solids, green vector edges.
-//  XY raster rules: fixed projection origin (never recentered),
-//  last two frames kept visible via triple buffer rotation.
-//  FOUNDATIONAL XBOX MAP (source of truth, per pad):
-//   X btn2 = DEFENCE      B btn1 = PUNCH
-//   A btn0 = KICK         Y btn3 = JUMP ATTACK
-//   RT btn7 = SPECIAL 1   LT btn6 = SPECIAL 2
-//   LB btn4 / RB btn5 = CHARACTER CYCLE (menus)
-//   VIEW btn8 = ARENA VIEW CYCLE   MENU btn9 = START / PAUSE
-//   DPAD 12/13/14/15 + LEFT STICK = MOVE
-//  DERIVED KEYBOARD (P1):
-//   W/A/S/D (+Arrows in 1P) = MOVE  J = PUNCH  K = KICK
-//   L = DEFENCE  I or SPACE = JUMP ATTACK
-//   U = SPECIAL 1 (RT)   O = SPECIAL 2 (LT)
-//   V = VIEW  P or ESC = PAUSE  ENTER = START  T = TOUCH PAD
-//  DERIVED KEYBOARD (P2, 2P shared keyboard, unchanged):
-//   ARROWS = MOVE  N/NP1 PUNCH  M/NP2 KICK  ,/NP3 DEF
-//   ./NP5 JUMP-ATK  NP4 SP1  NP6 SP2
-//  CONSOLE FLOW (this build):
-//   0 pads  : keyboard + touch, exactly as before
-//   1 pad   : MENU/START = 1P campaign WITH character select
-//             (pick any of 6 fighters, face the other 5)
-//   2 pads  : PAD1 START = 1P, PAD2 START = 2P join,
-//             LB or LT on ANY pad = 2 PLAYER VERSUS
-//   select  : per pad : DPAD/STICK or LB/RB cycle,
-//             A/B/LT/MENU lock, X unlock. keyboard unchanged.
-//   pads rumble on hits + K.O. where the browser permits.
-//  MATCH RULES: best of 3 rounds. First to 2 round wins advances.
-//  ROSTER: VANGUARD-01 / GEAROX / VERMIL / KOLOSS / GHOST-9 / EMBERFANG
+//  FOUNDATIONAL XBOX MAP (per pad):
+//   X btn2 DEF / B btn1 PUNCH / A btn0 KICK / Y btn3 JUMP-ATK
+//   RT btn7 = SP1 (signature, unique per fighter)  LT btn6 = SP2
+//   LB/RB = menus cycle. VIEW = CAM. MENU = START/PAUSE.
+//  BUILD 5 : muscular humanoid rigs (pecs/abs/traps/biceps/calf bulge),
+//   polygon shard arms for VERMIL + GHOST-9, digitigrade beast legs
+//   for EMBERFANG, per character normal move chains, and every RT
+//   special has dedicated VFX : hex pillars, debris shards, slash
+//   trails, ground cracks, after-images, ember trails, glyph rings.
+//  Console flow unchanged from Build 4 : 0/1/2 pads, LB/LT join 2P,
+//   select per pad, keyboard 2P shared unchanged.
 ================================================================ -->
 <svg xmlns="http://www.w3.org/2000/svg"
      xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -40,28 +23,23 @@
      font-family="Courier New, monospace">
 
   <title>OSCILLO-FIGHT HEXARENA</title>
-  <desc>Tekken type 3D vector fighting game. Best of 3 rounds, six
-  selectable fighters with unique special moves, SP meter, humanoid box
-  fighters with per limb rays, hexagon floor, phosphor persistence via a
-  rotating triple buffer. Full dual gamepad console flow: 0, 1 or 2 pads
-  each get a matching character select and progression, LB/LT join 2P.</desc>
+  <desc>Vector fighting game, best of 3 rounds, six muscular humanoid
+  fighters each with unique polygon bodies, unique normal chains and a
+  signature RT special with dedicated particle VFX. Full dual gamepad,
+  keyboard and touch console flow.</desc>
 
   <defs>
     <pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse">
       <rect x="0" y="0" width="4" height="4" fill="#000000"/>
       <rect x="0" y="0" width="4" height="2" fill="#020402"/>
     </pattern>
-    <!-- rotating frame buffers : only the oldest is rewritten each
-         frame, the two phosphor ghosts are free use references -->
     <g id="buf0"></g>
     <g id="buf1"></g>
     <g id="buf2"></g>
   </defs>
 
-  <!-- persistent black field -->
   <rect x="0" y="0" width="1920" height="1080" fill="#000000"/>
 
-  <!-- phosphor persistence : oldest two frames, zero re-parse -->
   <use id="uC" href="#buf2" xlink:href="#buf2" opacity="0.08"/>
   <use id="uB" href="#buf1" xlink:href="#buf1" opacity="0.24"/>
   <use id="uA" href="#buf0" xlink:href="#buf0"/>
@@ -96,13 +74,13 @@
     <text id="combo" x="120" y="200" font-size="34" fill="#39ff6e" letter-spacing="4"></text>
     <text id="comboR" x="1800" y="200" font-size="34" fill="#ffd23f" letter-spacing="4" text-anchor="end"></text>
     <text x="40" y="890" font-size="15" fill="#1f7a3d">== CONTROL BUS =================================================</text>
-    <text x="40" y="910" font-size="15" fill="#1f7a3d">PAD : A KICK / B PUNCH / X DEF+BACK / Y JUMP-ATK / RT SP1 / LT SP2</text>
+    <text x="40" y="910" font-size="15" fill="#1f7a3d">PAD : A KICK / B PUNCH / X DEF / Y JUMP-ATK / RT SIGNATURE SP / LT SP2</text>
     <text x="40" y="930" font-size="15" fill="#1f7a3d">PAD : DPAD+STICK MOVE / VIEW CAM / MENU START+PAUSE / LB-LT 2P JOIN</text>
     <text x="40" y="950" font-size="15" fill="#1f7a3d">KEY P1 : WASD MOVE / J PUNCH / K KICK / L DEF / I+SPACE JUMP-ATK</text>
     <text x="40" y="970" font-size="15" fill="#1f7a3d">KEY P1 : U SP1 / O SP2 / V VIEW / P PAUSE / ENTER START / T TOUCH</text>
     <text x="40" y="990" font-size="15" fill="#1f7a3d">KEY P2 : ARROWS / N M , . / NPAD 1-6 (2P SHARED KEYBOARD)</text>
-    <text x="40" y="1010" font-size="15" fill="#1f7a3d">MATCH : BEST OF 3 // 6 FIGHTERS // SPECIALS COST SP METER</text>
-    <text x="40" y="1048" font-size="14" fill="#135c2e" letter-spacing="2">XY RAW MAP // NO RE-CENTER // TRIPLE BUFFER // DUAL PAD BUILD 4</text>
+    <text x="40" y="1010" font-size="15" fill="#1f7a3d">MATCH : BEST OF 3 // 6 FIGHTERS // EACH RT SPECIAL IS UNIQUE</text>
+    <text x="40" y="1048" font-size="14" fill="#135c2e" letter-spacing="2">XY RAW MAP // TRIPLE BUFFER // DUAL PAD // MUSCLE RIG BUILD 5</text>
     <text id="padS" x="1880" y="1048" font-size="16" text-anchor="end" fill="#1f7a3d">KB</text>
   </g>
 
@@ -117,13 +95,13 @@
     <text x="960" y="290" font-size="100" letter-spacing="16">OSCILLO-FIGHT</text>
     <text x="960" y="350" font-size="28" fill="#1f7a3d" letter-spacing="10">HEXARENA PROTOCOL // VECTOR COMBAT</text>
     <text id="tPads" x="960" y="600" font-size="22" fill="#ffd23f" letter-spacing="4">INPUT : KEYBOARD / TOUCH</text>
-    <text x="960" y="648" font-size="19" fill="#1f7a3d">PAD : A KICK / B PUNCH / X DEF / Y JUMP-ATK / RT SP1 / LT SP2</text>
+    <text x="960" y="648" font-size="19" fill="#1f7a3d">PAD : A KICK / B PUNCH / X DEF / Y JUMP-ATK / RT SIGNATURE / LT SP2</text>
     <text x="960" y="676" font-size="19" fill="#1f7a3d">PAD : MENU = START / VIEW = CAM / LB OR LT = 2 PLAYER VERSUS</text>
     <text x="960" y="704" font-size="19" fill="#1f7a3d">KEYS : WASD MOVE / J K L I U O / V VIEW / P PAUSE / T TOUCH</text>
     <text id="pressL" x="960" y="778" font-size="30" letter-spacing="6">PRESS START / ENTER / TAP</text>
     <text id="tTwo" x="960" y="840" font-size="22" fill="#ffd23f" letter-spacing="4">C / LB / LT = 2 PLAYER VERSUS</text>
     <text x="960" y="882" font-size="18" fill="#135c2e">ROSTER : VANGUARD-01 / GEAROX / VERMIL / KOLOSS / GHOST-9 / EMBERFANG</text>
-    <text x="960" y="910" font-size="18" fill="#135c2e">BEST OF 3 ROUNDS // SPECIALS COST SP METER</text>
+    <text x="960" y="910" font-size="18" fill="#135c2e">EVERY FIGHTER HAS A UNIQUE RT SIGNATURE SPECIAL + VFX</text>
   </g>
 
   <!-- =================== CHARACTER SELECT =================== -->
@@ -190,24 +168,24 @@
 // ============================================================
 // 00 // BOOT CONSTANTS
 // ============================================================
-var CX = 960, CY = 540, FOC = 1050;   // FIXED origin, never recentered
+var CX = 960, CY = 540, FOC = 1050;
 var ARENA_R = 6.5;
 var T = 0;
-var DL = [];                          // draw list
+var DL = [];
 var PL = null, EN = null;
-var PRE = [null, null];               // character select previews
+var PRE = [null, null];
 var FLASH = 0, SHAKE = 0, BANT = 0, MVT = 0;
 var SPARKS = [], RINGS = [], PROJ = [];
+var SHARDS = [], TRAILS = [], PILLARS = [], AFTER = [];
 var PADS = [], PDP = [[], [], [], []], PADN = 'KB';
 var TOUCHON = false, TAP = false, IGN = 0;
 var VI = 0;
 var KEYS = {}, KEDGE = {};
 
-// cached DOM
 var EL = {}, ELBUF = [], SR = [], SS = [];
 var ACACHE = {};
 var XL = 'http://www.w3.org/1999/xlink';
-var ROT = [0, 1, 2];                  // newest, mid, oldest buffer ids
+var ROT = [0, 1, 2];
 
 function $(id){ return document.getElementById(id); }
 function setTxt(el, s){ if(el && el.textContent !== s){ el.textContent = s; } }
@@ -231,7 +209,7 @@ function KSET(c, v){
 
 var GAME = {
   state: 'title',
-  mode: '1p',              // '1p' campaign vs CPU, or '2p' local versus
+  mode: '1p',
   ei: 0,
   oppList: [],
   round: 1,
@@ -247,7 +225,6 @@ var GAME = {
   p1sel: 0, p2sel: 1, p1lock: false, p2lock: false
 };
 
-// adaptive quality
 var FPS = { acc: 0, n: 0, low: false };
 
 // ============================================================
@@ -272,7 +249,6 @@ function rnd(a,b){ return a + Math.random()*(b-a); }
 function mid(a,b,t){ t = (t === undefined) ? 0.5 : t;
   return [L(a[0],b[0],t), L(a[1],b[1],t), L(a[2],b[2],t)]; }
 
-// camera orbits a FIXED world target
 var CAM = { yaw: 0.6, pit: 0.30, dist: 9.8, tx: 0, ty: 1.2, tz: 0 };
 var SHX = 0, SHY = 0;
 var VIEWS = [
@@ -295,13 +271,11 @@ function proj(p){
   return [CX + x1*FOC/d + SHX, CY - y2*FOC/d + SHY, d];
 }
 
-// back face culling : rotation cached per frame
 var vCY = 1, vSY = 0, vCP = 1, vSP = 0;
 function cacheCamRot(){
   vCY = Math.cos(CAM.yaw); vSY = Math.sin(CAM.yaw);
   vCP = Math.cos(CAM.pit); vSP = Math.sin(CAM.pit);
 }
-// visible if rotated normal points toward camera (z2 component < 0)
 function nvis(nx, ny, nz){
   var z1 = nx*vSY + nz*vCY;
   return (-ny*vSP + z1*vCP) < -0.02;
@@ -328,7 +302,7 @@ function segSeg(p1,q1,p2,q2){
 }
 
 // ============================================================
-// 02 // RENDERER PRIMITIVES (with back face culling)
+// 02 // RENDERER PRIMITIVES
 // ============================================================
 function poly(pts, col, sw, op, fill, layer){
   var s = '', z = 0, i, p;
@@ -360,7 +334,6 @@ function lineSeg(a, b, col, sw, op, layer){
   pline([a,b], col, sw, op, layer);
 }
 
-// tapered rectangular frustum between two points, culled faces
 function boxSeg(a, b, u, v, wa, da, wb, db, col, caps){
   var dir = nrm(sub(b,a));
   var A1 = add(a, add(mul(u,-wa/2), mul(v,-da/2)));
@@ -381,7 +354,6 @@ function boxSeg(a, b, u, v, wa, da, wb, db, col, caps){
   }
 }
 
-// auto framed tapered limb segment
 function limbTaper(a, b, w1, w2, col){
   var d = sub(b, a);
   var l = len(d);
@@ -393,7 +365,6 @@ function limbTaper(a, b, w1, w2, col){
   boxSeg(a, b, u, v, w1, w1, w2, w2, col, false);
 }
 
-// axis aligned box from center + 3 axes, culled faces
 function boxCC3(c, u, v, w, sx, sy, sz, col){
   var C = [], i, su, sv, sw;
   for(i = 0; i < 8; i++){
@@ -418,7 +389,6 @@ function tri(a, b, c, col){
   poly([a,b,c], col, 1.5, 1, '#000', 2);
 }
 
-// pyramid spike pointing along dir
 function pyr(c, dir, h, bw, col){
   var ref = Math.abs(dir[1]) > 0.92 ? [1,0,0] : [0,1,0];
   var u = nrm(cross(dir, ref));
@@ -434,7 +404,6 @@ function pyr(c, dir, h, bw, col){
   tri(B[2],B[3],ap,col); tri(B[3],B[0],ap,col);
 }
 
-// flat ring in plane spanned by u,v
 function ringP(c, r, n, u, v, col, sw, op){
   var pts = [], i;
   for(i = 0; i < n; i++){
@@ -451,8 +420,21 @@ function fistBox(h, e, s, col){
   boxCC3(h, u, v, d, s, s, s, col);
 }
 
+// triangular prism segment (polygon shard limb facet)
+function triPrism(p0, p1, u, v, w0, w1, rot, col){
+  function vv(p, w, a){
+    return add(p, add(mul(u, Math.cos(a)*w), mul(v, Math.sin(a)*w)));
+  }
+  var A = rot, B = rot + 2.094, C = rot + 4.189;
+  var q0 = [vv(p0, w0, A), vv(p0, w0, B), vv(p0, w0, C)];
+  var q1 = [vv(p1, w1, A), vv(p1, w1, B), vv(p1, w1, C)];
+  poly([q0[0], q0[1], q1[1], q1[0]], col, 1.5, 1, '#000', 2);
+  poly([q0[1], q0[2], q1[2], q1[1]], col, 1.5, 1, '#000', 2);
+  poly([q0[2], q0[0], q1[0], q1[2]], col, 1.5, 1, '#000', 2);
+}
+
 // ============================================================
-// 03 // ARENA : hexagon tiles, boundary, pylons, emblem
+// 03 // ARENA
 // ============================================================
 var HEX = [], HEXI = [], PYL = [], BPOLY = [];
 
@@ -494,6 +476,14 @@ function hexPts(cx, cz, r, rot){
   for(i = 0; i < 6; i++){
     var a = Math.PI/3*i + (rot || 0);
     p.push([cx + Math.cos(a)*r, 0, cz + Math.sin(a)*r]);
+  }
+  return p;
+}
+function hexPts3(cx, cy, cz, r, rot){
+  var p = [], i;
+  for(i = 0; i < 6; i++){
+    var a = Math.PI/3*i + (rot || 0);
+    p.push([cx + Math.cos(a)*r, cy, cz + Math.sin(a)*r]);
   }
   return p;
 }
@@ -539,7 +529,6 @@ function drawArena(){
     boxCC3([px,2.95,pz], [1,0,0],[0,0,1],[0,1,0], 0.52, 0.52, 0.26, '#39ff6e');
     lineSeg([px,3.1,pz], [px,4.0,pz], '#39ff6e', 2, 0.7, 0);
   }
-  // SP ready pulse ring under fighters
   if(PL && GAME.state === 'fight' && PL.me >= 35){
     var rr = 0.55 + Math.sin(T*7)*0.12;
     poly(hexPts(PL.x, PL.z, rr, Math.PI/6 + T), '#b6ffd0', 1.6, 0.55, 'none', 0);
@@ -551,74 +540,106 @@ function drawArena(){
 }
 
 // ============================================================
-// 04 // RIGS : humanoid proportions + enemy identity edits
+// 04 // RIGS : muscular humanoid male proportions + identity kit
 // ============================================================
 function baseRig(){
   return {
     scale: 1,
-    chestW: 1.30, chestD: 0.66,
-    abdW: 0.80, abdD: 0.55,
-    pelW: 0.92, pelH: 0.46, pelD: 0.56,
-    headW: 0.40, headH: 0.46, headD: 0.44,
-    shX: 0.68, shY: 2.06,
-    elX: 0.78, elY: 1.58, elZ: 0.12,
-    haX: 0.58, haY: 1.18, haZ: 0.34,
-    ua: 0.30, la: 0.25, fistW: 0.30,
-    hipY: 0.98, hpX: 0.26,
-    knX: 0.28, knY: 0.50, knZ: 0.03,
-    th1: 0.40, th2: 0.30, ca1: 0.28, ca2: 0.18,
-    ftX: 0.30, footW: 0.32, footD: 0.60,
-    padW: 0.46,
+    chestW: 1.06, chestD: 0.62, chestH: 0.36,
+    abdW: 0.66, abdD: 0.52,
+    pelW: 0.86, pelH: 0.44, pelD: 0.54,
+    headW: 0.34, headH: 0.40, headD: 0.37,
+    shX: 0.78, shY: 2.18,
+    elX: 0.88, elY: 1.60, elZ: 0.18,
+    haX: 0.68, haY: 1.12, haZ: 0.36,
+    ua: 0.34, la: 0.28, bicep: 0.40, fore: 0.31, fistW: 0.30,
+    neckW: 0.20, trapW: 0.24,
+    hipY: 1.08, hpX: 0.28,
+    knX: 0.30, knY: 0.55, knZ: 0.04,
+    th1: 0.44, th2: 0.32, ca1: 0.30, ca2: 0.22, calf: 0.34,
+    ftX: 0.32, footW: 0.30, footD: 0.58,
+    padW: 0.50,
     hunch: 0, hover: 0, jaw: 0,
     spikes: 0, gear: 0, crest: 0, pauldron: 0, slab: 0, horns: 0,
     halo: 0, wings: 0, ant: 0, spine: 0, fangs: 0, claws: 0,
     tail: 0, blade: 0, thruster: 0,
-    hurtR: 0.19,
+    polyArm: 0, beastLeg: 0, mane: 0, belt: 0, kneecap: 0, armSpikes: 0,
+    sigil: 'hex',
+    hurtR: 0.20,
     name: 'VANGUARD-01', col: '#39ff6e', ai: 'player',
-    hp: 100, dmgMul: 1, speed: 4.3, pref: 1.8, reach: 2.2, cool: 0.9
+    hp: 100, dmgMul: 1, speed: 4.3, pref: 1.8, reach: 2.25, cool: 0.9
   };
 }
 
 var ROSTER = [
-  { name:'GEAROX', col:'#ffd23f', hp:120, dmg:1.15, spd:0.74, pref:2.0, reach:2.3, cool:1.15, ai:'brute', scale:1.14,
+  // GEAROX : yellow mass monster bodybuilder
+  { name:'GEAROX', col:'#ffd23f', hp:125, dmg:1.15, spd:0.74, pref:2.0, reach:2.35, cool:1.15, ai:'brute', scale:1.15,
     edit:function(R){
-      R.chestW *= 1.35; R.ua *= 1.4; R.la *= 1.3; R.fistW *= 1.5;
-      R.headW *= 0.85; R.headH *= 0.85; R.padW *= 1.25;
-      R.th1 *= 1.3; R.th2 *= 1.25; R.hurtR *= 1.15;
-      R.spikes = 1; R.gear = 1;
+      R.chestW *= 1.55; R.chestD *= 1.30; R.chestH *= 1.35;
+      R.abdW *= 1.20; R.pelW *= 1.12;
+      R.shX *= 1.20; R.shY *= 1.03; R.padW *= 1.55;
+      R.ua *= 1.50; R.bicep *= 1.60; R.la *= 1.35; R.fore *= 1.40; R.fistW *= 1.80;
+      R.th1 *= 1.35; R.th2 *= 1.25; R.ca1 *= 1.15; R.calf *= 1.30;
+      R.neckW *= 1.50; R.trapW *= 1.65;
+      R.headW *= 0.90; R.headH *= 0.92;
+      R.hurtR *= 1.18;
+      R.spikes = 1; R.gear = 1; R.armSpikes = 1; R.kneecap = 1;
+      R.sigil = 'gear';
     }},
-  { name:'VERMIL', col:'#ff4444', hp:100, dmg:1.0, spd:1.07, pref:1.85, reach:2.35, cool:0.7, ai:'blade', scale:1.03,
+  // VERMIL : red lean duelist with polygon shard arms
+  { name:'VERMIL', col:'#ff4444', hp:100, dmg:1.0, spd:1.07, pref:1.85, reach:2.40, cool:0.7, ai:'blade', scale:1.02,
     edit:function(R){
-      R.chestW *= 0.88; R.abdW *= 0.85; R.la = 0.17;
-      R.shX *= 1.12; R.headW *= 0.9;
-      R.blade = 1; R.crest = 1;
+      R.chestW *= 0.95; R.chestD *= 0.95; R.abdW *= 0.80; R.pelW *= 0.86;
+      R.shX *= 1.06; R.padW *= 0.72;
+      R.polyArm = 1; R.la *= 0.55; R.fistW *= 0.40;
+      R.th1 *= 0.85; R.th2 *= 0.80; R.ca1 *= 0.78; R.calf *= 0.80;
+      R.neckW *= 0.90; R.trapW *= 0.70;
+      R.crest = 1; R.belt = 1;
+      R.sigil = 'strap';
     }},
-  { name:'KOLOSS', col:'#4fc3ff', hp:140, dmg:1.2, spd:0.65, pref:2.15, reach:2.35, cool:1.3, ai:'tank', scale:1.10,
+  // KOLOSS : blue slab armored powerlifter
+  { name:'KOLOSS', col:'#4fc3ff', hp:145, dmg:1.2, spd:0.65, pref:2.15, reach:2.40, cool:1.3, ai:'tank', scale:1.12,
     edit:function(R){
-      R.chestW *= 1.28; R.shX *= 1.3; R.padW *= 1.5;
-      R.pelW *= 1.2; R.th1 *= 1.35; R.th2 *= 1.3; R.ca1 *= 1.25;
-      R.ua *= 1.3; R.fistW *= 1.15; R.hurtR *= 1.2;
-      R.pauldron = 1; R.slab = 1; R.horns = 1;
+      R.chestW *= 1.45; R.chestD *= 1.35; R.chestH *= 1.20;
+      R.abdW *= 1.28; R.pelW *= 1.16;
+      R.shX *= 1.28; R.padW *= 1.75;
+      R.ua *= 1.35; R.bicep *= 1.30; R.la *= 1.30; R.fore *= 1.30; R.fistW *= 1.35;
+      R.th1 *= 1.30; R.th2 *= 1.25; R.ca1 *= 1.25; R.calf *= 1.30;
+      R.neckW *= 1.45; R.trapW *= 1.50;
+      R.hurtR *= 1.20;
+      R.pauldron = 1; R.slab = 1; R.horns = 1; R.kneecap = 1;
+      R.sigil = 'slab';
     }},
-  { name:'GHOST-9', col:'#e8f6ff', hp:90, dmg:0.9, spd:1.19, pref:2.0, reach:2.1, cool:0.7, ai:'ghost', scale:0.98,
+  // GHOST-9 : white hovering phantom with polygon shard arms
+  { name:'GHOST-9', col:'#e8f6ff', hp:90, dmg:0.9, spd:1.19, pref:2.0, reach:2.15, cool:0.7, ai:'ghost', scale:0.99,
     edit:function(R){
-      R.chestW *= 0.75; R.chestD *= 0.85; R.abdW *= 0.75;
-      R.ua *= 0.72; R.la *= 0.65; R.fistW *= 0.8;
-      R.th1 *= 0.68; R.th2 *= 0.62; R.ca1 *= 0.62; R.ca2 *= 0.55;
-      R.headW *= 1.2; R.headH *= 1.2;
+      R.chestW *= 0.80; R.chestD *= 0.85; R.abdW *= 0.72; R.pelW *= 0.80;
+      R.shX *= 0.98; R.padW *= 0.66;
+      R.polyArm = 1; R.ua *= 0.85; R.la *= 0.50; R.fistW *= 0.35;
+      R.th1 *= 0.70; R.th2 *= 0.65; R.ca1 *= 0.60; R.calf *= 0.62;
+      R.neckW *= 0.80; R.trapW *= 0.55;
+      R.headW *= 1.28; R.headH *= 1.30;
       R.hover = 0.55; R.hurtR *= 0.85;
       R.halo = 1; R.wings = 1; R.ant = 1;
+      R.sigil = 'diamond';
     }},
-  { name:'EMBERFANG', col:'#ff9a3d', hp:110, dmg:1.05, spd:1.05, pref:1.65, reach:2.2, cool:0.8, ai:'beast', scale:1.06,
+  // EMBERFANG : orange digitigrade apex beast
+  { name:'EMBERFANG', col:'#ff9a3d', hp:112, dmg:1.05, spd:1.05, pref:1.65, reach:2.25, cool:0.8, ai:'beast', scale:1.06,
     edit:function(R){
-      R.hunch = 1; R.chestW *= 1.12;
-      R.headW *= 0.95; R.headH *= 0.8;
-      R.fistW *= 1.1; R.ftX *= 1.15;
-      R.jaw = 1; R.spine = 1; R.fangs = 1; R.claws = 1; R.tail = 1;
+      R.hunch = 1; R.chestW *= 1.22; R.chestD *= 1.12; R.chestH *= 1.10; R.abdW *= 1.05;
+      R.shX *= 1.12; R.padW *= 1.05;
+      R.ua *= 1.12; R.bicep *= 1.20; R.la *= 1.15; R.fore *= 1.15; R.fistW *= 1.05;
+      R.beastLeg = 1;
+      R.th1 *= 1.30; R.th2 *= 1.10; R.ca1 *= 0.90; R.calf *= 0.85;
+      R.ftX *= 1.20; R.footW *= 1.20; R.footD *= 0.75;
+      R.neckW *= 1.20; R.trapW *= 1.10;
+      R.headW *= 0.95; R.headH *= 0.82;
+      R.hurtR *= 1.05;
+      R.jaw = 1; R.spine = 1; R.fangs = 1; R.claws = 1; R.tail = 1; R.mane = 1;
+      R.sigil = 'scars';
     }}
 ];
 
-// all six selectable fighters (select indices)
 var FULLROSTER = [{ name: 'VANGUARD-01', col: '#39ff6e' }].concat(
   ROSTER.map(function(r){ return { name: r.name, col: r.col }; })
 );
@@ -626,20 +647,30 @@ var FULLSTAT = [{ hp: 100, dmg: 1.0, spd: 1.0 }].concat(
   ROSTER.map(function(r){ return { hp: r.hp, dmg: r.dmg, spd: r.spd }; })
 );
 
-// per character special move slots : [SP1 (RT), SP2 (LT)]
+// [RT signature special, LT special]
 var CHARSPEC = {
   'VANGUARD-01': ['sp1', 'sp2'],
   'GEAROX':      ['g_slam', 'g_rush'],
-  'VERMIL':      ['v_dance', 'v_cross'],
+  'VERMIL':      ['v_cross', 'v_dance'],
   'KOLOSS':      ['k_stomp', 'k_wall'],
   'GHOST-9':     ['gh_blast', 'gh_blink'],
   'EMBERFANG':   ['e_pounce', 'e_burst']
 };
 
-var SCALED = ['chestW','chestD','abdW','abdD','pelW','pelH','pelD',
+// per character normal move chains (distinct fighting styles)
+var CHAIN = {
+  'VANGUARD-01': { P: ['jab', 'cross'],  K: ['kick'],   J: ['jumpatk'] },
+  'GEAROX':      { P: ['g_jab', 'g_cross'], K: ['g_kick'], J: ['jumpatk'] },
+  'VERMIL':      { P: ['v_jab', 'v_cross'], K: ['v_kick'], J: ['jumpatk'] },
+  'KOLOSS':      { P: ['k_jab', 'k_cross'], K: ['k_kick'], J: ['jumpatk'] },
+  'GHOST-9':     { P: ['gh_jab', 'gh_cross'], K: ['gh_kick'], J: ['jumpatk'] },
+  'EMBERFANG':   { P: ['e_jab', 'e_cross'], K: ['e_kick'], J: ['jumpatk'] }
+};
+
+var SCALED = ['chestW','chestD','chestH','abdW','abdD','pelW','pelH','pelD',
   'headW','headH','headD','shX','shY','elX','elY','elZ','haX','haY','haZ',
-  'ua','la','fistW','hipY','hpX','knX','knY','knZ','th1','th2','ca1','ca2',
-  'ftX','footW','footD','padW','hurtR'];
+  'ua','la','bicep','fore','fistW','neckW','trapW','hipY','hpX','knX','knY','knZ',
+  'th1','th2','ca1','ca2','calf','ftX','footW','footD','padW','hurtR'];
 
 function buildRig(name){
   var R = baseRig();
@@ -659,8 +690,6 @@ function buildRig(name){
   return R;
 }
 
-// FULLROSTER index -> buildRig() key (index 0, VANGUARD-01, is the
-// 'PLAYER' rig; everything else maps straight to its roster name)
 function buildRigFor(selIdx){
   return buildRig(selIdx === 0 ? 'PLAYER' : FULLROSTER[selIdx].name);
 }
@@ -675,7 +704,7 @@ function basePose(f){
     pel: [0, R.hipY, 0],
     chs: [0, R.chY + br, 0.02 + R.hunch*0.26],
     uch: [0, R.uchY + br*0.7, 0.03 + R.hunch*0.30],
-    hed: [0, R.shY + 0.36 + R.hunch*(-0.10), 0.05 + R.hunch*0.42],
+    hed: [0, R.shY + 0.38 + R.hunch*(-0.10), 0.05 + R.hunch*0.42],
     shL: [-R.shX, R.shY, R.hunch*0.30],
     shR: [ R.shX, R.shY, R.hunch*0.30],
     elL: [-R.elX, R.elY, R.elZ + R.hunch*0.22],
@@ -700,6 +729,11 @@ function basePose(f){
     p.ftL = [-R.ftX, R.hover*0.45 + hs*0.08, 0.14];
     p.ftR = [ R.ftX, R.hover*0.45 - hs*0.08, 0.14];
   }
+  if(R.beastLeg){
+    p.knL[1] += 0.14; p.knL[2] += 0.26;
+    p.knR[1] += 0.14; p.knR[2] += 0.26;
+    p.ftL[2] -= 0.06; p.ftR[2] -= 0.06;
+  }
   return p;
 }
 
@@ -708,11 +742,17 @@ function walkPose(f){
   var p = basePose(f);
   var sp = Math.hypot(f.mv[0], f.mv[1]);
   var a = 0.45 * Math.min(1, sp);
+  if(R.beastLeg){ a *= 1.35; }
   var sw = Math.sin(f.walkPh), cw = Math.cos(f.walkPh);
   p.ftL = [-R.ftX, 0.10 + Math.max(0,cw)*0.36*a, 0.06 + sw*a];
   p.knL = [-R.knX, R.knY + Math.max(0,cw)*0.18*a, R.knZ + sw*a*0.5];
   p.ftR = [ R.ftX, 0.10 + Math.max(0,-cw)*0.36*a, 0.06 - sw*a];
   p.knR = [ R.knX, R.knY + Math.max(0,-cw)*0.18*a, R.knZ - sw*a*0.5];
+  if(R.beastLeg){
+    p.knL[1] += 0.14; p.knL[2] += 0.26;
+    p.knR[1] += 0.14; p.knR[2] += 0.26;
+    p.ftL[2] -= 0.06; p.ftR[2] -= 0.06;
+  }
   p.pel[1] += Math.abs(sw)*0.03 - 0.02;
   p.haL[2] = R.haZ - sw*0.14;
   p.haR[2] = R.haZ + sw*0.14;
@@ -721,12 +761,12 @@ function walkPose(f){
 
 // ============================================================
 // 06 // MOVE LIBRARY
-//  Every state and move used by the FSM exists here. (FIX C1)
-//  wins: hit windows. ev: timed events. dash: [t0,t1,speed].
-//  yArc: hop height. armor: damage reduction window.
-//  cost: SP meter price (specials only).
+//  Normal chains are built from parametric factories so every
+//  fighter punches and kicks differently. RT specials each carry
+//  dedicated VFX events (pillars, shards, trails, cracks, ghosts).
 // ============================================================
-function ringFX(c, col){ RINGS.push({ c: c, r: 0.3, l: 0.6, col: col }); }
+function ringFX(c, col){ RINGS.push({ c: c, r: 0.3, l: 0.6, l0: 0.6, col: col }); }
+function glyphFX(c, col, r){ RINGS.push({ c: c, r: r || 0.5, l: 0.75, l0: 0.75, col: col, g: 1 }); }
 
 function clampPos(f){
   var rr = Math.hypot(f.x, f.z);
@@ -753,12 +793,119 @@ function spawnOrb(f, foe, opt){
     p: [f.x + dx*0.6, opt.y || 1.5, f.z + dz*0.6],
     v: [dx*(opt.v||11), 0, dz*(opt.v||11)],
     r: opt.r || 0.22, col: opt.col, life: opt.life || 1.1,
-    dmg: opt.dmg, own: f, kind: opt.kind || 'orb', seed: Math.random()*7
+    dmg: opt.dmg, own: f, kind: opt.kind || 'orb',
+    seed: Math.random()*7, trail: opt.trail || 0
   });
 }
 
+function crackLine(x, z, ang, ln, col){
+  var pts = [[x, 0.02, z]], a = ang, i;
+  for(i = 1; i <= 4; i++){
+    a += rnd(-0.4, 0.4);
+    pts.push([x + Math.cos(a)*ln*i/4, 0.02, z + Math.sin(a)*ln*i/4]);
+  }
+  TRAILS.push({ pts: pts, col: col, life: 0.8, l0: 0.8, w: 2.2 });
+}
+
+function debris(x, z, col, n, pw){
+  if(FPS.low){ n = Math.ceil(n/2); }
+  for(var i = 0; i < n; i++){
+    var a = rnd(0, Math.PI*2);
+    SHARDS.push({
+      p: [x + Math.cos(a)*rnd(0.1, 0.5), 0.25, z + Math.sin(a)*rnd(0.1, 0.5)],
+      v: [Math.cos(a)*rnd(1.5, pw), rnd(3, 7.5), Math.sin(a)*rnd(1.5, pw)],
+      s: rnd(0.1, 0.3),
+      dir: nrm([rnd(-1,1), rnd(0.2,1), rnd(-1,1)]),
+      va: rnd(-7, 7), life: rnd(0.7, 1.15), col: col
+    });
+  }
+  if(SHARDS.length > 40){ SHARDS.splice(0, SHARDS.length - 40); }
+}
+
+function afterImage(f){
+  if(FPS.low || !f.J){ return; }
+  var J = {}, k;
+  for(k in f.J){ J[k] = [f.J[k][0], f.J[k][1], f.J[k][2]]; }
+  AFTER.push({ J: J, col: f.R.col, life: 0.45, l0: 0.45 });
+  if(AFTER.length > 8){ AFTER.shift(); }
+}
+
+// ---- parametric normal factories ----
+function mkPunch(o){
+  var kind = o.kind || 'straight';
+  return { d: o.d, name: o.name,
+    wins: [{ a0: 0.34, a1: 0.62,
+             tip: (o.side === 'L' ? 'haL' : 'haR'), dmg: o.dmg, kb: o.kb }],
+    fn: function(f, t, p){
+      var R = f.R, e, ex = (o.ext || 1)*R.scale;
+      if(t < 0.34){ e = EO(t/0.34); }
+      else if(t < 0.62){ e = 1; }
+      else { e = 1 - EI((t-0.62)/0.38); }
+      var S = (o.side === 'L') ? -1 : 1;
+      var HA = (o.side === 'L') ? 'haL' : 'haR';
+      var EL = (o.side === 'L') ? 'elL' : 'elR';
+      var SH = (o.side === 'L') ? 'shL' : 'shR';
+      var gu = [S*R.haX, R.haY, R.haZ];
+      var hy = R.chY + (o.hy || 0.06);
+      var tgt;
+      if(kind === 'hook'){
+        var wq = [S*(R.haX + 0.55), R.chY + 0.40, R.haZ - 0.12];
+        var fin = [S*0.12, hy + 0.24, R.haZ + 0.92*ex];
+        if(e < 0.55){ tgt = LZ(gu, wq, EO(e/0.55)); }
+        else { tgt = LZ(wq, fin, EO((e-0.55)/0.45)); }
+        p[EL] = [L(S*R.elX, S*0.62, e), L(R.elY, hy + 0.34, e), L(R.elZ, 0.45, e)];
+      } else if(kind === 'overhead'){
+        var up = [S*0.42, R.shY + 0.68, 0.10];
+        var dn = [S*0.24, R.chY - 0.40, R.haZ + 0.88*ex];
+        if(e < 0.5){ tgt = LZ(gu, up, EO(e/0.5)); }
+        else { tgt = LZ(up, dn, EO((e-0.5)/0.5)); }
+        p[EL] = [L(S*R.elX, S*0.50, e), L(R.elY, R.shY + 0.1, e), L(R.elZ, 0.28, e)];
+      } else if(kind === 'slash'){
+        var w0 = [-S*0.36, hy + 0.12, R.haZ - 0.06];
+        var t1 = [S*0.20, hy, R.haZ + 1.02*ex];
+        if(e < 0.42){ tgt = LZ(gu, w0, EO(e/0.42)); }
+        else { tgt = LZ(w0, t1, EO((e-0.42)/0.58)); }
+        p[EL] = [L(S*R.elX, -S*0.32, e), L(R.elY, hy + 0.10, e), L(R.elZ, 0.55, e)];
+      } else {
+        tgt = [S*0.15, hy, R.haZ + 1.08*ex];
+        p[EL] = [L(S*R.elX, S*0.50, e), L(R.elY, hy + 0.10, e), L(R.elZ, 0.62, e)];
+      }
+      if(kind === 'straight'){ p[HA] = LZ(gu, tgt, e); }
+      else { p[HA] = tgt; }
+      p[SH] = [S*R.shX, R.shY, (kind === 'slash' ? -S*0.12 : S*0.16)*e];
+      if(kind === 'slash'){
+        p.pel[0] += -S*0.12*e; p.chs[0] += -S*0.06*e;
+      } else {
+        p.pel[0] += S*0.07*e;
+      }
+      var OH = (o.side === 'L') ? p.haR : p.haL;
+      OH[1] += 0.06*e; OH[2] -= 0.08*e;
+      if(kind === 'overhead'){ OH[1] += 0.30*e; }
+    }};
+}
+
+function mkKick(o){
+  var kind = o.kind || 'thrust';
+  return { d: o.d, name: o.name,
+    wins: [{ a0: 0.38, a1: 0.66, tip: 'ftR', dmg: o.dmg, kb: o.kb }],
+    fn: function(f, t, p){
+      var R = f.R, e;
+      if(t < 0.38){ e = EO(t/0.38); }
+      else if(t < 0.66){ e = 1; }
+      else { e = 1 - EI((t-0.66)/0.34); }
+      var ext = (o.ext || 1)*R.scale;
+      var hy = (kind === 'low') ? 0.32 : R.chY + 0.16;
+      p.ftR = [L(R.ftX, 0.16, e), L(0.10, hy, e), L(0.06, 1.12*ext, e)];
+      p.knR = [L(R.knX, 0.24, e), L(R.knY, R.hipY + (kind === 'low' ? 0.16 : 0.34), e), L(R.knZ, 0.72, e)];
+      p.hpR = [R.hpX - 0.06*e, R.hipY - 0.06, 0.12*e];
+      p.chs[2] -= 0.14*e; p.uch[2] -= 0.14*e; p.hed[2] -= 0.12*e;
+      if(kind === 'low'){ p.chs[1] -= 0.10*e; p.hed[2] += 0.24*e; }
+      p.haL[2] += 0.14*e; p.haR[2] -= 0.08*e; p.haL[1] += 0.10*e;
+    }};
+}
+
 var MOVE = {
-  // ---- FSM state animations (FIX C1 : these must exist) ----
+  // ---- FSM state animations ----
   intro: { d: 1.1, wins: [], fn: function(f,t,p){
     var R = f.R, e = Math.sin(Math.min(1,t)*Math.PI);
     p.pel[1] -= 0.16*e;
@@ -813,46 +960,36 @@ var MOVE = {
     p.hed[1] += 0.06; p.chs[2] -= 0.03;
   }},
 
-  // ---- shared normals ----
-  jab: { d: 0.26, name: 'JAB',
-    wins: [{ a0: 0.30, a1: 0.58, tip: 'haR', dmg: 6, kb: 0.45 }],
-    fn: function(f,t,p){
-      var R = f.R, e;
-      if(t < 0.30){ e = EO(t/0.30); }
-      else if(t < 0.58){ e = 1; }
-      else { e = 1 - EI((t-0.58)/0.42); }
-      p.haR = [L(R.haX,0.12,e), L(R.haY,R.chY,e), L(R.haZ,1.18*R.scale,e)];
-      p.elR = [L(R.elX,0.50,e), L(R.elY,R.chY+0.08,e), L(R.elZ,0.62,e)];
-      p.shR = [R.shX, R.shY, 0.16*e];
-      p.shL = [-R.shX, R.shY, -0.08*e];
-      p.haL[1] += 0.05*e;
-    }},
-  cross: { d: 0.34, name: 'CROSS',
-    wins: [{ a0: 0.34, a1: 0.62, tip: 'haL', dmg: 9, kb: 0.7 }],
-    fn: function(f,t,p){
-      var R = f.R, e;
-      if(t < 0.34){ e = EO(t/0.34); }
-      else if(t < 0.62){ e = 1; }
-      else { e = 1 - EI((t-0.62)/0.38); }
-      p.haL = [L(R.haX,0.16,e), L(R.haY,R.chY+0.04,e), L(R.haZ,1.32*R.scale,e)];
-      p.elL = [L(R.elX,0.42,e), L(R.elY,R.chY+0.10,e), L(R.elZ,0.70,e)];
-      p.shL = [-R.shX*0.7, R.shY, 0.24*e];
-      p.hpL[2] += 0.12*e; p.hpR[2] -= 0.10*e;
-      p.haR[1] += 0.06*e;
-    }},
-  kick: { d: 0.42, name: 'KICK',
-    wins: [{ a0: 0.38, a1: 0.66, tip: 'ftR', dmg: 12, kb: 1.0 }],
-    fn: function(f,t,p){
-      var R = f.R, e;
-      if(t < 0.38){ e = EO(t/0.38); }
-      else if(t < 0.66){ e = 1; }
-      else { e = 1 - EI((t-0.66)/0.34); }
-      p.ftR = [L(R.ftX,0.14,e), L(0.10,R.chY+0.18,e), L(0.06,1.28*R.scale,e)];
-      p.knR = [L(R.knX,0.24,e), L(R.knY,R.hipY+0.32,e), L(R.knZ,0.72,e)];
-      p.hpR = [R.hpX - 0.06*e, R.hipY - 0.06, 0.12*e];
-      p.chs[2] -= 0.14*e; p.uch[2] -= 0.14*e; p.hed[2] -= 0.12*e;
-      p.haL[2] += 0.12*e; p.haR[2] -= 0.08*e; p.haL[1] += 0.10*e;
-    }},
+  // ---- VANGUARD-01 : heroic boxing ----
+  jab:  mkPunch({ side:'R', d:0.26, name:'JAB',       dmg:6,  kb:0.5,  kind:'straight' }),
+  cross:mkPunch({ side:'L', d:0.34, name:'CROSS',     dmg:9,  kb:0.75, kind:'straight', ext:1.06 }),
+  kick: mkKick({ d:0.42, name:'KICK', dmg:12, kb:1.1 }),
+
+  // ---- GEAROX : heavy sledge boxing ----
+  g_jab:   mkPunch({ side:'R', d:0.34, name:'HAMMER FIST', dmg:8,  kb:0.9,  kind:'straight', hy:0.12 }),
+  g_cross: mkPunch({ side:'L', d:0.52, name:'SLEDGE BLOW',  dmg:13, kb:1.5,  kind:'overhead', ext:0.95 }),
+  g_kick:  mkKick({ d:0.55, name:'PILE KICK', dmg:15, kb:1.7, ext:1.05 }),
+
+  // ---- VERMIL : fast blade slashes ----
+  v_jab:   mkPunch({ side:'R', d:0.22, name:'QUICK SLASH', dmg:5, kb:0.35, kind:'slash' }),
+  v_cross: mkPunch({ side:'L', d:0.30, name:'RIPOSTE',     dmg:8, kb:0.55, kind:'slash', ext:1.10 }),
+  v_kick:  mkKick({ d:0.36, name:'SWEEP CUT', dmg:10, kb:0.95, kind:'low' }),
+
+  // ---- KOLOSS : piston power ----
+  k_jab:   mkPunch({ side:'R', d:0.30, name:'PISTON JAB', dmg:7,  kb:0.9,  kind:'straight' }),
+  k_cross: mkPunch({ side:'L', d:0.50, name:'ANVIL HOOK', dmg:13, kb:1.6,  kind:'hook' }),
+  k_kick:  mkKick({ d:0.50, name:'RAM KICK', dmg:13, kb:1.9, ext:1.05 }),
+
+  // ---- GHOST-9 : phase strikes ----
+  gh_jab:   mkPunch({ side:'R', d:0.20, name:'PHASE JAB',   dmg:4, kb:0.35, kind:'straight' }),
+  gh_cross: mkPunch({ side:'L', d:0.27, name:'PHANTOM CUT', dmg:7, kb:0.55, kind:'slash' }),
+  gh_kick:  mkKick({ d:0.31, name:'DRIFT KICK', dmg:9, kb:0.95 }),
+
+  // ---- EMBERFANG : savage claw chains ----
+  e_jab:   mkPunch({ side:'R', d:0.24, name:'CLAW SWIPE', dmg:6,  kb:0.5,  kind:'slash' }),
+  e_cross: mkPunch({ side:'L', d:0.36, name:'MAUL RIP',   dmg:10, kb:1.05, kind:'hook' }),
+  e_kick:  mkKick({ d:0.40, name:'SAVAGE KICK', dmg:11, kb:1.2, kind:'low' }),
+
   jumpatk: { d: 0.60, name: 'JUMP ATTACK', yArc: 1.1,
     wins: [{ a0: 0.46, a1: 0.76, tip: 'haR', dmg: 15, kb: 1.2 }],
     fn: function(f,t,p){
@@ -873,11 +1010,23 @@ var MOVE = {
       p.knL[1] += 0.28*air; p.knR[1] += 0.28*air;
       p.ftL[1] += 0.45*air; p.ftR[1] += 0.45*air;
     }},
+
+  // ==== RT SIGNATURES (unique per fighter, with VFX) ====
+
+  // VANGUARD-01 RT : HEX WAVE - slam, rings, 6 hex pillars, glyph
   sp1: { d: 0.70, name: 'HEX WAVE', cost: 35,
-    ev: [{ t: 0.42, fn: function(f,foe){
-      radialHit(f, foe, 18, 3.0, 1.4);
-      ringFX([f.x, 0.1, f.z], f.R.col);
-      SHAKE = Math.max(SHAKE, 0.30);
+    ev: [{ t: 0.42, fn: function(f, foe){
+      radialHit(f, foe, 18, 3.0, 1.5);
+      ringFX([f.x, 0.1, f.z], '#39ff6e');
+      glyphFX([f.x, 0.1, f.z], '#39ff6e', 0.9);
+      var i, a;
+      for(i = 0; i < 6; i++){
+        a = Math.PI/3*i + 0.26;
+        PILLARS.push({ x: f.x + Math.cos(a)*2.1, z: f.z + Math.sin(a)*2.1,
+                       h: 1.9, life: 0.7, l0: 0.7, col: '#39ff6e' });
+      }
+      spark([f.x, 0.4, f.z], '#39ff6e', 16);
+      SHAKE = Math.max(SHAKE, 0.34);
       snd('boom');
     }}],
     wins: [],
@@ -905,8 +1054,13 @@ var MOVE = {
       p.knL[2] += 0.10*cr; p.knR[2] += 0.10*cr;
       p.chs[2] += 0.16*cr;
     }},
+  // VANGUARD-01 LT
   sp2: { d: 0.55, name: 'RIFT UPPER', dash: [0.06, 0.30, 9], yArc: 0.25, cost: 50,
     wins: [{ a0: 0.36, a1: 0.58, tip: 'haR', dmg: 16, kb: 1.4 }],
+    ev: [{ t: 0.42, fn: function(f, foe){
+      spark([f.x, 1.2, f.z], '#39ff6e', 8);
+      ringFX([f.x, 0.1, f.z], '#39ff6e');
+    }}],
     fn: function(f,t,p){
       var R = f.R;
       var eD = (t > 0.04 && t < 0.34) ? Math.sin((t-0.04)/0.30*Math.PI) : 0;
@@ -927,15 +1081,22 @@ var MOVE = {
       p.haL = [-R.haX, R.haY, R.haZ - 0.35*eD];
     }},
 
-  // ---- GEAROX specials ----
+  // GEAROX RT : GEAR SLAM - crater, polygon debris, cracks
   g_slam: { d: 0.78, name: 'GEAR SLAM', yArc: 1.0, cost: 40,
     wins: [],
-    ev: [{ t: 0.55, fn: function(f,foe){
-      radialHit(f, foe, 20, 2.8, 1.6);
+    ev: [{ t: 0.55, fn: function(f, foe){
+      radialHit(f, foe, 20, 2.8, 1.7);
       ringFX([f.x, 0.1, f.z], f.R.col);
-      SHAKE = Math.max(SHAKE, 0.38);
+      glyphFX([f.x, 0.1, f.z], f.R.col, 1.0);
+      var i, a;
+      for(i = 0; i < 5; i++){
+        a = i/5*Math.PI*2 + rnd(0, 0.5);
+        crackLine(f.x, f.z, a, rnd(2.2, 3.4), f.R.col);
+      }
+      debris(f.x, f.z, f.R.col, 14, 4.5);
+      spark([f.x, 0.4, f.z], f.R.col, 12);
+      SHAKE = Math.max(SHAKE, 0.45);
       snd('boom');
-      spark([f.x, 0.3, f.z], f.R.col, 10);
     }}],
     fn: function(f,t,p){
       var R = f.R, e1, e2;
@@ -957,8 +1118,14 @@ var MOVE = {
         p.knL[2] += 0.16*e2; p.knR[2] += 0.16*e2;
       }
     }},
+  // GEAROX LT : armored bull rush with dust trail
   g_rush: { d: 1.0, name: 'BULL RUSH', dash: [0.12, 0.62, 9.5], armor: [0.12, 0.62], cost: 45,
     wins: [{ a0: 0.14, a1: 0.60, tip: 'shR', dmg: 18, kb: 2.2 }],
+    ev: [
+      { t: 0.22, fn: function(f){ spark([f.x, 0.25, f.z], f.R.col, 5, 3); } },
+      { t: 0.42, fn: function(f){ spark([f.x, 0.25, f.z], f.R.col, 5, 3); } },
+      { t: 0.62, fn: function(f){ spark([f.x, 0.25, f.z], f.R.col, 5, 3); } }
+    ],
     fn: function(f,t,p){
       var R = f.R;
       var e = EZ(Math.min(1, t/0.12));
@@ -971,12 +1138,60 @@ var MOVE = {
       p.knL[2] -= 0.10*e; p.knR[2] += 0.14*e;
     }},
 
-  // ---- VERMIL specials ----
+  // VERMIL RT : CRIMSON CROSS - blink through, X slash trails
+  v_cross: { d: 0.60, name: 'CRIMSON CROSS', dash: [0.12, 0.22, 14], cost: 45,
+    wins: [],
+    ev: [
+      { t: 0.22, fn: function(f, foe){
+        afterImage(f);
+        f.x = foe.x - Math.sin(foe.yaw)*1.15;
+        f.z = foe.z - Math.cos(foe.yaw)*1.15;
+        f.yaw = Math.atan2(foe.x - f.x, foe.z - f.z);
+        clampPos(f);
+        spark([f.x, 1.4, f.z], f.R.col, 10);
+        snd('tele');
+      }},
+      { t: 0.36, fn: function(f, foe){
+        if(foe.state !== 'ko'){ radialHit(f, foe, 16, 2.0, 1.2); }
+        var c = [foe.x, foe.R.chY + 0.12, foe.z];
+        TRAILS.push({ pts: [[c[0]-1.35, c[1]+0.62, c[2]],
+                           [c[0]+0.10, c[1]+0.10, c[2]],
+                           [c[0]+1.35, c[1]-0.50, c[2]]],
+                      col: '#ff4444', life: 0.5, l0: 0.5, w: 3.2 });
+        TRAILS.push({ pts: [[c[0]-1.35, c[1]-0.50, c[2]],
+                           [c[0]+0.10, c[1]+0.10, c[2]],
+                           [c[0]+1.35, c[1]+0.62, c[2]]],
+                      col: '#ff8080', life: 0.5, l0: 0.5, w: 2.2 });
+        spark(c, '#ff4444', 12);
+        SHAKE = Math.max(SHAKE, 0.30);
+        snd('swoosh'); snd('hit');
+      }}
+    ],
+    fn: function(f,t,p){
+      var R = f.R;
+      var e1 = EO(Math.min(1, t/0.14));
+      if(t < 0.24){
+        p.haL = [-0.14, R.chY + 0.12, 0.45*e1];
+        p.haR = [ 0.14, R.chY - 0.06, 0.48*e1];
+      } else {
+        var e2 = EO((t-0.24)/0.10);
+        var e3 = t > 0.5 ? 1 - EZ((t-0.5)/0.5) : 1;
+        p.haR = [0.55*e2*e3, R.chY + 0.55*e2*e3, 0.35];
+        p.haL = [-0.55*e2*e3, R.chY + 0.10, 0.35];
+        p.elR = [0.60*e2*e3, R.chY + 0.20*e2*e3, 0.30];
+      }
+    }},
+  // VERMIL LT : multi-hit blade dance
   v_dance: { d: 0.80, name: 'BLADE DANCE', cost: 40,
     wins: [
       { a0: 0.18, a1: 0.30, tip: 'haR', dmg: 7, kb: 0.35 },
       { a0: 0.38, a1: 0.50, tip: 'haL', dmg: 7, kb: 0.35 },
       { a0: 0.56, a1: 0.70, tip: 'haR', dmg: 9, kb: 1.2 }
+    ],
+    ev: [
+      { t: 0.18, fn: function(f){ if(f.J){ spark(f.J.haR, '#ff4444', 5, 6); } } },
+      { t: 0.38, fn: function(f){ if(f.J){ spark(f.J.haL, '#ff4444', 5, 6); } } },
+      { t: 0.56, fn: function(f){ if(f.J){ spark(f.J.haR, '#ff8080', 7, 6); } } }
     ],
     fn: function(f,t,p){
       var R = f.R, e;
@@ -999,38 +1214,26 @@ var MOVE = {
       }
       p.chs[2] += 0.10;
     }},
-  v_cross: { d: 0.60, name: 'CROSS SLASH', dash: [0.12, 0.22, 14], cost: 45,
-    wins: [{ a0: 0.30, a1: 0.44, tip: 'haR', dmg: 16, kb: 1.0 }],
-    ev: [{ t: 0.22, fn: function(f,foe){
-      f.x = foe.x + Math.sin(foe.yaw)*1.15;
-      f.z = foe.z + Math.cos(foe.yaw)*1.15;
-      f.yaw = Math.atan2(foe.x - f.x, foe.z - f.z);
-      clampPos(f);
-      spark([f.x, 1.4, f.z], f.R.col, 10);
-      snd('tele');
-    }}],
-    fn: function(f,t,p){
-      var R = f.R;
-      var e1 = EO(Math.min(1, t/0.14));
-      if(t < 0.24){
-        p.haL = [-0.14, R.chY + 0.12, 0.45*e1];
-        p.haR = [ 0.14, R.chY - 0.06, 0.48*e1];
-      } else {
-        var e2 = EO((t-0.24)/0.10);
-        var e3 = t > 0.5 ? 1 - EZ((t-0.5)/0.5) : 1;
-        p.haR = [0.55*e2*e3, R.chY + 0.55*e2*e3, 0.35];
-        p.haL = [-0.55*e2*e3, R.chY + 0.10, 0.35];
-        p.elR = [0.60*e2*e3, R.chY + 0.20*e2*e3, 0.30];
-      }
-    }},
 
-  // ---- KOLOSS specials ----
+  // KOLOSS RT : SEISMIC STOMP - crack wave, ground cracks, dust
   k_stomp: { d: 0.85, name: 'SEISMIC STOMP', cost: 35,
     wins: [{ a0: 0.38, a1: 0.52, tip: 'ftR', dmg: 10, kb: 0.8 }],
-    ev: [{ t: 0.46, fn: function(f,foe){
+    ev: [{ t: 0.46, fn: function(f, foe){
+      radialHit(f, foe, 12, 2.2, 1.0);
       spawnOrb(f, foe, { v: 9, y: 0.25, r: 0.34, dmg: 14, life: 0.9,
                          col: f.R.col, kind: 'crack' });
-      SHAKE = Math.max(SHAKE, 0.30);
+      var i, a;
+      for(i = 0; i < 6; i++){
+        a = i/6*Math.PI*2 + rnd(0, 0.4);
+        crackLine(f.x, f.z, a, rnd(2.6, 3.8), f.R.col);
+      }
+      spark([f.x, 0.2, f.z], '#9fd8ff', 12, 2.5);
+      for(i = 0; i < 3; i++){
+        a = rnd(0, Math.PI*2);
+        PILLARS.push({ x: f.x + Math.cos(a)*1.6, z: f.z + Math.sin(a)*1.6,
+                       h: 1.2, life: 0.55, l0: 0.55, col: f.R.col });
+      }
+      SHAKE = Math.max(SHAKE, 0.42);
       snd('boom');
     }}],
     fn: function(f,t,p){
@@ -1050,6 +1253,7 @@ var MOVE = {
         p.chs[2] += 0.14*e2;
       }
     }},
+  // KOLOSS LT : armored iron wall
   k_wall: { d: 1.25, name: 'IRON WALL', dash: [0.15, 0.95, 3.4], armor: [0.15, 0.95], cost: 55,
     wins: [{ a0: 0.16, a1: 0.92, tip: 'shR', dmg: 15, kb: 2.6 }],
     fn: function(f,t,p){
@@ -1066,14 +1270,29 @@ var MOVE = {
       p.knL[2] += 0.08*e; p.knR[2] += 0.08*e;
     }},
 
-  // ---- GHOST-9 specials ----
+  // GHOST-9 RT : PHASE BLAST - triple orb volley, trails, after-images
   gh_blast: { d: 0.62, name: 'PHASE BLAST', cost: 30,
     wins: [],
-    ev: [{ t: 0.30, fn: function(f,foe){
-      spawnOrb(f, foe, { v: 11, y: 1.5, r: 0.24, dmg: 12, life: 1.1,
-                         col: '#ffffff', kind: 'orb' });
-      snd('swoosh');
-    }}],
+    ev: [
+      { t: 0.30, fn: function(f, foe){
+        afterImage(f);
+        glyphFX([f.x, 1.5, f.z], '#ffffff', 0.4);
+        spawnOrb(f, foe, { v: 11, y: 1.5, r: 0.24, dmg: 8, life: 1.1,
+                           col: '#ffffff', kind: 'orb', trail: 1 });
+        snd('swoosh');
+      }},
+      { t: 0.40, fn: function(f, foe){
+        spawnOrb(f, foe, { v: 11, y: 1.3, r: 0.24, dmg: 8, life: 1.1,
+                           col: '#e8f6ff', kind: 'orb', trail: 1, spread: 0.14 });
+        snd('swoosh');
+      }},
+      { t: 0.50, fn: function(f, foe){
+        spawnOrb(f, foe, { v: 11, y: 1.7, r: 0.24, dmg: 8, life: 1.1,
+                           col: '#ffffff', kind: 'orb', trail: 1, spread: -0.14 });
+        afterImage(f);
+        snd('swoosh');
+      }}
+    ],
     fn: function(f,t,p){
       var R = f.R, e = EO(Math.min(1, t/0.25));
       var rec = (t > 0.30 && t < 0.5) ? Math.sin((t-0.30)/0.20*Math.PI)*0.10 : 0;
@@ -1084,11 +1303,13 @@ var MOVE = {
       p.pel[1] += 0.08*e;
       p.knL[1] += 0.06*e; p.knR[1] += 0.06*e;
     }},
+  // GHOST-9 LT : blink strike with after-image
   gh_blink: { d: 0.60, name: 'BLINK STRIKE', cost: 45,
     wins: [{ a0: 0.28, a1: 0.42, tip: 'haR', dmg: 15, kb: 1.0 }],
-    ev: [{ t: 0.20, fn: function(f,foe){
-      f.x = foe.x + Math.sin(foe.yaw)*1.1;
-      f.z = foe.z + Math.cos(foe.yaw)*1.1;
+    ev: [{ t: 0.20, fn: function(f, foe){
+      afterImage(f);
+      f.x = foe.x - Math.sin(foe.yaw)*1.1;
+      f.z = foe.z - Math.cos(foe.yaw)*1.1;
       f.yaw = Math.atan2(foe.x - f.x, foe.z - f.z);
       clampPos(f);
       spark([f.x, 1.4, f.z], '#ffffff', 8);
@@ -1108,9 +1329,27 @@ var MOVE = {
       }
     }},
 
-  // ---- EMBERFANG specials ----
+  // EMBERFANG RT : FANG RUSH - ember trail pounce, claw arcs
   e_pounce: { d: 0.70, name: 'FANG RUSH', dash: [0.15, 0.50, 7.5], yArc: 1.2, cost: 40,
-    wins: [{ a0: 0.42, a1: 0.60, tip: 'hed', dmg: 16, kb: 1.4 }],
+    wins: [{ a0: 0.42, a1: 0.60, tip: 'hed', dmg: 16, kb: 1.5 }],
+    ev: [
+      { t: 0.20, fn: function(f){
+        TRAILS.push({ pts: [[f.x, 0.9, f.z], [f.x + 0.8, 1.3, f.z + 0.4],
+                            [f.x + 1.5, 0.9, f.z + 0.8]],
+                      col: f.R.col, life: 0.4, l0: 0.4, w: 2.6 });
+        spark([f.x, 0.6, f.z], f.R.col, 6, 3);
+      }},
+      { t: 0.34, fn: function(f){
+        spark([f.x, 0.7, f.z], f.R.col, 6, 3);
+      }},
+      { t: 0.55, fn: function(f){
+        ringFX([f.x, 0.1, f.z], f.R.col);
+        glyphFX([f.x, 0.1, f.z], f.R.col, 0.7);
+        spark([f.x, 0.4, f.z], f.R.col, 10, 4);
+        SHAKE = Math.max(SHAKE, 0.30);
+        snd('boom');
+      }}
+    ],
     fn: function(f,t,p){
       var R = f.R, e1, e2;
       if(t < 0.15){
@@ -1128,23 +1367,22 @@ var MOVE = {
         p.knL[2] -= 0.25*e2; p.knR[2] -= 0.25*e2;
       }
     }},
+  // EMBERFANG LT : ember burst fan
   e_burst: { d: 0.80, name: 'EMBER BURST', cost: 50,
     wins: [],
     ev: [
       { t: 0.30, fn: function(f,foe){
-        spawnOrb(f, foe, { v: 6, y: 1.3, r: 0.16, dmg: 4, life: 0.7, col: f.R.col, kind: 'spark' });
-        spawnOrb(f, foe, { v: 6, y: 1.3, r: 0.16, dmg: 4, life: 0.7, col: f.R.col, kind: 'spark', spread: 0.35 });
-        spawnOrb(f, foe, { v: 6, y: 1.3, r: 0.16, dmg: 4, life: 0.7, col: f.R.col, kind: 'spark', spread: -0.35 });
+        spawnOrb(f, foe, { v: 6, y: 1.3, r: 0.16, dmg: 4, life: 0.7, col: f.R.col, kind: 'spark', trail: 1 });
+        spawnOrb(f, foe, { v: 6, y: 1.3, r: 0.16, dmg: 4, life: 0.7, col: f.R.col, kind: 'spark', trail: 1, spread: 0.35 });
+        spawnOrb(f, foe, { v: 6, y: 1.3, r: 0.16, dmg: 4, life: 0.7, col: f.R.col, kind: 'spark', trail: 1, spread: -0.35 });
       }},
       { t: 0.45, fn: function(f,foe){
-        spawnOrb(f, foe, { v: 6.5, y: 1.4, r: 0.16, dmg: 4, life: 0.7, col: f.R.col, kind: 'spark' });
-        spawnOrb(f, foe, { v: 6.5, y: 1.4, r: 0.16, dmg: 4, life: 0.7, col: f.R.col, kind: 'spark', spread: 0.3 });
-        spawnOrb(f, foe, { v: 6.5, y: 1.4, r: 0.16, dmg: 4, life: 0.7, col: f.R.col, kind: 'spark', spread: -0.3 });
+        spawnOrb(f, foe, { v: 6.5, y: 1.4, r: 0.16, dmg: 4, life: 0.7, col: f.R.col, kind: 'spark', trail: 1, spread: 0.3 });
+        spawnOrb(f, foe, { v: 6.5, y: 1.4, r: 0.16, dmg: 4, life: 0.7, col: f.R.col, kind: 'spark', trail: 1, spread: -0.3 });
       }},
       { t: 0.60, fn: function(f,foe){
-        spawnOrb(f, foe, { v: 7, y: 1.5, r: 0.16, dmg: 4, life: 0.7, col: f.R.col, kind: 'spark' });
-        spawnOrb(f, foe, { v: 7, y: 1.5, r: 0.16, dmg: 4, life: 0.7, col: f.R.col, kind: 'spark', spread: 0.25 });
-        spawnOrb(f, foe, { v: 7, y: 1.5, r: 0.16, dmg: 4, life: 0.7, col: f.R.col, kind: 'spark', spread: -0.25 });
+        spawnOrb(f, foe, { v: 7, y: 1.5, r: 0.16, dmg: 4, life: 0.7, col: f.R.col, kind: 'spark', trail: 1, spread: 0.25 });
+        spawnOrb(f, foe, { v: 7, y: 1.5, r: 0.16, dmg: 4, life: 0.7, col: f.R.col, kind: 'spark', trail: 1, spread: -0.25 });
         snd('swoosh');
       }}
     ],
@@ -1165,7 +1403,10 @@ var MOVE = {
 // ============================================================
 function Fighter(R, ctrl){
   this.R = R;
-  this.ctrl = ctrl || 'cpu';        // 'p1' | 'p2' | 'cpu'
+  this.ctrl = ctrl || 'cpu';
+  this.chains = CHAIN[R.name] || CHAIN['VANGUARD-01'];
+  this.pI = 0;
+  this.idleT = 0;
   this.x = 0; this.z = 0; this.y = 0; this.yaw = 0;
   this.phase = Math.random()*6;
   this.hp = R.hp; this.maxhp = R.hp;
@@ -1205,6 +1446,7 @@ Fighter.prototype.tryMove = function(name){
   this.wh = []; this.evI = 0; this.y = 0;
   this.dk = [Math.sin(this.yaw), Math.cos(this.yaw)];
   this.cool = 0.2;
+  this.idleT = 0;
   if(M.name){
     setTxt(EL.mvn, (this.ctrl === 'p1' ? 'P1: ' : (this.ctrl === 'p2' ? 'P2: ' : 'CPU: ')) + M.name);
     MVT = 1.0;
@@ -1219,6 +1461,12 @@ Fighter.prototype.think = function(dt, foe){
   if(this.comboT > 0){
     this.comboT -= dt;
     if(this.comboT <= 0){ this.combo = 0; }
+  }
+  if(this.state === 'idle' || this.state === 'walk'){
+    this.idleT += dt;
+    if(this.idleT > 0.55){ this.pI = 0; }
+  } else {
+    this.idleT = 0;
   }
   switch(this.state){
     case 'intro':
@@ -1281,8 +1529,6 @@ Fighter.prototype.think = function(dt, foe){
       break;
     }
   }
-  // FIX C2 : capture previous frame tip positions BEFORE re-pose,
-  // so resolveAttacks gets a true swept segment.
   if(this.state === 'attack' && this.J){
     var M2 = MOVE[this.anim];
     if(M2){
@@ -1332,7 +1578,6 @@ Fighter.prototype.poseNow = function(){
   } else {
     p = basePose(this);
   }
-  // local -> world : yaw rotation + fighter offset
   var cy = Math.cos(this.yaw), sy = Math.sin(this.yaw), J = {}, k;
   for(k in p){
     var q = p[k];
@@ -1355,7 +1600,6 @@ function tryHit(f, foe){
   if(!f || !foe || f.state !== 'attack' || !f.J || foe.state === 'ko') return;
   var M = MOVE[f.anim];
   if(!M || !M.wins || !M.wins.length) return;
-  // attacker must roughly face the defender
   var dirx = foe.x - f.x, dirz = foe.z - f.z;
   var dl = Math.hypot(dirx, dirz) || 1;
   if((dirx * Math.sin(f.yaw) + dirz * Math.cos(f.yaw)) / dl < -0.15) return;
@@ -1393,7 +1637,6 @@ function applyHit(att, def, w, tip){
   def.hp = Math.max(0, def.hp - dmg);
   att.me = Math.min(100, att.me + dmg * 0.5);
   def.me = Math.min(100, def.me + dmg * 0.35 + (blocked ? 3 : 0));
-  // knockback
   var kx = def.x - att.x, kz = def.z - att.z;
   var kl = Math.hypot(kx, kz) || 1;
   var kb = (w.kb || 0.5) * (blocked ? 0.25 : 1);
@@ -1414,7 +1657,7 @@ function applyHit(att, def, w, tip){
   if(def.ctrl === 'p1'){ rumble(0, 90, 0.5); }
   else if(def.ctrl === 'p2'){ rumble(1, 90, 0.5); }
   if(def.hp <= 0){ doKO(def, att); return; }
-  if(def.armor){ return; }   // armored attacks are not interrupted
+  if(def.armor){ return; }
   def.state = 'hit';
   def.anim = (w.kb > 1.05 || w.dmg >= 12) ? 'hitgut' : 'hithigh';
   def.t = 0;
@@ -1470,7 +1713,7 @@ function separation(){
 }
 
 // ============================================================
-// 09 // AI (campaign opponents)
+// 09 // AI
 // ============================================================
 var AIP = {
   brute: { block: 0.08, strafe: 0.25 },
@@ -1481,8 +1724,10 @@ var AIP = {
 };
 var SPRANGE = {
   sp1: [0, 3.2], sp2: [0, 2.6],
-  g_slam: [0, 2.5], g_rush: [2.0, 9], v_dance: [0, 2.4], v_cross: [1.6, 9],
-  k_stomp: [0, 3.2], k_wall: [1.4, 9], gh_blast: [1.6, 9], gh_blink: [0, 2.0],
+  g_slam: [0, 2.6], g_rush: [2.0, 9],
+  v_cross: [1.4, 9], v_dance: [0, 2.4],
+  k_stomp: [0, 3.2], k_wall: [1.4, 9],
+  gh_blast: [1.8, 9], gh_blink: [0, 2.0],
   e_pounce: [1.5, 9], e_burst: [1.2, 6]
 };
 var AIGAP = { brute: 'g_rush', blade: 'v_cross', tank: 'k_wall', ghost: 'gh_blink', beast: 'e_pounce' };
@@ -1514,19 +1759,16 @@ function aiThink(f, foe, dt){
     return;
   }
   var spec = CHARSPEC[f.R.name] || ['sp1', 'sp2'];
-  // gap closer
   if(f.cool <= 0 && d > f.R.pref + 0.7){
     var gn = AIGAP[f.R.ai];
     if(gn && f.me >= (MOVE[gn].cost || 0) && Math.random() < dt * 1.4){
       if(f.tryMove(gn)){ f.cool = rnd(0.5, 1.0) * f.R.cool; return; }
     }
   }
-  // ghost keeps distance with projectiles
   if(f.cool <= 0 && d > 2.4 && f.R.ai === 'ghost' && f.me >= 30 && Math.random() < dt * 1.6){
     if(f.tryMove('gh_blast')){ f.cool = rnd(0.5, 0.9) * f.R.cool; return; }
   }
-  // melee pressure
-  if(f.cool <= 0 && d < f.R.reach + 0.2){
+  if(f.cool <= 0 && d < f.R.reach + 0.25){
     var did = false;
     if(f.me >= 38 && Math.random() < 0.5){
       var cand = [], k;
@@ -1539,8 +1781,11 @@ function aiThink(f, foe, dt){
       if(cand.length){ did = f.tryMove(cand[(Math.random() * cand.length) | 0]); }
     }
     if(!did){
-      var rr = Math.random();
-      var nm = rr < 0.34 ? 'jab' : (rr < 0.62 ? 'cross' : (rr < 0.88 ? 'kick' : 'jumpatk'));
+      var ch = f.chains, rr = Math.random(), nm;
+      if(rr < 0.38){ nm = ch.P[0]; }
+      else if(rr < 0.66){ nm = ch.P[Math.min(1, ch.P.length - 1)]; }
+      else if(rr < 0.9){ nm = ch.K[0]; }
+      else { nm = ch.J[0]; }
       did = f.tryMove(nm);
     }
     if(did){ f.cool = rnd(0.45, 0.95) * f.R.cool; }
@@ -1550,21 +1795,21 @@ function aiThink(f, foe, dt){
 // ============================================================
 // 10 // FX + PROJECTILES
 // ============================================================
-function spark(p, col, n){
+function spark(p, col, n, g){
   if(FPS.low){ n = Math.ceil(n / 2); }
   for(var i = 0; i < n; i++){
     SPARKS.push({ p: p.slice(), v: [rnd(-4,4), rnd(1.5,6), rnd(-4,4)],
-                  l: rnd(0.25, 0.55), col: col });
+                  l: rnd(0.25, 0.55), col: col, g: (g === undefined ? 9.5 : g) });
   }
-  if(SPARKS.length > 90){ SPARKS.splice(0, SPARKS.length - 90); }
+  if(SPARKS.length > 120){ SPARKS.splice(0, SPARKS.length - 120); }
 }
 
 function updFX(dt){
-  var i;
+  var i, c, s2;
   for(i = SPARKS.length - 1; i >= 0; i--){
     var s = SPARKS[i];
     s.p[0] += s.v[0]*dt; s.p[1] += s.v[1]*dt; s.p[2] += s.v[2]*dt;
-    s.v[1] -= 9.5*dt;
+    s.v[1] -= (s.g || 9.5)*dt;
     if(s.p[1] < 0.03){ s.p[1] = 0.03; s.v[1] *= -0.4; s.v[0] *= 0.7; s.v[2] *= 0.7; }
     s.l -= dt;
     if(s.l <= 0){ SPARKS.splice(i, 1); }
@@ -1574,6 +1819,28 @@ function updFX(dt){
     r.r += 6.5*dt; r.l -= dt;
     if(r.l <= 0){ RINGS.splice(i, 1); }
   }
+  for(i = SHARDS.length - 1; i >= 0; i--){
+    var sh = SHARDS[i];
+    sh.p[0] += sh.v[0]*dt; sh.p[1] += sh.v[1]*dt; sh.p[2] += sh.v[2]*dt;
+    sh.v[1] -= 8.5*dt;
+    if(sh.p[1] < sh.s){ sh.p[1] = sh.s; sh.v[1] *= -0.35; sh.v[0] *= 0.6; sh.v[2] *= 0.6; }
+    c = Math.cos(sh.va*dt); s2 = Math.sin(sh.va*dt);
+    sh.dir = [sh.dir[0]*c - sh.dir[2]*s2, sh.dir[1], sh.dir[0]*s2 + sh.dir[2]*c];
+    sh.life -= dt;
+    if(sh.life <= 0){ SHARDS.splice(i, 1); }
+  }
+  for(i = TRAILS.length - 1; i >= 0; i--){
+    TRAILS[i].life -= dt;
+    if(TRAILS[i].life <= 0){ TRAILS.splice(i, 1); }
+  }
+  for(i = PILLARS.length - 1; i >= 0; i--){
+    PILLARS[i].life -= dt;
+    if(PILLARS[i].life <= 0){ PILLARS.splice(i, 1); }
+  }
+  for(i = AFTER.length - 1; i >= 0; i--){
+    AFTER[i].life -= dt;
+    if(AFTER[i].life <= 0){ AFTER.splice(i, 1); }
+  }
 }
 
 function updProj(dt){
@@ -1582,6 +1849,11 @@ function updProj(dt){
     var p = PROJ[i];
     p.p[0] += p.v[0]*dt; p.p[1] += p.v[1]*dt; p.p[2] += p.v[2]*dt;
     p.life -= dt;
+    if(p.trail && !FPS.low && Math.random() < 0.5){
+      SPARKS.push({ p: [p.p[0], p.p[1], p.p[2]],
+                    v: [rnd(-0.5,0.5), rnd(-0.5,0.5), rnd(-0.5,0.5)],
+                    l: 0.22, col: p.col, g: 1 });
+    }
     var foe = (p.own === PL) ? EN : PL;
     var hit = false;
     if(foe && foe.state !== 'ko' && GAME.state === 'fight' && !GAME.paused){
@@ -1622,7 +1894,7 @@ function drawProj(p){
 }
 
 function drawFX(){
-  var i;
+  var i, j;
   for(i = 0; i < SPARKS.length; i++){
     var s = SPARKS[i];
     lineSeg(s.p, [s.p[0]-s.v[0]*0.03, s.p[1]-s.v[1]*0.03, s.p[2]-s.v[2]*0.03],
@@ -1630,36 +1902,172 @@ function drawFX(){
   }
   for(i = 0; i < RINGS.length; i++){
     var r = RINGS[i];
-    poly(hexPts(r.c[0], r.c[2], r.r, T*2.5), r.col, 2.5,
-         Math.max(0, Math.min(0.9, r.l*1.6)), 'none', 1);
+    var op = clamp(r.l/(r.l0 || 0.6), 0, 1);
+    poly(hexPts3(r.c[0], r.c[1] || 0.1, r.c[2], r.r, T*2.5), r.col, 2.5,
+         Math.min(0.9, op*1.6), 'none', 1);
+    if(r.g){
+      poly(hexPts3(r.c[0], r.c[1] || 0.1, r.c[2], r.r*0.6, -T*3.4), '#eafff2', 1.6,
+           Math.min(0.85, op*1.4), 'none', 1);
+    }
+  }
+  for(i = 0; i < TRAILS.length; i++){
+    var tr = TRAILS[i], k = clamp(tr.life/tr.l0, 0, 1);
+    pline(tr.pts, tr.col, Math.max(0.5, tr.w*(0.4 + 0.6*k)), Math.min(0.95, k*1.5), 1);
+  }
+  for(i = 0; i < PILLARS.length; i++){
+    var pl = PILLARS[i], k2 = clamp(pl.life/pl.l0, 0, 1);
+    var pr = 1 - k2;
+    var hh = pl.h * EO(Math.min(1, pr*1.9));
+    var base = hexPts3(pl.x, 0, pl.z, 0.5, 0);
+    for(j = 0; j < 6; j++){
+      lineSeg(base[j], [base[j][0], hh, base[j][2]], pl.col, 1.3, 0.5*k2, 1);
+    }
+    poly(hexPts3(pl.x, hh, pl.z, 0.5, T*2), pl.col, 1.8, 0.9*k2, 'none', 1);
+    lineSeg([pl.x, 0, pl.z], [pl.x, hh, pl.z], pl.col, 2, 0.55*k2, 1);
+  }
+  for(i = 0; i < AFTER.length; i++){
+    var af = AFTER[i], k3 = clamp(af.life/af.l0, 0, 1), J = af.J;
+    pline([J.pel, J.chs, J.uch, J.hed], af.col, 1.6, 0.5*k3, 2);
+    pline([J.shL, J.elL, J.haL], af.col, 1.3, 0.5*k3, 2);
+    pline([J.shR, J.elR, J.haR], af.col, 1.3, 0.5*k3, 2);
+    pline([J.hpL, J.knL, J.ftL], af.col, 1.3, 0.5*k3, 2);
+    pline([J.hpR, J.knR, J.ftR], af.col, 1.3, 0.5*k3, 2);
+  }
+  for(i = 0; i < SHARDS.length; i++){
+    var sh = SHARDS[i];
+    pyr(sh.p, sh.dir, sh.s, sh.s*0.75, sh.col);
+    lineSeg(sh.p, add(sh.p, mul(sh.dir, sh.s)), '#eafff2', 1.1, 0.7, 2);
   }
   for(i = 0; i < PROJ.length; i++){ drawProj(PROJ[i]); }
 }
 
 // ============================================================
-// 11 // FIGHTER DRAW (black faced solids + identity kit)
+// 11 // FIGHTER DRAW : muscular humanoid body + identity kit
 // ============================================================
+function muscleArm(sh, el, ha, R, col){
+  var b = mid(sh, el, 0.58);
+  limbTaper(sh, b, R.ua, R.bicep, col);
+  limbTaper(b, el, R.bicep*0.82, R.la*0.95, col);
+  var c = mid(el, ha, 0.42);
+  limbTaper(el, c, R.la, R.fore, col);
+  limbTaper(c, ha, R.fore, R.la*0.78, col);
+}
+
+function shardSeg(a, b, w1, w2, col){
+  var d = sub(b, a), l = len(d);
+  if(l < 1e-5){ return; }
+  var dir = mul(d, 1/l);
+  var ref = Math.abs(dir[1]) > 0.92 ? [1,0,0] : [0,1,0];
+  var u = nrm(cross(dir, ref));
+  var v = nrm(cross(u, dir));
+  var n = 3, i;
+  for(i = 0; i < n; i++){
+    var t0 = i/n, t1 = (i+1)/n;
+    var rot = (i % 2) ? 0.5 : -0.5;
+    triPrism(LZ(a, b, t0), LZ(a, b, t1), u, v,
+             L(w1, w2, t0)*0.85, L(w1, w2, t1)*0.85, rot, col);
+  }
+  lineSeg(add(a, mul(v, w1*0.7)), add(b, mul(v, w2*0.7)), col, 1.4, 0.9, 2);
+}
+
+function shardArm(sh, el, ha, R, col, sgn, RGT){
+  shardSeg(sh, el, R.ua, R.la, col);
+  shardSeg(el, ha, R.la*0.95, R.la*0.5, col);
+  pyr(ha, nrm(sub(ha, el)), 0.5*R.scale, R.fistW*2.2 + 0.12, col);
+  pyr(el, mul(RGT, sgn), 0.22, 0.09, col);
+}
+
 function drawFighter(f){
   if(!f || !f.J) return;
   var R = f.R, J = f.J, col = R.col, i, sgn;
   var cyw = Math.cos(f.yaw), syw = Math.sin(f.yaw);
   var FWD = [syw, 0, cyw], RGT = [cyw, 0, -syw], UP = [0,1,0];
-  // ground shadow
-  poly(hexPts(f.x, f.z, 0.55, f.yaw), '#0c3f1f', 1, 0.55, 'none', 0);
-  // torso
-  limbTaper(J.pel, J.chs, R.pelW*0.92, R.abdW, col);
-  limbTaper(J.chs, J.uch, R.abdW*0.96, R.chestW*0.8, col);
-  boxCC3(mid(J.chs, J.uch, 0.55), RGT, UP, FWD, R.chestW*0.98,
-         (R.uchY - R.chY)*1.15 + 0.16, R.chestD, col);
+  poly(hexPts(f.x, f.z, 0.6 + 0.15*Math.sin(T*2 + f.phase), f.yaw), '#0c3f1f', 1, 0.5, 'none', 0);
+
+  // ---- legs : quads + calf bulges (or digitigrade beast legs) ----
+  var LEGS = [[J.hpL, J.knL, J.ftL], [J.hpR, J.knR, J.ftR]];
+  for(i = 0; i < 2; i++){
+    var hp = LEGS[i][0], kn = LEGS[i][1], ft = LEGS[i][2];
+    var qm = mid(hp, kn, 0.58);
+    limbTaper(hp, qm, R.th1, R.th1*1.14, col);
+    limbTaper(qm, kn, R.th1*1.1, R.ca1*0.92, col);
+    var cm = mid(kn, ft, 0.42);
+    limbTaper(kn, cm, R.ca1, R.calf, col);
+    limbTaper(cm, ft, R.calf*0.92, R.ca2*0.85, col);
+    if(R.kneecap){ pyr(kn, FWD, 0.16, 0.12, col); }
+    if(R.beastLeg){
+      pyr(kn, nrm(add(mul(FWD, -1), mul(UP, 0.55))), 0.3, 0.13, col);
+      boxCC3(add(ft, mul(FWD, R.footD*0.2)), RGT, UP, FWD, R.footW*1.3, 0.14, R.footD*0.85, col);
+      pyr(add(ft, add(mul(FWD, R.footD*0.62), mul(RGT,  R.footW*0.45))), FWD, 0.18, 0.08, col);
+      pyr(add(ft, add(mul(FWD, R.footD*0.62), mul(RGT, -R.footW*0.45))), FWD, 0.18, 0.08, col);
+    } else {
+      boxCC3(add(ft, mul(FWD, R.footD*0.2)), RGT, UP, FWD, R.footW, 0.16, R.footD, col);
+    }
+  }
+
+  // ---- pelvis + belt ----
   boxCC3(J.pel, RGT, UP, FWD, R.pelW, R.pelH, R.pelD, col);
-  // neck + head
-  limbTaper(J.uch, mid(J.uch, J.hed, 0.75), 0.2, 0.17, col);
+  if(R.belt){
+    lineSeg(add(add(J.pel, mul(FWD, R.pelD*0.55)), mul(RGT, -R.pelW*0.5)),
+            add(add(J.pel, mul(FWD, R.pelD*0.55)), mul(RGT,  R.pelW*0.5)), col, 2, 0.85, 2);
+    pyr(add(J.pel, mul(FWD, R.pelD*0.6)), FWD, 0.14, 0.1, col);
+  }
+
+  // ---- torso : V taper, abs plate, pecs ----
+  limbTaper(J.pel, J.chs, R.pelW*0.86, R.abdW*0.92, col);
+  limbTaper(J.chs, J.uch, R.abdW*0.94, R.chestW*0.74, col);
+  var chestC = mid(J.chs, J.uch, 0.6);
+  var chestHH = (R.uchY - R.chY)*0.85 + 0.22;
+  boxCC3(chestC, RGT, UP, FWD, R.chestW*0.96, chestHH, R.chestD, col);
+  lineSeg(add(J.uch, mul(RGT, -R.chestW*0.46)), add(J.pel, mul(RGT, -R.abdW*0.5)), col, 1.1, 0.45, 2);
+  lineSeg(add(J.uch, mul(RGT,  R.chestW*0.46)), add(J.pel, mul(RGT,  R.abdW*0.5)), col, 1.1, 0.45, 2);
+  var abC = mid(J.pel, J.chs, 0.45);
+  boxCC3(abC, RGT, UP, FWD, R.abdW*0.52, (R.chY - R.hipY)*0.72, R.abdD*0.55, col);
+  var abF = add(abC, mul(FWD, R.abdD*0.52));
+  lineSeg(abF, add(abF, mul(UP, (R.chY - R.hipY)*0.66)), col, 1, 0.55, 2);
+  for(sgn = -1; sgn <= 1; sgn += 2){
+    var pc = add(chestC, add(mul(RGT, sgn*R.chestW*0.25),
+                 add(mul(FWD, R.chestD*0.18), mul(UP, chestHH*0.16))));
+    boxCC3(pc, RGT, UP, FWD, R.chestW*0.4, chestHH*0.52, R.chestD*0.6, col);
+  }
+  var pf = add(chestC, add(mul(FWD, R.chestD*0.52), mul(UP, chestHH*0.1)));
+  lineSeg(pf, add(pf, mul(UP, chestHH*0.5)), col, 1, 0.6, 2);
+
+  // ---- chest sigil / identity mark ----
+  var sf = add(chestC, mul(FWD, R.chestD*0.64));
+  if(R.sigil === 'hex'){
+    var hp2 = [];
+    for(i = 0; i < 6; i++){
+      var a2 = Math.PI/3*i + T*1.5;
+      hp2.push(add(sf, add(mul(RGT, Math.cos(a2)*0.15), mul(UP, Math.sin(a2)*0.15))));
+    }
+    poly(hp2, '#b6ffd0', 1.5, 0.9, 'none', 2);
+  } else if(R.sigil === 'diamond'){
+    pyr(sf, FWD, 0.2, 0.14, '#ffffff');
+  } else if(R.sigil === 'strap'){
+    lineSeg(add(J.uch, mul(RGT, R.chestW*0.38)),
+            add(J.pel, mul(RGT, -R.pelW*0.38)), col, 2.4, 0.85, 2);
+  } else if(R.sigil === 'scars'){
+    lineSeg(add(sf, mul(UP, 0.1)),
+            add(add(sf, mul(RGT, 0.14)), mul(UP, -0.08)), '#ffdcb0', 1.4, 0.8, 2);
+    lineSeg(add(add(sf, mul(RGT, 0.06)), mul(UP, 0.14)),
+            add(add(sf, mul(RGT, 0.2)), mul(UP, -0.04)), '#ffdcb0', 1.2, 0.7, 2);
+  }
+  if(R.slab){
+    boxCC3(add(chestC, mul(FWD, R.chestD*0.55)), RGT, UP, FWD, R.chestW*0.66, 0.52, 0.13, col);
+  }
+
+  // ---- traps + neck ----
+  var nb = add(J.uch, mul(UP, (R.shY - R.uchY)*0.3));
+  limbTaper(nb, J.shL, R.trapW, R.trapW*1.15, col);
+  limbTaper(nb, J.shR, R.trapW, R.trapW*1.15, col);
+  limbTaper(nb, mid(J.uch, J.hed, 0.7), R.neckW, R.neckW*0.85, col);
+
+  // ---- head ----
   boxCC3(J.hed, RGT, UP, FWD, R.headW, R.headH, R.headD, col);
-  // visor
-  var vzz = R.headD*0.52, vxx = R.headW*0.34;
+  var vzz = R.headD*0.52, vxx = R.headW*0.33;
   lineSeg(add(J.hed, add(mul(RGT, -vxx), mul(FWD, vzz))),
           add(J.hed, add(mul(RGT,  vxx), mul(FWD, vzz))), '#eafff2', 2.4, 0.95, 2);
-  // identity kit
   if(R.jaw){
     var jm = add(J.hed, add(mul(FWD, R.headD*0.28), mul(UP, -R.headH*0.45)));
     boxCC3(jm, RGT, UP, FWD, R.headW*0.72, 0.15, R.headD*0.5, col);
@@ -1675,6 +2083,12 @@ function drawFighter(f){
   if(R.crest){
     pyr(add(J.hed, mul(UP, R.headH*0.55)), nrm(add(mul(UP, 1), mul(FWD, 0.5))),
         0.44*R.scale, 0.15, col);
+  }
+  if(R.mane){
+    for(i = 0; i < 5; i++){
+      var sd = nrm(add(add(mul(FWD, -0.85), mul(UP, 0.6 + i*0.06)), mul(RGT, (i-2)*0.26)));
+      pyr(add(J.hed, add(mul(UP, R.headH*0.08), mul(FWD, -R.headD*0.3))), sd, 0.34, 0.11, col);
+    }
   }
   if(R.halo){
     var hc = add(J.hed, mul(UP, R.headH*0.5 + 0.4));
@@ -1698,17 +2112,50 @@ function drawFighter(f){
       pline([w0, add(w1, mul(UP, 0.3)), add(w2, mul(UP, -0.1))], '#e8f6ff', 1.2, 0.4, 2);
     }
   }
-  if(R.spikes){
-    var shs = [J.shL, J.shR];
-    for(i = 0; i < 2; i++){
-      pyr(add(shs[i], mul(UP, R.padW*0.45)), mul(UP, 1), 0.3, 0.14, col);
+
+  // ---- shoulders / delts ----
+  if(R.pauldron){
+    for(sgn = -1; sgn <= 1; sgn += 2){
+      var shp = sgn < 0 ? J.shL : J.shR;
+      boxCC3(shp, RGT, UP, FWD, R.padW*1.5, R.padW*0.9, R.padW*1.3, col);
+      pyr(add(shp, mul(UP, R.padW*0.5)), UP, 0.3, 0.16, col);
     }
+  } else {
+    boxCC3(J.shL, RGT, UP, FWD, R.padW, R.padW*0.62, R.padW*0.95, col);
+    boxCC3(J.shR, RGT, UP, FWD, R.padW, R.padW*0.62, R.padW*0.95, col);
+  }
+  if(R.spikes){
+    pyr(add(J.shL, mul(UP, R.padW*0.5)), UP, 0.3, 0.14, col);
+    pyr(add(J.shR, mul(UP, R.padW*0.5)), UP, 0.3, 0.14, col);
     for(i = 0; i < 3; i++){
-      var sp = mid(J.pel, J.chs, 0.25 + i*0.3);
-      pyr(add(sp, mul(FWD, -R.chestD*0.55)),
+      var spq = mid(J.pel, J.chs, 0.25 + i*0.3);
+      pyr(add(spq, mul(FWD, -R.chestD*0.55)),
           nrm(add(mul(UP, 0.8), mul(FWD, -1))), 0.26, 0.12, col);
     }
   }
+
+  // ---- arms : bicep/forearm muscle or polygon shard limbs ----
+  if(R.polyArm){
+    shardArm(J.shL, J.elL, J.haL, R, col, -1, RGT);
+    shardArm(J.shR, J.elR, J.haR, R, col, 1, RGT);
+  } else {
+    muscleArm(J.shL, J.elL, J.haL, R, col);
+    muscleArm(J.shR, J.elR, J.haR, R, col);
+    fistBox(J.haL, J.elL, R.fistW, col);
+    fistBox(J.haR, J.elR, R.fistW, col);
+    if(R.armSpikes){
+      for(sgn = -1; sgn <= 1; sgn += 2){
+        var em = mid(sgn < 0 ? J.elL : J.elR, sgn < 0 ? J.haL : J.haR, 0.45);
+        pyr(add(em, mul(RGT, sgn*R.fore*0.5)), mul(RGT, sgn), 0.24, 0.1, col);
+      }
+    }
+  }
+  if(R.claws){
+    pyr(J.haL, nrm(sub(J.haL, J.elL)), 0.22*R.scale, 0.09, col);
+    pyr(J.haR, nrm(sub(J.haR, J.elR)), 0.22*R.scale, 0.09, col);
+  }
+
+  // ---- gear aura (waist + chest mini gear) ----
   if(R.gear){
     var gu = [Math.cos(T*3), 0, Math.sin(T*3)];
     var gv = [-Math.sin(T*3), 0, Math.cos(T*3)];
@@ -1719,27 +2166,13 @@ function drawFighter(f){
       lineSeg(add(J.pel, mul(tu, R.pelW*0.8)),
               add(J.pel, mul(tu, R.pelW*0.8 + 0.14)), col, 1.6, 0.85, 2);
     }
-  }
-  if(R.pauldron){
-    var PS = [J.shL, J.shR];
-    for(i = 0; i < 2; i++){
-      boxCC3(PS[i], RGT, UP, FWD, R.padW*1.5, R.padW*0.95, R.padW*1.35, col);
-      pyr(add(PS[i], mul(UP, R.padW*0.55)), mul(UP, 1), 0.3, 0.15, col);
-    }
-  } else {
-    var PS2 = [J.shL, J.shR];
-    for(i = 0; i < 2; i++){
-      boxCC3(PS2[i], RGT, UP, FWD, R.padW, R.padW*0.55, R.padW*0.8, col);
-    }
-  }
-  if(R.slab){
-    boxCC3(add(mid(J.chs, J.uch, 0.5), mul(FWD, R.chestD*0.55)),
-           RGT, UP, FWD, R.chestW*0.62, 0.5, 0.12, col);
+    ringP(add(chestC, mul(FWD, R.chestD*0.66)), 0.2, 10,
+          [Math.cos(T*4), 0, Math.sin(T*4)], [-Math.sin(T*4), 0, Math.cos(T*4)], col, 1.4, 0.9);
   }
   if(R.spine){
     for(i = 0; i < 4; i++){
-      var spq = mid(J.pel, J.chs, i/3);
-      pyr(add(spq, mul(FWD, -R.pelD*0.5)),
+      var spq2 = mid(J.pel, J.chs, i/3);
+      pyr(add(spq2, mul(FWD, -R.pelD*0.5)),
           nrm(add(mul(UP, 0.9), mul(FWD, -0.9))), 0.2, 0.09, col);
     }
   }
@@ -1752,22 +2185,6 @@ function drawFighter(f){
     limbTaper(t1, t2, 0.11, 0.06, col);
     pyr(t2, nrm(mul(FWD, -1)), 0.2, 0.09, col);
   }
-  if(R.claws){
-    var HD = [[J.haL, J.elL], [J.haR, J.elR]];
-    for(i = 0; i < 2; i++){
-      var cd = nrm(sub(HD[i][0], HD[i][1]));
-      pyr(add(HD[i][0], mul(cd, R.fistW*0.62)), cd, 0.22*R.scale, 0.09, col);
-    }
-  }
-  if(R.blade){
-    var BD = [[J.haL, J.elL], [J.haR, J.elR]];
-    for(i = 0; i < 2; i++){
-      var bd = nrm(sub(BD[i][0], BD[i][1]));
-      var bt = add(BD[i][0], mul(bd, 1.0*R.scale));
-      limbTaper(BD[i][0], bt, 0.09, 0.015, col);
-      lineSeg(add(BD[i][0], mul(UP, 0.05)), add(bt, mul(UP, 0.02)), col, 1.1, 0.9, 2);
-    }
-  }
   if(R.thruster){
     var bp = add(J.uch, mul(FWD, -R.chestD*0.62));
     boxCC3(bp, RGT, UP, FWD, R.chestW*0.5, 0.4, 0.16, col);
@@ -1777,21 +2194,7 @@ function drawFighter(f){
       lineSeg(f0, add(f0, add(mul(FWD, -0.16), mul(UP, -fl2))), '#b6ffd0', 2, 0.8, 2);
     }
   }
-  // arms
-  limbTaper(J.shL, J.elL, R.ua, R.la*1.08, col);
-  limbTaper(J.elL, J.haL, R.la, R.la*0.9, col);
-  fistBox(J.haL, J.elL, R.fistW, col);
-  limbTaper(J.shR, J.elR, R.ua, R.la*1.08, col);
-  limbTaper(J.elR, J.haR, R.la, R.la*0.9, col);
-  fistBox(J.haR, J.elR, R.fistW, col);
-  // legs
-  limbTaper(J.hpL, J.knL, R.th1, R.ca1*1.06, col);
-  limbTaper(J.knL, J.ftL, R.ca1, R.ca2, col);
-  boxCC3(add(J.ftL, mul(FWD, R.footD*0.18)), RGT, UP, FWD, R.footW, 0.15, R.footD, col);
-  limbTaper(J.hpR, J.knR, R.th1, R.ca1*1.06, col);
-  limbTaper(J.knR, J.ftR, R.ca1, R.ca2, col);
-  boxCC3(add(J.ftR, mul(FWD, R.footD*0.18)), RGT, UP, FWD, R.footW, 0.15, R.footD, col);
-  // player pin marker (human controlled only)
+  // player pin marker
   if(f.ctrl === 'p1' || f.ctrl === 'p2'){
     var pc2 = f.ctrl === 'p1' ? '#39ff6e' : '#ffd23f';
     var pin = add(J.hed, mul(UP, R.headH*0.5 + 0.75));
@@ -1907,7 +2310,6 @@ function cycleView(){
   snd('click');
 }
 
-// human control : merges gamepad slot + keyboard slot
 function humanCtl(f, which){
   if(!f) return;
   var mvx = 0, mvz = 0;
@@ -1954,12 +2356,13 @@ function humanCtl(f, which){
     if(def){ f.state = 'block'; f.t = 0; return; }
     if(f.cool <= 0){
       if(punch){
-        var nm = f.lastP === 'jab' ? 'cross' : 'jab';
-        if(f.tryMove(nm)){ f.lastP = nm; }
+        var ch = f.chains;
+        var nm = ch.P[f.pI % ch.P.length];
+        if(f.tryMove(nm)){ f.lastP = nm; f.pI = (f.pI + 1) % ch.P.length; }
       } else if(kick){
-        f.tryMove('kick');
+        f.tryMove(f.chains.K[0]);
       } else if(jump){
-        f.tryMove('jumpatk');
+        f.tryMove(f.chains.J[0]);
       } else if(sp1e){
         f.tryMove((CHARSPEC[f.R.name] || ['sp1','sp2'])[0]);
       } else if(sp2e){
@@ -2014,7 +2417,7 @@ function bindTouch(){
 }
 
 // ============================================================
-// 14 // GAME FLOW (title / select / match / rounds / campaign)
+// 14 // GAME FLOW
 // ============================================================
 function banner(a, b, dur){
   setTxt(EL.banner, a);
@@ -2027,6 +2430,11 @@ function hideBanner(){
   sA(EL.banner, 'visibility', 'hidden');
   sA(EL.banner2, 'visibility', 'hidden');
   BANT = 0;
+}
+
+function clearFX(){
+  SPARKS = []; RINGS = []; PROJ = [];
+  SHARDS = []; TRAILS = []; PILLARS = []; AFTER = [];
 }
 
 function upTitleUI(){
@@ -2055,7 +2463,6 @@ function beginGame(mode){
   if(mode === '2p' || PADS.length > 0){
     gotoSelect();
   } else {
-    // classic no-pad flow : straight in as VANGUARD-01
     GAME.p1sel = 0;
     GAME.oppList = [1, 2, 3, 4, 5];
     GAME.ei = 0;
@@ -2148,6 +2555,7 @@ function resetF(f, x, yaw){
   f.blockHold = false; f.blockT = 0;
   f.wh = []; f.evI = 0; f.y = 0;
   f.combo = 0; f.comboT = 0; f.prevTips = null;
+  f.pI = 0; f.idleT = 0;
 }
 
 function resetRound(){
@@ -2159,7 +2567,7 @@ function resetRound(){
 function startMatch(){
   PRE = [null, null];
   sA(EL.selectUI, 'visibility', 'hidden');
-  SPARKS = []; RINGS = []; PROJ = [];
+  clearFX();
   PL = new Fighter(buildRigFor(GAME.p1sel), 'p1');
   if(GAME.mode === '2p'){
     EN = new Fighter(buildRigFor(GAME.p2sel), 'p2');
@@ -2178,7 +2586,7 @@ function toTitle(){
   GAME.state = 'title';
   GAME.paused = false;
   PL = null; EN = null; PRE = [null, null];
-  SPARKS = []; RINGS = []; PROJ = [];
+  clearFX();
   hideBanner();
   sA(EL.selectUI, 'visibility', 'hidden');
   sA(EL.titleUI, 'visibility', 'visible');
@@ -2190,8 +2598,6 @@ function upTitle(dt){
   if(IGN > 0){ return; }
   var i;
   for(i = 0; i < PADS.length; i++){
-    // START / A / B on pad 1 begins 1P, on pad 2 joins 2P.
-    // LB or LT on ANY pad selects 2 PLAYER VERSUS.
     if(pp(i, 9) || pp(i, 0) || pp(i, 1)){
       beginGame(i === 0 ? '1p' : '2p');
       return;
@@ -2412,7 +2818,6 @@ function update(dt){
   var tv = TOUCHON && GAME.state !== 'title';
   sA(EL.touchUI, 'visibility', tv ? 'visible' : 'hidden');
   if(viewEdge()){ cycleView(); }
-  // attract camera drift on menus
   if(GAME.state === 'title' || GAME.state === 'select'){
     CAM.yaw = VIEWS[VI].yaw + Math.sin(T * 0.12) * 0.4;
     CAM.pit = VIEWS[VI].pit + Math.sin(T * 0.07) * 0.05;
@@ -2512,9 +2917,9 @@ function render(){
   DL.sort(function(a, b){ return (a.l - b.l) || (b.z - a.z); });
   var s = '', i;
   for(i = 0; i < DL.length; i++){ s += DL[i].s; }
-  var bid = ROT[2];                 // rewrite the oldest buffer
+  var bid = ROT[2];
   ELBUF[bid].innerHTML = s;
-  ROT = [bid, ROT[0], ROT[1]];      // just-written becomes newest
+  ROT = [bid, ROT[0], ROT[1]];
   setBuf(EL.uA, '#buf' + ROT[0]);
   setBuf(EL.uB, '#buf' + ROT[1]);
   setBuf(EL.uC, '#buf' + ROT[2]);
@@ -2529,12 +2934,15 @@ function buildSelectUI(){
   for(i = 0; i < 6; i++){
     y = 268 + i * 96;
     var F = FULLROSTER[i], st = FULLSTAT[i];
+    var spec = CHARSPEC[F.name];
+    var rt = MOVE[spec[0]].name, lt = MOVE[spec[1]].name;
     s += '<text id="sr' + i + '" x="960" y="' + (y + 36) +
          '" font-size="36" fill="' + F.col + '" letter-spacing="7" text-anchor="middle" opacity="0.42">' +
          F.name + '</text>';
     s += '<text id="ss' + i + '" x="960" y="' + (y + 64) +
-         '" font-size="15" fill="#1f7a3d" letter-spacing="3" text-anchor="middle" opacity="0.4">HP ' +
-         st.hp + ' // PWR ' + st.dmg.toFixed(2) + ' // SPD ' + st.spd.toFixed(2) + '</text>';
+         '" font-size="13" fill="#1f7a3d" letter-spacing="2" text-anchor="middle" opacity="0.4">HP ' +
+         st.hp + '  PWR ' + st.dmg.toFixed(2) + '  SPD ' + st.spd.toFixed(2) +
+         '  RT ' + rt + '  LT ' + lt + '</text>';
     s += '<line x1="620" y1="' + (y + 78) + '" x2="1300" y2="' + (y + 78) +
          '" stroke="#135c2e" stroke-width="1"/>';
   }
