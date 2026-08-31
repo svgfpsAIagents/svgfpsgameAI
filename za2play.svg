@@ -22,8 +22,9 @@
 ================================================================ -->
 <svg xmlns="http://www.w3.org/2000/svg"
      xmlns:xlink="http://www.w3.org/1999/xlink"
-     width="1920" height="1080" viewBox="0 0 1920 1080"
-     style="touch-action:none;-webkit-user-select:none;user-select:none;background:#000"
+     viewBox="0 0 1920 1080"
+     preserveAspectRatio="xMidYMid meet"
+     style="width:100vw;height:100vh;touch-action:none;-webkit-user-select:none;user-select:none;background:#000;display:block;position:fixed;top:0;left:0"
      shape-rendering="geometricPrecision"
      font-family="Courier New, monospace">
 
