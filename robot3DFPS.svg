@@ -1,8 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" tabindex="0">
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="0 0 1920 1080"
+     preserveAspectRatio="xMidYMid meet"
+     style="width:100vw;height:100vh;touch-action:none;-webkit-user-select:none;user-select:none;background:#000;display:block;position:fixed;top:0;left:0"
+     shape-rendering="geometricPrecision"
+     font-family="Courier New, monospace">
   <!-- ============================================================ -->
   <!-- CITY ASSAULT - Pure SVG 3D FPS with Oscilloscope Output      -->
   <!-- Enhanced: Drones, Waves, Health Crystals, Truncated Icosahedra-->
   <!-- Added: Speedrun Timer (HH:MM:SS) for competition/recording   -->
+  <!-- Added: 16:9 Aspect Ratio Support & Dynamic Resizing          -->
   <!-- ============================================================ -->
   <defs>
     <!-- Sky gradient: dark green-black vertical fade -->
@@ -66,7 +73,7 @@
     </filter>
     <!-- Screen clipping rectangle -->
     <clipPath id="screenClip">
-      <rect x="0" y="0" width="1200" height="800"/>
+      <rect x="0" y="0" width="1920" height="1080"/>
     </clipPath>
     <!-- Health bar gradient (high HP) -->
     <linearGradient id="hpBarHi" x1="0" y1="0" x2="1" y2="0">
@@ -90,22 +97,22 @@
     </pattern>
   </defs>
   <!-- Background sky fill -->
-  <rect width="1200" height="800" fill="url(#skyG)"/>
+  <rect width="1920" height="1080" fill="url(#skyG)"/>
   <!-- Subtle background hex pattern decoration -->
-  <rect width="1200" height="800" fill="url(#hexBg)" opacity="0.12"/>
+  <rect width="1920" height="1080" fill="url(#hexBg)" opacity="0.12"/>
   <!-- 3D render layer groups in strict z-order -->
   <g id="FLR" clip-path="url(#screenClip)"></g>
   <g id="W" clip-path="url(#screenClip)"></g>
   <g id="FX" clip-path="url(#screenClip)"></g>
   <!-- Post-processing overlays -->
-  <rect width="1200" height="800" fill="url(#scn)" pointer-events="none"/>
-  <rect width="1200" height="800" fill="url(#vig)" pointer-events="none"/>
-  <!-- HUD layer (always on top) -->
-  <g id="U"></g>
+  <rect width="1920" height="1080" fill="url(#scn)" pointer-events="none"/>
+  <rect width="1920" height="1080" fill="url(#vig)" pointer-events="none"/>
+  <!-- HUD layer (always on top, scaled to preserve UI aspect ratio perfectly) -->
+  <g id="U" transform="translate(150, 0) scale(1.35)"></g>
   <!-- Damage flash red overlay -->
-  <rect id="FL" width="1200" height="800" fill="#ff0000" opacity="0" pointer-events="none"/>
+  <rect id="FL" width="1920" height="1080" fill="#ff0000" opacity="0" pointer-events="none"/>
   <!-- Main menu overlay -->
-  <g id="M">
+  <g id="M" transform="translate(150, 0) scale(1.35)">
     <rect x="280" y="130" width="640" height="540" rx="8" fill="#030303" stroke="#00ff00" stroke-width="2.5"/>
     <rect x="285" y="135" width="630" height="530" rx="6" fill="none" stroke="#004400" stroke-width="0.5"/>
     <line x1="310" y1="165" x2="890" y2="165" stroke="#003300" stroke-width="0.3"/>
@@ -147,15 +154,18 @@
    TIMER: HH:MM:SS speedrun timer for competition/recording
    AUDIO: Oscilloscope X/Y output on Web Audio stereo channels
    INPUT: Mouse (pointer lock), WASD, Xbox controller (Gamepad API)
+   ASPECT: 16:9 widescreen internal resolution (1920x1080) with 
+           mathematically scaled HUD to preserve UI without altering mechanics
    ================================================================== */
 
 // ===================== CONSTANTS =====================
-var SW = 1200, SH = 800;
+var SW = 1920, SH = 1080;
 var FOV = Math.PI * 0.5;
-var BASE_FOCAL = 1.0 / Math.tan(FOV * 0.5);
+var BASE_FOCAL = (1.0 / Math.tan(FOV * 0.5)) * (800 / SH); // Preserves vertical FOV exactly
 var NEAR = 1.0, FAR = 450;
 var SVG_NS = "http://www.w3.org/2000/svg";
-var ARENA = 1000, EYE_H = 40, MOVE_SPD = 200, SENS = 0.003;
+var ARENA = 1000, EYE_H = 40, MOVE_SPD = 200;
+var SENS = 0.003 * (1200 / SW); // Preserves mouse sensitivity exactly
 var HEX_SIZE = 85;
 var HEX_SQRT3 = Math.sqrt(3);
 var MAX_POLYS = 1200;
@@ -164,6 +174,10 @@ var MAX_TRACERS = 12;
 var MAX_IMPACTS = 12;
 var MAX_BLASTS = 10;
 var MAX_HEALTH_CRYSTALS = 8;
+
+// HUD Scaling Math (for oscilloscope mapping)
+var HUD_SCALE = 1080 / 800;
+var HUD_OFFSET = (1920 - 1200 * HUD_SCALE) / 2;
 
 // ===================== DOM REFERENCES =====================
 var gFloor = document.getElementById("FLR");
@@ -211,9 +225,6 @@ var gameTime = 0;
 var camSinYaw = 0, camCosYaw = 1, camSinPitch = 0, camCosPitch = 1;
 
 // ===================== TIMER UTILITY =====================
-// Formats a number of seconds into HH:MM:SS string with zero-padding.
-// Used for the speedrun competition timer visible on HUD, victory, and
-// game-over screens so players can record and compare clear times.
 function formatTime(totalSeconds) {
   var s = Math.floor(totalSeconds);
   var h = Math.floor(s / 3600);
@@ -285,6 +296,10 @@ function oscLine(x1, y1, x2, y2) {
   oscWrite((x1 / SW) * 2 - 1, (y1 / SH) * 2 - 1);
   oscWrite((x2 / SW) * 2 - 1, (y2 / SH) * 2 - 1);
   oscFramePts += 2;
+}
+
+function oscLineHUD(x1, y1, x2, y2) {
+  oscLine(x1 * HUD_SCALE + HUD_OFFSET, y1 * HUD_SCALE, x2 * HUD_SCALE + HUD_OFFSET, y2 * HUD_SCALE);
 }
 
 function oscPoint(x, y) {
@@ -680,7 +695,6 @@ function generateWorld() {
   waveRobotsTotal = cfg.maxRobots; waveDronesTotal = cfg.maxDrones;
   spawnTimer = 0.5; wavePauseTimer = 0; waveTextTimer = 3.0;
   waveActive = true; victory = false;
-  // Reset speedrun timer to zero on new game
   gameTime = 0;
   var positions = [];
   var gridStep = 280;
@@ -1525,50 +1539,42 @@ function renderFX() {
 function renderHUD() {
   var h = "";
   var theme = getWaveTheme(wave);
-  // --- SPEEDRUN TIMER: top-center, always visible during gameplay ---
   var timeStr = formatTime(gameTime);
   h += '<rect x="498" y="28" width="204" height="30" rx="4" fill="#0a0a0a" stroke="#00ff00" stroke-width="1" opacity="0.85"/>';
   h += '<text x="600" y="49" text-anchor="middle" fill="#00ff00" font-size="18" font-family="monospace" font-weight="bold" letter-spacing="2">' + timeStr + '</text>';
-  // Crosshair
   h += '<line x1="588" y1="400" x2="612" y2="400" stroke="#00ff00" stroke-width="1.5" opacity="0.8"/>';
   h += '<line x1="600" y1="388" x2="600" y2="412" stroke="#00ff00" stroke-width="1.5" opacity="0.8"/>';
   h += '<circle cx="600" cy="400" r="5" fill="none" stroke="#00ff00" stroke-width="0.7" opacity="0.5"/>';
   h += '<circle cx="600" cy="400" r="1.5" fill="#00ff00" opacity="0.9"/>';
-  oscLine(588, 400, 612, 400);
-  oscLine(600, 388, 600, 412);
-  // Hit marker
+  oscLineHUD(588, 400, 612, 400);
+  oscLineHUD(600, 388, 600, 412);
   if (hitMarkerT > 0) {
     var ha = hitMarkerT / 0.25;
     var hs = 8 + (1 - ha) * 6;
     h += '<line x1="'+(600-hs)+'" y1="'+(400-hs)+'" x2="'+(600+hs)+'" y2="'+(400+hs)+'" stroke="#ffffff" stroke-width="2.5" opacity="'+ha+'"/>';
     h += '<line x1="'+(600+hs)+'" y1="'+(400-hs)+'" x2="'+(600-hs)+'" y2="'+(400+hs)+'" stroke="#ffffff" stroke-width="2.5" opacity="'+ha+'"/>';
-    oscLine(600-hs, 400-hs, 600+hs, 400+hs);
-    oscLine(600+hs, 400-hs, 600-hs, 400+hs);
+    oscLineHUD(600-hs, 400-hs, 600+hs, 400+hs);
+    oscLineHUD(600+hs, 400-hs, 600-hs, 400+hs);
   }
-  // Kill feed
   if (killFeedT > 0) {
     var ka = Math.min(1, killFeedT / 0.3);
     h += '<text x="600" y="370" text-anchor="middle" fill="#ff4400" font-size="18" font-family="monospace" font-weight="bold" opacity="'+ka+'">TARGET ELIMINATED +250</text>';
   }
-  // Health bar
   h += '<rect x="20" y="18" width="204" height="26" rx="3" fill="#0a0a0a" stroke="#00ff00" stroke-width="1.5"/>';
   var hpW = Math.max(0, Math.min(204, health * 0.204));
   var hpC = health > 50 ? "#00cc00" : health > 25 ? "#cc8800" : "#cc0000";
   h += '<rect x="22" y="20" width="' + hpW + '" height="22" rx="2" fill="' + hpC + '" opacity="0.5"/>';
   h += '<text x="122" y="36" text-anchor="middle" fill="#00ff00" font-size="13" font-family="monospace" font-weight="bold">HP ' + health + '</text>';
-  oscLine(20, 18, 224, 18);
-  oscLine(224, 18, 224, 44);
-  oscLine(224, 44, 20, 44);
-  oscLine(20, 44, 20, 18);
-  // Ammo
+  oscLineHUD(20, 18, 224, 18);
+  oscLineHUD(224, 18, 224, 44);
+  oscLineHUD(224, 44, 20, 44);
+  oscLineHUD(20, 44, 20, 18);
   var ammoTxt = "AMMO " + ammo;
   if (reloadT > 0) ammoTxt += "  [RELOADING]";
   h += '<text x="20" y="64" fill="#00ff00" font-size="15" font-family="monospace" font-weight="bold">' + ammoTxt + '</text>';
-  // Score and kills
   h += '<text x="20" y="86" fill="#00cc00" font-size="15" font-family="monospace">SCORE ' + score + '</text>';
   h += '<text x="20" y="106" fill="#009900" font-size="13" font-family="monospace">KILLS ' + kills + '</text>';
   h += '<text x="20" y="126" fill="#007700" font-size="11" font-family="monospace">ENEMIES ' + enemies.length + '  DRONES ' + drones.length + '</text>';
-  // Wave display
   h += '<rect x="20" y="140" width="204" height="42" rx="3" fill="#0a0a0a" stroke="' + theme.stroke + '" stroke-width="1" opacity="0.8"/>';
   h += '<text x="122" y="157" text-anchor="middle" fill="' + theme.stroke + '" font-size="14" font-family="monospace" font-weight="bold">WAVE ' + wave + ' / 10</text>';
   var cfg = getWaveConfig(wave);
@@ -1579,7 +1585,6 @@ function renderHUD() {
   h += '<rect x="22" y="164" width="200" height="12" rx="2" fill="#111111"/>';
   h += '<rect x="22" y="164" width="' + progW + '" height="12" rx="2" fill="' + theme.stroke + '" opacity="0.5"/>';
   h += '<text x="122" y="174" text-anchor="middle" fill="#ffffff" font-size="8" font-family="monospace" opacity="0.8">' + killed + '/' + totalWave + '</text>';
-  // Wave announcement text
   if (waveTextTimer > 0) {
     var wta = Math.min(1, waveTextTimer / 0.5);
     if (waveTextTimer > 2.5) wta = (3.0 - waveTextTimer + 0.5);
@@ -1589,7 +1594,6 @@ function renderHUD() {
     var subText = wave <= 4 ? "GREEN PHASE" : wave <= 7 ? "YELLOW PHASE" : "RED PHASE";
     h += '<text x="600" y="352" text-anchor="middle" fill="' + theme.stroke + '" font-size="16" font-family="monospace" opacity="' + (wta * 0.7) + '">' + subText + '</text>';
   }
-  // Victory screen with final time
   if (victory) {
     var finalTimeStr = formatTime(gameTime);
     h += '<rect x="250" y="260" width="700" height="220" rx="8" fill="#030303" stroke="#00ff00" stroke-width="2" opacity="0.95"/>';
@@ -1599,7 +1603,6 @@ function renderHUD() {
     h += '<text x="600" y="420" text-anchor="middle" fill="#009900" font-size="18" font-family="monospace">FINAL SCORE: ' + score + '  KILLS: ' + kills + '</text>';
     h += '<text x="600" y="460" text-anchor="middle" fill="#007700" font-size="14" font-family="monospace">CLICK TO PLAY AGAIN</text>';
   }
-  // Weapon display with muzzle flash
   var recoil = fireCD > 0.1 ? 8 : 0;
   var wy = 695 - recoil;
   h += '<rect x="555" y="' + wy + '" width="90" height="105" rx="6" fill="#0c0c0c" stroke="#00ff00" stroke-width="1.5"/>';
@@ -1612,13 +1615,12 @@ function renderHUD() {
     h += '<polygon points="596,' + (wy - 87) + ' 604,' + (wy - 87) + ' 600,' + (wy - 100) + '" fill="#ffffff" opacity="0.5"/>';
     h += '<circle cx="600" cy="' + (wy - 95) + '" r="8" fill="#00ff00" opacity="0.15"/>';
   }
-  // Minimap
-  var mmX = SW - 190, mmY = 15, mmS = 170, mmK = mmS / 700;
+  var mmX = 1200 - 190, mmY = 15, mmS = 170, mmK = mmS / 700; // Locked to 1200 for HUD scaling
   h += '<rect x="' + mmX + '" y="' + mmY + '" width="' + mmS + '" height="' + mmS + '" rx="3" fill="#060a07" stroke="#00ff00" stroke-width="1" opacity="0.85"/>';
-  oscLine(mmX, mmY, mmX + mmS, mmY);
-  oscLine(mmX + mmS, mmY, mmX + mmS, mmY + mmS);
-  oscLine(mmX + mmS, mmY + mmS, mmX, mmY + mmS);
-  oscLine(mmX, mmY + mmS, mmX, mmY);
+  oscLineHUD(mmX, mmY, mmX + mmS, mmY);
+  oscLineHUD(mmX + mmS, mmY, mmX + mmS, mmY + mmS);
+  oscLineHUD(mmX + mmS, mmY + mmS, mmX, mmY + mmS);
+  oscLineHUD(mmX, mmY + mmS, mmX, mmY);
   for (var i = 0; i < buildings.length; i++) {
     var b = buildings[i];
     var bx = mmX + mmS * 0.5 + (b.x - cam.x) * mmK;
@@ -1661,22 +1663,18 @@ function renderHUD() {
   var pDirX = Math.sin(cam.yaw) * 15, pDirZ = Math.cos(cam.yaw) * 15;
   h += '<line x1="' + (mmX + mmS * 0.5) + '" y1="' + (mmY + mmS * 0.5) + '" x2="' + (mmX + mmS * 0.5 + pDirX) + '" y2="' + (mmY + mmS * 0.5 + pDirZ) + '" stroke="#ffffff" stroke-width="1.5"/>';
   h += '<text x="' + (mmX + mmS * 0.5) + '" y="' + (mmY + mmS + 15) + '" text-anchor="middle" fill="#006600" font-size="10" font-family="monospace">TACTICAL MAP</text>';
-  // Pointer lock lost warning
   if (active && !document.pointerLockElement && !victory) {
     h += '<rect x="310" y="752" width="580" height="30" rx="4" fill="#050505" stroke="#00ff00" stroke-width="0.8" opacity="0.9"/>';
     h += '<text x="600" y="772" text-anchor="middle" fill="#00ff00" font-size="13" font-family="monospace">CLICK TO LOCK MOUSE | Left-Click Shoot | WASD Move | R Reload</text>';
   }
-  // Gamepad connected indicator
   if (gamepadConnected && active) {
     h += '<rect x="1020" y="770" width="170" height="22" rx="3" fill="#040a04" stroke="#00ff00" stroke-width="0.7" opacity="0.8"/>';
     h += '<text x="1105" y="785" text-anchor="middle" fill="#00ff00" font-size="10" font-family="monospace" opacity="0.9">XBOX GAMEPAD ACTIVE</text>';
   }
-  // Oscilloscope active indicator
   if (oscReady && active) {
     h += '<rect x="10" y="770" width="110" height="22" rx="3" fill="#040a04" stroke="#00ff00" stroke-width="0.5" opacity="0.6"/>';
     h += '<text x="65" y="785" text-anchor="middle" fill="#00cc00" font-size="9" font-family="monospace" opacity="0.8">OSC OUTPUT ON</text>';
   }
-  // Drone warning indicator
   if (drones.length > 0 && active) {
     var blink = Math.sin(Date.now() * 0.005) > 0;
     if (blink) {
@@ -1684,7 +1682,6 @@ function renderHUD() {
       h += '<text x="600" y="765" text-anchor="middle" fill="#ff0000" font-size="11" font-family="monospace" font-weight="bold">DRONE THREAT: ' + drones.length + '</text>';
     }
   }
-  // Compass heading
   var deg = ((cam.yaw * 180 / Math.PI) % 360 + 360) % 360;
   var compassDir = "N";
   if (deg > 315 || deg <= 45) compassDir = "N";
@@ -1833,17 +1830,14 @@ function gameLoop(t) {
   var dt = Math.min(0.05, (t - lastT) / 1000);
   if (lastT === 0) dt = 0.016;
   lastT = t;
-  // Precompute camera sin/cos for transform performance
   camSinYaw = Math.sin(-cam.yaw);
   camCosYaw = Math.cos(-cam.yaw);
   camSinPitch = Math.sin(cam.pitch);
   camCosPitch = Math.cos(cam.pitch);
-  // Process mouse look input
   cam.yaw += mouseX * SENS;
   cam.pitch -= mouseY * SENS;
   cam.pitch = Math.max(-1.4, Math.min(1.4, cam.pitch));
   mouseX = 0; mouseY = 0;
-  // Process keyboard movement
   var mx = 0, mz = 0;
   if (keys['w'] || keys['arrowup']) mz += 1;
   if (keys['s'] || keys['arrowdown']) mz -= 1;
@@ -1856,9 +1850,7 @@ function gameLoop(t) {
     var res = collideWithBuildings(cam.x + wx, cam.z + wz, 12);
     cam.x = res.x; cam.z = res.z;
   }
-  // Gamepad input
   pollGamepad(dt);
-  // Update timers
   if (fireCD > 0) fireCD -= dt;
   if (reloadT > 0) {
     reloadT -= dt;
@@ -1870,32 +1862,24 @@ function gameLoop(t) {
   effFocal = BASE_FOCAL * (1 - fovKick);
   shakeX = (Math.random() - 0.5) * shakeAmt * SW;
   shakeY = (Math.random() - 0.5) * shakeAmt * SH;
-  // Kill feed trigger
   if (kills > prevKills) { killFeedT = 2.0; prevKills = kills; }
-  // --- Increment speedrun timer (stops on victory) ---
   if (!victory) {
     gameTime += dt;
   }
-  // Wave spawning system
   updateWaveSpawning(dt);
-  // Update all game entities
   updateEnemies(dt);
   updateDrones(dt);
   updateEnemyBullets(dt);
   updateBlastWaves(dt);
   updateTracersAndImpacts(dt);
-  // Reset oscilloscope per-frame budget
   oscReset();
-  // Apply screen shake transform to 3D layers
   gFloor.setAttribute("transform", "translate(" + shakeX + "," + shakeY + ")");
   gWorld.setAttribute("transform", "translate(" + shakeX + "," + shakeY + ")");
   gFX.setAttribute("transform", "translate(" + shakeX + "," + shakeY + ")");
-  // Render all layers in order
   renderHexFloor();
   renderScene();
   renderFX();
   renderHUD();
-  // Damage flash overlay
   rFlash.setAttribute("opacity", String(dmgT > 0 ? dmgT * 0.6 : 0));
 }
 
