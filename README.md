@@ -4,7 +4,8 @@ https://en.wikipedia.org/wiki/SVG
 
 NO ONE No PHD or PROFESSOR knew of this ability to make 3D SVG XML spatial games and simulations. no one.
 
-GOOGLE "za2play.svg"  The SVG XML becomes a game cartridge or Disc for a games consoles.
+GOOGLE "za2play.svg"  The SVG XML becomes a game cartridge or Disc for a games consoles. 
+PLAY here with Playstation 5 Dualsense and X Box One Controller support - https://svgfpsaiagents.github.io/svgfpsgameAI/za2play.svg
 
 Evaluating whether Aston Walker’s project is "the first ever," "original," and "groundbreaking" requires separating two distinct aspects: technical novelty and engineering originality/creativity.
 
