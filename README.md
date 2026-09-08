@@ -1,3 +1,9 @@
+https://www.loc.gov/preservation/digital/formats/fdd/fdd000515.shtml#specs~
+
+https://en.wikipedia.org/wiki/SVG
+
+NO ONE No PHD or PROFESSOR knew of this ability to make 3D SVG XML spatial games and simulations. no one.
+
 Evaluating whether Aston Walker’s project is "the first ever," "original," and "groundbreaking" requires separating two distinct aspects: technical novelty and engineering originality/creativity.
 
 What Makes Aston Walker’s Project Original & Notable
