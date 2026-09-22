@@ -1,0 +1,2466 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900"
+     preserveAspectRatio="xMidYMid meet"
+     font-family="'Courier New', ui-monospace, monospace"
+     style="width:100vw;height:100vh;display:block;background:#ffffff;touch-action:none;user-select:none;-webkit-user-select:none">
+
+  <title>SECTOR-9 — PLASMA PROTOCOL (Full-Frame Oscilloscope Buffer + Scope MiniMap)</title>
+  <desc>Third-person pure-SVG 3D shooter. Complete frame captured into a double-buffer and streamed as X/Y stereo PCM (WAV/audio out). Black-screen minimap shows the full captured scope buffer.</desc>
+
+  <defs>
+    <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#ffffff"/>
+      <stop offset="45%" stop-color="#fbf7f1"/>
+      <stop offset="75%" stop-color="#f5ede0"/>
+      <stop offset="100%" stop-color="#ffffff"/>
+    </linearGradient>
+    <radialGradient id="horG" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"  stop-color="#ff9a3a" stop-opacity="0.35"/>
+      <stop offset="45%" stop-color="#ffb454" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="vig" cx="50%" cy="50%" r="70%">
+      <stop offset="0%"  stop-color="#000" stop-opacity="0"/>
+      <stop offset="65%" stop-color="#000" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.20"/>
+    </radialGradient>
+    <pattern id="scn" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="2" fill="#000" opacity="0.025"/>
+    </pattern>
+    <filter id="glowS" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="2.4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="touchGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="3" result="t"/>
+      <feMerge><feMergeNode in="t"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="scopeGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.2" result="sg"/>
+      <feMerge><feMergeNode in="sg"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="scrClip"><rect x="0" y="0" width="1600" height="900"/></clipPath>
+    <clipPath id="mmClip"><circle cx="0" cy="0" r="96"/></clipPath>
+    <clipPath id="scopeClip"><rect x="0" y="0" width="220" height="220"/></clipPath>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#skyG)"/>
+  <ellipse id="HOR" cx="800" cy="340" rx="1200" ry="120" fill="url(#horG)"/>
+  <g id="STARS" opacity="0"></g>
+  <g id="FLR" clip-path="url(#scrClip)"></g>
+  <g id="W"   clip-path="url(#scrClip)"></g>
+  <g id="FX"  clip-path="url(#scrClip)"></g>
+  <rect width="1600" height="900" fill="url(#scn)" pointer-events="none"/>
+  <rect width="1600" height="900" fill="url(#vig)" pointer-events="none"/>
+  <rect id="FL" width="1600" height="900" fill="#ff2a1a" opacity="0" pointer-events="none"/>
+
+  <g id="U">
+    <text x="26" y="38" fill="#7a5a3a" font-size="12" letter-spacing="3">SECTOR-9 // FULL-FRAME OSC BUFFER // M88 + QUAD SPIDER</text>
+    <rect x="22" y="52" width="330" height="20" fill="#fff8ee" fill-opacity="0.90" stroke="#c88a4a" stroke-width="1.5"/>
+    <rect id="HP_FG" x="24" y="54" width="326" height="16" fill="#00aa44"/>
+    <text x="24" y="90" fill="#8a6a44" font-size="11" letter-spacing="2">INTEGRITY</text>
+    <text id="AMMO_T" x="22" y="136" fill="#1a1a1a" font-size="40" font-weight="bold" letter-spacing="2">30 / 120</text>
+    <text x="22" y="158" fill="#8a6a44" font-size="11" letter-spacing="2">MK-VII PLASMA RIFLE</text>
+    <text id="ST_T" x="22" y="184" fill="#4a7a5a" font-size="14">STANCE HIP | GAIT AUTO | FREE AIM</text>
+    <rect x="22" y="200" width="228" height="44" fill="#fff8ee" fill-opacity="0.90" stroke="#0a6a4a" stroke-width="1.2"/>
+    <text x="32" y="218" fill="#00aa44" font-size="13" letter-spacing="2">VIPER-2 [WINGMAN]</text>
+    <rect x="32" y="226" width="124" height="10" fill="none" stroke="#0a6a4a" stroke-width="1"/>
+    <rect id="AL_HP" x="33" y="227" width="122" height="8" fill="#00aa44"/>
+    <text id="AL_ST" x="164" y="236" fill="#3a6a4a" font-size="11">ONLINE</text>
+    <rect x="22" y="252" width="228" height="44" fill="#fff8ee" fill-opacity="0.90" stroke="#aa2020" stroke-width="1.2"/>
+    <text x="32" y="270" fill="#cc2222" font-size="13" letter-spacing="2">ENEMY MIX [WAVE 1]</text>
+    <text x="32" y="288" fill="#3a2a2a" font-size="11">M88 x0 · SPIDER x0</text>
+    <text id="EN_MIX" x="150" y="288" fill="#cc2222" font-size="11">—</text>
+    <text id="SCORE_T" x="1576" y="36" text-anchor="end" fill="#1a1a1a" font-size="20" font-weight="bold">SCORE 0</text>
+    <text id="TIMER_T" x="1576" y="60" text-anchor="end" fill="#4a5a6a" font-size="16">00:00:00</text>
+    <text id="KILLS_T" x="1576" y="82" text-anchor="end" fill="#5a6a7a" font-size="13">KILLS 0</text>
+    <text id="WAVE_T"  x="1576" y="104" text-anchor="end" fill="#cc6622" font-size="13">WAVE 1</text>
+    <text id="FPS_T"   x="1576" y="126" text-anchor="end" fill="#8a9aaa" font-size="12">0 FPS</text>
+    <text id="OSC_T"   x="1576" y="146" text-anchor="end" fill="#7a8a9a" font-size="11">OSC OFF [0]</text>
+    <text id="TCH_T"   x="1576" y="164" text-anchor="end" fill="#7a8a9a" font-size="11">TOUCH OFF</text>
+    <text id="PAD_T"   x="1576" y="182" text-anchor="end" fill="#7a8a9a" font-size="11">PAD OFF</text>
+    <text id="KF0" x="1576" y="214" text-anchor="end" fill="#cc2222" font-size="13" opacity="0"></text>
+    <text id="KF1" x="1576" y="234" text-anchor="end" fill="#cc2222" font-size="13" opacity="0"></text>
+    <text id="KF2" x="1576" y="254" text-anchor="end" fill="#cc2222" font-size="13" opacity="0"></text>
+
+    <g id="CH">
+      <line id="CH_T" x1="800" y1="430" x2="800" y2="442" stroke="#1a1a1a" stroke-width="2"/>
+      <line id="CH_B" x1="800" y1="458" x2="800" y2="470" stroke="#1a1a1a" stroke-width="2"/>
+      <line id="CH_L" x1="782" y1="450" x2="794" y2="450" stroke="#1a1a1a" stroke-width="2"/>
+      <line id="CH_R" x1="806" y1="450" x2="818" y2="450" stroke="#1a1a1a" stroke-width="2"/>
+      <circle id="CH_D" cx="800" cy="450" r="1.6" fill="#1a1a1a"/>
+      <g id="HM" opacity="0">
+        <line x1="788" y1="438" x2="796" y2="446" stroke="#cc2222" stroke-width="2.5"/>
+        <line x1="812" y1="438" x2="804" y2="446" stroke="#cc2222" stroke-width="2.5"/>
+        <line x1="788" y1="462" x2="796" y2="454" stroke="#cc2222" stroke-width="2.5"/>
+        <line x1="812" y1="462" x2="804" y2="454" stroke="#cc2222" stroke-width="2.5"/>
+      </g>
+    </g>
+
+    <g id="LOCK" opacity="0">
+      <path d="M-40,-24 L-40,-40 L-24,-40" fill="none" stroke="#cc2222" stroke-width="2.5"/>
+      <path d="M40,-24 L40,-40 L24,-40" fill="none" stroke="#cc2222" stroke-width="2.5"/>
+      <path d="M-40,24 L-40,40 L-24,40" fill="none" stroke="#cc2222" stroke-width="2.5"/>
+      <path d="M40,24 L40,40 L24,40" fill="none" stroke="#cc2222" stroke-width="2.5"/>
+      <rect x="-48" y="46" width="96" height="7" fill="#fff0e8" stroke="#aa2020" stroke-width="1"/>
+      <rect id="LK_HP" x="-47" y="47" width="94" height="5" fill="#cc2222"/>
+      <text id="LK_T" y="70" text-anchor="middle" fill="#cc2222" font-size="12" letter-spacing="1">TARGET</text>
+    </g>
+
+    <g id="MMAP" transform="translate(1452,742)">
+      <circle r="104" fill="#fffaf0" fill-opacity="0.92" stroke="#cc6622" stroke-width="2"/>
+      <circle r="68" fill="none" stroke="#c88a4a" stroke-width="1"/>
+      <circle r="34" fill="none" stroke="#c88a4a" stroke-width="1"/>
+      <line x1="-104" y1="0" x2="104" y2="0" stroke="#c88a4a" stroke-width="0.6"/>
+      <line x1="0" y1="-104" x2="0" y2="104" stroke="#c88a4a" stroke-width="0.6"/>
+      <g clip-path="url(#mmClip)">
+        <g id="MB_B"></g>
+        <g id="MB_C"></g>
+        <g id="MB_E"></g>
+        <circle id="M_ALLY" r="4" fill="#00aa44"/>
+        <line id="MSWEEP" x1="0" y1="0" x2="0" y2="-98" stroke="#cc6622" stroke-width="1.5" opacity="0.55"/>
+      </g>
+      <polygon points="0,-8 5,6 0,2 -5,6" fill="#1a1a1a"/>
+      <text y="-112" text-anchor="middle" fill="#8a6a44" font-size="11">N</text>
+      <text y="124" text-anchor="middle" fill="#8a6a44" font-size="10" letter-spacing="2">TACTICAL RADAR</text>
+    </g>
+
+    <g id="SCOPEMAP" transform="translate(36,610)">
+      <rect x="-4" y="-4" width="248" height="268" rx="6"
+            fill="#fff8ee" fill-opacity="0.92" stroke="#cc6622" stroke-width="2"/>
+      <rect x="0" y="0" width="240" height="240" rx="3"
+            fill="#000000" stroke="#1a1a1a" stroke-width="1.5"/>
+      <g clip-path="url(#scopeClip)" id="SCOPE_DOTS">
+        <g id="SCOPE_TRAIL"></g>
+        <g id="SCOPE_GREEN"></g>
+        <g id="SCOPE_ORANGE"></g>
+        <g id="SCOPE_BEAM"></g>
+        <circle id="SCOPE_PEN" cx="120" cy="120" r="2.4" fill="#ffffff" filter="url(#scopeGlow)"/>
+      </g>
+      <line x1="120" y1="0" x2="120" y2="240" stroke="#1f3a1f" stroke-width="0.5" opacity="0.5"/>
+      <line x1="0" y1="120" x2="240" y2="120" stroke="#1f3a1f" stroke-width="0.5" opacity="0.5"/>
+      <text x="120" y="256" text-anchor="middle" fill="#8a6a44" font-size="10" letter-spacing="2">OSC X/Y VECTOR MAP</text>
+      <text id="SCOPE_COUNT" x="228" y="256" text-anchor="end" fill="#4a7a5a" font-size="9">0 pts</text>
+      <text x="8" y="12" fill="#22aa44" font-size="9" opacity="0.9">GRN</text>
+      <text x="46" y="12" fill="#ff9a3a" font-size="9" opacity="0.9">ORG</text>
+    </g>
+
+    <text id="BANNER" x="800" y="170" text-anchor="middle" fill="#cc2222" font-size="42" font-weight="bold" letter-spacing="10" opacity="0" filter="url(#glowS)"></text>
+    <text id="TOAST"  x="800" y="660" text-anchor="middle" fill="#1a1a1a" font-size="36" font-weight="bold" letter-spacing="8" opacity="0" filter="url(#glowS)"></text>
+
+    <text x="800" y="878" text-anchor="middle" fill="#8a6a44" font-size="12" letter-spacing="1">
+      [WASD] MOVE [SHIFT] SPRINT [LMB] FIRE [RMB] ADS [R] RELOAD [Q] LOCK [E] CYCLE [F] SNAP [0] OSC [1-4/T] GAIT [SPACE] JUMP [WHEEL] ZOOM | PAD: RT FIRE, LT ADS, LB+MOVE AIM-SHOOT, RB JUMP, A RELOAD, X LOCK, Y CYCLE, B GAIT
+    </text>
+  </g>
+
+  <g id="TOUCH" display="none" filter="url(#touchGlow)">
+    <g id="DPAD" transform="translate(160,700)">
+      <circle r="110" fill="#fffaf0" fill-opacity="0.55" stroke="#cc6622" stroke-width="2"/>
+      <circle r="86" fill="none" stroke="#c88a4a" stroke-width="1"/>
+      <g id="TC_UP"><circle cx="0" cy="-60" r="30" fill="#fff4e6" fill-opacity="0.90" stroke="#cc6622" stroke-width="2"/><polygon points="0,-72 -12,-52 12,-52" fill="#cc6622"/></g>
+      <g id="TC_DN"><circle cx="0" cy="60" r="30" fill="#fff4e6" fill-opacity="0.90" stroke="#cc6622" stroke-width="2"/><polygon points="0,72 -12,52 12,52" fill="#cc6622"/></g>
+      <g id="TC_LT"><circle cx="-60" cy="0" r="30" fill="#fff4e6" fill-opacity="0.90" stroke="#cc6622" stroke-width="2"/><polygon points="-72,0 -52,-12 -52,12" fill="#cc6622"/></g>
+      <g id="TC_RT"><circle cx="60" cy="0" r="30" fill="#fff4e6" fill-opacity="0.90" stroke="#cc6622" stroke-width="2"/><polygon points="72,0 52,-12 52,12" fill="#cc6622"/></g>
+      <circle r="18" fill="#ffeede" fill-opacity="0.95" stroke="#cc6622" stroke-width="1.4"/>
+      <text y="5" text-anchor="middle" fill="#8a5a2a" font-size="10" letter-spacing="1">MOVE</text>
+    </g>
+    <g id="ACT" transform="translate(1420,660)">
+      <g id="TC_FIRE"><circle r="72" fill="#fff0e8" fill-opacity="0.85" stroke="#cc2222" stroke-width="2.5"/><circle r="58" fill="#cc2222" fill-opacity="0.28"/><text y="6" text-anchor="middle" fill="#8a1010" font-size="16" font-weight="bold" letter-spacing="2">FIRE</text></g>
+      <g id="TC_ADS" transform="translate(-110,-40)"><circle r="34" fill="#fff4e6" fill-opacity="0.90" stroke="#cc6622" stroke-width="2"/><text y="5" text-anchor="middle" fill="#8a5a2a" font-size="12">ADS</text></g>
+      <g id="TC_REL" transform="translate(110,-40)"><circle r="34" fill="#fff4e6" fill-opacity="0.90" stroke="#cc6622" stroke-width="2"/><text y="5" text-anchor="middle" fill="#8a5a2a" font-size="12">RELOAD</text></g>
+      <g id="TC_LOCK" transform="translate(-110,40)"><circle r="34" fill="#fff4e6" fill-opacity="0.90" stroke="#cc6622" stroke-width="2"/><text y="5" text-anchor="middle" fill="#8a5a2a" font-size="12">LOCK</text></g>
+      <g id="TC_GAIT" transform="translate(110,40)"><circle r="34" fill="#fff4e6" fill-opacity="0.90" stroke="#cc6622" stroke-width="2"/><text y="5" text-anchor="middle" fill="#8a5a2a" font-size="11">GAIT</text></g>
+    </g>
+    <g id="AUX" transform="translate(800,820)">
+      <g id="TC_JUMP" transform="translate(-70,0)"><circle r="34" fill="#fff4e6" fill-opacity="0.90" stroke="#cc6622" stroke-width="2"/><text y="5" text-anchor="middle" fill="#8a5a2a" font-size="12">JUMP</text></g>
+      <g id="TC_TGT" transform="translate(70,0)"><circle r="34" fill="#fff4e6" fill-opacity="0.90" stroke="#cc6622" stroke-width="2"/><text y="5" text-anchor="middle" fill="#8a5a2a" font-size="11">TGT</text></g>
+    </g>
+    <g id="OSCB" transform="translate(1520,120)">
+      <circle r="26" fill="#fff4e6" fill-opacity="0.90" stroke="#cc6622" stroke-width="1.6"/>
+      <text y="5" text-anchor="middle" fill="#8a5a2a" font-size="11">OSC</text>
+    </g>
+  </g>
+
+  <text id="LH" x="800" y="820" text-anchor="middle" fill="#cc6622" font-size="16" letter-spacing="4" opacity="0">CLICK TO CAPTURE MOUSE</text>
+
+  <g id="END" display="none">
+    <rect x="0" y="0" width="1600" height="900" fill="#ffffff" opacity="0.85"/>
+    <text id="END_T" x="800" y="400" text-anchor="middle" fill="#cc2222" font-size="58" font-weight="bold" letter-spacing="12" filter="url(#glowS)">MISSION FAILED</text>
+    <text id="END_S" x="800" y="456" text-anchor="middle" fill="#4a5a6a" font-size="20">SCORE 0 — TIME 00:00:00</text>
+    <text x="800" y="520" text-anchor="middle" fill="#1a1a1a" font-size="22" font-weight="bold" letter-spacing="4">CLICK TO REDEPLOY</text>
+  </g>
+
+  <g id="M">
+    <rect x="0" y="0" width="1600" height="900" fill="#ffffff" opacity="0.92"/>
+    <rect x="400" y="60" width="800" height="780" rx="10" fill="#fffdf8" stroke="#cc6622" stroke-width="2"/>
+    <rect x="411" y="71" width="778" height="758" rx="8" fill="none" stroke="#c88a4a" stroke-width="1"/>
+    <text x="800" y="128" text-anchor="middle" fill="#cc2222" font-size="38" font-weight="bold" letter-spacing="10" filter="url(#glowS)">SECTOR-9</text>
+    <text x="800" y="158" text-anchor="middle" fill="#cc6622" font-size="20" font-weight="bold" letter-spacing="6">PLASMA PROTOCOL · FULL-FRAME SCOPE</text>
+    <text x="800" y="184" text-anchor="middle" fill="#8a6a44" font-size="12" letter-spacing="5">GREEN OPERATIVE · BLACK M88 · RED QUAD SPIDER</text>
+    <line x1="460" y1="206" x2="1140" y2="206" stroke="#c88a4a" stroke-width="1"/>
+    <text x="800" y="244" text-anchor="middle" fill="#1a1a1a" font-size="24" font-weight="bold" letter-spacing="4">CLICK / TAP / PRESS START TO DEPLOY</text>
+    <text x="800" y="270" text-anchor="middle" fill="#8a6a44" font-size="12" letter-spacing="2">FULL FRAME BUFFERED TO X/Y WAV — SCOPE MINIMAP SHOWS COMPLETE PROJECTION</text>
+    <line x1="460" y1="290" x2="1140" y2="290" stroke="#c88a4a" stroke-width="1"/>
+    <text x="480" y="322" fill="#cc6622" font-size="15" font-weight="bold" letter-spacing="2">KEYBOARD + MOUSE</text>
+    <text x="480" y="346" fill="#3a4a5a" font-size="12">WASD / ARROWS ... MOVE             SHIFT ........... SPRINT</text>
+    <text x="480" y="366" fill="#3a4a5a" font-size="12">MOUSE ........... ORBIT CAM        WHEEL ........... ZOOM</text>
+    <text x="480" y="386" fill="#1a1a1a" font-size="12">LMB (HOLD) ...... FIRE PLASMA      RMB (HOLD) ...... AIM DOWN SIGHTS</text>
+    <text x="480" y="406" fill="#1a1a1a" font-size="12">R ............... RELOAD           Q ............... LOCK-ON TOGGLE</text>
+    <text x="480" y="426" fill="#3a4a5a" font-size="12">E ............... CYCLE TARGET     F ............... SNAP CAMERA</text>
+    <text x="480" y="446" fill="#3a4a5a" font-size="12">1 / 2 / 3 ....... IDLE/WALK/RUN    4 / T ........... AUTO GAIT / CYCLE</text>
+    <text x="480" y="466" fill="#3a4a5a" font-size="12">SPACE ........... JUMP            0 ............... OSCILLOSCOPE</text>
+    <text x="980" y="322" fill="#cc6622" font-size="15" font-weight="bold" letter-spacing="2">GAMEPAD / ANDROID</text>
+    <text x="980" y="346" fill="#1a1a1a" font-size="12">RT .............. FIRE PLASMA      LT ............. AIM DOWN SIGHTS</text>
+    <text x="980" y="366" fill="#cc2222" font-size="12">LB + MOVE ....... AIM-SHOOT AT MOVING MOUSE TARGET</text>
+    <text x="980" y="386" fill="#3a4a5a" font-size="12">L-STICK ......... MOVE             R-STICK ........ ORBIT CAM</text>
+    <text x="980" y="406" fill="#3a4a5a" font-size="12">RB .............. JUMP             A .............. RELOAD</text>
+    <text x="980" y="426" fill="#3a4a5a" font-size="12">X ............... LOCK-ON          Y .............. CYCLE TARGET</text>
+    <text x="980" y="446" fill="#3a4a5a" font-size="12">B ............... GAIT CYCLE       START .......... DEPLOY / PAUSE</text>
+    <line x1="460" y1="470" x2="1140" y2="470" stroke="#c88a4a" stroke-width="1"/>
+    <text x="480" y="500" fill="#cc6622" font-size="15" font-weight="bold" letter-spacing="2">FIELD MANUAL</text>
+    <text x="480" y="524" fill="#3a4a5a" font-size="12">- M88 HOSTILE: black body, RED outline, 120 HP, plasma rifle.</text>
+    <text x="480" y="544" fill="#3a4a5a" font-size="12">- QUAD SPIDER: 4 thick RED geometric legs, 220 HP, pounces + claws.</text>
+    <text x="480" y="564" fill="#3a4a5a" font-size="12">- Aim for the SPIDER EYES cluster for 2.4x damage multiplier.</text>
+    <text x="480" y="584" fill="#3a4a5a" font-size="12">- VIPER-2 follows you with a GREEN-teal outline.</text>
+    <text x="480" y="604" fill="#3a4a5a" font-size="12">- GREEN CRYSTALS +36 AMMO. PURPLE CRYSTALS +40 HP.</text>
+    <text x="480" y="624" fill="#3a4a5a" font-size="12">- FULL FRAME BUFFER: every visible edge is captured, not cherry-picked.</text>
+    <line x1="460" y1="644" x2="1140" y2="644" stroke="#c88a4a" stroke-width="1"/>
+    <text x="800" y="676" text-anchor="middle" fill="#7a8a9a" font-size="11" letter-spacing="2">
+      FULL FRAME RING BUFFER → X/Y STEREO PCM → AUDIO DESTINATION + SCOPE MINIMAP
+    </text>
+    <text x="800" y="700" text-anchor="middle" fill="#8a9aaa" font-size="10">
+      CONNECT L/R OF SOUND CARD TO X/Y OF ANALOG OSCILLOSCOPE
+    </text>
+    <text x="800" y="724" text-anchor="middle" fill="#8a9aaa" font-size="10">
+      LEFT MINIMAP MIRRORS THE EXACT X/Y STREAM BEING OUTPUT
+    </text>
+    <text x="800" y="800" text-anchor="middle" fill="#cc6622" font-size="20" font-weight="bold" letter-spacing="6">[ CLICK / TAP / PRESS START ]</text>
+  </g>
+
+  <script><![CDATA[
+  (function(){
+  "use strict";
+
+  var SVGNS = "http://www.w3.org/2000/svg";
+  var SW = 1600, SH = 900, HALF = SW * 0.5, MID = SH * 0.5;
+  var FOCAL = 1;
+  var NEAR = 2, FAR = 2400, PI = Math.PI, TAU = PI * 2;
+  var ARENA = 1700;
+  var VS = HALF;
+
+  var FLOOR_ORANGE      = "#ff9a3a";
+  var FLOOR_ORANGE_HI   = "#ffb454";
+  var BUILDING_ORANGE   = "#d88a3a";
+  var BUILDING_ORANGE_HI= "#e8a55a";
+  var PLAYER_GREEN      = "#00aa44";
+  var PLAYER_GREEN_HI   = "#33cc66";
+  var ALLY_GREEN        = "#0a8a6a";
+  var ALLY_GREEN_HI     = "#1aa88a";
+  var ENEMY_RED         = "#cc2222";
+  var ENEMY_RED_HI      = "#e84444";
+  var SPIDER_SEG_DARK   = "#8a1010";
+  var SPIDER_SEG_MID    = "#c81a1a";
+  var SPIDER_SEG_LIGHT  = "#e83a3a";
+  var SPIDER_SEG_HI     = "#ff5a5a";
+  var SPIDER_SEG_EDGE   = "#ff7a7a";
+  var SPIDER_BODY_DARK  = "#5a0a0a";
+  var SPIDER_BODY_MID   = "#a01414";
+  var SPIDER_EYE        = "#ffd000";
+
+  var SVGEL = document.querySelector("svg");
+
+  function el(n, a, p){
+    var e = document.createElementNS(SVGNS, n);
+    for(var k in a) e.setAttribute(k, a[k]);
+    if(p) p.appendChild(e);
+    return e;
+  }
+
+  var gFLR = document.getElementById("FLR");
+  var gW   = document.getElementById("W");
+  var gFX  = document.getElementById("FX");
+  var gMenu = document.getElementById("M");
+  var gEnd = document.getElementById("END");
+  var gTouch = document.getElementById("TOUCH");
+  var lockHint = document.getElementById("LH");
+  var horEl = document.getElementById("HOR");
+  var flashEl = document.getElementById("FL");
+  var tchT = document.getElementById("TCH_T");
+  var padT = document.getElementById("PAD_T");
+  var enMix = document.getElementById("EN_MIX");
+  var scopeTrailG = document.getElementById("SCOPE_TRAIL");
+  var scopeGreenG = document.getElementById("SCOPE_GREEN");
+  var scopeOrangeG = document.getElementById("SCOPE_ORANGE");
+  var scopeBeamG = document.getElementById("SCOPE_BEAM");
+  var scopePen = document.getElementById("SCOPE_PEN");
+  var scopeCount = document.getElementById("SCOPE_COUNT");
+
+  function clamp(v, a, b){ return v < a ? a : (v > b ? b : v); }
+  function rnd(a, b){ return a + Math.random() * (b - a); }
+  function pad2(n){ return (n < 10 ? "0" : "") + n; }
+  function formatTime(s){
+    s = Math.floor(s);
+    var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), x = s % 60;
+    return pad2(h) + ":" + pad2(m) + ":" + pad2(x);
+  }
+  function lerpAngle(a, b, t){
+    var d = (b - a) % TAU;
+    if(d > PI) d -= TAU;
+    if(d < -PI) d += TAU;
+    return a + d * t;
+  }
+  function deadzone(v, dz){ return Math.abs(v) < dz ? 0 : v; }
+
+  /* ==================================================================
+     FULL-FRAME OSCILLOSCOPE BUFFER
+     ------------------------------------------------------------------
+     Every visible edge in the entire frame is captured into a
+     persistent DOUBLE RING BUFFER.  The audio output reads the
+     current frame's buffer, and the scope minimap reads the same
+     buffer.  No cherry-picking, no class caps, no budget slicing.
+     The full projection is streamed as stereo X/Y PCM to the
+     AudioContext destination (WAV out).
+     ================================================================== */
+
+  var audioCtx = null, masterGain = null;
+  var scopeScriptNode = null;
+  var scopeMode = "none";
+  var oscReady = false, oscOn = false;
+
+  /* Ring buffer holds up to 48 seconds of scope path samples at 48kHz.
+     Each "sample" is one stereo frame (X, Y). We also keep the edge
+     class for the minimap coloring. */
+  var RB_CAP = 2 * 1024 * 1024;   /* 2M frames = ~43s @48kHz, ~16MB */
+  var rbL = new Float32Array(RB_CAP);   /* X channel (left out) */
+  var rbR = new Float32Array(RB_CAP);   /* Y channel (right out) */
+  var rbCls = new Uint8Array(RB_CAP);   /* color class for minimap */
+  var rbW = 0;   /* write head */
+  var rbR_ = 0;  /* read head */
+  var rbLen = 0; /* samples available to read */
+
+  /* Also a "current frame" snapshot for minimap fast access */
+  var frameCapN = 0;
+  var FRAME_CAP_MAX = 65536;
+  var fX = new Float32Array(FRAME_CAP_MAX);
+  var fY = new Float32Array(FRAME_CAP_MAX);
+  var fCls = new Uint8Array(FRAME_CAP_MAX);
+
+  var SC_HUD = 0, SC_FX = 1, SC_ENEMY = 2, SC_PLAYER = 3, SC_ALLY = 4, SC_PICK = 5, SC_BLD = 6, SC_FLOOR = 7;
+  var scCur = SC_BLD;
+
+  var OSC_GAIN = 0.92;
+  var OSC_STEP = 6;        /* interpolation spacing along each edge (smaller = more detail) */
+  var OSC_NOISE_FLOOR = 0;
+
+  /* When ON we stream the buffer; when OFF we output silence. */
+  var oscUsed = 0;
+
+  /* ---- Ring buffer writer ---- */
+  function rbWrite(xn, yn, cls){
+    if(rbLen >= RB_CAP){
+      /* Full — advance read head (drop oldest) */
+      rbR_ = (rbR_ + 1) % RB_CAP;
+      rbLen--;
+    }
+    rbL[rbW] = xn;
+    rbR[rbW] = yn;
+    rbCls[rbW] = cls;
+    rbW = (rbW + 1) % RB_CAP;
+    rbLen++;
+  }
+  function rbRead(out, maxFrames){
+    var n = Math.min(rbLen, maxFrames);
+    var i;
+    for(i = 0; i < n; i++){
+      out[i * 2]     = rbL[rbR_];
+      out[i * 2 + 1] = rbR[rbR_];
+      rbR_ = (rbR_ + 1) % RB_CAP;
+    }
+    rbLen -= n;
+    return n;
+  }
+  function rbReset(){
+    rbW = 0; rbR_ = 0; rbLen = 0;
+    frameCapN = 0;
+    scopeTrailPts.length = 0;
+  }
+
+  /* ---- Audio init: ScriptProcessor is the guaranteed path ---- */
+  function initAudioOut(){
+    if(oscReady) return;
+    try{
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return;
+      audioCtx = new AC({ latencyHint: "interactive" });
+      if(audioCtx.state === "suspended") audioCtx.resume();
+      masterGain = audioCtx.createGain();
+      masterGain.gain.value = 0.85;
+      masterGain.connect(audioCtx.destination);
+
+      scopeScriptNode = audioCtx.createScriptProcessor(4096, 0, 2);
+      var tmpOut = new Float32Array(4096 * 2);
+      scopeScriptNode.onaudioprocess = function(e){
+        var L = e.outputBuffer.getChannelData(0);
+        var R = e.outputBuffer.getChannelData(1);
+        if(!oscOn || !started){
+          /* silence when scope off */
+          for(var z = 0; z < L.length; z++){ L[z] = 0; R[z] = 0; }
+          return;
+        }
+        /* read from ring buffer, loop silence if empty */
+        var want = L.length;
+        var got = rbRead(tmpOut, want);
+        oscUsed = got;
+        var k;
+        for(k = 0; k < got; k++){
+          L[k] = tmpOut[k * 2];
+          R[k] = tmpOut[k * 2 + 1];
+        }
+        /* loop the last sample if underrun to avoid clicks */
+        var lastL = got > 0 ? tmpOut[(got - 1) * 2] : 0;
+        var lastR = got > 0 ? tmpOut[(got - 1) * 2 + 1] : 0;
+        for(k = got; k < want; k++){ L[k] = lastL; R[k] = lastR; }
+      };
+      scopeScriptNode.connect(masterGain);
+      scopeMode = "script";
+      oscReady = true;
+
+      /* Test beep so user knows the audio path works */
+      var beepFrames = 4000;
+      for(var bi = 0; bi < beepFrames; bi++){
+        var ph = bi / beepFrames;
+        var v = (ph < 0.5) ? Math.sin(ph * 2 * PI * 8) * 0.3 : 0;
+        rbWrite(v, v, SC_HUD);
+      }
+    }catch(ex){ }
+  }
+
+  /* ==================================================================
+     FRAME CAPTURE — every visible edge goes into frame buffer & ring
+     ================================================================== */
+  function capBegin(){
+    frameCapN = 0;
+  }
+  function capEdge(cls, x1, y1, x2, y2){
+    if(!oscOn || !started) return;
+    if(frameCapN >= FRAME_CAP_MAX) return;
+    /* clip to screen */
+    var dx = x2 - x1, dy = y2 - y1;
+    /* quick reject */
+    if((x1 < -100 && x2 < -100) || (x1 > SW + 100 && x2 > SW + 100)) return;
+    if((y1 < -100 && y2 < -100) || (y1 > SH + 100 && y2 > SH + 100)) return;
+
+    /* liang-barsky clip to 0..SW, 0..SH */
+    var t0 = 0, t1 = 1;
+    var p = [-dx, dx, -dy, dy];
+    var q = [x1, SW - x1, y1, SH - y1];
+    for(var i = 0; i < 4; i++){
+      if(p[i] === 0){ if(q[i] < 0) return; }
+      else {
+        var r = q[i] / p[i];
+        if(p[i] < 0){ if(r > t1) return; if(r > t0) t0 = r; }
+        else { if(r < t0) return; if(r < t1) t1 = r; }
+      }
+    }
+    var cx1 = x1 + t0 * dx, cy1 = y1 + t0 * dy;
+    var cx2 = x1 + t1 * dx, cy2 = y1 + t1 * dy;
+
+    var segLen = Math.sqrt((cx2 - cx1) * (cx2 - cx1) + (cy2 - cy1) * (cy2 - cy1));
+    if(segLen < 0.7) return;
+
+    /* interpolate along the segment and push into ring + frame buffer */
+    var steps = Math.max(1, Math.ceil(segLen / OSC_STEP));
+    var stepX = (cx2 - cx1) / steps;
+    var stepY = (cy2 - cy1) / steps;
+    var ex = cx1, ey = cy1, s;
+    for(s = 0; s <= steps; s++){
+      /* normalize screen coords to -1..1, Y inverted for scope convention */
+      var xn = (ex - HALF) * OSC_GAIN / HALF;
+      var yn = -(ey - MID) * OSC_GAIN / HALF;
+      rbWrite(xn, yn, cls);
+      if(frameCapN < FRAME_CAP_MAX){
+        fX[frameCapN] = ex;
+        fY[frameCapN] = ey;
+        fCls[frameCapN] = cls;
+        frameCapN++;
+      }
+      ex += stepX; ey += stepY;
+    }
+  }
+
+  /* ==================================================================
+     SCOPE MINIMAP — draws the FULL captured frame from fX/fY/fCls
+     ================================================================== */
+  var SCMAP = 240;
+  var scopeTrailPts = [];
+  var scopeMaxTrail = 200;
+
+  function updateScopeMiniMap(){
+    if(!oscReady || !oscOn || !started){
+      scopeGreenG.setAttribute("display", "none");
+      scopeOrangeG.setAttribute("display", "none");
+      scopeTrailG.setAttribute("display", "none");
+      scopeBeamG.setAttribute("display", "none");
+      scopePen.setAttribute("display", "none");
+      scopeCount.textContent = "OFF";
+      return;
+    }
+    scopeGreenG.removeAttribute("display");
+    scopeOrangeG.removeAttribute("display");
+    scopeTrailG.removeAttribute("display");
+    scopeBeamG.removeAttribute("display");
+    scopePen.removeAttribute("display");
+    scopeCount.textContent = frameCapN + " pts";
+
+    /* Draw dots directly — one small circle per capture sample */
+    var html = "", i, cls, mx, my;
+    var greenHtml = "", orangeHtml = "";
+    var step = 1;
+    if(frameCapN > 4000) step = 2;
+    if(frameCapN > 12000) step = 3;
+    if(frameCapN > 24000) step = 4;
+
+    for(i = 0; i < frameCapN; i += step){
+      cls = fCls[i];
+      mx = fX[i] * SCMAP / SW;
+      my = fY[i] * SCMAP / SH;
+      if(cls === SC_PLAYER || cls === SC_ALLY || cls === SC_HUD){
+        greenHtml += '<circle cx="' + mx.toFixed(1) + '" cy="' + my.toFixed(1) + '" r="1.2" fill="#22ee66" opacity="0.85"/>';
+      } else {
+        orangeHtml += '<circle cx="' + mx.toFixed(1) + '" cy="' + my.toFixed(1) + '" r="1" fill="#ff9a3a" opacity="0.7"/>';
+      }
+    }
+    scopeGreenG.innerHTML = greenHtml;
+    scopeOrangeG.innerHTML = orangeHtml;
+
+    /* Beam lines: connect sequential capture points (adjacent edges) */
+    var beamHtml = "";
+    var beamStep = Math.max(1, Math.floor(frameCapN / 300));
+    for(i = 0; i < frameCapN - beamStep; i += beamStep){
+      var ax = fX[i] * SCMAP / SW, ay = fY[i] * SCMAP / SH;
+      var bx = fX[i + beamStep] * SCMAP / SW, by = fY[i + beamStep] * SCMAP / SH;
+      beamHtml += '<line x1="' + ax.toFixed(1) + '" y1="' + ay.toFixed(1) +
+                  '" x2="' + bx.toFixed(1) + '" y2="' + by.toFixed(1) +
+                  '" stroke="#ffffff" stroke-width="0.35" opacity="0.12"/>';
+    }
+    scopeBeamG.innerHTML = beamHtml;
+
+    /* Trail from frame end */
+    if(frameCapN > 0){
+      var lx = fX[frameCapN - 1] * SCMAP / SW;
+      var ly = fY[frameCapN - 1] * SCMAP / SH;
+      scopeTrailPts.push({ x: lx, y: ly });
+      while(scopeTrailPts.length > scopeMaxTrail) scopeTrailPts.shift();
+      var trailHtml = "";
+      for(i = 1; i < scopeTrailPts.length; i++){
+        var prev = scopeTrailPts[i-1], cur = scopeTrailPts[i];
+        trailHtml += '<line x1="' + prev.x.toFixed(1) + '" y1="' + prev.y.toFixed(1) +
+                     '" x2="' + cur.x.toFixed(1) + '" y2="' + cur.y.toFixed(1) +
+                     '" stroke="#ffdd44" stroke-width="1.1" opacity="' + (i/scopeTrailPts.length*0.55).toFixed(2) + '"/>';
+      }
+      scopeTrailG.innerHTML = trailHtml;
+      scopePen.setAttribute("cx", lx.toFixed(1));
+      scopePen.setAttribute("cy", ly.toFixed(1));
+      scopePen.setAttribute("display", "");
+    } else {
+      scopePen.setAttribute("display", "none");
+    }
+  }
+
+  /* ==================================================================
+     3D PIPELINE
+     ================================================================== */
+  function TR(x, y, z){ return { r:[1,0,0,0,1,0,0,0,1], tx:x, ty:y, tz:z }; }
+  function RX(a){ var c = Math.cos(a), s = Math.sin(a); return { r:[1,0,0,0,c,-s,0,s,c], tx:0, ty:0, tz:0 }; }
+  function RY(a){ var c = Math.cos(a), s = Math.sin(a); return { r:[c,0,s,0,1,0,-s,0,c], tx:0, ty:0, tz:0 }; }
+  function mul(P, L){
+    var a = P.r, b = L.r;
+    return {
+      r:[
+        a[0]*b[0]+a[1]*b[3]+a[2]*b[6], a[0]*b[1]+a[1]*b[4]+a[2]*b[7], a[0]*b[2]+a[1]*b[5]+a[2]*b[8],
+        a[3]*b[0]+a[4]*b[3]+a[5]*b[6], a[3]*b[1]+a[4]*b[4]+a[5]*b[7], a[3]*b[2]+a[4]*b[5]+a[5]*b[8],
+        a[6]*b[0]+a[7]*b[3]+a[8]*b[6], a[6]*b[1]+a[7]*b[4]+a[8]*b[7], a[6]*b[2]+a[7]*b[5]+a[8]*b[8]
+      ],
+      tx: a[0]*L.tx + a[1]*L.ty + a[2]*L.tz + P.tx,
+      ty: a[3]*L.tx + a[4]*L.ty + a[5]*L.tz + P.ty,
+      tz: a[6]*L.tx + a[7]*L.ty + a[8]*L.tz + P.tz
+    };
+  }
+  function xfTo(m, x, y, z, o){
+    o.x = m.r[0]*x + m.r[1]*y + m.r[2]*z + m.tx;
+    o.y = m.r[3]*x + m.r[4]*y + m.r[5]*z + m.ty;
+    o.z = m.r[6]*x + m.r[7]*y + m.r[8]*z + m.tz;
+  }
+  function xfN(m, x, y, z, o){
+    o.x = m.r[0]*x + m.r[1]*y + m.r[2]*z;
+    o.y = m.r[3]*x + m.r[4]*y + m.r[5]*z;
+    o.z = m.r[6]*x + m.r[7]*y + m.r[8]*z;
+  }
+
+  var MAX_HEX = 160, MAX_POLY = 1400, MAX_TRACER = 60, MAX_IMPACT = 40;
+  var MAX_BLAST = 12, MAX_MOTE = 20, MAX_RING = 14, MAX_MUZZ = 8, MAX_EXPL = 8;
+  var hexEls = [], polyEls = [], tracEls = [], tracGl = [], tracBm = [];
+  var impEls = [], blaEls = [], moteEls = [], ringEls = [], muzEls = [], expEls = [];
+  var i0;
+
+  for(i0 = 0; i0 < MAX_HEX; i0++)
+    hexEls.push(el("polygon", { fill:"#fff4e6", "fill-opacity":"0",
+      stroke:FLOOR_ORANGE, "stroke-width":"1.1", "stroke-linejoin":"round", display:"none" }, gFLR));
+  var shadowEls = [];
+  for(i0 = 0; i0 < 4; i0++)
+    shadowEls.push(el("polygon", { fill:"#000000", opacity:"0.20", display:"none" }, gFLR));
+  for(i0 = 0; i0 < MAX_RING; i0++)
+    ringEls.push(el("polygon", { fill:"none", stroke:FLOOR_ORANGE, "stroke-width":"1.5",
+      "stroke-linejoin":"round", display:"none" }, gFLR));
+  for(i0 = 0; i0 < MAX_POLY; i0++)
+    polyEls.push(el("polygon", { fill:"#f8f8f8", "fill-opacity":"0.92",
+      stroke:"#1a1a1a", "stroke-width":"1.2", "stroke-linejoin":"round", display:"none" }, gW));
+  for(i0 = 0; i0 < MAX_TRACER; i0++)
+    tracBm.push(el("line", { stroke:PLAYER_GREEN, "stroke-width":"1", "stroke-linecap":"round", display:"none" }, gFX));
+  for(i0 = 0; i0 < MAX_TRACER; i0++)
+    tracGl.push(el("line", { stroke:PLAYER_GREEN, "stroke-width":"7", "stroke-linecap":"round", display:"none" }, gFX));
+  for(i0 = 0; i0 < MAX_TRACER; i0++)
+    tracEls.push(el("line", { stroke:"#e8ffe0", "stroke-width":"2.2", "stroke-linecap":"round", display:"none" }, gFX));
+  for(i0 = 0; i0 < MAX_IMPACT; i0++)
+    impEls.push(el("circle", { fill:PLAYER_GREEN_HI, display:"none" }, gFX));
+  for(i0 = 0; i0 < MAX_BLAST; i0++)
+    blaEls.push(el("circle", { fill:"none", stroke:PLAYER_GREEN, "stroke-width":"2.5", display:"none" }, gFX));
+  for(i0 = 0; i0 < MAX_MOTE; i0++)
+    moteEls.push(el("circle", { fill:"#c8a878", display:"none" }, gFX));
+  for(i0 = 0; i0 < MAX_MUZZ; i0++)
+    muzEls.push(el("circle", { fill:"#e8ffe0", display:"none" }, gFX));
+  for(i0 = 0; i0 < MAX_EXPL; i0++)
+    expEls.push(el("circle", { fill:PLAYER_GREEN_HI, display:"none" }, gFX));
+
+  var HP_FG = document.getElementById("HP_FG");
+  var AMMO_T = document.getElementById("AMMO_T");
+  var ST_T = document.getElementById("ST_T");
+  var SCORE_T = document.getElementById("SCORE_T");
+  var TIMER_T = document.getElementById("TIMER_T");
+  var KILLS_T = document.getElementById("KILLS_T");
+  var WAVE_T = document.getElementById("WAVE_T");
+  var FPS_T = document.getElementById("FPS_T");
+  var OSC_T = document.getElementById("OSC_T");
+  var AL_HP = document.getElementById("AL_HP");
+  var AL_ST = document.getElementById("AL_ST");
+  var CH_T = document.getElementById("CH_T"), CH_B = document.getElementById("CH_B");
+  var CH_L = document.getElementById("CH_L"), CH_R = document.getElementById("CH_R");
+  var CHG = document.getElementById("CH");
+  var HM = document.getElementById("HM");
+  var LOCKG = document.getElementById("LOCK");
+  var LK_HP = document.getElementById("LK_HP"), LK_T = document.getElementById("LK_T");
+  var BANNER = document.getElementById("BANNER");
+  var toast = document.getElementById("TOAST");
+  var KF = [document.getElementById("KF0"), document.getElementById("KF1"), document.getElementById("KF2")];
+  var M_ALLY = document.getElementById("M_ALLY"), MSWEEP = document.getElementById("MSWEEP");
+  var END_T = document.getElementById("END_T"), END_S = document.getElementById("END_S");
+
+  var kfT = [0,0,0], kfTxt = ["","",""];
+  function killFeed(s){
+    kfTxt[2] = kfTxt[1]; kfTxt[1] = kfTxt[0]; kfTxt[0] = s;
+    kfT[2] = kfT[1]; kfT[1] = kfT[0]; kfT[0] = 3.2;
+  }
+  var toastT = 0;
+  function showToast(s){ toast.textContent = s; toastT = 1.6; }
+
+  var mmBlds = [], mmEn = [], mmCr = [];
+  var gMB = document.getElementById("MB_B"), gME = document.getElementById("MB_E"), gMC = document.getElementById("MB_C");
+  for(i0 = 0; i0 < 40; i0++) mmBlds.push(el("rect", { width:"7", height:"7", fill:"#c88a4a", display:"none" }, gMB));
+  for(i0 = 0; i0 < 26; i0++) mmEn.push(el("circle", { r:"4", fill:ENEMY_RED, display:"none" }, gME));
+  for(i0 = 0; i0 < 12; i0++) mmCr.push(el("circle", { r:"2.6", display:"none" }, gMC));
+
+  var started = false, locked = false, ended = false, victory = false;
+  var keys = {}, mouseDown = false, aimDown = false;
+  var score = 0, kills = 0, gameTime = 0;
+  var shake = 0, shakeX = 0, shakeY = 0, dmgT = 0, hitT = 0, hitKill = false;
+
+  var player = {
+    x: 0, z: 0, facing: 0, speed: 0, phase: 0,
+    hp: 100, mag: 30, reserve: 120, fireCD: 0, reloadT: 0, spread: 0,
+    jumpY: 0, jumpV: 0, jumping: false,
+    muzzle: { x:0, y:0, z:0 },
+    footL: { x:0, y:0, z:0 }, footR: { x:0, y:0, z:0 }
+  };
+  var aimBlend = 0;
+  var animMode = "AUTO", gaitName = "IDLE";
+  var lastDirX = 0, lastDirZ = 1;
+
+  var cam = { x:0, y:120, z:-260, yaw:0, pitch:-0.18, distBase:250 };
+  var cyw = 1, syw = 0, cpw = 1, spw = 0, horY = 340;
+  var tmpP = { x:0, y:0, z:0 };
+  var lockTarget = null;
+  var mouseTargetX = HALF, mouseTargetY = MID;
+
+  var touchDetected = false, touchActivated = false;
+  var tUp = false, tDn = false, tLf = false, tRt = false;
+  var tFire = false, tAim = false;
+  var lastDpadTap = 0, dpadSprint = false;
+  var pinchStart = 0;
+  var dragTouchId = -1, dragLastX = 0, dragLastY = 0;
+
+  var padConnected = false, padName = "", padIndex = -1;
+  var padPrev = {};
+  var PAD_DEADZONE = 0.18;
+  var padAxes = { lx:0, ly:0, rx:0, ry:0 };
+  var padFire = false, padAim = false;
+  var padLbAimShoot = false, padLbAimActive = false;
+
+  var GAITS = {
+    IDLE: { freq:0,    thigh:0.05, kneeB:0.12, knee:0.08, arm:0.05, elbow:0.25, lean:0.02, twist:0.02, drop:0,   speed:0 },
+    WALK: { freq:6.6,  thigh:0.52, kneeB:0.16, knee:0.72, arm:0.42, elbow:0.55, lean:0.07, twist:0.09, drop:2.8, speed:70 },
+    RUN:  { freq:10.8, thigh:0.95, kneeB:0.28, knee:1.42, arm:0.80, elbow:1.20, lean:0.26, twist:0.14, drop:5.0, speed:160 }
+  };
+  var cur = { freq:0, thigh:0.05, kneeB:0.12, knee:0.08, arm:0.05, elbow:0.25, lean:0.02, twist:0.02, drop:0, speed:0 };
+
+  var buildings = [], crystals = [], healthCrystals = [];
+  var enemies = [], spiders = [], eBullets = [], blasts = [];
+  var tracers = [], impacts = [], rings = [], muzzleF = [], explosions = [];
+  var ally = {
+    x: 26, z: -14, facing: 0, phase: 0, speed: 0,
+    hp: 60, maxHp: 60, downT: 0, fireT: 0, burst: 0, burstT: 0,
+    target: null, muzzle: { x:0, y:0, z:0 }
+  };
+
+  var wave = 1, waveRSpawn = 0, waveSSpawn = 0, waveDSpawn = 0, spawnT = 1.0, pauseT = 0, waveTextT = 3.0;
+
+  function waveTotals(w){
+    return { r: 5 + (w-1)*2, s: w >= 3 ? 1 + Math.floor((w-3)*0.7) : 0, d: 3 + (w-1)*2 };
+  }
+  function waveTheme(w){
+    if(w <= 4) return "#22aa44";
+    if(w <= 7) return "#d8a020";
+    return "#cc2222";
+  }
+  function isNearBuilding(x, z, m){
+    for(var i = 0; i < buildings.length; i++){
+      var b = buildings[i];
+      if(Math.abs(x - b.x) < b.hx + m && Math.abs(z - b.z) < b.hz + m) return true;
+    }
+    return false;
+  }
+
+  function generateWorld(){
+    buildings = []; crystals = []; healthCrystals = [];
+    var GRID = 6, CELL = 480, HALF_SIZE = 160;
+    var ORIGIN = -(GRID - 1) * CELL / 2;
+    var plazas = ["0,0","5,0","0,5","5,5","2,2","3,3","1,4","4,1"];
+    for(var r = 0; r < GRID; r++){
+      for(var c = 0; c < GRID; c++){
+        var key = r + "," + c;
+        if(plazas.indexOf(key) >= 0) continue;
+        var bx = ORIGIN + c * CELL + rnd(-30, 30);
+        var bz = ORIGIN + r * CELL + rnd(-30, 30);
+        var hx = HALF_SIZE + rnd(-20, 40);
+        var hz = HALF_SIZE + rnd(-20, 40);
+        var h  = rnd(140, 320);
+        buildings.push({ x:bx, z:bz, hx:hx, hz:hz, h:h });
+        if(Math.random() < 0.45){
+          var offset = CELL * 0.42;
+          var sx = bx + (Math.random() < 0.5 ? offset : -offset);
+          var sz = bz + (Math.random() < 0.5 ? offset : -offset);
+          buildings.push({ x: sx, z: sz, hx: 55 + rnd(0, 35), hz: 55 + rnd(0, 35), h: rnd(60, 140) });
+        }
+      }
+    }
+    for(var k = 0; k < 10; k++){
+      var ang = rnd(0, TAU), dist = rnd(500, 1250);
+      var wx = Math.cos(ang) * dist, wz = Math.sin(ang) * dist;
+      var horiz = Math.random() < 0.5;
+      if(horiz) buildings.push({ x: wx, z: wz, hx: rnd(90, 200), hz: rnd(18, 32), h: rnd(40, 70) });
+      else buildings.push({ x: wx, z: wz, hx: rnd(18, 32), hz: rnd(90, 200), h: rnd(40, 70) });
+    }
+    for(var i = 0; i < 22; i++) placeCrystal(crystals, true);
+    for(var i = 0; i < 12; i++) placeCrystal(healthCrystals, false);
+  }
+  function placeCrystal(list, isAmmo){
+    var x, z, tries = 0;
+    do{
+      x = rnd(-ARENA + 100, ARENA - 100);
+      z = rnd(-ARENA + 100, ARENA - 100);
+      tries++;
+    } while(isNearBuilding(x, z, 40) && tries < 200);
+    list.push({ x:x, y:22, z:z, alive:true, spin: rnd(0, TAU), ammo: isAmmo });
+  }
+
+  function collideWorld(px, pz, r){
+    for(var i = 0; i < buildings.length; i++){
+      var b = buildings[i];
+      var cx = clamp(px, b.x - b.hx, b.x + b.hx);
+      var cz = clamp(pz, b.z - b.hz, b.z + b.hz);
+      var dx = px - cx, dz = pz - cz, d2 = dx*dx + dz*dz;
+      if(d2 < r*r){
+        var d = Math.sqrt(d2) || 0.001, push = r - d;
+        px += dx / d * push; pz += dz / d * push;
+      }
+    }
+    var L = Math.sqrt(px*px + pz*pz);
+    if(L > ARENA){ px *= ARENA / L; pz *= ARENA / L; }
+    return [px, pz];
+  }
+  function pointInBuilding(x, z, y){
+    for(var i = 0; i < buildings.length; i++){
+      var b = buildings[i];
+      if(x >= b.x - b.hx && x <= b.x + b.hx && z >= b.z - b.hz && z <= b.z + b.hz && (y === undefined || y <= b.h)) return true;
+    }
+    return false;
+  }
+  function rayBoxHit(o, d, b){
+    var x0 = b.x - b.hx, x1 = b.x + b.hx, z0 = b.z - b.hz, z1 = b.z + b.hz, y0 = 0, y1 = b.h;
+    var tN = -1e9, tF = 1e9, t1, t2, tmp;
+    if(Math.abs(d.x) > 1e-9){
+      t1 = (x0 - o.x) / d.x; t2 = (x1 - o.x) / d.x;
+      if(t1 > t2){ tmp = t1; t1 = t2; t2 = tmp; }
+      tN = Math.max(tN, t1); tF = Math.min(tF, t2);
+    } else if(o.x < x0 || o.x > x1) return -1;
+    if(Math.abs(d.y) > 1e-9){
+      t1 = (y0 - o.y) / d.y; t2 = (y1 - o.y) / d.y;
+      if(t1 > t2){ tmp = t1; t1 = t2; t2 = tmp; }
+      tN = Math.max(tN, t1); tF = Math.min(tF, t2);
+    } else if(o.y < y0 || o.y > y1) return -1;
+    if(Math.abs(d.z) > 1e-9){
+      t1 = (z0 - o.z) / d.z; t2 = (z1 - o.z) / d.z;
+      if(t1 > t2){ tmp = t1; t1 = t2; t2 = tmp; }
+      tN = Math.max(tN, t1); tF = Math.min(tF, t2);
+    } else if(o.z < z0 || o.z > z1) return -1;
+    if(tN > tF || tF < 0) return -1;
+    return tN > 0 ? tN : tF;
+  }
+  function raySphere(o, d, cx, cy, cz, r){
+    var ox = o.x - cx, oy = o.y - cy, oz = o.z - cz;
+    var b = 2 * (ox*d.x + oy*d.y + oz*d.z);
+    var c = ox*ox + oy*oy + oz*oz - r*r;
+    var disc = b*b - 4*c;
+    if(disc < 0) return -1;
+    var t = (-b - Math.sqrt(disc)) * 0.5;
+    return t > 0 ? t : -1;
+  }
+
+  function camForward(){
+    var cp = Math.cos(cam.pitch);
+    return { x: Math.sin(cam.yaw)*cp, y: Math.sin(cam.pitch), z: Math.cos(cam.yaw)*cp };
+  }
+  function camPt(wx, wy, wz, o){
+    var dx = wx - cam.x, dy = wy - cam.y, dz = wz - cam.z;
+    var vx = dx*cyw - dz*syw, vz = dx*syw + dz*cyw;
+    o.x = vx; o.y = dy*cpw - vz*spw; o.z = dy*spw + vz*cpw;
+    return o.z >= NEAR;
+  }
+  function projStr(o){
+    return (o.x * FOCAL / o.z * HALF + HALF).toFixed(1) + "," + (-o.y * FOCAL / o.z * VS + MID).toFixed(1);
+  }
+  var aimPos = { x:0, y:0, z:0 };
+  function worldScreen(wx, wy, wz){
+    if(!camPt(wx, wy, wz, aimPos)) return null;
+    if(aimPos.z > FAR) return null;
+    aimPos.sx = aimPos.x * FOCAL / aimPos.z * HALF + HALF;
+    aimPos.sy = -aimPos.y * FOCAL / aimPos.z * VS + MID;
+    aimPos.d = aimPos.z;
+    return aimPos;
+  }
+  var TA = { sx:0, sy:0, d:0 }, TB = { sx:0, sy:0, d:0 };
+  var TC = { sx:0, sy:0, d:0 }, TD = { sx:0, sy:0, d:0 };
+  function wsTo(wx, wy, wz, o){
+    if(!camPt(wx, wy, wz, aimPos)) return false;
+    if(aimPos.z > FAR) return false;
+    o.sx = aimPos.x * FOCAL / aimPos.z * HALF + HALF;
+    o.sy = -aimPos.y * FOCAL / aimPos.z * VS + MID;
+    o.d = aimPos.z;
+    return true;
+  }
+  function updateCamera(dt){
+    aimBlend += (((aimDown || tAim || padAim) ? 1 : 0) - aimBlend) * Math.min(1, dt * 10);
+    var dist = cam.distBase * (1 - aimBlend * 0.30);
+    var side = aimBlend * 16;
+    var f = camForward();
+    var rx = Math.cos(cam.yaw), rz = -Math.sin(cam.yaw);
+    var tx = player.x - f.x * dist + rx * side;
+    var ty = 58 - f.y * dist + player.jumpY * 0.4;
+    var tz = player.z - f.z * dist + rz * side;
+    var o = { x: player.x, y: 58 + player.jumpY * 0.4, z: player.z };
+    var d = { x: tx - o.x, y: ty - o.y, z: tz - o.z };
+    var dl = Math.sqrt(d.x*d.x + d.y*d.y + d.z*d.z) || 1;
+    d.x /= dl; d.y /= dl; d.z /= dl;
+    var t = dl;
+    for(var i = 0; i < buildings.length; i++){
+      var h = rayBoxHit(o, d, buildings[i]);
+      if(h > 0 && h < t) t = Math.max(10, h - 8);
+    }
+    tx = o.x + d.x * t; ty = o.y + d.y * t; tz = o.z + d.z * t;
+    if(ty < 5) ty = 5;
+    var k = 1 - Math.exp(-10 * dt);
+    cam.x += (tx - cam.x) * k; cam.y += (ty - cam.y) * k; cam.z += (tz - cam.z) * k;
+    var eyw = cam.yaw + shakeX, epi = clamp(cam.pitch + shakeY, -1.05, 0.45);
+    cyw = Math.cos(eyw); syw = Math.sin(eyw);
+    cpw = Math.cos(epi); spw = Math.sin(epi);
+    horY = MID + Math.tan(epi) * FOCAL * HALF;
+    horEl.setAttribute("cy", clamp(horY, -400, SH + 400).toFixed(1));
+  }
+
+  var drawList = [];
+  var wv8 = [];
+  for(i0 = 0; i0 < 8; i0++) wv8.push({ x:0, y:0, z:0 });
+  var camScr = [];
+  for(i0 = 0; i0 < 10; i0++) camScr.push({ x:0, y:0, z:0 });
+  var scratchV = [];
+  for(i0 = 0; i0 < 80; i0++) scratchV.push({ x:0, y:0, z:0 });
+  var tmpN = { x:0, y:0, z:0 };
+  var FIDX = [[2,3,7,6],[0,1,5,4],[1,3,7,5],[0,2,6,4],[4,5,7,6],[0,1,3,2]];
+  var FN = [[0,0,1],[0,0,-1],[1,0,0],[-1,0,0],[0,1,0],[0,-1,0]];
+
+  function processFace(wv, idx, nx, ny, nz, stroke, swBase, fo){
+    var rx = nx*cyw - nz*syw, rz = nx*syw + nz*cyw;
+    var ry = ny*cpw - rz*spw, rz2 = ny*spw + rz*cpw;
+    if(rz2 > 0.02) return;
+    var dsum = 0, k;
+    for(k = 0; k < idx.length; k++){
+      var p = wv[idx[k]];
+      var dx = p.x - cam.x, dy = p.y - cam.y, dz = p.z - cam.z;
+      var vx = dx*cyw - dz*syw, vz = dx*syw + dz*cyw;
+      var vy = dy*cpw - vz*spw, vz2 = dy*spw + vz*cpw;
+      if(vz2 < NEAR) return;
+      var cv = camScr[k]; cv.x = vx; cv.y = vy; cv.z = vz2;
+      dsum += vz2;
+    }
+    var d = dsum / idx.length;
+    if(d > FAR) return;
+    var pts = "", vis = false, xy = [], n2 = 0;
+    for(k = 0; k < idx.length; k++){
+      var cv2 = camScr[k];
+      var sx = cv2.x * FOCAL / cv2.z * HALF + HALF;
+      var sy = -cv2.y * FOCAL / cv2.z * VS + MID;
+      if(sx > -400 && sx < SW + 400 && sy > -400 && sy < SH + 400) vis = true;
+      pts += (k ? " " : "") + sx.toFixed(1) + "," + sy.toFixed(1);
+      xy.push(sx, sy);
+      n2 += 2;
+    }
+    if(!vis) return;
+    drawList.push({
+      xy: xy, n: n2, p: pts, d: d, c: scCur, s: stroke,
+      w: clamp(swBase * 170 / d, 0.45, 3.4),
+      o: clamp(1.55 - d / FAR * 1.35, 0.12, 1),
+      fo: fo === undefined ? 0.9 : fo
+    });
+  }
+  function pushBox(m, cx, cy, cz, hx, hy, hz, stroke, swBase, fo){
+    var n = 0;
+    for(var yi = 0; yi < 2; yi++) for(var zi = 0; zi < 2; zi++) for(var xi = 0; xi < 2; xi++)
+      xfTo(m, cx + (xi ? hx : -hx), cy + (yi ? hy : -hy), cz + (zi ? hz : -hz), wv8[n++]);
+    for(var f = 0; f < 6; f++){
+      xfN(m, FN[f][0], FN[f][1], FN[f][2], tmpN);
+      processFace(wv8, FIDX[f], tmpN.x, tmpN.y, tmpN.z, stroke, swBase, fo);
+    }
+  }
+  function flushDraw(){
+    drawList.sort(function(a, b){ return b.d - a.d; });
+    var n = Math.min(drawList.length, MAX_POLY), i, k;
+    for(i = 0; i < n; i++){
+      var f = drawList[i], p = polyEls[i];
+      p.setAttribute("points", f.p);
+      p.setAttribute("stroke", f.s);
+      p.setAttribute("stroke-width", f.w.toFixed(2));
+      p.setAttribute("stroke-opacity", f.o.toFixed(2));
+      p.setAttribute("fill-opacity", f.fo.toFixed(2));
+      p.removeAttribute("display");
+    }
+    for(i = n; i < MAX_POLY; i++) polyEls[i].setAttribute("display", "none");
+    /* FULL-FRAME CAPTURE: every visible edge goes into the buffer */
+    if(oscOn && started){
+      for(i = 0; i < drawList.length; i++){
+        var f2 = drawList[i], xy = f2.xy, fc = f2.c;
+        for(k = 0; k < f2.n; k += 2){
+          var nx2 = (k + 2) % f2.n;
+          capEdge(fc, xy[k], xy[k+1], xy[nx2], xy[nx2+1]);
+        }
+      }
+    }
+  }
+
+  function makeOcta(size){
+    var v = [
+      { x:0, y:size, z:0 }, { x:0, y:-size, z:0 },
+      { x:size, y:0, z:0 }, { x:-size, y:0, z:0 },
+      { x:0, y:0, z:size }, { x:0, y:0, z:-size }
+    ];
+    var tris = [[0,4,2],[0,2,5],[0,5,3],[0,3,4],[1,2,4],[1,5,2],[1,3,5],[1,4,3]];
+    var f = [];
+    for(var i = 0; i < tris.length; i++){
+      var a = { x:v[tris[i][1]].x - v[tris[i][0]].x, y:v[tris[i][1]].y - v[tris[i][0]].y, z:v[tris[i][1]].z - v[tris[i][0]].z };
+      var b = { x:v[tris[i][2]].x - v[tris[i][0]].x, y:v[tris[i][2]].y - v[tris[i][0]].y, z:v[tris[i][2]].z - v[tris[i][0]].z };
+      var n = { x:a.y*b.z - a.z*b.y, y:a.z*b.x - a.x*b.z, z:a.x*b.y - a.y*b.x };
+      var l = Math.sqrt(n.x*n.x + n.y*n.y + n.z*n.z) || 1;
+      f.push({ i: tris[i], n: { x:n.x/l, y:n.y/l, z:n.z/l } });
+    }
+    return { v:v, f:f };
+  }
+  var OCTA = makeOcta(1);
+  function pushOcta(m, s, stroke, sw, fo){
+    var i;
+    for(i = 0; i < 6; i++){
+      var v = OCTA.v[i];
+      xfTo(m, v.x*s, v.y*s, v.z*s, scratchV[i]);
+    }
+    for(i = 0; i < 8; i++){
+      var n = OCTA.f[i].n;
+      xfN(m, n.x, n.y, n.z, tmpN);
+      processFace(scratchV, OCTA.f[i].i, tmpN.x, tmpN.y, tmpN.z, stroke, sw, fo);
+    }
+  }
+
+  var SPIDER_BODY_H = 42;
+  function buildSpider(pose){
+    var S = 1.0, ph = pose.walkPhase, bob = Math.sin(ph) * 1.2;
+    var gA = Math.sin(ph), gB = Math.sin(ph + PI);
+    var legLiftA = Math.max(0, gA) * 0.55 + 0.12;
+    var legLiftB = Math.max(0, gB) * 0.55 + 0.12;
+    var legReachA = gA * 0.25, legReachB = gB * 0.25;
+    var Mroot = mul(TR(pose.x, 0, pose.z), RY(pose.facing));
+    var bodyY = SPIDER_BODY_H + bob;
+    var Mceph = mul(Mroot, TR(20 * S, bodyY, 0));
+    pushBox(Mceph, 0, -8 * S, 0, 22 * S, 4 * S, 26 * S, SPIDER_BODY_DARK, 1.4, 0.92);
+    pushBox(Mceph, 0,  4 * S, 0, 26 * S, 8 * S, 30 * S, SPIDER_BODY_MID, 1.6, 0.92);
+    pushBox(Mceph, 0, 12 * S, 0, 20 * S, 2 * S, 24 * S, SPIDER_SEG_MID, 1.4, 0.92);
+    pushBox(Mceph, 0, -2 * S, 26 * S, 10 * S, 5 * S, 5 * S, SPIDER_SEG_DARK, 1.2, 0.92);
+    var Mabdo = mul(Mroot, TR(-32 * S, bodyY, 0));
+    pushBox(Mabdo, 0, -8 * S, 0, 26 * S, 4 * S, 30 * S, SPIDER_BODY_DARK, 1.4, 0.92);
+    pushBox(Mabdo, 0,  4 * S, 0, 30 * S, 10 * S, 34 * S, SPIDER_BODY_MID, 1.6, 0.92);
+    pushBox(Mabdo, 0, 14 * S, 0, 24 * S, 2 * S, 26 * S, SPIDER_SEG_MID, 1.4, 0.92);
+    pushBox(Mabdo, -8 * S, 10 * S, 12 * S, 3 * S, 1.2 * S, 14 * S, SPIDER_SEG_DARK, 1.0, 0.92);
+    pushBox(Mabdo,  8 * S, 10 * S, 12 * S, 3 * S, 1.2 * S, 14 * S, SPIDER_SEG_DARK, 1.0, 0.92);
+    scCur = SC_ENEMY;
+    var Mex = mul(Mroot, TR(44 * S, bodyY + 4 * S, 0));
+    pushBox(Mex, -6 * S,  4 * S, 0, 1.6 * S, 1.6 * S, 1.6 * S, SPIDER_EYE, 1.2, 1);
+    pushBox(Mex,  6 * S,  4 * S, 0, 1.6 * S, 1.6 * S, 1.6 * S, SPIDER_EYE, 1.2, 1);
+    pushBox(Mex, -3 * S,  7 * S, 0, 1.2 * S, 1.2 * S, 1.2 * S, SPIDER_EYE, 1.1, 1);
+    pushBox(Mex,  3 * S,  7 * S, 0, 1.2 * S, 1.2 * S, 1.2 * S, SPIDER_EYE, 1.1, 1);
+    pushBox(Mex, -1.5 * S, 1.5 * S, 0, 0.9 * S, 0.9 * S, 0.9 * S, SPIDER_EYE, 1.0, 1);
+    pushBox(Mex,  1.5 * S, 1.5 * S, 0, 0.9 * S, 0.9 * S, 0.9 * S, SPIDER_EYE, 1.0, 1);
+    var Mfang = mul(Mroot, TR(48 * S, bodyY - 4 * S, 0));
+    pushBox(Mfang, -5 * S, 0, 0, 2.4 * S, 3 * S, 2.4 * S, SPIDER_SEG_DARK, 1.1, 0.92);
+    pushBox(Mfang,  5 * S, 0, 0, 2.4 * S, 3 * S, 2.4 * S, SPIDER_SEG_DARK, 1.1, 0.92);
+    var Mped = mul(Mroot, TR(50 * S, bodyY + 2 * S, 0));
+    pushBox(Mped, -8 * S, 0, 0, 2 * S, 2 * S, 4 * S, SPIDER_SEG_MID, 1.0, 0.92);
+    pushBox(Mped,  8 * S, 0, 0, 2 * S, 2 * S, 4 * S, SPIDER_SEG_MID, 1.0, 0.92);
+    buildSpiderLeg(Mroot, bodyY, +1, -1, legLiftA, legReachA, S);
+    buildSpiderLeg(Mroot, bodyY, -1, -1, legLiftB, legReachB, S);
+    buildSpiderLeg(Mroot, bodyY, +1, +1, legLiftB, legReachB, S);
+    buildSpiderLeg(Mroot, bodyY, -1, +1, legLiftA, legReachA, S);
+  }
+  function buildSpiderLeg(Mroot, bodyY, sideX, sideZ, lift, reach, S){
+    var anchorX = (sideZ < 0 ? 26 : -22) * S;
+    var anchorZ = sideX * (sideZ < 0 ? 26 : 34) * S;
+    var Manchor = mul(Mroot, TR(anchorX, bodyY - 4 * S, anchorZ));
+    pushBox(Manchor, 0, 0, 0, 4 * S, 5 * S, 4 * S, SPIDER_SEG_DARK, 1.3, 0.92);
+    var Mfem = mul(Manchor, TR(sideZ * 6 * S, 0, sideX * 6 * S));
+    Mfem = mul(Mfem, RY(sideX * sideZ * 0.6));
+    pushBox(Mfem, 0, 0, 0, 16 * S, 5 * S, 5 * S, SPIDER_SEG_MID, 1.6, 0.92);
+    pushBox(Mfem, 0, 4 * S, 0, 14 * S, 1 * S, 3 * S, SPIDER_SEG_HI, 1.2, 0.92);
+    var Mtib = mul(Mfem, TR(sideZ * 24 * S, -6 * S - lift * 4 * S, sideX * 8 * S));
+    Mtib = mul(Mtib, RY(sideX * sideZ * 0.9));
+    Mtib = mul(Mtib, RX(sideZ * -0.5));
+    pushBox(Mtib, 0, 0, 0, 14 * S, 4 * S, 4 * S, SPIDER_SEG_LIGHT, 1.5, 0.92);
+    pushBox(Mtib, 0, 3 * S, 0, 12 * S, 1 * S, 2.6 * S, SPIDER_SEG_HI, 1.1, 0.92);
+    var Mtars = mul(Mtib, TR(sideZ * 22 * S, -12 * S - lift * 10 * S + reach * 4 * S, sideX * 4 * S));
+    Mtars = mul(Mtars, RX(sideZ * -0.8));
+    pushBox(Mtars, 0, 0, 0, 10 * S, 3 * S, 3 * S, SPIDER_SEG_HI, 1.3, 0.92);
+    var Mclaw = mul(Mtars, TR(sideZ * 14 * S, -6 * S, 0));
+    pushBox(Mclaw, 0, 0, 0, 5 * S, 2 * S, 2 * S, SPIDER_SEG_EDGE, 1.2, 0.92);
+    pushBox(Mclaw, sideZ * 3 * S, 0, 0, 2.5 * S, 1.2 * S, 1.2 * S, SPIDER_SEG_EDGE, 1.1, 0.92);
+  }
+
+  var HSIZE = 78, COLST = HSIZE * 1.5, ROWST = HSIZE * 1.7320508;
+  function renderFloor(t){
+    var q0 = Math.round(player.x / COLST), r0 = Math.round(player.z / ROWST), list = [];
+    for(var q = q0 - 12; q <= q0 + 12; q++) for(var r = r0 - 12; r <= r0 + 12; r++){
+      var hx = q * COLST, hz = r * ROWST + ((q & 1) ? ROWST * 0.5 : 0);
+      var dx = hx - cam.x, dz = hz - cam.z, d = Math.sqrt(dx*dx + dz*dz);
+      if(d > FAR * 0.92) continue;
+      var pts = "", ok = true, vis = false, v;
+      for(v = 0; v < 6; v++){
+        var ang = PI / 3 * v;
+        if(!camPt(hx + Math.cos(ang)*HSIZE, 0, hz + Math.sin(ang)*HSIZE, tmpP)){ ok = false; break; }
+        var s = projStr(tmpP).split(",");
+        var sx = +s[0], sy = +s[1];
+        if(sx > -100 && sx < SW + 100 && sy > -100 && sy < SH + 100) vis = true;
+        pts += (v ? " " : "") + s[0] + "," + s[1];
+      }
+      if(!ok || !vis) continue;
+      var a = 1 - d / (FAR * 0.92);
+      a *= 0.85 + 0.15 * Math.sin(t * 2 - d * 0.012);
+      var acc = (Math.abs(hx - player.x) < COLST * 0.8 && Math.abs(hz - player.z) < ROWST * 0.8) || (((q * 7 + r * 13) % 11) === 0);
+      list.push({ p: pts, d: d, a: a, ac: acc });
+    }
+    list.sort(function(a, b){ return b.d - a.d; });
+    var n = Math.min(list.length, MAX_HEX), i;
+    for(i = 0; i < n; i++){
+      var f = list[i], e = hexEls[i];
+      e.setAttribute("points", f.p);
+      e.setAttribute("stroke", f.ac ? FLOOR_ORANGE_HI : FLOOR_ORANGE);
+      e.setAttribute("stroke-opacity", (f.a * (f.ac ? 1 : 0.80)).toFixed(2));
+      e.setAttribute("fill-opacity", (f.a * 0.35).toFixed(2));
+      e.removeAttribute("display");
+      if(oscOn && started){
+        var sp2 = f.p.split(" ");
+        for(var k2 = 0; k2 < sp2.length; k2++){
+          var a2 = sp2[k2].split(","), b2 = sp2[(k2 + 1) % sp2.length].split(",");
+          capEdge(SC_FLOOR, +a2[0], +a2[1], +b2[0], +b2[1]);
+        }
+      }
+    }
+    for(i = n; i < MAX_HEX; i++) hexEls[i].setAttribute("display", "none");
+  }
+  function renderShadowAt(x, z, idx, rad){
+    var e = shadowEls[idx], pts = "", ok = true;
+    for(var i = 0; i < 10; i++){
+      var a = i / 10 * TAU;
+      if(!camPt(x + Math.cos(a)*rad, 0.2, z + Math.sin(a)*rad, tmpP)){ ok = false; break; }
+      pts += (i ? " " : "") + projStr(tmpP);
+    }
+    if(!ok){ e.setAttribute("display", "none"); return; }
+    e.setAttribute("points", pts);
+    e.removeAttribute("display");
+  }
+  function spawnRing(x, z, col, maxR){
+    if(rings.length >= MAX_RING) rings.shift();
+    rings.push({ x:x, z:z, life:0.55, max:0.55, col: col || FLOOR_ORANGE, mr: maxR || 18 });
+  }
+  function renderRings(){
+    for(var i = 0; i < MAX_RING; i++){
+      var e = ringEls[i];
+      if(i >= rings.length){ e.setAttribute("display", "none"); continue; }
+      var rg = rings[i];
+      var rad = 6 + (1 - rg.life / rg.max) * rg.mr, pts = "", ok = true;
+      for(var v = 0; v < 6; v++){
+        var a = PI / 3 * v;
+        if(!camPt(rg.x + Math.cos(a)*rad, 0.3, rg.z + Math.sin(a)*rad, tmpP)){ ok = false; break; }
+        pts += (v ? " " : "") + projStr(tmpP);
+      }
+      if(!ok){ e.setAttribute("display", "none"); continue; }
+      e.setAttribute("points", pts);
+      e.setAttribute("stroke", rg.col);
+      e.setAttribute("stroke-opacity", (rg.life / rg.max * 0.75).toFixed(2));
+      e.removeAttribute("display");
+    }
+  }
+  var motes = [];
+  for(i0 = 0; i0 < MAX_MOTE; i0++)
+    motes.push({ x: rnd(-220, 220), y: rnd(8, 140), z: rnd(-220, 220), sp: rnd(0.4, 1.6), ph: rnd(0, TAU) });
+  function renderMotes(t){
+    for(var i = 0; i < MAX_MOTE; i++){
+      var m = motes[i], e = moteEls[i];
+      var wx = m.x - player.x; wx = ((wx + 220) % 440 + 440) % 440 - 220;
+      var wz = m.z - player.z; wz = ((wz + 220) % 440 + 440) % 440 - 220;
+      var wy = m.y + Math.sin(t * m.sp + m.ph) * 9;
+      if(!camPt(player.x + wx, wy, player.z + wz, tmpP)){ e.setAttribute("display", "none"); continue; }
+      if(tmpP.z > FAR){ e.setAttribute("display", "none"); continue; }
+      var sx = tmpP.x * FOCAL / tmpP.z * HALF + HALF, sy = -tmpP.y * FOCAL / tmpP.z * VS + MID;
+      e.setAttribute("cx", sx.toFixed(1));
+      e.setAttribute("cy", sy.toFixed(1));
+      e.setAttribute("r", clamp(260 / tmpP.z, 0.5, 2.6).toFixed(2));
+      e.setAttribute("opacity", (0.45 * (1 - tmpP.z / FAR)).toFixed(2));
+      e.removeAttribute("display");
+    }
+  }
+
+  function buildM88(pose, opts, jumpY){
+    var g = pose.gait, ph = pose.phase;
+    var S = opts.scale || 1.0;
+    var jy = jumpY || 0;
+    var sL = Math.sin(ph), cL = Math.cos(ph);
+    var sR = -sL;
+    var swingL = Math.max(0, cL), swingR = Math.max(0, -cL);
+    var breathe = Math.sin(performance.now() * 0.0018) * 0.6;
+    var drop = (0.5 - 0.5 * Math.cos(2 * ph)) * g.drop;
+    var bodyY = 51.5 * S - drop + (g.freq < 1 ? breathe : 0);
+    var ab = pose.aimBlend || 0;
+    if(pose.downed) bodyY *= 0.55;
+    var thighL = sL * g.thigh, thighR = sR * g.thigh;
+    var kneeL = g.kneeB + swingL * g.knee, kneeR = g.kneeB + swingR * g.knee;
+    var armL0 = sR * g.arm + 0.06 + breathe * 0.025;
+    var armR0 = 0.34 + sL * g.arm * 0.25;
+    var armL = armL0 * (1 - ab) + 1.10 * ab;
+    var armR = armR0 * (1 - ab) + 1.32 * ab;
+    var elbowL = 0.35 + Math.max(0, sR) * g.elbow;
+    var elbowR = (0.85 + Math.max(0, sL) * g.elbow * 0.3) * (1 - ab) + 0.22 * ab;
+    var lean = g.lean * (1 - ab) + 0.03 * ab + breathe * 0.008;
+    var twist = sL * g.twist * (1 - ab * 0.7);
+    var nod = -lean * 0.8 - ab * 0.1 + Math.sin(performance.now() * 0.0009) * 0.02;
+    var headYaw = (g.freq < 1 ? Math.sin(performance.now() * 0.0005) * 0.12 : sL * 0.03) * (1 - ab);
+    var ankleL = (thighL - kneeL) * 0.85, ankleR = (thighR - kneeR) * 0.85;
+    var C = opts.colors;
+    var P = C.primary, H = C.hi, D = C.dark;
+    var Hel = C.helmet, HelHi = C.helmetHi, Vis = C.visor;
+    var Rifle = C.rifle, RifleHi = C.rifleHi, Emit = C.emitter;
+    var Glove = C.glove, Boot = C.boot;
+    var Mroot = mul(TR(pose.x, jy, pose.z), RY(pose.facing));
+    var Mpelvis = mul(Mroot, TR(0, bodyY, 0));
+    var Mupper = mul(Mpelvis, TR(0, 4 * S, 0));
+    Mupper = mul(Mupper, RY(twist));
+    Mupper = mul(Mupper, RX(lean));
+    if(pose.downed) Mupper = mul(Mupper, RX(0.5));
+    pushBox(Mpelvis, 0, -1 * S, 0, 9.5 * S, 6 * S, 7 * S, D, 1.15);
+    pushBox(Mpelvis, 0, 4.5 * S, 0, 11.5 * S, 3 * S, 7.5 * S, P, 1.1);
+    pushBox(Mpelvis, 0, 4.5 * S, 8.2 * S, 2.5 * S, 2 * S, 1.2 * S, H, 0.9);
+    pushBox(Mupper, 0, 22 * S, 0, 11 * S, 13 * S, 7 * S, D, 1.25);
+    pushBox(Mupper, 0, 20 * S, 0.5 * S, 12.5 * S, 12 * S, 8.5 * S, P, 1.3);
+    pushBox(Mupper, -6 * S, 13.5 * S, 10 * S, 3.8 * S, 4.5 * S, 2 * S, H, 0.9);
+    pushBox(Mupper, 0, 13.5 * S, 10 * S, 3.8 * S, 4.5 * S, 2 * S, H, 0.9);
+    pushBox(Mupper, 6 * S, 13.5 * S, 10 * S, 3.8 * S, 4.5 * S, 2 * S, H, 0.9);
+    pushBox(Mupper, -13 * S, 30 * S, 0, 4.5 * S, 4 * S, 6.5 * S, H, 1.0);
+    pushBox(Mupper, 13 * S, 30 * S, 0, 4.5 * S, 4 * S, 6.5 * S, H, 1.0);
+    var Mh = mul(Mupper, TR(0, 39 * S, 0));
+    Mh = mul(Mh, RY(headYaw)); Mh = mul(Mh, RX(nod));
+    pushBox(Mh, 0, -6 * S, 0, 4 * S, 4 * S, 4 * S, D, 0.85);
+    pushBox(Mh, 0, 6 * S, 0.5 * S, 5.5 * S, 5 * S, 6 * S, Hel, 1.15);
+    pushBox(Mh, 0, 11 * S, -0.5 * S, 6 * S, 2 * S, 6 * S, HelHi, 1.05);
+    pushBox(Mh, 0, 3.5 * S, 6 * S, 5.8 * S, 1.2 * S, 0.6 * S, HelHi, 1.0);
+    pushBox(Mh, 0, 9 * S, 6.2 * S, 2.2 * S, 2.4 * S, 0.9 * S, D, 0.85);
+    pushBox(Mh, 0, 9 * S, 7.4 * S, 1.4 * S, 1.4 * S, 1.2 * S, Vis, 1.0);
+    pushBox(Mh, 0, 4.5 * S, 3.5 * S, 6.2 * S, 1.6 * S, 2 * S, D, 0.85);
+    pushBox(Mh, 0, 4.5 * S, 5.8 * S, 4.2 * S, 1.4 * S, 0.4 * S, Vis, 1.2);
+    var MsL = mul(Mupper, TR(-13 * S, 28 * S, 0)); MsL = mul(MsL, RX(-armL));
+    pushBox(MsL, 0, -8 * S, 0, 3.2 * S, 8 * S, 3.2 * S, P, 1.05);
+    var MeL = mul(MsL, TR(0, -16 * S, 0)); MeL = mul(MeL, RX(-elbowL));
+    pushBox(MeL, 0, -7.5 * S, 0, 2.8 * S, 7.5 * S, 2.8 * S, D, 1.0);
+    pushBox(MeL, 0, -17 * S, 0, 3 * S, 3 * S, 3.2 * S, Glove, 0.95);
+    var MsR = mul(Mupper, TR(13 * S, 28 * S, 0)); MsR = mul(MsR, RX(-armR));
+    pushBox(MsR, 0, -8 * S, 0, 3.2 * S, 8 * S, 3.2 * S, P, 1.05);
+    var MeR = mul(MsR, TR(0, -16 * S, 0)); MeR = mul(MeR, RX(-elbowR));
+    pushBox(MeR, 0, -7.5 * S, 0, 2.8 * S, 7.5 * S, 2.8 * S, D, 1.0);
+    var MhR = mul(MeR, TR(0, -17 * S, 0));
+    pushBox(MhR, 0, 0, 0, 3 * S, 3 * S, 3.2 * S, Glove, 0.95);
+    pushBox(MhR, 0, -2 * S, 0, 2 * S, 6.5 * S, 1.9 * S, Rifle, 1.0);
+    pushBox(MhR, 0, -13.5 * S, 0.4 * S, 1 * S, 7.5 * S, 1.2 * S, Rifle, 0.9);
+    pushBox(MhR, 0, -21 * S, 0.4 * S, 1.4 * S, 1.2 * S, 1.5 * S, RifleHi, 1.0);
+    pushBox(MhR, 0, -21.5 * S, 0.4 * S, 0.7 * S, 0.5 * S, 0.8 * S, Emit, 1.4);
+    pushBox(MhR, 0, 7.5 * S, -0.6 * S, 1.7 * S, 5 * S, 1.6 * S, RifleHi, 0.9);
+    pushBox(MhR, 0, 12 * S, -0.6 * S, 1.4 * S, 4 * S, 1.5 * S, Rifle, 0.85);
+    pushBox(MhR, 0, -3 * S, 3.2 * S, 1.2 * S, 3 * S, 1.2 * S, RifleHi, 0.95);
+    pushBox(MhR, -2.2 * S, -4 * S, 0, 0.5 * S, 3 * S, 1.4 * S, Rifle, 0.8);
+    pushBox(MhR, 0, -8 * S, -2.6 * S, 1 * S, 3 * S, 1.2 * S, Emit, 1.2);
+    xfTo(MhR, 0, -23 * S, 0.4 * S, pose.muzzle);
+    var MhipL = mul(Mpelvis, TR(-6.5 * S, -2 * S, 0)); MhipL = mul(MhipL, RX(-thighL));
+    pushBox(MhipL, 0, -10.5 * S, 0, 4.6 * S, 10.5 * S, 4.6 * S, P, 1.15);
+    pushBox(MhipL, 0, -20 * S, 2.8 * S, 4.9 * S, 4 * S, 2.2 * S, H, 0.95);
+    var MknL = mul(MhipL, TR(0, -21 * S, 0)); MknL = mul(MknL, RX(kneeL));
+    pushBox(MknL, 0, -11 * S, 0, 4 * S, 11 * S, 4 * S, D, 1.1);
+    var MakL = mul(MknL, TR(0, -22 * S, 0)); MakL = mul(MakL, RX(ankleL));
+    pushBox(MakL, 0, -3.5 * S, 2.5 * S, 4.6 * S, 3.5 * S, 7 * S, Boot, 1.15);
+    xfTo(MakL, 0, -6 * S, 2 * S, pose.footL);
+    var MhipR = mul(Mpelvis, TR(6.5 * S, -2 * S, 0)); MhipR = mul(MhipR, RX(-thighR));
+    pushBox(MhipR, 0, -10.5 * S, 0, 4.6 * S, 10.5 * S, 4.6 * S, P, 1.15);
+    pushBox(MhipR, 0, -20 * S, 2.8 * S, 4.9 * S, 4 * S, 2.2 * S, H, 0.95);
+    var MknR = mul(MhipR, TR(0, -21 * S, 0)); MknR = mul(MknR, RX(kneeR));
+    pushBox(MknR, 0, -11 * S, 0, 4 * S, 11 * S, 4 * S, D, 1.1);
+    var MakR = mul(MknR, TR(0, -22 * S, 0)); MakR = mul(MakR, RX(ankleR));
+    pushBox(MakR, 0, -3.5 * S, 2.5 * S, 4.6 * S, 3.5 * S, 7 * S, Boot, 1.15);
+    xfTo(MakR, 0, -6 * S, 2 * S, pose.footR);
+  }
+
+  var PLAYER_COLORS = { primary: PLAYER_GREEN, hi: PLAYER_GREEN_HI, dark: "#000000", helmet: "#0a0a0a", helmetHi: "#2a2a2a", visor: PLAYER_GREEN_HI, rifle: "#000000", rifleHi: "#1a1a1a", emitter: PLAYER_GREEN_HI, glove: "#000000", boot: "#000000" };
+  var ALLY_COLORS = { primary: ALLY_GREEN, hi: ALLY_GREEN_HI, dark: "#0a2a20", helmet: "#0a2028", helmetHi: "#14403a", visor: ALLY_GREEN_HI, rifle: "#0a2018", rifleHi: "#1a4030", emitter: ALLY_GREEN_HI, glove: "#0a1a14", boot: "#0a1a14" };
+  var ENEMY_COLORS = { primary: ENEMY_RED, hi: ENEMY_RED_HI, dark: "#000000", helmet: "#0a0a0a", helmetHi: "#2a2a2a", visor: ENEMY_RED_HI, rifle: "#000000", rifleHi: "#1a1a1a", emitter: ENEMY_RED_HI, glove: "#000000", boot: "#000000" };
+
+  function spawnEnemy(){
+    var ex = 0, ez = 0, t;
+    for(t = 0; t < 80; t++){
+      var a = rnd(0, TAU), dist = rnd(600, 1400);
+      ex = clamp(player.x + Math.cos(a) * dist, -ARENA + 80, ARENA - 80);
+      ez = clamp(player.z + Math.sin(a) * dist, -ARENA + 80, ARENA - 80);
+      if(!isNearBuilding(ex, ez, 40)) break;
+    }
+    enemies.push({
+      x: ex, z: ez, facing: rnd(0, TAU),
+      hp: 120, maxHp: 120,
+      walkPhase: rnd(0, TAU), walking: false,
+      fireCD: rnd(1.5, 3),
+      state: "patrol",
+      patrolX: ex + rnd(-300, 300),
+      patrolZ: ez + rnd(-300, 300),
+      alertT: 0, class: "m88"
+    });
+  }
+  function spawnSpider(){
+    var ex = 0, ez = 0, t;
+    for(t = 0; t < 100; t++){
+      var a = rnd(0, TAU), dist = rnd(700, 1500);
+      ex = clamp(player.x + Math.cos(a) * dist, -ARENA + 100, ARENA - 100);
+      ez = clamp(player.z + Math.sin(a) * dist, -ARENA + 100, ARENA - 100);
+      if(!isNearBuilding(ex, ez, 60)) break;
+    }
+    spiders.push({
+      x: ex, z: ez, facing: rnd(0, TAU),
+      hp: 220, maxHp: 220,
+      walkPhase: rnd(0, TAU), attackPhase: 0,
+      biteCD: rnd(1.8, 3.2),
+      state: "patrol",
+      patrolX: ex + rnd(-360, 360),
+      patrolZ: ez + rnd(-360, 360),
+      alertT: 0, speed: 55, class: "spider"
+    });
+    showToast("QUAD SPIDER INBOUND");
+  }
+
+  function muzzleFlash(p, col){
+    if(muzzleF.length >= MAX_MUZZ) muzzleF.shift();
+    muzzleF.push({ x: p.x, y: p.y, z: p.z, life: 0.07, max: 0.07, col: col || PLAYER_GREEN_HI });
+  }
+  function sparks(x, y, z, n, col){
+    for(var i = 0; i < n; i++){
+      if(impacts.length >= MAX_IMPACT) impacts.shift();
+      impacts.push({ x: x, y: y, z: z, vx: rnd(-160, 160), vy: rnd(20, 240), vz: rnd(-160, 160),
+        life: rnd(0.2, 0.45), max: 0.45, r: rnd(1.4, 2.6), col: col || PLAYER_GREEN_HI });
+    }
+  }
+  function explosion(x, y, z, big){
+    spawnRing(x, z, PLAYER_GREEN, big ? 80 : 50);
+    if(explosions.length >= MAX_EXPL) explosions.shift();
+    explosions.push({ x: x, y: y, z: z, t: 0, max: big ? 0.6 : 0.42, big: big });
+    sparks(x, y, z, big ? 12 : 7, PLAYER_GREEN_HI);
+    shake = Math.min(0.14, shake + (big ? 0.09 : 0.05));
+  }
+  function addTracer(m, h, col, life, w){
+    if(tracers.length >= MAX_TRACER) tracers.shift();
+    tracers.push({ sx: m.x, sy: m.y, sz: m.z, ex: h.x, ey: h.y, ez: h.z, life: life, max: life, col: col, w: w });
+  }
+  function updateVFX(dt){
+    var i;
+    for(i = tracers.length - 1; i >= 0; i--){ tracers[i].life -= dt; if(tracers[i].life <= 0) tracers.splice(i, 1); }
+    for(i = muzzleF.length - 1; i >= 0; i--){ muzzleF[i].life -= dt; if(muzzleF[i].life <= 0) muzzleF.splice(i, 1); }
+    for(i = explosions.length - 1; i >= 0; i--){ explosions[i].t += dt; if(explosions[i].t >= explosions[i].max) explosions.splice(i, 1); }
+    for(i = impacts.length - 1; i >= 0; i--){
+      var p = impacts[i];
+      p.life -= dt; p.x += p.vx * dt; p.y += p.vy * dt; p.z += p.vz * dt;
+      p.vy -= 420 * dt;
+      if(p.y < 1){ p.y = 1; p.vy *= -0.35; p.vx *= 0.7; p.vz *= 0.7; }
+      if(p.life <= 0) impacts.splice(i, 1);
+    }
+    for(i = rings.length - 1; i >= 0; i--){ rings[i].life -= dt; if(rings[i].life <= 0) rings.splice(i, 1); }
+    if(hitT > 0) hitT -= dt;
+    if(dmgT > 0) dmgT -= dt;
+    if(shake > 0){
+      shake -= dt * 0.35;
+      shakeX = (Math.random() - 0.5) * shake * 40;
+      shakeY = (Math.random() - 0.5) * shake * 22;
+    } else { shakeX = 0; shakeY = 0; }
+  }
+  function renderVFX(){
+    var i, e;
+    for(i = 0; i < MAX_TRACER; i++){
+      var eB = tracBm[i], eG = tracGl[i], eC = tracEls[i];
+      if(i >= tracers.length){
+        eB.setAttribute("display", "none"); eG.setAttribute("display", "none"); eC.setAttribute("display", "none");
+        continue;
+      }
+      var tr = tracers[i], p0 = 1 - tr.life / tr.max;
+      var hd = clamp(p0 * 2.6, 0, 1);
+      var tl = clamp(p0 * 2.6 - 0.34, 0, 1);
+      var dxT = tr.ex - tr.sx, dyT = tr.ey - tr.sy, dzT = tr.ez - tr.sz;
+      var okA = wsTo(tr.sx + dxT * tl, tr.sy + dyT * tl, tr.sz + dzT * tl, TA);
+      var okB = wsTo(tr.sx + dxT * hd, tr.sy + dyT * hd, tr.sz + dzT * hd, TB);
+      if(okA && okB && tl < 1){
+        var tw = clamp(360 / TB.d, 1.4, 5) * tr.w;
+        eG.setAttribute("x1", TA.sx.toFixed(1)); eG.setAttribute("y1", TA.sy.toFixed(1));
+        eG.setAttribute("x2", TB.sx.toFixed(1)); eG.setAttribute("y2", TB.sy.toFixed(1));
+        eG.setAttribute("stroke", tr.col);
+        eG.setAttribute("stroke-width", (tw * 3.4).toFixed(2));
+        eG.setAttribute("opacity", "0.28"); eG.removeAttribute("display");
+        eC.setAttribute("x1", TA.sx.toFixed(1)); eC.setAttribute("y1", TA.sy.toFixed(1));
+        eC.setAttribute("x2", TB.sx.toFixed(1)); eC.setAttribute("y2", TB.sy.toFixed(1));
+        eC.setAttribute("stroke", tr.col);
+        eC.setAttribute("stroke-width", tw.toFixed(2));
+        eC.setAttribute("opacity", (1 - p0 * 0.4).toFixed(2));
+        eC.removeAttribute("display");
+        capEdge(SC_FX, TA.sx, TA.sy, TB.sx, TB.sy);
+      } else { eG.setAttribute("display", "none"); eC.setAttribute("display", "none"); }
+      var okC = wsTo(tr.sx, tr.sy, tr.sz, TC);
+      var okD = wsTo(tr.ex, tr.ey, tr.ez, TD);
+      if(okC && okD){
+        eB.setAttribute("x1", TC.sx.toFixed(1)); eB.setAttribute("y1", TC.sy.toFixed(1));
+        eB.setAttribute("x2", TD.sx.toFixed(1)); eB.setAttribute("y2", TD.sy.toFixed(1));
+        eB.setAttribute("stroke", tr.col);
+        eB.setAttribute("opacity", ((1 - p0) * 0.4).toFixed(2));
+        eB.removeAttribute("display");
+      } else eB.setAttribute("display", "none");
+    }
+    for(i = 0; i < MAX_IMPACT; i++){
+      e = impEls[i];
+      if(i >= impacts.length){ e.setAttribute("display", "none"); continue; }
+      var p = impacts[i];
+      var s = worldScreen(p.x, p.y, p.z);
+      if(!s){ e.setAttribute("display", "none"); continue; }
+      e.setAttribute("cx", s.sx.toFixed(1)); e.setAttribute("cy", s.sy.toFixed(1));
+      e.setAttribute("r", clamp(p.r * 260 / s.d, 0.8, 5).toFixed(2));
+      e.setAttribute("fill", p.col);
+      e.setAttribute("opacity", (p.life / p.max).toFixed(2));
+      e.removeAttribute("display");
+    }
+    for(i = 0; i < MAX_MUZZ; i++){
+      e = muzEls[i];
+      if(i >= muzzleF.length){ e.setAttribute("display", "none"); continue; }
+      var mz = muzzleF[i];
+      var s2 = worldScreen(mz.x, mz.y, mz.z);
+      if(!s2){ e.setAttribute("display", "none"); continue; }
+      e.setAttribute("cx", s2.sx.toFixed(1)); e.setAttribute("cy", s2.sy.toFixed(1));
+      e.setAttribute("r", clamp(700 / s2.d, 4, 30).toFixed(1));
+      e.setAttribute("fill", mz.col);
+      e.setAttribute("opacity", (mz.life / mz.max * 0.9).toFixed(2));
+      e.removeAttribute("display");
+    }
+    for(i = 0; i < MAX_EXPL; i++){
+      e = expEls[i];
+      if(i >= explosions.length){ e.setAttribute("display", "none"); continue; }
+      var ex = explosions[i], k = ex.t / ex.max;
+      var s3 = worldScreen(ex.x, ex.y, ex.z);
+      if(!s3){ e.setAttribute("display", "none"); continue; }
+      e.setAttribute("cx", s3.sx.toFixed(1)); e.setAttribute("cy", s3.sy.toFixed(1));
+      e.setAttribute("r", clamp(((ex.big ? 90 : 48) * (0.3 + k * 1.6)) * FOCAL * HALF / s3.d, 6, 300).toFixed(1));
+      e.setAttribute("fill", PLAYER_GREEN_HI);
+      e.setAttribute("opacity", ((1 - k) * 0.55).toFixed(2));
+      e.removeAttribute("display");
+    }
+  }
+
+  function castShot(o, d){
+    var best = 1e9, kind = "sky", obj = null, t, i;
+    for(i = 0; i < enemies.length; i++){
+      t = raySphere(o, d, enemies[i].x, 52, enemies[i].z, 42);
+      if(t > 0 && t < best){ best = t; kind = "enemy"; obj = enemies[i]; }
+    }
+    for(i = 0; i < spiders.length; i++){
+      t = raySphere(o, d, spiders[i].x, SPIDER_BODY_H, spiders[i].z, 38);
+      if(t > 0 && t < best){ best = t; kind = "spider"; obj = spiders[i]; }
+    }
+    for(i = 0; i < buildings.length; i++){
+      t = rayBoxHit(o, d, buildings[i]);
+      if(t > 0 && t < best){ best = t; kind = "wall"; obj = buildings[i]; }
+    }
+    if(d.y < -1e-4){
+      t = -o.y / d.y;
+      if(t > 0 && t < best){ best = t; kind = "ground"; obj = null; }
+    }
+    var tc = best > 2000 ? 2000 : best;
+    return { t: best, kind: kind, obj: obj, x: o.x + d.x * tc, y: o.y + d.y * tc, z: o.z + d.z * tc };
+  }
+  function angErr(o, d, cx, cy, cz){
+    var ox = cx - o.x, oy = cy - o.y, oz = cz - o.z;
+    var l = Math.sqrt(ox*ox + oy*oy + oz*oz) || 1;
+    var dot = ox/l*d.x + oy/l*d.y + oz/l*d.z;
+    return { dot: dot, ang: Math.acos(clamp(dot, -1, 1)), dist: l };
+  }
+  function findAimAssist(o, d){
+    var best = null, bestA = 0.09, i, e, c;
+    for(i = 0; i < enemies.length; i++){
+      e = enemies[i]; c = angErr(o, d, e.x, 52, e.z);
+      if(c.ang < bestA && c.dist < 900){ bestA = c.ang; best = e; }
+    }
+    for(i = 0; i < spiders.length; i++){
+      e = spiders[i]; c = angErr(o, d, e.x, SPIDER_BODY_H, e.z);
+      if(c.ang < bestA && c.dist < 1000){ bestA = c.ang; best = e; }
+    }
+    return best;
+  }
+  function killEnemy(en){
+    score += 400; kills++;
+    killFeed("M88 HOSTILE DOWN +400");
+    explosion(en.x, 52, en.z, true);
+    enemies.splice(enemies.indexOf(en), 1);
+  }
+  function killSpider(sp){
+    score += 900; kills++;
+    killFeed("QUAD SPIDER DESTROYED +900");
+    explosion(sp.x, SPIDER_BODY_H, sp.z, true);
+    spawnRing(sp.x, sp.z, ENEMY_RED, 100);
+    spawnRing(sp.x, sp.z, PLAYER_GREEN, 60);
+    spiders.splice(spiders.indexOf(sp), 1);
+    showToast("SPIDER SPLASH");
+  }
+  function fireAtScreenPoint(sx, sy){
+    var cp = Math.cos(cam.pitch);
+    var nx = (sx - HALF) / HALF;
+    var ny = (sy - MID) / VS;
+    var f = camForward();
+    var rxv = Math.cos(cam.yaw), rzv = -Math.sin(cam.yaw);
+    var upv = { x:-f.y*Math.sin(cam.yaw), y:cp, z:-f.y*Math.cos(cam.yaw) };
+    var d = { x: f.x + rxv * nx * 0.55, y: f.y + upv.y * (-ny) * 0.55, z: f.z + rzv * nx * 0.55 };
+    var dl = Math.sqrt(d.x*d.x + d.y*d.y + d.z*d.z) || 1;
+    d.x /= dl; d.y /= dl; d.z /= dl;
+    var o = { x: player.x, y: 58 + player.jumpY * 0.4, z: player.z };
+    o.x += f.x * 18; o.z += f.z * 18;
+    var hit = castShot(o, d);
+    var mzl = { x: player.muzzle.x, y: player.muzzle.y, z: player.muzzle.z };
+    if(mzl.x === 0 && mzl.y === 0 && mzl.z === 0){
+      mzl = { x: o.x + f.x * 22, y: o.y - 4, z: o.z + f.z * 22 };
+    }
+    muzzleFlash(mzl, PLAYER_GREEN_HI);
+    addTracer(mzl, hit, PLAYER_GREEN, 0.22, 1);
+    if(hit.kind === "enemy"){
+      hit.obj.hp -= 34; hitT = 0.2; hitKill = hit.obj.hp <= 0;
+      sparks(hit.x, hit.y, hit.z, 4, ENEMY_RED);
+      if(hit.obj.hp <= 0) killEnemy(hit.obj);
+    } else if(hit.kind === "spider"){
+      var eyeHit = Math.abs(hit.x - (hit.obj.x + Math.cos(hit.obj.facing) * 44)) < 14
+                && Math.abs(hit.z - (hit.obj.z - Math.sin(hit.obj.facing) * 44)) < 14
+                && hit.y > SPIDER_BODY_H - 2 && hit.y < SPIDER_BODY_H + 14;
+      var dmg = eyeHit ? 34 * 2.4 : 34;
+      hit.obj.hp -= dmg; hitT = 0.22; hitKill = hit.obj.hp <= 0;
+      sparks(hit.x, hit.y, hit.z, eyeHit ? 8 : 5, eyeHit ? SPIDER_EYE : SPIDER_SEG_HI);
+      if(eyeHit){ showToast("EYE SHOT x2.4"); shake = Math.min(0.14, shake + 0.05); }
+      if(hit.obj.hp <= 0) killSpider(hit.obj);
+    } else if(hit.kind !== "sky"){
+      sparks(hit.x, hit.y, hit.z, 3, hit.kind === "ground" ? FLOOR_ORANGE : BUILDING_ORANGE_HI);
+    }
+  }
+
+  function playerFire(){
+    if(player.reloadT > 0) return;
+    if(player.mag <= 0){ startReload(); return; }
+    if(player.fireCD > 0) return;
+    player.mag--;
+    player.fireCD = aimBlend > 0.5 ? 0.16 : 0.13;
+    player.spread = Math.min(0.05, player.spread + 0.016);
+    cam.pitch = clamp(cam.pitch + 0.0035, -1.05, 0.45);
+    var d = camForward();
+    var sp = player.spread * (aimBlend > 0.5 ? 0.4 : 1);
+    d.x += rnd(-sp, sp); d.y += rnd(-sp, sp); d.z += rnd(-sp, sp);
+    var l = Math.sqrt(d.x*d.x + d.y*d.y + d.z*d.z);
+    d.x /= l; d.y /= l; d.z /= l;
+    var asst = findAimAssist(cam, d);
+    if(asst && !(lockTarget && lockTarget.hp > 0)){
+      var tx = asst.x;
+      var ty = asst.class === "spider" ? SPIDER_BODY_H : 52;
+      var tz = asst.z;
+      var dx = tx - cam.x, dy = ty - cam.y, dz = tz - cam.z;
+      var dl = Math.sqrt(dx*dx + dy*dy + dz*dz) || 1;
+      d.x = d.x * 0.65 + dx/dl * 0.35;
+      d.y = d.y * 0.65 + dy/dl * 0.35;
+      d.z = d.z * 0.65 + dz/dl * 0.35;
+      dl = Math.sqrt(d.x*d.x + d.y*d.y + d.z*d.z);
+      d.x /= dl; d.y /= dl; d.z /= dl;
+    }
+    var hit = castShot(cam, d);
+    muzzleFlash(player.muzzle, PLAYER_GREEN_HI);
+    addTracer(player.muzzle, hit, PLAYER_GREEN, 0.22, 1);
+    if(hit.kind === "enemy"){
+      hit.obj.hp -= 34; hitT = 0.2; hitKill = hit.obj.hp <= 0;
+      sparks(hit.x, hit.y, hit.z, 4, ENEMY_RED);
+      if(hit.obj.hp <= 0) killEnemy(hit.obj);
+    } else if(hit.kind === "spider"){
+      var eyeHit = Math.abs(hit.x - (hit.obj.x + Math.cos(hit.obj.facing) * 44)) < 14
+                && Math.abs(hit.z - (hit.obj.z - Math.sin(hit.obj.facing) * 44)) < 14
+                && hit.y > SPIDER_BODY_H - 2 && hit.y < SPIDER_BODY_H + 14;
+      var dmg = eyeHit ? 34 * 2.4 : 34;
+      hit.obj.hp -= dmg; hitT = 0.22; hitKill = hit.obj.hp <= 0;
+      sparks(hit.x, hit.y, hit.z, eyeHit ? 8 : 5, eyeHit ? SPIDER_EYE : SPIDER_SEG_HI);
+      if(eyeHit){ showToast("EYE SHOT x2.4"); shake = Math.min(0.14, shake + 0.05); }
+      if(hit.obj.hp <= 0) killSpider(hit.obj);
+    } else if(hit.kind !== "sky"){
+      sparks(hit.x, hit.y, hit.z, 3, hit.kind === "ground" ? FLOOR_ORANGE : BUILDING_ORANGE_HI);
+    }
+  }
+  function startReload(){
+    if(player.reloadT > 0 || player.mag >= 30 || player.reserve <= 0) return;
+    player.reloadT = 1.35;
+    showToast("RELOADING");
+  }
+  function allyFire(){
+    var t = ally.target;
+    if(!t) return;
+    var ty = t.class === "spider" ? SPIDER_BODY_H : 52;
+    var dx = t.x - ally.x, dy = ty - 45, dz = t.z - ally.z;
+    var l = Math.sqrt(dx*dx + dy*dy + dz*dz) || 1;
+    dx /= l; dy /= l; dz /= l;
+    dx += rnd(-0.04, 0.04); dy += rnd(-0.02, 0.02); dz += rnd(-0.04, 0.04);
+    var o = { x: ally.x, y: 45, z: ally.z };
+    var hit = castShot(o, { x: dx, y: dy, z: dz });
+    muzzleFlash(ally.muzzle, ALLY_GREEN_HI);
+    addTracer(ally.muzzle, hit, ALLY_GREEN, 0.2, 0.85);
+    if(hit.kind === "enemy"){
+      hit.obj.hp -= 12; sparks(hit.x, hit.y, hit.z, 2, ENEMY_RED);
+      if(hit.obj.hp <= 0) killEnemy(hit.obj);
+    } else if(hit.kind === "spider"){
+      hit.obj.hp -= 10; sparks(hit.x, hit.y, hit.z, 2, SPIDER_SEG_MID);
+      if(hit.obj.hp <= 0) killSpider(hit.obj);
+    } else sparks(hit.x, hit.y, hit.z, 2, FLOOR_ORANGE);
+  }
+
+  function updatePlayer(dt){
+    var ix = ((keys.KeyD || keys.ArrowRight) ? 1 : 0) - ((keys.KeyA || keys.ArrowLeft) ? 1 : 0);
+    var iz = ((keys.KeyW || keys.ArrowUp) ? 1 : 0) - ((keys.KeyS || keys.ArrowDown) ? 1 : 0);
+    if(tLf) ix -= 1; if(tRt) ix += 1;
+    if(tUp) iz += 1; if(tDn) iz -= 1;
+    ix += deadzone(padAxes.lx, PAD_DEADZONE);
+    iz -= deadzone(padAxes.ly, PAD_DEADZONE);
+    ix = clamp(ix, -1, 1); iz = clamp(iz, -1, 1);
+    var mag = Math.sqrt(ix*ix + iz*iz);
+    if(mag > 1){ ix /= mag; iz /= mag; mag = 1; }
+    var active = animMode === "AUTO" && mag > 0.12;
+    var sprintKey = keys.ShiftLeft || keys.ShiftRight;
+    var sprint = active && (sprintKey || dpadSprint) && aimBlend < 0.5;
+    var tgt = animMode !== "AUTO" ? animMode : (active ? (sprint ? "RUN" : "WALK") : "IDLE");
+    gaitName = tgt;
+    var gT = GAITS[tgt], k = 1 - Math.exp(-dt * 5), key;
+    for(key in cur) cur[key] += (gT[key] - cur[key]) * k;
+    if(active){
+      var dirx = Math.sin(cam.yaw) * iz + Math.cos(cam.yaw) * ix;
+      var dirz = Math.cos(cam.yaw) * iz - Math.sin(cam.yaw) * ix;
+      var dl = Math.sqrt(dirx*dirx + dirz*dirz) || 1;
+      dirx /= dl; dirz /= dl;
+      lastDirX = dirx; lastDirZ = dirz;
+      player.speed += (gT.speed * Math.min(1, mag * 1.15) * (sprint ? 1.15 : 1) * (aimBlend > 0.5 ? 0.5 : 1) - player.speed) * (1 - Math.exp(-9 * dt));
+    } else {
+      player.speed += (0 - player.speed) * (1 - Math.exp(-9 * dt));
+    }
+    var wantFace = (aimBlend > 0.4 || (lockTarget && lockTarget.hp > 0)) ? cam.yaw : Math.atan2(lastDirX, lastDirZ);
+    if(padLbAimActive && padLbAimShoot){
+      var msx = mouseTargetX, msy = mouseTargetY;
+      var fdx = camForward();
+      var nx2 = (msx - HALF) / HALF, ny2 = (msy - MID) / VS;
+      var dtx = fdx.x + Math.cos(cam.yaw) * nx2 * 0.55;
+      var dtz = fdx.z - Math.sin(cam.yaw) * nx2 * 0.55;
+      wantFace = Math.atan2(dtx, dtz);
+    }
+    var fk = active ? 11 : 3;
+    player.facing = lerpAngle(player.facing, wantFace, 1 - Math.exp(-fk * dt));
+    if(player.speed > 1){
+      player.x += lastDirX * player.speed * dt;
+      player.z += lastDirZ * player.speed * dt;
+      var res = collideWorld(player.x, player.z, 13);
+      player.x = res[0]; player.z = res[1];
+    }
+    if(player.jumping){
+      player.jumpV -= 900 * dt;
+      player.jumpY += player.jumpV * dt;
+      if(player.jumpY <= 0){ player.jumpY = 0; player.jumpV = 0; player.jumping = false; }
+    }
+    var pc = Math.cos(player.phase);
+    player.phase += cur.freq * dt;
+    if(cur.freq > 1){
+      var c = Math.cos(player.phase);
+      if(pc > 0 && c <= 0) spawnRing(player.footL.x, player.footL.z, PLAYER_GREEN, 14);
+      else if(pc < 0 && c >= 0) spawnRing(player.footR.x, player.footR.z, PLAYER_GREEN, 14);
+    }
+    player.fireCD -= dt;
+    player.spread = Math.max(0, player.spread - dt * 0.05);
+    player.spread = Math.min(0.05, player.spread + player.speed * 0.00008);
+    if(player.reloadT > 0){
+      player.reloadT -= dt;
+      if(player.reloadT <= 0){
+        var need = 30 - player.mag, take = Math.min(need, player.reserve);
+        player.mag += take; player.reserve -= take;
+      }
+    }
+    var wantFire = mouseDown || tFire || padFire;
+    if(padLbAimActive && padLbAimShoot && active) wantFire = true;
+    if(wantFire && !ended){
+      if(padLbAimActive && padLbAimShoot && active){
+        if(player.fireCD <= 0 && player.reloadT <= 0 && player.mag > 0){
+          player.mag--;
+          player.fireCD = 0.14;
+          player.spread = Math.min(0.05, player.spread + 0.016);
+          fireAtScreenPoint(mouseTargetX, mouseTargetY);
+        } else if(player.mag <= 0) startReload();
+      } else {
+        playerFire();
+      }
+    }
+  }
+  function updateAlly(dt){
+    if(ally.downT > 0){
+      ally.downT -= dt;
+      if(ally.downT <= 0){ ally.hp = 40; showToast("VIPER-2 BACK ONLINE"); }
+      ally.speed += (0 - ally.speed) * (1 - Math.exp(-8 * dt));
+      return;
+    }
+    var best = null, bd = 600, i, e, dx, dz, d;
+    for(i = 0; i < enemies.length; i++){
+      e = enemies[i]; dx = e.x - ally.x; dz = e.z - ally.z; d = Math.sqrt(dx*dx + dz*dz);
+      if(d < bd){ bd = d; best = e; }
+    }
+    for(i = 0; i < spiders.length; i++){
+      e = spiders[i]; dx = e.x - ally.x; dz = e.z - ally.z; d = Math.sqrt(dx*dx + dz*dz);
+      if(d < bd){ bd = d; best = e; }
+    }
+    ally.target = best;
+    var mvx = 0, mvz = 0, wantSpeed = 0;
+    if(best){
+      dx = best.x - ally.x; dz = best.z - ally.z; d = Math.sqrt(dx*dx + dz*dz) || 1;
+      ally.facing = lerpAngle(ally.facing, Math.atan2(dx, dz), 1 - Math.exp(-8 * dt));
+      if(d > 240){ mvx = dx / d; mvz = dz / d; wantSpeed = 150; }
+      ally.fireT -= dt;
+      if(ally.fireT <= 0 && ally.burst <= 0){ ally.burst = 3; ally.burstT = 0; }
+      if(ally.burst > 0){
+        ally.burstT -= dt;
+        if(ally.burstT <= 0){
+          ally.burstT = 0.13; ally.burst--;
+          allyFire();
+          if(ally.burst <= 0) ally.fireT = rnd(0.9, 1.5);
+        }
+      }
+    } else {
+      var fx = player.x - Math.sin(player.facing) * 34 + Math.cos(player.facing) * (-26);
+      var fz = player.z - Math.cos(player.facing) * 34 - Math.sin(player.facing) * (-26);
+      dx = fx - ally.x; dz = fz - ally.z; d = Math.sqrt(dx*dx + dz*dz);
+      if(d > 26){
+        mvx = dx / d; mvz = dz / d;
+        wantSpeed = Math.min(170, d * 2.2);
+        ally.facing = lerpAngle(ally.facing, Math.atan2(dx, dz), 1 - Math.exp(-8 * dt));
+      }
+    }
+    ally.speed += (wantSpeed - ally.speed) * (1 - Math.exp(-7 * dt));
+    if(ally.speed > 2){
+      ally.x += mvx * ally.speed * dt;
+      ally.z += mvz * ally.speed * dt;
+      var res = collideWorld(ally.x, ally.z, 11);
+      ally.x = res[0]; ally.z = res[1];
+    }
+    var pc = Math.cos(ally.phase);
+    ally.phase += 7 * clamp(ally.speed / 150, 0, 1.1) * dt;
+    if(ally.speed > 40){
+      var c = Math.cos(ally.phase);
+      if(pc > 0 && c <= 0) spawnRing(ally.x, ally.z, ALLY_GREEN, 10);
+    }
+    ally.hp = Math.min(ally.maxHp, ally.hp + dt * 2.5);
+  }
+  function updateEnemies(dt){
+    var theme = waveTheme(wave);
+    for(var i = enemies.length - 1; i >= 0; i--){
+      var r = enemies[i];
+      var toX = player.x - r.x, toZ = player.z - r.z;
+      var dist = Math.sqrt(toX*toX + toZ*toZ);
+      if(dist < 420){ r.state = dist < 230 ? "attack" : "chase"; r.alertT = 6; }
+      else if(r.alertT > 0){ r.alertT -= dt; r.state = "chase"; }
+      else r.state = "patrol";
+      var mx = 0, mz = 0; r.walking = false;
+      if(r.state === "patrol"){
+        var pdx = r.patrolX - r.x, pdz = r.patrolZ - r.z;
+        var pd = Math.sqrt(pdx*pdx + pdz*pdz);
+        if(pd < 24){ r.patrolX = r.x + rnd(-260, 260); r.patrolZ = r.z + rnd(-260, 260); }
+        else { mx = pdx / pd * 46 * dt; mz = pdz / pd * 46 * dt; r.facing = Math.atan2(pdx, pdz); r.walking = true; }
+      } else if(r.state === "chase"){
+        if(dist > 40){ mx = toX / dist * 62 * dt; mz = toZ / dist * 62 * dt; r.facing = Math.atan2(toX, toZ); r.walking = true; }
+      } else {
+        r.facing = Math.atan2(toX, toZ);
+        var sa = r.facing + PI * 0.5;
+        var sm = Math.sin(performance.now() * 0.002 + i * 1.7) * 40 * dt;
+        mx = Math.cos(sa) * sm; mz = Math.sin(sa) * sm;
+        r.walking = true;
+        r.fireCD -= dt;
+        if(r.fireCD <= 0 && dist < 520){
+          r.fireCD = rnd(1.2, 2.4);
+          var cf = Math.cos(r.facing), sf = Math.sin(r.facing);
+          var gx = r.x + 15 * cf + 14 * sf;
+          var gz = r.z - 15 * sf + 14 * cf;
+          var gy = 60;
+          var ddx = player.x - gx, ddy = 58 - gy, ddz = player.z - gz;
+          var dl = Math.sqrt(ddx*ddx + ddy*ddy + ddz*ddz) || 1;
+          ddx = ddx / dl + rnd(-0.06, 0.06);
+          ddy = ddy / dl + rnd(-0.04, 0.04);
+          ddz = ddz / dl + rnd(-0.06, 0.06);
+          eBullets.push({ x: gx, y: gy, z: gz, vx: ddx * 300, vy: ddy * 300, vz: ddz * 300, life: 2.6, dmg: 9 });
+        }
+      }
+      if(mx !== 0 || mz !== 0){
+        var res = collideWorld(r.x + mx, r.z + mz, 16);
+        r.x = res[0]; r.z = res[1];
+      }
+      if(r.walking) r.walkPhase += dt * 5;
+      if(r.walking && Math.sin(r.walkPhase) * Math.sin(r.walkPhase - dt * 5) < 0)
+        spawnRing(r.x, r.z, theme, 10);
+    }
+  }
+  function updateSpiders(dt){
+    var theme = waveTheme(wave);
+    for(var i = spiders.length - 1; i >= 0; i--){
+      var sp = spiders[i];
+      var toX = player.x - sp.x, toZ = player.z - sp.z;
+      var dist = Math.sqrt(toX*toX + toZ*toZ);
+      if(dist < 480){ sp.state = dist < 200 ? "attack" : "chase"; sp.alertT = 6; }
+      else if(sp.alertT > 0){ sp.alertT -= dt; sp.state = "chase"; }
+      else sp.state = "patrol";
+      var mx = 0, mz = 0;
+      if(sp.state === "patrol"){
+        var pdx = sp.patrolX - sp.x, pdz = sp.patrolZ - sp.z;
+        var pd = Math.sqrt(pdx*pdx + pdz*pdz);
+        if(pd < 30){ sp.patrolX = sp.x + rnd(-360, 360); sp.patrolZ = sp.z + rnd(-360, 360); }
+        else { mx = pdx / pd * sp.speed * dt; mz = pdz / pd * sp.speed * dt; sp.facing = Math.atan2(pdx, pdz); }
+      } else if(sp.state === "chase"){
+        if(dist > 60){ mx = toX / dist * (sp.speed + 40) * dt; mz = toZ / dist * (sp.speed + 40) * dt; }
+        sp.facing = Math.atan2(toX, toZ);
+      } else {
+        sp.facing = Math.atan2(toX, toZ);
+        sp.attackPhase = Math.min(1, (sp.attackPhase || 0) + dt * 2.4);
+        sp.biteCD -= dt;
+        if(sp.biteCD <= 0 && dist < 90){
+          sp.biteCD = rnd(1.6, 2.6);
+          if(dist < 80){
+            player.hp -= 18; dmgT = 0.35;
+            sparks(player.x, 40, player.z, 5, ENEMY_RED);
+            if(player.hp <= 0){ player.hp = 0; gameOver(); }
+          }
+        }
+      }
+      if(sp.state !== "attack" && sp.attackPhase > 0) sp.attackPhase = Math.max(0, sp.attackPhase - dt * 2.0);
+      if(mx !== 0 || mz !== 0){
+        var res = collideWorld(sp.x + mx, sp.z + mz, 30);
+        sp.x = res[0]; sp.z = res[1];
+      }
+      var moving = (mx !== 0 || mz !== 0);
+      sp.walkPhase += dt * (moving ? 3.2 : 0.9);
+      if(moving){
+        var pc = Math.cos(sp.walkPhase);
+        var c = Math.cos(sp.walkPhase - dt * 3.2);
+        if(pc > 0 && c <= 0) spawnRing(sp.x + 30, sp.z, theme, 12);
+        else if(pc < 0 && c >= 0) spawnRing(sp.x - 30, sp.z, theme, 12);
+      }
+    }
+  }
+  function updateBullets(dt){
+    for(var i = eBullets.length - 1; i >= 0; i--){
+      var b = eBullets[i];
+      b.x += b.vx * dt; b.y += b.vy * dt; b.z += b.vz * dt;
+      b.life -= dt;
+      var dx = b.x - player.x, dy = b.y - 55, dz = b.z - player.z;
+      if(dx*dx + dy*dy + dz*dz < 22*22){
+        player.hp -= b.dmg; dmgT = 0.3;
+        sparks(b.x, b.y, b.z, 3, ENEMY_RED);
+        eBullets.splice(i, 1);
+        if(player.hp <= 0){ player.hp = 0; gameOver(); }
+        continue;
+      }
+      dx = b.x - ally.x; dy = b.y - 38; dz = b.z - ally.z;
+      if(ally.downT <= 0 && dx*dx + dy*dy + dz*dz < 14*14){
+        ally.hp -= b.dmg * 0.8; sparks(b.x, b.y, b.z, 2, ALLY_GREEN_HI);
+        eBullets.splice(i, 1);
+        if(ally.hp <= 0){ ally.hp = 0; ally.downT = 6; killFeed("VIPER-2 DOWN"); }
+        continue;
+      }
+      if(pointInBuilding(b.x, b.z, b.y) || b.y < 0 || b.y > 260 || b.life <= 0) eBullets.splice(i, 1);
+    }
+  }
+  function updateBlasts(dt){
+    for(var i = blasts.length - 1; i >= 0; i--){
+      var bw = blasts[i];
+      bw.life -= dt;
+      bw.radius = bw.maxR * (1 - bw.life / bw.maxLife);
+      if(!bw.applied && bw.radius > 5){
+        var dx = player.x - bw.x, dz = player.z - bw.z;
+        if(Math.sqrt(dx*dx + dz*dz) < bw.radius){
+          player.hp -= 28; dmgT = 0.4; bw.applied = true;
+          if(player.hp <= 0){ player.hp = 0; gameOver(); }
+        }
+        dx = ally.x - bw.x; dz = ally.z - bw.z;
+        if(ally.downT <= 0 && Math.sqrt(dx*dx + dz*dz) < bw.radius){
+          ally.hp -= 20; bw.applied = true;
+          if(ally.hp <= 0){ ally.hp = 0; ally.downT = 6; killFeed("VIPER-2 DOWN"); }
+        }
+      }
+      if(bw.life <= 0) blasts.splice(i, 1);
+    }
+  }
+  function updateCrystals(){
+    var i;
+    for(i = 0; i < crystals.length; i++){
+      var c = crystals[i];
+      if(!c.alive) continue;
+      c.spin += 0.02;
+      var dx = c.x - player.x, dz = c.z - player.z;
+      if(Math.sqrt(dx*dx + dz*dz) < 34){
+        c.alive = false;
+        player.reserve = Math.min(240, player.reserve + 36);
+        score += 50; killFeed("AMMO CRYSTAL +36");
+        spawnRing(c.x, c.z, "#22cc55", 22);
+        respawnCrystal(crystals, i);
+      }
+    }
+    for(i = 0; i < healthCrystals.length; i++){
+      var h = healthCrystals[i];
+      if(!h.alive) continue;
+      h.spin += 0.025;
+      var dx2 = h.x - player.x, dz2 = h.z - player.z;
+      if(Math.sqrt(dx2*dx2 + dz2*dz2) < 34){
+        h.alive = false;
+        player.hp = Math.min(100, player.hp + 40);
+        score += 50; killFeed("REPAIR CRYSTAL +40");
+        spawnRing(h.x, h.z, "#9944cc", 22);
+        respawnCrystal(healthCrystals, i);
+      }
+    }
+  }
+  function respawnCrystal(list, idx){
+    setTimeout(function(){
+      var x, z, tries = 0;
+      do { x = rnd(-ARENA + 100, ARENA - 100); z = rnd(-ARENA + 100, ARENA - 100); tries++; }
+      while(isNearBuilding(x, z, 40) && tries < 200);
+      list[idx].x = x; list[idx].z = z; list[idx].alive = true;
+    }, 6000);
+  }
+  function updateWaves(dt){
+    if(ended) return;
+    gameTime += dt;
+    if(pauseT > 0){
+      pauseT -= dt;
+      if(pauseT <= 0){ wave++; waveRSpawn = 0; waveSSpawn = 0; waveDSpawn = 0; waveTextT = 3.0; spawnT = 0.5; }
+      return;
+    }
+    if(waveTextT > 0) waveTextT -= dt;
+    spawnT -= dt;
+    if(spawnT <= 0){
+      spawnT = 1.6;
+      var tot = waveTotals(wave);
+      if(waveRSpawn < tot.r && enemies.length < 8){ spawnEnemy(); waveRSpawn++; }
+      else if(waveSSpawn < tot.s && spiders.length < 4){ spawnSpider(); waveSSpawn++; }
+      else if(waveDSpawn < tot.d && enemies.length < 10){ spawnEnemy(); waveDSpawn++; }
+    }
+    var tot2 = waveTotals(wave);
+    if(waveRSpawn >= tot2.r && waveSSpawn >= tot2.s && waveDSpawn >= tot2.d && enemies.length === 0 && spiders.length === 0){
+      if(wave >= 10){ victory = true; ended = true; score += 5000; showEnd(true); return; }
+      pauseT = 4.0;
+      score += wave * 600;
+      killFeed("WAVE " + wave + " CLEARED +" + wave * 600);
+    }
+  }
+
+  function acquireLock(){
+    var d = camForward(), best = null, bestA = 0.42, i, e, c;
+    for(i = 0; i < enemies.length; i++){
+      e = enemies[i]; c = angErr(cam, d, e.x, 52, e.z);
+      if(c.ang < bestA && c.dist < 900){ bestA = c.ang; best = e; }
+    }
+    for(i = 0; i < spiders.length; i++){
+      e = spiders[i]; c = angErr(cam, d, e.x, SPIDER_BODY_H, e.z);
+      if(c.ang < bestA && c.dist < 1000){ bestA = c.ang; best = e; }
+    }
+    if(best){ lockTarget = best; showToast("TARGET LOCKED"); }
+    else showToast("NO TARGET IN CONE");
+  }
+  function cycleLock(){
+    var cands = [], d = camForward(), i, e, c;
+    for(i = 0; i < enemies.length; i++){
+      e = enemies[i]; c = angErr(cam, d, e.x, 52, e.z);
+      if(c.dist < 1000) cands.push({ ref: e, a: c.ang });
+    }
+    for(i = 0; i < spiders.length; i++){
+      e = spiders[i]; c = angErr(cam, d, e.x, SPIDER_BODY_H, e.z);
+      if(c.dist < 1000) cands.push({ ref: e, a: c.ang });
+    }
+    cands.sort(function(a, b){ return a.a - b.a; });
+    if(cands.length === 0){ lockTarget = null; return; }
+    var idx = lockTarget ? cands.findIndex(function(x){ return x.ref === lockTarget; }) : -1;
+    lockTarget = cands[(idx + 1) % cands.length].ref;
+    showToast("TARGET CYCLED");
+  }
+  function updateLock(dt){
+    if(lockTarget){
+      var isAlive = (enemies.indexOf(lockTarget) >= 0) || (spiders.indexOf(lockTarget) >= 0);
+      if(lockTarget.hp <= 0 || !isAlive) lockTarget = null;
+    }
+    if(lockTarget){
+      var want = Math.atan2(lockTarget.x - player.x, lockTarget.z - player.z);
+      cam.yaw = lerpAngle(cam.yaw, want, 1 - Math.exp(-2.0 * dt));
+    }
+  }
+  function renderLock(){
+    if(!lockTarget){ LOCKG.setAttribute("opacity", "0"); return; }
+    var ty = lockTarget.class === "spider" ? SPIDER_BODY_H : 52;
+    var s = worldScreen(lockTarget.x, ty, lockTarget.z);
+    if(!s){ LOCKG.setAttribute("opacity", "0"); return; }
+    LOCKG.setAttribute("opacity", "1");
+    var sc = clamp(3000 / s.d, 0.55, 2.4);
+    if(lockTarget.class === "spider") sc *= 1.35;
+    LOCKG.setAttribute("transform", "translate(" + s.sx.toFixed(1) + "," + s.sy.toFixed(1) + ") scale(" + sc.toFixed(2) + ")");
+    LK_HP.setAttribute("width", (94 * lockTarget.hp / lockTarget.maxHp).toFixed(1));
+    var label = lockTarget.class === "spider" ? "QUAD SPIDER" : "M88 HOSTILE";
+    LK_T.textContent = label + " // " + Math.max(0, Math.round(lockTarget.hp)) + " HP";
+  }
+
+  function renderScene(t){
+    var i;
+    scCur = SC_PICK;
+    for(i = 0; i < crystals.length; i++){
+      var c = crystals[i];
+      if(!c.alive) continue;
+      var dx = c.x - cam.x, dz = c.z - cam.z;
+      if(Math.sqrt(dx*dx + dz*dz) > FAR) continue;
+      var by = 22 + Math.sin(t * 0.003 + c.spin) * 6;
+      var m = mul(mul(TR(c.x, by, c.z), RY(c.spin)), RX(0.3));
+      pushOcta(m, 14, "#00aa44", 1.5);
+    }
+    for(i = 0; i < healthCrystals.length; i++){
+      var h = healthCrystals[i];
+      if(!h.alive) continue;
+      var dx2 = h.x - cam.x, dz2 = h.z - cam.z;
+      if(Math.sqrt(dx2*dx2 + dz2*dz2) > FAR) continue;
+      var by2 = 22 + Math.sin(t * 0.004 + h.spin) * 8;
+      var m2 = mul(mul(TR(h.x, by2, h.z), RY(h.spin)), RX(0.4));
+      pushOcta(m2, 16, "#8833cc", 1.7);
+    }
+    scCur = SC_ENEMY;
+    var ePose = { x:0, z:0, facing:0, phase:0, gait: cur, aimBlend:0, muzzle: { x:0, y:0, z:0 }, footL: { x:0, y:0, z:0 }, footR: { x:0, y:0, z:0 }, downed: false };
+    for(i = 0; i < enemies.length; i++){
+      var en = enemies[i];
+      var edx = en.x - cam.x, edz = en.z - cam.z;
+      if(Math.sqrt(edx*edx + edz*edz) > FAR) continue;
+      ePose.x = en.x; ePose.z = en.z; ePose.facing = en.facing; ePose.phase = en.walkPhase;
+      buildM88(ePose, { scale: 1.0, colors: ENEMY_COLORS }, 0);
+    }
+    for(i = 0; i < spiders.length; i++){
+      var sp = spiders[i];
+      var sdx = sp.x - cam.x, sdz = sp.z - cam.z;
+      if(Math.sqrt(sdx*sdx + sdz*sdz) > FAR) continue;
+      buildSpider({ x: sp.x, z: sp.z, facing: sp.facing, walkPhase: sp.walkPhase, attackPhase: sp.attackPhase || 0 });
+    }
+    scCur = SC_FX;
+    for(i = 0; i < eBullets.length; i++){
+      var b = eBullets[i];
+      var bdx = b.x - cam.x, bdz = b.z - cam.z;
+      if(Math.sqrt(bdx*bdx + bdz*bdz) > FAR) continue;
+      pushOcta(mul(TR(b.x, b.y, b.z), RY(t * 6 + i)), 3.4, ENEMY_RED, 1.2);
+    }
+    scCur = SC_ALLY;
+    var aPose = { x: ally.x, z: ally.z, facing: ally.facing, phase: ally.phase, gait: cur, aimBlend: 0, muzzle: ally.muzzle, footL: { x:0, y:0, z:0 }, footR: { x:0, y:0, z:0 }, downed: ally.downT > 0 };
+    buildM88(aPose, { scale: 0.72, colors: ALLY_COLORS }, 0);
+    scCur = SC_PLAYER;
+    var pPose = { x: player.x, z: player.z, facing: player.facing, phase: player.phase, gait: cur, aimBlend: aimBlend, muzzle: player.muzzle, footL: player.footL, footR: player.footR, downed: false };
+    buildM88(pPose, { scale: 1.0, colors: PLAYER_COLORS }, player.jumpY);
+    flushDraw();
+  }
+
+  function renderMinimap(t){
+    var R = 104, scale = R / 1400, cy2 = Math.cos(cam.yaw), sy2 = Math.sin(cam.yaw);
+    function toMap(wx, wz, o){
+      var dx = wx - player.x, dz = wz - player.z;
+      var rx = dx * cy2 - dz * sy2;
+      var ry = dx * sy2 + dz * cy2;
+      var d = Math.sqrt(rx*rx + ry*ry);
+      var k = 1;
+      if(d * scale > R - 6) k = (R - 6) / (d * scale);
+      o.x = rx * scale * k; o.y = -ry * scale * k; o.edge = k < 1;
+      return o;
+    }
+    var mo = { x:0, y:0, edge:false }, i, n;
+    for(i = 0; i < 40; i++){
+      var e = mmBlds[i];
+      if(i >= buildings.length){ e.setAttribute("display", "none"); continue; }
+      var b = buildings[i];
+      toMap(b.x, b.z, mo);
+      var sz = clamp(b.hx * scale * 1.4, 2, 10);
+      e.setAttribute("x", (mo.x - sz / 2).toFixed(1));
+      e.setAttribute("y", (mo.y - sz / 2).toFixed(1));
+      e.setAttribute("width", sz.toFixed(1));
+      e.setAttribute("height", sz.toFixed(1));
+      e.setAttribute("opacity", mo.edge ? "0.35" : "0.75");
+      e.removeAttribute("display");
+    }
+    n = 0;
+    for(i = 0; i < enemies.length && n < 26; i++){
+      var e2 = mmEn[n++];
+      toMap(enemies[i].x, enemies[i].z, mo);
+      e2.setAttribute("cx", mo.x.toFixed(1)); e2.setAttribute("cy", mo.y.toFixed(1));
+      e2.setAttribute("r", "4.5"); e2.setAttribute("fill", ENEMY_RED);
+      e2.setAttribute("opacity", mo.edge ? "0.4" : "1"); e2.removeAttribute("display");
+    }
+    for(i = 0; i < spiders.length && n < 26; i++){
+      var e2b = mmEn[n++];
+      toMap(spiders[i].x, spiders[i].z, mo);
+      e2b.setAttribute("cx", mo.x.toFixed(1)); e2b.setAttribute("cy", mo.y.toFixed(1));
+      e2b.setAttribute("r", "7"); e2b.setAttribute("fill", "#e83a3a");
+      e2b.setAttribute("opacity", mo.edge ? "0.4" : "1"); e2b.removeAttribute("display");
+    }
+    for(i = n; i < 26; i++) mmEn[i].setAttribute("display", "none");
+    n = 0;
+    for(i = 0; i < crystals.length && n < 12; i++){
+      if(!crystals[i].alive) continue;
+      var e4 = mmCr[n++];
+      toMap(crystals[i].x, crystals[i].z, mo);
+      e4.setAttribute("cx", mo.x.toFixed(1)); e4.setAttribute("cy", mo.y.toFixed(1));
+      e4.setAttribute("fill", "#00aa44"); e4.setAttribute("opacity", mo.edge ? "0.3" : "0.85");
+      e4.removeAttribute("display");
+    }
+    for(i = 0; i < healthCrystals.length && n < 12; i++){
+      if(!healthCrystals[i].alive) continue;
+      var e5 = mmCr[n++];
+      toMap(healthCrystals[i].x, healthCrystals[i].z, mo);
+      e5.setAttribute("cx", mo.x.toFixed(1)); e5.setAttribute("cy", mo.y.toFixed(1));
+      e5.setAttribute("fill", "#8833cc"); e5.setAttribute("opacity", mo.edge ? "0.3" : "0.85");
+      e5.removeAttribute("display");
+    }
+    for(i = n; i < 12; i++) mmCr[i].setAttribute("display", "none");
+    toMap(ally.x, ally.z, mo);
+    M_ALLY.setAttribute("cx", mo.x.toFixed(1)); M_ALLY.setAttribute("cy", mo.y.toFixed(1));
+    M_ALLY.setAttribute("opacity", ally.downT > 0 ? "0.3" : "1");
+    MSWEEP.setAttribute("transform", "rotate(" + ((t * 57) % 360).toFixed(1) + ")");
+  }
+
+  var fpsN = 0, fpsT = 0, fpsShown = 0;
+  function updateHUD(dt){
+    var hpk = clamp(player.hp / 100, 0, 1);
+    HP_FG.setAttribute("width", (326 * hpk).toFixed(1));
+    HP_FG.setAttribute("fill", player.hp > 50 ? "#00aa44" : (player.hp > 25 ? "#d8a020" : "#cc2222"));
+    AMMO_T.textContent = player.reloadT > 0 ? "-- RELOAD --" : (player.mag + " / " + player.reserve);
+    ST_T.textContent = "STANCE " + (aimBlend > 0.5 ? "ADS" : "HIP") + " | GAIT " + gaitName + " | " + (lockTarget ? "LOCKED" : "FREE AIM") + (padLbAimShoot ? " | LB-AIM" : "");
+    SCORE_T.textContent = "SCORE " + score;
+    TIMER_T.textContent = formatTime(gameTime);
+    KILLS_T.textContent = "KILLS " + kills;
+    WAVE_T.textContent = "WAVE " + wave + (pauseT > 0 ? " - CLEAR" : "");
+    fpsN++; fpsT += dt;
+    if(fpsT >= 0.5){ fpsShown = Math.round(fpsN / fpsT); fpsN = 0; fpsT = 0; }
+    FPS_T.textContent = fpsShown + " FPS";
+    OSC_T.textContent = oscReady ? (oscOn ? "OSC " + scopeMode + " buf:" + rbLen + " out:" + oscUsed : "OSC OFF") : "OSC WAIT";
+    TCH_T.textContent = touchActivated ? "TOUCH ON" : (touchDetected ? "TOUCH READY" : "TOUCH OFF");
+    if(padT) padT.textContent = padConnected ? ("PAD " + padName.substring(0, 14)) : "PAD OFF";
+    enMix.textContent = "x" + enemies.length + " · x" + spiders.length;
+    var g = 13 + player.spread * 300 - aimBlend * 5;
+    g = clamp(g, 6, 60);
+    CH_T.setAttribute("y1", (450 - g - 12).toFixed(1)); CH_T.setAttribute("y2", (450 - g).toFixed(1));
+    CH_B.setAttribute("y1", (450 + g).toFixed(1)); CH_B.setAttribute("y2", (450 + g + 12).toFixed(1));
+    CH_L.setAttribute("x1", (800 - g - 12).toFixed(1)); CH_L.setAttribute("x2", (800 - g).toFixed(1));
+    CH_R.setAttribute("x1", (800 + g).toFixed(1)); CH_R.setAttribute("x2", (800 + g + 12).toFixed(1));
+    CHG.setAttribute("opacity", lockTarget ? "0.35" : "0.95");
+    if(oscOn && started){
+      capEdge(SC_HUD, 800, 450 - g - 12, 800, 450 - g);
+      capEdge(SC_HUD, 800, 450 + g, 800, 450 + g + 12);
+      capEdge(SC_HUD, 800 - g - 12, 450, 800 - g, 450);
+      capEdge(SC_HUD, 800 + g, 450, 800 + g + 12, 450);
+    }
+    if(hitT > 0){
+      capEdge(SC_HUD, 788, 438, 796, 446);
+      capEdge(SC_HUD, 812, 438, 804, 446);
+      capEdge(SC_HUD, 788, 462, 796, 454);
+      capEdge(SC_HUD, 812, 462, 804, 454);
+    }
+    HM.setAttribute("opacity", hitT > 0 ? (hitKill ? "1" : "0.7") : "0");
+    AL_HP.setAttribute("width", (122 * clamp(ally.hp / ally.maxHp, 0, 1)).toFixed(1));
+    AL_ST.textContent = ally.downT > 0 ? "DOWN" : "ONLINE";
+    AL_ST.setAttribute("fill", ally.downT > 0 ? "#cc2222" : "#3a6a4a");
+    if(waveTextT > 0 && !ended){
+      BANNER.setAttribute("opacity", clamp(waveTextT, 0, 1).toFixed(2));
+      BANNER.textContent = "WAVE " + wave;
+      BANNER.setAttribute("fill", waveTheme(wave));
+    } else BANNER.setAttribute("opacity", "0");
+    for(var i = 0; i < 3; i++){
+      if(kfT[i] > 0) kfT[i] -= dt;
+      KF[i].textContent = kfTxt[i];
+      KF[i].setAttribute("opacity", clamp(kfT[i], 0, 1).toFixed(2));
+    }
+    if(toastT > 0){ toastT -= dt; toast.setAttribute("opacity", clamp(toastT / 1.2, 0, 1).toFixed(2)); }
+    else toast.setAttribute("opacity", "0");
+    flashEl.setAttribute("opacity", dmgT > 0 ? (dmgT * 1.4).toFixed(2) : "0");
+    lockHint.setAttribute("opacity", (started && !locked && !ended && !touchActivated && !padConnected) ? (0.5 + 0.5 * Math.sin(performance.now() * 0.004)).toFixed(2) : "0");
+    if(touchActivated){
+      setTouchFill("TC_FIRE", tFire ? "#cc2222" : "#fff0e8");
+      setTouchFill("TC_ADS",  tAim ? "#cc6622" : "#fff4e6");
+      setTouchFill("TC_UP",   tUp ? "#cc6622" : "#fff4e6");
+      setTouchFill("TC_DN",   tDn ? "#cc6622" : "#fff4e6");
+      setTouchFill("TC_LT",   tLf ? "#cc6622" : "#fff4e6");
+      setTouchFill("TC_RT",   tRt ? "#cc6622" : "#fff4e6");
+    }
+  }
+  function setTouchFill(id, col){
+    var g = document.getElementById(id);
+    if(!g) return;
+    var c = g.querySelector("circle");
+    if(c) c.setAttribute("fill", col);
+  }
+
+  function gameOver(){ if(ended) return; ended = true; explosion(player.x, 40, player.z, true); showEnd(false); }
+  function showEnd(win){
+    gEnd.removeAttribute("display");
+    END_T.textContent = win ? "SECTOR CLEARED" : "MISSION FAILED";
+    END_T.setAttribute("fill", win ? "#00aa44" : "#cc2222");
+    END_S.textContent = "SCORE " + score + " — TIME " + formatTime(gameTime) + " — KILLS " + kills;
+  }
+  function restart(){
+    gEnd.setAttribute("display", "none");
+    player.x = 0; player.z = 0; player.facing = 0; player.speed = 0; player.phase = 0;
+    player.hp = 100; player.mag = 30; player.reserve = 120;
+    player.fireCD = 0; player.reloadT = 0; player.spread = 0;
+    player.jumpY = 0; player.jumpV = 0; player.jumping = false;
+    ally.x = 26; ally.z = -14; ally.hp = 60; ally.downT = 0;
+    ally.target = null; ally.fireT = 0; ally.burst = 0;
+    enemies.length = 0; spiders.length = 0; eBullets.length = 0; blasts.length = 0;
+    tracers.length = 0; impacts.length = 0; explosions.length = 0;
+    wave = 1; waveRSpawn = 0; waveSSpawn = 0; waveDSpawn = 0;
+    spawnT = 1; pauseT = 0; waveTextT = 3;
+    score = 0; kills = 0; gameTime = 0;
+    ended = false; victory = false; lockTarget = null;
+    cam.yaw = 0; cam.pitch = -0.18;
+    rbReset();
+    generateWorld();
+    showToast("REDEPLOYED");
+  }
+
+  var CYCLE = ["AUTO", "IDLE", "WALK", "RUN"];
+  function setAnim(m){ animMode = m; showToast(m === "AUTO" ? "AUTO GAIT" : m + " CYCLE"); }
+  function cycleAnim(){ setAnim(CYCLE[(CYCLE.indexOf(animMode) + 1) % CYCLE.length]); }
+  function doJump(){ if(player.jumping) return; player.jumping = true; player.jumpV = 380; showToast("HOP"); }
+
+  window.addEventListener("keydown", function(e){
+    keys[e.code] = true;
+    if(e.code === "Tab" || e.code === "Space" || e.code.indexOf("Arrow") === 0) e.preventDefault();
+    if(!started) return;
+    if(e.code === "Digit1") setAnim("IDLE");
+    else if(e.code === "Digit2") setAnim("WALK");
+    else if(e.code === "Digit3") setAnim("RUN");
+    else if(e.code === "Digit4") setAnim("AUTO");
+    else if(e.code === "KeyT" || e.code === "Tab") cycleAnim();
+    else if(e.code === "KeyR") startReload();
+    else if(e.code === "KeyQ"){ if(lockTarget) lockTarget = null; else acquireLock(); }
+    else if(e.code === "KeyE") cycleLock();
+    else if(e.code === "KeyF") cam.yaw = player.facing;
+    else if(e.code === "Space") doJump();
+    else if(e.code === "Digit0"){
+      initAudioOut();
+      if(audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+      oscOn = !oscOn;
+      rbReset();
+      showToast(oscOn ? "OSCILLOSCOPE ON" : "OSCILLOSCOPE OFF");
+    }
+  });
+  window.addEventListener("keyup", function(e){ keys[e.code] = false; });
+  window.addEventListener("blur", function(){ keys = {}; mouseDown = false; aimDown = false; });
+
+  function tryLock(){ if(SVGEL.requestPointerLock) try{ SVGEL.requestPointerLock(); }catch(ex){} }
+  document.addEventListener("pointerlockchange", function(){ locked = document.pointerLockElement === SVGEL; });
+  var dragging = false, lmx = 0, lmy = 0;
+  window.addEventListener("mousemove", function(e){
+    if(touchActivated) return;
+    var rect = SVGEL.getBoundingClientRect();
+    mouseTargetX = (e.clientX - rect.left) / rect.width * SW;
+    mouseTargetY = (e.clientY - rect.top) / rect.height * SH;
+    if(locked){
+      cam.yaw += e.movementX * 0.0026;
+      cam.pitch = clamp(cam.pitch - e.movementY * 0.0026, -1.05, 0.45);
+    } else if(dragging){
+      cam.yaw += (e.clientX - lmx) * 0.005;
+      cam.pitch = clamp(cam.pitch - (e.clientY - lmy) * 0.005, -1.05, 0.45);
+      lmx = e.clientX; lmy = e.clientY;
+    }
+  });
+  window.addEventListener("mousedown", function(e){
+    if(touchActivated) return;
+    if(audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+    if(!started){ startGame(); return; }
+    if(ended){ restart(); return; }
+    if(e.button === 0) mouseDown = true;
+    if(e.button === 2) aimDown = true;
+    if(!locked){ dragging = true; lmx = e.clientX; lmy = e.clientY; tryLock(); }
+  });
+  window.addEventListener("mouseup", function(e){
+    if(touchActivated) return;
+    if(e.button === 0) mouseDown = false;
+    if(e.button === 2) aimDown = false;
+    dragging = false;
+  });
+  window.addEventListener("contextmenu", function(e){ e.preventDefault(); });
+  window.addEventListener("wheel", function(e){
+    if(touchActivated) return;
+    cam.distBase = clamp(cam.distBase + e.deltaY * 0.35, 130, 500);
+  }, { passive: true });
+
+  function enableTouch(){
+    if(touchActivated) return;
+    touchDetected = true; touchActivated = true;
+    gTouch.removeAttribute("display");
+    gMenu.setAttribute("display", "none");
+    showToast("TOUCH CONTROLS ON");
+    lockHint.setAttribute("opacity", "0");
+    if(!started) startGame();
+  }
+  function hitCircle(elem, x, y){
+    if(!elem) return false;
+    var rect = elem.getBoundingClientRect();
+    var cx = rect.left + rect.width * 0.5, cy = rect.top + rect.height * 0.5;
+    var r = Math.max(rect.width, rect.height) * 0.5;
+    var dx = x - cx, dy = y - cy;
+    return dx*dx + dy*dy <= r*r;
+  }
+  function handleTouchStart(e){
+    if(audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+    if(!touchActivated){ enableTouch(); e.preventDefault(); return; }
+    if(!started){ startGame(); e.preventDefault(); return; }
+    if(ended){ restart(); e.preventDefault(); return; }
+    var tch = e.changedTouches;
+    for(var i = 0; i < tch.length; i++){
+      var t = tch[i], x = t.clientX, y = t.clientY, handled = false;
+      if(hitCircle(document.getElementById("TC_FIRE").querySelector("circle"), x, y)){ tFire = true; handled = true; }
+      else if(hitCircle(document.getElementById("TC_ADS").querySelector("circle"), x, y)){ tAim = true; handled = true; }
+      else if(hitCircle(document.getElementById("TC_REL").querySelector("circle"), x, y)){ startReload(); handled = true; }
+      else if(hitCircle(document.getElementById("TC_LOCK").querySelector("circle"), x, y)){ if(lockTarget) lockTarget = null; else acquireLock(); handled = true; }
+      else if(hitCircle(document.getElementById("TC_GAIT").querySelector("circle"), x, y)){ cycleAnim(); handled = true; }
+      else if(hitCircle(document.getElementById("TC_TGT").querySelector("circle"), x, y)){ cycleLock(); handled = true; }
+      else if(hitCircle(document.getElementById("TC_JUMP").querySelector("circle"), x, y)){ doJump(); handled = true; }
+      else if(hitCircle(document.getElementById("OSCB").querySelector("circle"), x, y)){ toggleOSC(); handled = true; }
+      else if(hitCircle(document.getElementById("TC_UP").querySelector("circle"), x, y)){ tUp = true; handled = true; }
+      else if(hitCircle(document.getElementById("TC_DN").querySelector("circle"), x, y)){ tDn = true; handled = true; }
+      else if(hitCircle(document.getElementById("TC_LT").querySelector("circle"), x, y)){ tLf = true; handled = true; }
+      else if(hitCircle(document.getElementById("TC_RT").querySelector("circle"), x, y)){ tRt = true; handled = true; }
+      if(!handled){
+        if(dragTouchId < 0){ dragTouchId = t.identifier; dragLastX = x; dragLastY = y; }
+      }
+    }
+    e.preventDefault();
+  }
+  function handleTouchMove(e){
+    if(!touchActivated) return;
+    var tch = e.changedTouches;
+    for(var i = 0; i < tch.length; i++){
+      var t = tch[i];
+      if(t.identifier === dragTouchId){
+        cam.yaw += (t.clientX - dragLastX) * 0.006;
+        cam.pitch = clamp(cam.pitch - (t.clientY - dragLastY) * 0.006, -1.05, 0.45);
+        dragLastX = t.clientX; dragLastY = t.clientY;
+      }
+    }
+    e.preventDefault();
+  }
+  function handleTouchEnd(e){
+    var tch = e.changedTouches;
+    for(var i = 0; i < tch.length; i++){ if(tch[i].identifier === dragTouchId) dragTouchId = -1; }
+    if(tch.length >= 1){
+      tUp = tDn = tLf = tRt = false;
+      var still = e.touches;
+      for(var j = 0; j < still.length; j++){
+        var s = still[j];
+        if(hitCircle(document.getElementById("TC_UP").querySelector("circle"), s.clientX, s.clientY)) tUp = true;
+        if(hitCircle(document.getElementById("TC_DN").querySelector("circle"), s.clientX, s.clientY)) tDn = true;
+        if(hitCircle(document.getElementById("TC_LT").querySelector("circle"), s.clientX, s.clientY)) tLf = true;
+        if(hitCircle(document.getElementById("TC_RT").querySelector("circle"), s.clientX, s.clientY)) tRt = true;
+      }
+      if(still.length === 0){ tFire = false; tAim = false; }
+    }
+    e.preventDefault();
+  }
+  function toggleOSC(){
+    initAudioOut();
+    if(audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+    oscOn = !oscOn;
+    rbReset();
+    showToast(oscOn ? "OSCILLOSCOPE ON" : "OSCILLOSCOPE OFF");
+  }
+  document.addEventListener("touchstart", handleTouchStart, { passive: false });
+  document.addEventListener("touchmove", handleTouchMove, { passive: false });
+  document.addEventListener("touchend", handleTouchEnd, { passive: false });
+  document.addEventListener("touchcancel", handleTouchEnd, { passive: false });
+  if(("ontouchstart" in window) || (navigator.maxTouchPoints > 0)){ touchDetected = true; }
+
+  window.addEventListener("gamepadconnected", function(e){
+    padConnected = true; padIndex = e.gamepad.index;
+    padName = e.gamepad.id || "GAMEPAD";
+    showToast("PAD CONNECTED");
+    if(audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+    if(!started) startGame();
+  });
+  window.addEventListener("gamepaddisconnected", function(){
+    padConnected = false; padIndex = -1; padName = "";
+    padFire = false; padAim = false;
+    padLbAimShoot = false; padLbAimActive = false;
+    showToast("PAD DISCONNECTED");
+  });
+  function padBtnPressed(btn, name){ var p = padPrev[name] === true; padPrev[name] = btn; return btn && !p; }
+  function pollGamepad(dt){
+    if(!padConnected) return;
+    var gps = navigator.getGamepads ? navigator.getGamepads() : [];
+    var gp = gps[padIndex];
+    if(!gp) return;
+    var b = gp.buttons;
+    padAxes.lx = gp.axes[0] || 0; padAxes.ly = gp.axes[1] || 0;
+    padAxes.rx = gp.axes[2] || 0; padAxes.ry = gp.axes[3] || 0;
+    var aBtn  = b[0] ? b[0].pressed : false;
+    var bBtn  = b[1] ? b[1].pressed : false;
+    var xBtn  = b[2] ? b[2].pressed : false;
+    var yBtn  = b[3] ? b[3].pressed : false;
+    var lbBtn = b[4] ? b[4].pressed : false;
+    var rbBtn = b[5] ? b[5].pressed : false;
+    var ltBtn = b[6] ? b[6].value > 0.25 : false;
+    var rtBtn = b[7] ? b[7].value > 0.25 : false;
+    var startBtn = b[9] ? b[9].pressed : false;
+    var backBtn  = b[8] ? b[8].pressed : false;
+    if(padBtnPressed(startBtn, "start")){ if(!started) startGame(); else if(ended) restart(); }
+    if(padBtnPressed(backBtn, "back")) toggleOSC();
+    if(padBtnPressed(aBtn, "a")) startReload();
+    if(padBtnPressed(xBtn, "x")){ if(lockTarget) lockTarget = null; else acquireLock(); }
+    if(padBtnPressed(yBtn, "y")) cycleLock();
+    if(padBtnPressed(bBtn, "b")) cycleAnim();
+    if(padBtnPressed(rbBtn, "rb")) doJump();
+    padFire = rtBtn; padAim = ltBtn;
+    var stickMag = Math.sqrt(padAxes.lx * padAxes.lx + padAxes.ly * padAxes.ly);
+    var moving = stickMag > PAD_DEADZONE;
+    padLbAimActive = lbBtn && moving;
+    padLbAimShoot = padLbAimActive;
+    if(Math.abs(padAxes.rx) > PAD_DEADZONE) cam.yaw += padAxes.rx * 2.4 * dt;
+    if(Math.abs(padAxes.ry) > PAD_DEADZONE) cam.pitch = clamp(cam.pitch - padAxes.ry * 1.8 * dt, -1.05, 0.45);
+  }
+
+  function startGame(){
+    started = true;
+    gMenu.setAttribute("display", "none");
+    initAudioOut();
+    if(audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+    oscOn = true;
+    rbReset();
+    showToast("DEPLOYED - SCOPE ON");
+  }
+  gMenu.addEventListener("mousedown", function(e){
+    if(!started) startGame(); else if(ended) restart();
+  });
+  gMenu.addEventListener("touchstart", function(e){
+    if(!touchActivated) enableTouch();
+    if(!started) startGame(); else if(ended) restart();
+    e.preventDefault();
+  }, { passive: false });
+
+  generateWorld();
+  var lastT = performance.now();
+
+  function frame(now){
+    requestAnimationFrame(frame);
+    var dt = Math.min(0.05, (now - lastT) / 1000);
+    lastT = now;
+    var t = now / 1000;
+    capBegin();
+    pollGamepad(dt);
+    if(started && !ended){
+      updatePlayer(dt);
+      updateAlly(dt);
+      updateEnemies(dt);
+      updateSpiders(dt);
+      updateBullets(dt);
+      updateBlasts(dt);
+      updateCrystals();
+      updateWaves(dt);
+    } else if(started && ended){
+      updateBlasts(dt);
+    }
+    updateLock(dt);
+    updateVFX(dt);
+    updateCamera(dt);
+
+    drawList.length = 0;
+    scCur = SC_BLD;
+    renderFloor(t);
+    renderShadowAt(player.x, player.z, 0, 16);
+    renderShadowAt(ally.x, ally.z, 1, 11);
+    if(lockTarget) renderShadowAt(lockTarget.x, lockTarget.z, 2, 16);
+    if(spiders.length > 0) renderShadowAt(spiders[0].x, spiders[0].z, 3, 42);
+    for(var i = 0; i < buildings.length; i++){
+      var b = buildings[i];
+      var bdx = b.x - cam.x, bdz = b.z - cam.z;
+      var bDist = Math.sqrt(bdx*bdx + bdz*bdz);
+      if(bDist > FAR + b.hx + b.hz) continue;
+      var bright = Math.max(0.1, 1 - bDist / FAR);
+      pushBox(TR(b.x, 0, b.z), 0, b.h * 0.5, 0, b.hx, b.h * 0.5, b.hz,
+        b.h > 220 ? BUILDING_ORANGE_HI : BUILDING_ORANGE, 0.9 + bright * 1.1, 0.85);
+    }
+    renderScene(t);
+    renderRings();
+    renderMotes(t);
+    renderVFX();
+    renderLock();
+    renderMinimap(t);
+    updateScopeMiniMap();
+    updateHUD(dt);
+  }
+  requestAnimationFrame(frame);
+
+  })();
+  ]]></script>
+</svg>
