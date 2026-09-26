@@ -4,9 +4,8 @@
      style="width:100vw;height:100vh;display:block;background:#f7f4ee;touch-action:none;user-select:none;-webkit-user-select:none">
 
   <title>ATON RA — Vector Protocol (Buckyball Edition)</title>
-  <desc>Third-person pure-SVG 3D shooter. Red hexagon floor, off-white world, black buckyball Aton RA with green outlines and red visor, orange outline white-faced quad spiders, detailed SWAT enemies with plasma rifles. Full gamepad, touch, and keyboard support with oscilloscope XY output capturing the whole frame.</desc>
+  <desc>Third-person pure-SVG 3D shooter. Red hexagon floor, off-white world, black buckyball Aton RA with green outlines and red visor, detailed SWAT enemies with plasma rifles. Full gamepad, touch, and keyboard support with oscilloscope XY output capturing the whole frame.</desc>
 
-  <!-- ===================== DEFS ===================== -->
   <defs>
     <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%"  stop-color="#fbf9f5"/>
@@ -14,79 +13,64 @@
       <stop offset="75%" stop-color="#eee8de"/>
       <stop offset="100%" stop-color="#fbf9f5"/>
     </linearGradient>
-
     <radialGradient id="horG" cx="50%" cy="50%" r="50%">
       <stop offset="0%"  stop-color="#cc2222" stop-opacity="0.22"/>
       <stop offset="45%" stop-color="#cc3333" stop-opacity="0.08"/>
       <stop offset="100%" stop-color="#fbf9f5" stop-opacity="0"/>
     </radialGradient>
-
     <radialGradient id="vig" cx="50%" cy="50%" r="70%">
       <stop offset="0%"  stop-color="#000" stop-opacity="0"/>
       <stop offset="65%" stop-color="#000" stop-opacity="0.03"/>
       <stop offset="100%" stop-color="#000" stop-opacity="0.16"/>
     </radialGradient>
-
     <pattern id="scn" width="4" height="4" patternUnits="userSpaceOnUse">
       <rect width="4" height="2" fill="#000" opacity="0.022"/>
     </pattern>
-
     <filter id="glowS" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="2.4" result="b"/>
       <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
-
     <filter id="plasmaGlow" x="-100%" y="-100%" width="300%" height="300%">
       <feGaussianBlur stdDeviation="4.5" result="b"/>
       <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
-
     <filter id="touchGlow" x="-40%" y="-40%" width="180%" height="180%">
       <feGaussianBlur stdDeviation="3" result="t"/>
       <feMerge><feMergeNode in="t"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
-
     <clipPath id="scrClip"><rect x="0" y="0" width="1600" height="900"/></clipPath>
     <clipPath id="mmClip"><circle cx="0" cy="0" r="96"/></clipPath>
   </defs>
 
-  <!-- ===================== BACKDROP ===================== -->
   <rect width="1600" height="900" fill="url(#skyG)"/>
   <ellipse id="HOR" cx="800" cy="340" rx="1200" ry="120" fill="url(#horG)"/>
   <g id="STARS" opacity="0"></g>
 
-  <!-- ===================== 3D LAYERS ===================== -->
   <g id="FLR" clip-path="url(#scrClip)"></g>
   <g id="W"   clip-path="url(#scrClip)"></g>
   <g id="FX"  clip-path="url(#scrClip)"></g>
 
-  <!-- ===================== POST ===================== -->
   <rect width="1600" height="900" fill="url(#scn)" pointer-events="none"/>
   <rect width="1600" height="900" fill="url(#vig)" pointer-events="none"/>
   <rect id="FL" width="1600" height="900" fill="#ff2a1a" opacity="0" pointer-events="none"/>
 
-  <!-- ===================== HUD ===================== -->
   <g id="U">
     <text x="26" y="38" fill="#7a5a3a" font-size="12" letter-spacing="3">ATON RA // BUCKYBALL EDITION // SECTOR-9</text>
     <rect x="22" y="52" width="330" height="20" fill="#fff8ee" fill-opacity="0.90" stroke="#c88a4a" stroke-width="1.5"/>
     <rect id="HP_FG" x="24" y="54" width="326" height="16" fill="#00aa44"/>
     <text x="24" y="90" fill="#8a6a44" font-size="11" letter-spacing="2">INTEGRITY</text>
-
     <text id="AMMO_T" x="22" y="136" fill="#1a1a1a" font-size="40" font-weight="bold" letter-spacing="2">30 / 120</text>
     <text x="22" y="158" fill="#8a6a44" font-size="11" letter-spacing="2">VISOR PLASMA EMITTER</text>
     <text id="ST_T" x="22" y="184" fill="#4a7a5a" font-size="14">STANCE HIP | GAIT AUTO | FREE AIM</text>
-
     <rect x="22" y="200" width="228" height="44" fill="#fff8ee" fill-opacity="0.90" stroke="#0a6a4a" stroke-width="1.2"/>
     <text x="32" y="218" fill="#00aa44" font-size="13" letter-spacing="2">VIPER-2 [WINGMAN]</text>
     <rect x="32" y="226" width="124" height="10" fill="none" stroke="#0a6a4a" stroke-width="1"/>
     <rect id="AL_HP" x="33" y="227" width="122" height="8" fill="#00aa44"/>
     <text id="AL_ST" x="164" y="236" fill="#3a6a4a" font-size="11">ONLINE</text>
-
     <rect x="22" y="252" width="228" height="44" fill="#fff8ee" fill-opacity="0.90" stroke="#aa2020" stroke-width="1.2"/>
     <text x="32" y="270" fill="#cc2222" font-size="13" letter-spacing="2">ENEMY MIX [WAVE 1]</text>
-    <text x="32" y="288" fill="#3a2a2a" font-size="11">SWAT x0 · SPIDER x0</text>
+    <text x="32" y="288" fill="#3a2a2a" font-size="11">SWAT x0</text>
     <text id="EN_MIX" x="150" y="288" fill="#cc2222" font-size="11">—</text>
-
     <text id="SCORE_T" x="1576" y="36" text-anchor="end" fill="#1a1a1a" font-size="20" font-weight="bold">SCORE 0</text>
     <text id="TIMER_T" x="1576" y="60" text-anchor="end" fill="#4a5a6a" font-size="16">00:00:00</text>
     <text id="KILLS_T" x="1576" y="82" text-anchor="end" fill="#5a6a7a" font-size="13">KILLS 0</text>
@@ -94,11 +78,9 @@
     <text id="FPS_T"   x="1576" y="126" text-anchor="end" fill="#8a9aaa" font-size="12">0 FPS</text>
     <text id="OSC_T"   x="1576" y="146" text-anchor="end" fill="#7a8a9a" font-size="11">OSC OFF [0]</text>
     <text id="TCH_T"   x="1576" y="164" text-anchor="end" fill="#7a8a9a" font-size="11">TOUCH OFF</text>
-
     <text id="KF0" x="1576" y="196" text-anchor="end" fill="#cc2222" font-size="13" opacity="0"></text>
     <text id="KF1" x="1576" y="216" text-anchor="end" fill="#cc2222" font-size="13" opacity="0"></text>
     <text id="KF2" x="1576" y="236" text-anchor="end" fill="#cc2222" font-size="13" opacity="0"></text>
-
     <g id="CH">
       <line id="CH_T" x1="800" y1="430" x2="800" y2="442" stroke="#1a1a1a" stroke-width="2"/>
       <line id="CH_B" x1="800" y1="458" x2="800" y2="470" stroke="#1a1a1a" stroke-width="2"/>
@@ -112,7 +94,6 @@
         <line x1="812" y1="462" x2="804" y2="454" stroke="#cc2222" stroke-width="2.5"/>
       </g>
     </g>
-
     <g id="LOCK" opacity="0">
       <path d="M-40,-24 L-40,-40 L-24,-40" fill="none" stroke="#cc2222" stroke-width="2.5"/>
       <path d="M40,-24 L40,-40 L24,-40" fill="none" stroke="#cc2222" stroke-width="2.5"/>
@@ -122,7 +103,6 @@
       <rect id="LK_HP" x="-47" y="47" width="94" height="5" fill="#cc2222"/>
       <text id="LK_T" y="70" text-anchor="middle" fill="#cc2222" font-size="12" letter-spacing="1">TARGET</text>
     </g>
-
     <g id="MMAP" transform="translate(1452,742)">
       <circle r="104" fill="#fffaf0" fill-opacity="0.92" stroke="#cc6622" stroke-width="2"/>
       <circle r="68" fill="none" stroke="#c88a4a" stroke-width="1"/>
@@ -140,16 +120,13 @@
       <text y="-112" text-anchor="middle" fill="#8a6a44" font-size="11">N</text>
       <text y="124" text-anchor="middle" fill="#8a6a44" font-size="10" letter-spacing="2">TACTICAL RADAR</text>
     </g>
-
     <text id="BANNER" x="800" y="170" text-anchor="middle" fill="#cc2222" font-size="42" font-weight="bold" letter-spacing="10" opacity="0" filter="url(#glowS)"></text>
     <text id="TOAST"  x="800" y="660" text-anchor="middle" fill="#1a1a1a" font-size="36" font-weight="bold" letter-spacing="8" opacity="0" filter="url(#glowS)"></text>
-
     <text x="800" y="878" text-anchor="middle" fill="#8a6a44" font-size="12" letter-spacing="1">
       [WASD] MOVE  [SHIFT] SPRINT  [LMB] FIRE PLASMA  [RMB] ADS  [R] RELOAD  [Q] LOCK  [E] CYCLE  [F] SNAP  [0] OSC  [1-4/T] GAIT  [SPACE] JUMP  [WHEEL] ZOOM
     </text>
   </g>
 
-  <!-- ===================== TOUCH CONTROLS ===================== -->
   <g id="TOUCH" display="none" filter="url(#touchGlow)">
     <g id="DPAD" transform="translate(160,700)">
       <circle r="110" fill="#fffaf0" fill-opacity="0.55" stroke="#cc6622" stroke-width="2"/>
@@ -162,7 +139,6 @@
       <text y="5" text-anchor="middle" fill="#8a5a2a" font-size="10" letter-spacing="1">MOVE</text>
       <text y="-92" text-anchor="middle" fill="#8a5a2a" font-size="10" letter-spacing="1">SPRINT x2</text>
     </g>
-
     <g id="ACT" transform="translate(1420,660)">
       <g id="TC_FIRE"><circle r="72" fill="#fff0e8" fill-opacity="0.85" stroke="#cc2222" stroke-width="2.5"/><circle r="58" fill="#cc2222" fill-opacity="0.28"/><text y="6" text-anchor="middle" fill="#8a1010" font-size="16" font-weight="bold" letter-spacing="2">FIRE</text></g>
       <g id="TC_ADS" transform="translate(-110,-40)"><circle r="34" fill="#fff4e6" fill-opacity="0.90" stroke="#cc6622" stroke-width="2"/><text y="5" text-anchor="middle" fill="#8a5a2a" font-size="12" letter-spacing="1">ADS</text></g>
@@ -170,23 +146,19 @@
       <g id="TC_LOCK" transform="translate(-110,40)"><circle r="34" fill="#fff4e6" fill-opacity="0.90" stroke="#cc6622" stroke-width="2"/><text y="5" text-anchor="middle" fill="#8a5a2a" font-size="12" letter-spacing="1">LOCK</text></g>
       <g id="TC_GAIT" transform="translate(110,40)"><circle r="34" fill="#fff4e6" fill-opacity="0.90" stroke="#cc6622" stroke-width="2"/><text y="5" text-anchor="middle" fill="#8a5a2a" font-size="11" letter-spacing="1">GAIT</text></g>
     </g>
-
     <g id="AUX" transform="translate(800,820)">
       <g id="TC_JUMP" transform="translate(-70,0)"><circle r="34" fill="#fff4e6" fill-opacity="0.90" stroke="#cc6622" stroke-width="2"/><text y="5" text-anchor="middle" fill="#8a5a2a" font-size="12" letter-spacing="1">JUMP</text></g>
       <g id="TC_TGT" transform="translate(70,0)"><circle r="34" fill="#fff4e6" fill-opacity="0.90" stroke="#cc6622" stroke-width="2"/><text y="5" text-anchor="middle" fill="#8a5a2a" font-size="11" letter-spacing="1">TGT</text></g>
     </g>
-
     <g id="OSCB" transform="translate(1520,120)">
       <circle r="26" fill="#fff4e6" fill-opacity="0.90" stroke="#cc6622" stroke-width="1.6"/>
       <text y="5" text-anchor="middle" fill="#8a5a2a" font-size="11" letter-spacing="1">OSC</text>
     </g>
-
     <text id="TD_TEXT" x="800" y="60" text-anchor="middle" fill="#8a5a2a" font-size="11" letter-spacing="2">TOUCH CONTROLS ACTIVE</text>
   </g>
 
   <text id="LH" x="800" y="820" text-anchor="middle" fill="#cc6622" font-size="16" letter-spacing="4" opacity="0">CLICK TO CAPTURE MOUSE</text>
 
-  <!-- ===================== END OVERLAY ===================== -->
   <g id="END" display="none">
     <rect x="0" y="0" width="1600" height="900" fill="#ffffff" opacity="0.85"/>
     <text id="END_T" x="800" y="400" text-anchor="middle" fill="#cc2222" font-size="58" font-weight="bold" letter-spacing="12" filter="url(#glowS)">MISSION FAILED</text>
@@ -194,23 +166,17 @@
     <text x="800" y="520" text-anchor="middle" fill="#1a1a1a" font-size="22" font-weight="bold" letter-spacing="4">CLICK TO REDEPLOY</text>
   </g>
 
-  <!-- ===================== MENU ===================== -->
   <g id="M">
     <rect x="0" y="0" width="1600" height="900" fill="#ffffff" opacity="0.92"/>
     <rect x="400" y="60" width="800" height="780" rx="10" fill="#fffdf8" stroke="#cc6622" stroke-width="2"/>
     <rect x="411" y="71" width="778" height="758" rx="8" fill="none" stroke="#c88a4a" stroke-width="1"/>
-
     <text x="800" y="128" text-anchor="middle" fill="#cc2222" font-size="38" font-weight="bold" letter-spacing="10" filter="url(#glowS)">ATON RA</text>
     <text x="800" y="158" text-anchor="middle" fill="#cc6622" font-size="20" font-weight="bold" letter-spacing="6">VECTOR PROTOCOL · BUCKYBALL</text>
-    <text x="800" y="184" text-anchor="middle" fill="#8a6a44" font-size="12" letter-spacing="5">GREEN WIREFRAME · RED HEX FLOOR · ORANGE SPIDERS · SWAT ENEMIES</text>
-
+    <text x="800" y="184" text-anchor="middle" fill="#8a6a44" font-size="12" letter-spacing="5">GREEN WIREFRAME · RED HEX FLOOR · SWAT ENEMIES</text>
     <line x1="460" y1="206" x2="1140" y2="206" stroke="#c88a4a" stroke-width="1"/>
-
     <text x="800" y="244" text-anchor="middle" fill="#1a1a1a" font-size="24" font-weight="bold" letter-spacing="4">CLICK / TAP TO DEPLOY</text>
     <text x="800" y="270" text-anchor="middle" fill="#8a6a44" font-size="12" letter-spacing="2">MAZE ARENA · 1700 UNIT ARENA · 36 BLOCKS · 8 OPEN PLAZAS</text>
-
     <line x1="460" y1="290" x2="1140" y2="290" stroke="#c88a4a" stroke-width="1"/>
-
     <text x="480" y="322" fill="#cc6622" font-size="15" font-weight="bold" letter-spacing="2">KEYBOARD + MOUSE</text>
     <text x="480" y="346" fill="#3a4a5a" font-size="12">WASD / ARROWS ... MOVE             SHIFT ........... SPRINT</text>
     <text x="480" y="366" fill="#3a4a5a" font-size="12">MOUSE ........... ORBIT CAM        WHEEL ........... ZOOM</text>
@@ -219,7 +185,6 @@
     <text x="480" y="426" fill="#3a4a5a" font-size="12">E ............... CYCLE TARGET     F ............... SNAP CAMERA</text>
     <text x="480" y="446" fill="#3a4a5a" font-size="12">1 / 2 / 3 ....... IDLE/WALK/RUN    4 / T ........... AUTO GAIT / CYCLE</text>
     <text x="480" y="466" fill="#3a4a5a" font-size="12">SPACE ........... JUMP            0 ............... OSCILLOSCOPE</text>
-
     <text x="980" y="322" fill="#cc6622" font-size="15" font-weight="bold" letter-spacing="2">GAMEPAD + TOUCH</text>
     <text x="980" y="346" fill="#3a4a5a" font-size="12">LEFT STICK ...... MOVE            RIGHT STICK ..... LOOK</text>
     <text x="980" y="366" fill="#1a1a1a" font-size="12">RT / FIRE ...... FIRE PLASMA     LT / ADS ....... AIM DOWN SIGHTS</text>
@@ -227,19 +192,13 @@
     <text x="980" y="406" fill="#3a4a5a" font-size="12">B / TGT ........ CYCLE TARGET    Y / LOCK ....... LOCK-ON</text>
     <text x="980" y="426" fill="#3a4a5a" font-size="12">LB / RB ........ CYCLE GAIT      START .......... OSCILLOSCOPE</text>
     <text x="980" y="446" fill="#3a4a5a" font-size="12">D-PAD / DRAG ... ORBIT CAMERA    PINCH .......... ZOOM CAMERA</text>
-
     <line x1="460" y1="470" x2="1140" y2="470" stroke="#c88a4a" stroke-width="1"/>
-
     <text x="480" y="500" fill="#cc6622" font-size="15" font-weight="bold" letter-spacing="2">FIELD MANUAL</text>
     <text x="480" y="524" fill="#3a4a5a" font-size="12">- ATON RA: black buckyball spheres, GREEN outlines, red line eye visor.</text>
     <text x="480" y="544" fill="#3a4a5a" font-size="12">- SWAT SOLDIER: black body, RED outline, detailed helmet + plasma rifle.</text>
-    <text x="480" y="564" fill="#3a4a5a" font-size="12">- QUAD SPIDER: sleek polygonal body, 4 long ORANGE legs, WHITE faces.</text>
-    <text x="480" y="584" fill="#3a4a5a" font-size="12">- Aim for the SPIDER EYES cluster for 2.4x damage multiplier.</text>
-    <text x="480" y="604" fill="#3a4a5a" font-size="12">- VIPER-2 follows you with a GREEN-teal outline.</text>
-    <text x="480" y="624" fill="#3a4a5a" font-size="12">- GREEN CRYSTALS +36 AMMO. PURPLE CRYSTALS +40 HP.</text>
-
+    <text x="480" y="564" fill="#3a4a5a" font-size="12">- VIPER-2 follows you with a GREEN-teal outline.</text>
+    <text x="480" y="584" fill="#3a4a5a" font-size="12">- GREEN CRYSTALS +36 AMMO. PURPLE CRYSTALS +40 HP.</text>
     <line x1="460" y1="644" x2="1140" y2="644" stroke="#c88a4a" stroke-width="1"/>
-
     <text x="800" y="676" text-anchor="middle" fill="#7a8a9a" font-size="11" letter-spacing="2">
       PAINTER'S ALGORITHM · BACKFACE CULLING · PERSPECTIVE PROJECTION · RAY/SPHERE + RAY/BOX HITSCAN
     </text>
@@ -247,9 +206,8 @@
       ALL VISIBLE EDGES STREAM AS X/Y TO WEB AUDIO STEREO — CONNECT L/R TO AN OSCILLOSCOPE
     </text>
     <text x="800" y="722" text-anchor="middle" fill="#8a9aaa" font-size="10">
-      OFF-WHITE SKY · RED HEX FLOOR · BLACK BUCKYBALL PLAYER · ORANGE SPIDERS
+      OFF-WHITE SKY · RED HEX FLOOR · BLACK BUCKYBALL PLAYER
     </text>
-
     <text x="800" y="800" text-anchor="middle" fill="#cc6622" font-size="20" font-weight="bold" letter-spacing="6">[ CLICK / TAP ANYWHERE ]</text>
   </g>
 
@@ -257,9 +215,6 @@
   (function(){
   "use strict";
 
-  /* ==================================================================
-     0. CONSTANTS
-     ================================================================== */
   var SVGNS = "http://www.w3.org/2000/svg";
   var SW = 1600, SH = 900, HALF = SW * 0.5, MID = SH * 0.5;
   var FOCAL = 1;
@@ -267,41 +222,24 @@
   var ARENA = 1700;
   var VS = HALF;
 
-  /* palette */
   var FLOOR_RED       = "#cc3333";
   var FLOOR_RED_HI    = "#ee4444";
   var FLOOR_RED_DEEP  = "#aa2222";
   var BUILDING_STROKE = "#c8b8a8";
   var BUILDING_DARK   = "#e8e2d8";
 
-  /* Aton RA: GREEN outline, black buckyball faces */
   var RA_GREEN        = "#22cc44";
   var RA_GREEN_HI     = "#44ee66";
   var RA_GREEN_DEEP   = "#008822";
 
-  /* ally */
   var ALLY_GREEN      = "#0a9a6a";
   var ALLY_GREEN_HI   = "#1abb8a";
   var ALLY_GREEN_DEEP = "#056a44";
 
-  /* SWAT: RED outline, black body */
   var ENEMY_RED       = "#cc2222";
   var ENEMY_RED_HI    = "#ee4444";
   var ENEMY_RED_DEEP  = "#8a1010";
 
-  /* spider: ORANGE outlines, white faces */
-  var SPIDER_ORANGE   = "#ee7722";
-  var SPIDER_ORANGE_HI= "#ff9944";
-  var SPIDER_ORANGE_DK= "#cc5500";
-  var SPIDER_FACE     = "#ffffff";
-  var SPIDER_FACE_HI  = "#fff8f0";
-  var SPIDER_EYE      = "#ffdd00";
-  var SPIDER_EYE_HI   = "#ffee66";
-  var SPIDER_FANG     = "#ffccdd";
-
-  /* ==================================================================
-     1. DOM FACTORY
-     ================================================================== */
   function el(n, a, p){
     var e = document.createElementNS(SVGNS, n);
     for(var k in a) e.setAttribute(k, a[k]);
@@ -322,9 +260,6 @@
   var tchT = document.getElementById("TCH_T");
   var enMix = document.getElementById("EN_MIX");
 
-  /* ==================================================================
-     2. UTILITIES
-     ================================================================== */
   function clamp(v, a, b){ return v < a ? a : (v > b ? b : v); }
   function lerp(a, b, t){ return a + (b - a) * t; }
   function rnd(a, b){ return a + Math.random() * (b - a); }
@@ -341,9 +276,7 @@
     return a + d * t;
   }
 
-  /* ==================================================================
-     3. OSCILLOSCOPE OUTPUT
-     ================================================================== */
+  /* ============ OSCILLOSCOPE OUTPUT (unchanged) ============ */
   var audioCtx = null, scopeNode = null, scopeMode = "none";
   var oscReady = false, oscOn = false, oscSR = 48000;
   var OSC_BUDGET = 1600;
@@ -507,9 +440,6 @@
     scBegin();
   }
 
-  /* ==================================================================
-     4. MATRIX KIT
-     ================================================================== */
   function TR(x, y, z){ return { r:[1,0,0,0,1,0,0,0,1], tx:x, ty:y, tz:z }; }
   function RX(a){ var c = Math.cos(a), s = Math.sin(a); return { r:[1,0,0,0,c,-s,0,s,c], tx:0, ty:0, tz:0 }; }
   function RY(a){ var c = Math.cos(a), s = Math.sin(a); return { r:[c,0,s,0,1,0,-s,0,c], tx:0, ty:0, tz:0 }; }
@@ -538,9 +468,6 @@
     o.z = m.r[6]*x + m.r[7]*y + m.r[8]*z;
   }
 
-  /* ==================================================================
-     5. ELEMENT POOLS
-     ================================================================== */
   var MAX_HEX = 200, MAX_POLY = 1800, MAX_TRACER = 80, MAX_IMPACT = 60;
   var MAX_BLAST = 16, MAX_MOTE = 30, MAX_RING = 24, MAX_MUZZ = 12, MAX_EXPL = 12;
   var hexEls = [], polyEls = [], tracEls = [], tracGl = [], tracBm = [];
@@ -582,9 +509,6 @@
   for(i0 = 0; i0 < MAX_EXPL; i0++)
     expEls.push(el("circle", { fill:RA_GREEN_HI, display:"none" }, gFX));
 
-  /* ==================================================================
-     6. HUD REFS
-     ================================================================== */
   var HP_FG = document.getElementById("HP_FG");
   var AMMO_T = document.getElementById("AMMO_T");
   var ST_T = document.getElementById("ST_T");
@@ -622,9 +546,6 @@
   for(i0 = 0; i0 < 30; i0++) mmEn.push(el("circle", { r:"4", fill:ENEMY_RED, display:"none" }, gME));
   for(i0 = 0; i0 < 16; i0++) mmCr.push(el("circle", { r:"2.6", display:"none" }, gMC));
 
-  /* ==================================================================
-     7. GAME STATE
-     ================================================================== */
   var started = false, locked = false, ended = false, victory = false;
   var keys = {}, mouseDown = false, aimDown = false;
   var score = 0, kills = 0, gameTime = 0;
@@ -645,10 +566,8 @@
   var cam = { x:0, y:120, z:-260, yaw:0, pitch:-0.18, distBase:250 };
   var cyw = 1, syw = 0, cpw = 1, spw = 0, horY = 340;
   var tmpP = { x:0, y:0, z:0 };
-
   var lockTarget = null;
 
-  /* touch state */
   var touchDetected = false, touchActivated = false;
   var tUp = false, tDn = false, tLf = false, tRt = false;
   var tFire = false, tAim = false, tJump = false;
@@ -656,7 +575,6 @@
   var pinchStart = 0, pinchDist = 250;
   var dragTouchId = -1, dragLastX = 0, dragLastY = 0;
 
-  /* gamepad state */
   var padConnected = false, padIndex = -1;
   var padPrev = { a:false, b:false, x:false, y:false, lb:false, rb:false, start:false, back:false };
   var padLX = 0, padLY = 0, padRX = 0, padRY = 0, padRT = 0, padLT = 0;
@@ -668,11 +586,8 @@
   };
   var cur = { freq:0, thigh:0.05, kneeB:0.12, knee:0.08, arm:0.05, elbow:0.25, lean:0.02, twist:0.02, drop:0, speed:0 };
 
-  /* ==================================================================
-     8. WORLD DATA
-     ================================================================== */
   var buildings = [], crystals = [], healthCrystals = [];
-  var enemies = [], spiders = [], eBullets = [], blasts = [];
+  var enemies = [], eBullets = [], blasts = [];
   var tracers = [], impacts = [], rings = [], muzzleF = [], explosions = [];
   var ally = {
     x: 26, z: -14, facing: 0, phase: 0, speed: 0,
@@ -680,14 +595,10 @@
     target: null, muzzle: { x:0, y:0, z:0 }
   };
 
-  var wave = 1, waveRSpawn = 0, waveSSpawn = 0, waveDSpawn = 0, spawnT = 1.0, pauseT = 0, waveTextT = 3.0;
+  var wave = 1, waveRSpawn = 0, waveDSpawn = 0, spawnT = 1.0, pauseT = 0, waveTextT = 3.0;
 
   function waveTotals(w){
-    return {
-      r: 5 + (w-1)*2,
-      s: w >= 1 ? 2 + Math.floor((w-1)*0.8) : 0,
-      d: 3 + (w-1)*2
-    };
+    return { r: 5 + (w-1)*2, d: 3 + (w-1)*2 };
   }
   function waveTheme(w){
     if(w <= 4) return "#22aa44";
@@ -702,79 +613,43 @@
     return false;
   }
 
-  /* ==================================================================
-     8b. MAZE WORLD GENERATOR
-     ================================================================== */
   function generateWorld(){
     buildings = []; crystals = []; healthCrystals = [];
-
-    var GRID = 6;
-    var CELL = 480;
-    var HALF_SIZE = 160;
-    var ORIGIN = -(GRID - 1) * CELL / 2;
-
-    var plazas = [
-      "0,0", "5,0", "0,5", "5,5",
-      "2,2", "3,3",
-      "1,4", "4,1"
-    ];
-
+    var GRID = 6, CELL = 480, HALF_SIZE = 160, ORIGIN = -(GRID - 1) * CELL / 2;
+    var plazas = ["0,0","5,0","0,5","5,5","2,2","3,3","1,4","4,1"];
     for(var r = 0; r < GRID; r++){
       for(var c = 0; c < GRID; c++){
         var key = r + "," + c;
         if(plazas.indexOf(key) >= 0) continue;
-
         var bx = ORIGIN + c * CELL + rnd(-30, 30);
         var bz = ORIGIN + r * CELL + rnd(-30, 30);
-
         var hx = HALF_SIZE + rnd(-20, 40);
         var hz = HALF_SIZE + rnd(-20, 40);
         var h  = rnd(140, 320);
-
         buildings.push({ x:bx, z:bz, hx:hx, hz:hz, h:h });
-
         if(Math.random() < 0.45){
           var offset = CELL * 0.42;
           var sx = bx + (Math.random() < 0.5 ? offset : -offset);
           var sz = bz + (Math.random() < 0.5 ? offset : -offset);
-          buildings.push({
-            x: sx, z: sz,
-            hx: 55 + rnd(0, 35),
-            hz: 55 + rnd(0, 35),
-            h: rnd(60, 140)
-          });
+          buildings.push({ x: sx, z: sz, hx: 55 + rnd(0, 35), hz: 55 + rnd(0, 35), h: rnd(60, 140) });
         }
       }
     }
-
     for(var k = 0; k < 10; k++){
       var ang = rnd(0, TAU);
       var dist = rnd(500, 1250);
       var wx = Math.cos(ang) * dist;
       var wz = Math.sin(ang) * dist;
-
       var horiz = Math.random() < 0.5;
       if(horiz){
-        buildings.push({
-          x: wx, z: wz,
-          hx: rnd(90, 200),
-          hz: rnd(18, 32),
-          h: rnd(40, 70)
-        });
+        buildings.push({ x: wx, z: wz, hx: rnd(90, 200), hz: rnd(18, 32), h: rnd(40, 70) });
       } else {
-        buildings.push({
-          x: wx, z: wz,
-          hx: rnd(18, 32),
-          hz: rnd(90, 200),
-          h: rnd(40, 70)
-        });
+        buildings.push({ x: wx, z: wz, hx: rnd(18, 32), hz: rnd(90, 200), h: rnd(40, 70) });
       }
     }
-
     for(var i = 0; i < 22; i++) placeCrystal(crystals, true);
     for(var i = 0; i < 12; i++) placeCrystal(healthCrystals, false);
   }
-
   function placeCrystal(list, isAmmo){
     var x, z, tries = 0;
     do{
@@ -785,9 +660,6 @@
     list.push({ x:x, y:22, z:z, alive:true, spin: rnd(0, TAU), ammo: isAmmo });
   }
 
-  /* ==================================================================
-     9. COLLISION
-     ================================================================== */
   function collideWorld(px, pz, r){
     for(var i = 0; i < buildings.length; i++){
       var b = buildings[i];
@@ -841,9 +713,6 @@
     return t > 0 ? t : -1;
   }
 
-  /* ==================================================================
-     10. CAMERA
-     ================================================================== */
   function camForward(){
     var cp = Math.cos(cam.pitch);
     return { x: Math.sin(cam.yaw)*cp, y: Math.sin(cam.pitch), z: Math.cos(cam.yaw)*cp };
@@ -905,16 +774,13 @@
     horEl.setAttribute("cy", clamp(horY, -400, SH + 400).toFixed(1));
   }
 
-  /* ==================================================================
-     11. FACE PIPELINE
-     ================================================================== */
   var drawList = [];
   var wv8 = [];
   for(i0 = 0; i0 < 8; i0++) wv8.push({ x:0, y:0, z:0 });
   var camScr = [];
   for(i0 = 0; i0 < 12; i0++) camScr.push({ x:0, y:0, z:0 });
   var scratchV = [];
-  for(i0 = 0; i0 < 120; i0++) scratchV.push({ x:0, y:0, z:0 });
+  for(i0 = 0; i0 < 200; i0++) scratchV.push({ x:0, y:0, z:0 });
   var tmpN = { x:0, y:0, z:0 };
   var FIDX = [[2,3,7,6],[0,1,5,4],[1,3,7,5],[0,2,6,4],[4,5,7,6],[0,1,3,2]];
   var FN = [[0,0,1],[0,0,-1],[1,0,0],[-1,0,0],[0,1,0],[0,-1,0]];
@@ -986,9 +852,6 @@
     }
   }
 
-  /* ==================================================================
-     12. GEOMETRY LIBRARY
-     ================================================================== */
   function makeOcta(size){
     var v = [
       { x:0, y:size, z:0 }, { x:0, y:-size, z:0 },
@@ -1020,9 +883,6 @@
     }
   }
 
-  /* ==================================================================
-     12b. BUCKYBALL SPHERE GENERATOR
-     ================================================================== */
   function makeBuckyball(size, squashY){
     var phi = (1 + Math.sqrt(5)) / 2;
     var icoV = [
@@ -1147,67 +1007,29 @@
     }
   }
 
-  /* ==================================================================
-     12b-2. TAPERED TOE HI-TOP POLYGON FOOT
-     ================================================================== */
   function makeTaperedToeHiTop(scale){
     var s = scale;
     var v = [
-      { x: -3.8*s, y:  0.0*s, z: -2.5*s },
-      { x:  3.8*s, y:  0.0*s, z: -2.5*s },
-      { x:  3.8*s, y:  0.0*s, z:  3.5*s },
-      { x: -3.8*s, y:  0.0*s, z:  3.5*s },
-      { x: -4.2*s, y: -6.0*s, z: -3.0*s },
-      { x:  4.2*s, y: -6.0*s, z: -3.0*s },
-      { x:  4.2*s, y: -6.0*s, z:  5.0*s },
-      { x: -4.2*s, y: -6.0*s, z:  5.0*s },
-      { x: -4.0*s, y:-11.5*s, z: -3.5*s },
-      { x:  4.0*s, y:-11.5*s, z: -3.5*s },
-      { x:  4.0*s, y:-11.5*s, z:  7.0*s },
-      { x: -4.0*s, y:-11.5*s, z:  7.0*s },
-      { x: -1.6*s, y: -6.5*s, z: 10.5*s },
-      { x:  1.6*s, y: -6.5*s, z: 10.5*s },
-      { x: -2.5*s, y: -1.0*s, z:  9.0*s },
-      { x:  2.5*s, y: -1.0*s, z:  9.0*s },
-      { x: -2.0*s, y:-11.5*s, z: 10.0*s },
-      { x:  2.0*s, y:-11.5*s, z: 10.0*s },
-      { x: -3.5*s, y: -3.0*s, z: -6.0*s },
-      { x:  3.5*s, y: -3.0*s, z: -6.0*s },
-      { x: -3.5*s, y:-11.5*s, z: -5.0*s },
-      { x:  3.5*s, y:-11.5*s, z: -5.0*s }
+      { x: -3.8*s, y:  0.0*s, z: -2.5*s }, { x:  3.8*s, y:  0.0*s, z: -2.5*s },
+      { x:  3.8*s, y:  0.0*s, z:  3.5*s }, { x: -3.8*s, y:  0.0*s, z:  3.5*s },
+      { x: -4.2*s, y: -6.0*s, z: -3.0*s }, { x:  4.2*s, y: -6.0*s, z: -3.0*s },
+      { x:  4.2*s, y: -6.0*s, z:  5.0*s }, { x: -4.2*s, y: -6.0*s, z:  5.0*s },
+      { x: -4.0*s, y:-11.5*s, z: -3.5*s }, { x:  4.0*s, y:-11.5*s, z: -3.5*s },
+      { x:  4.0*s, y:-11.5*s, z:  7.0*s }, { x: -4.0*s, y:-11.5*s, z:  7.0*s },
+      { x: -1.6*s, y: -6.5*s, z: 10.5*s }, { x:  1.6*s, y: -6.5*s, z: 10.5*s },
+      { x: -2.5*s, y: -1.0*s, z:  9.0*s }, { x:  2.5*s, y: -1.0*s, z:  9.0*s },
+      { x: -2.0*s, y:-11.5*s, z: 10.0*s }, { x:  2.0*s, y:-11.5*s, z: 10.0*s },
+      { x: -3.5*s, y: -3.0*s, z: -6.0*s }, { x:  3.5*s, y: -3.0*s, z: -6.0*s },
+      { x: -3.5*s, y:-11.5*s, z: -5.0*s }, { x:  3.5*s, y:-11.5*s, z: -5.0*s }
     ];
     var faces = [
-      [0, 1, 2, 3],
-      [0, 4, 5, 1],
-      [1, 5, 6, 2],
-      [2, 6, 7, 3],
-      [3, 7, 4, 0],
-      [4, 8, 9, 5],
-      [5, 9, 10, 6],
-      [6, 10, 11, 7],
-      [7, 11, 8, 4],
-      [2, 6, 15, 14],
-      [3, 14, 15, 7],
-      [6, 10, 17, 15],
-      [7, 15, 17, 11],
-      [14, 15, 13, 12],
-      [15, 17, 13, 14],
-      [11, 17, 16, 8],
-      [8, 16, 13, 12],
-      [12, 13, 17, 16],
-      [12, 14, 15, 13],
-      [0, 18, 19, 1],
-      [1, 19, 5, 0],
-      [3, 2, 19, 18],
-      [2, 6, 19, 3],
-      [18, 20, 21, 19],
-      [19, 21, 9, 5],
-      [20, 8, 9, 21],
-      [18, 4, 8, 20],
-      [18, 0, 4, 18],
-      [18, 19, 20],
-      [20, 21, 8],
-      [21, 9, 8]
+      [0,1,2,3],[0,4,5,1],[1,5,6,2],[2,6,7,3],[3,7,4,0],
+      [4,8,9,5],[5,9,10,6],[6,10,11,7],[7,11,8,4],
+      [2,6,15,14],[3,14,15,7],[6,10,17,15],[7,15,17,11],
+      [14,15,13,12],[15,17,13,14],[11,17,16,8],[8,16,13,12],
+      [12,13,17,16],[12,14,15,13],[0,18,19,1],[1,19,5,0],
+      [3,2,19,18],[2,6,19,3],[18,20,21,19],[19,21,9,5],
+      [20,8,9,21],[18,4,8,20],[18,0,4,18],[18,19,20],[20,21,8],[21,9,8]
     ];
     var out = [];
     for(var fi = 0; fi < faces.length; fi++){
@@ -1231,7 +1053,6 @@
   }
 
   var FOOT_GEO = makeTaperedToeHiTop(1.0);
-
   function pushFoot(geo, m, scale, stroke, sw, fo){
     var i;
     for(i = 0; i < geo.v.length; i++){
@@ -1245,74 +1066,6 @@
     }
   }
 
-  /* ==================================================================
-     12b-3. SLEEK POLYGONAL QUAD SPIDER MESH GENERATOR
-     ------------------------------------------------------------------
-     Builds a tapered polygonal body segment as a hexagonal prism
-     between two rings, with variable radii. Used for the spider's
-     sleek cephalothorax and abdomen.
-     ================================================================== */
-  function makeTaperedHexPrism(r1, r2, len, squash){
-    /* 6-vertex rings at z = -len/2 and z = +len/2 */
-    var v = [], i;
-    for(i = 0; i < 6; i++){
-      var a = PI / 3 * i + PI / 6;
-      v.push({ x: Math.cos(a) * r1, y: Math.sin(a) * r1 * squash, z: -len / 2 });
-    }
-    for(i = 0; i < 6; i++){
-      var a = PI / 3 * i + PI / 6;
-      v.push({ x: Math.cos(a) * r2, y: Math.sin(a) * r2 * squash, z: len / 2 });
-    }
-    var faces = [];
-    /* side quads */
-    for(i = 0; i < 6; i++){
-      faces.push([i, (i + 1) % 6, 6 + (i + 1) % 6, 6 + i]);
-    }
-    /* cap faces */
-    faces.push([0, 1, 2, 3, 4, 5]);
-    faces.push([11, 10, 9, 8, 7, 6]);
-    /* compute normals */
-    var out = [];
-    for(var fi = 0; fi < faces.length; fi++){
-      var idx = faces[fi];
-      var v0 = v[idx[0]], v1 = v[idx[1]], v2 = v[idx[2]];
-      var ax = v1.x-v0.x, ay = v1.y-v0.y, az = v1.z-v0.z;
-      var bx = v2.x-v0.x, by = v2.y-v0.y, bz = v2.z-v0.z;
-      var n = { x: ay*bz-az*by, y: az*bx-ax*bz, z: ax*by-ay*bx };
-      var nl = Math.sqrt(n.x*n.x + n.y*n.y + n.z*n.z) || 1;
-      n = { x:n.x/nl, y:n.y/nl, z:n.z/nl };
-      /* orient outward from prism axis */
-      var fx = 0, fy = 0, fz = 0;
-      for(var j = 0; j < idx.length; j++){ fx += v[idx[j]].x; fy += v[idx[j]].y; fz += v[idx[j]].z; }
-      fx /= idx.length; fy /= idx.length; fz /= idx.length;
-      /* for cap faces, outward is along ±z; for side quads, outward is radial */
-      if(fi < 6){
-        /* side: check radial direction */
-        if(n.x*fx + n.z*fz < 0){
-          idx = idx.slice().reverse();
-          n = { x:-n.x, y:-n.y, z:-n.z };
-        }
-      } else {
-        /* cap: check z direction */
-        if(fz > 0 && n.z < 0 || fz < 0 && n.z > 0){
-          idx = idx.slice().reverse();
-          n = { x:-n.x, y:-n.y, z:-n.z };
-        }
-      }
-      out.push({ i: idx, n: n });
-    }
-    return { v: v, f: out };
-  }
-
-  /* Segment geometry for legs — tapered hexagonal prisms */
-  var LEG_SEG_UPPER = makeTaperedHexPrism(0.85, 0.7, 1.0, 0.9);
-  var LEG_SEG_MID   = makeTaperedHexPrism(0.7, 0.55, 1.0, 0.9);
-  var LEG_SEG_LOWER = makeTaperedHexPrism(0.55, 0.35, 1.0, 0.9);
-  var LEG_SEG_TIP   = makeTaperedHexPrism(0.35, 0.12, 1.0, 0.9);
-
-  /* ==================================================================
-     12c. ATON RA — floating buckyball humanoid
-     ================================================================== */
   function buildAtonRa(pose, jumpY){
     var S = 1.0;
     var ph = pose.phase;
@@ -1324,12 +1077,9 @@
     var drop = (0.5 - 0.5 * Math.cos(2 * ph)) * g.drop;
     var bodyY = 51.5 * S - drop + (g.freq < 1 ? breathe : 0);
     var ab = pose.aimBlend || 0;
-
-    var thighL = sL * g.thigh;
-    var thighR = sR * g.thigh;
+    var thighL = sL * g.thigh, thighR = sR * g.thigh;
     var kneeL = g.kneeB + Math.max(0, cL) * g.knee;
     var kneeR = g.kneeB + Math.max(0, -cL) * g.knee;
-
     var armL0 = sR * g.arm + 0.06 + breathe * 0.025;
     var armR0 = 0.34 + sL * g.arm * 0.25;
     var armL = armL0 * (1 - ab) + 1.10 * ab;
@@ -1340,50 +1090,39 @@
     var twist = sL * g.twist * (1 - ab * 0.7);
     var nod = -lean * 0.8 - ab * 0.1 + Math.sin(performance.now() * 0.0009) * 0.02;
     var headYaw = (g.freq < 1 ? Math.sin(performance.now() * 0.0005) * 0.12 : sL * 0.03) * (1 - ab);
-
     var C = RA_GREEN, CHI = RA_GREEN_HI, CDK = "#000000";
-
     var Mroot = mul(TR(pose.x, jy, pose.z), RY(pose.facing));
     var Mpelvis = mul(Mroot, TR(0, bodyY, 0));
     var Mupper = mul(Mpelvis, TR(0, 4 * S, 0));
     Mupper = mul(Mupper, RY(twist));
     Mupper = mul(Mupper, RX(lean));
-
     pushBucky(BUCKY_SMALL, mul(Mpelvis, TR(-3.5 * S, 2 * S, 0)), 4.0 * S, C, 1.0, 0.92);
     pushBucky(BUCKY_SMALL, mul(Mpelvis, TR(3.5 * S, 2 * S, 0)), 4.0 * S, C, 1.0, 0.92);
-
     pushBucky(BUCKY_LARGE, mul(Mupper, TR(0, 18 * S, 0)), 13.5 * S, C, 1.35, 0.92);
     pushBucky(BUCKY_SMALL, mul(Mupper, TR(0, 22 * S, 0)), 8.0 * S, CDK, 1.1, 0.92);
     pushBucky(BUCKY_SMALL, mul(Mupper, TR(0, 27 * S, 0)), 5.0 * S, CHI, 1.0, 0.92);
-
     pushBucky(BUCKY_LARGE, mul(Mupper, TR(-14 * S, 26 * S, 0)), 8.5 * S, C, 1.2, 0.92);
     pushBucky(BUCKY_LARGE, mul(Mupper, TR(14 * S, 26 * S, 0)), 8.5 * S, C, 1.2, 0.92);
     pushBucky(BUCKY_SMALL, mul(Mupper, TR(-15 * S, 30 * S, 0)), 4.5 * S, CHI, 1.0, 0.92);
     pushBucky(BUCKY_SMALL, mul(Mupper, TR(15 * S, 30 * S, 0)), 4.5 * S, CHI, 1.0, 0.92);
-
-    var Mh = mul(Mupper, TR(0, 38 * S, 0));
-    Mh = mul(Mh, RY(headYaw));
-    Mh = mul(Mh, RX(nod));
+    var Mh = mul(Mupper, TR(0, 38 * S, 0)); Mh = mul(Mh, RY(headYaw)); Mh = mul(Mh, RX(nod));
     pushBucky(BUCKY_SMALL, mul(Mh, TR(0, 0, 0)), 5.5 * S, C, 1.1, 0.92);
     pushBucky(BUCKY_SMALL, mul(Mh, TR(0, 3 * S, 0)), 4.0 * S, CDK, 1.0, 0.92);
     pushBox(Mh, 0, 1 * S, 5.5 * S, 4.5 * S, 0.8 * S, 0.6 * S, "#ff2222", 2.0, 1);
     pushBox(Mh, 0, 1 * S, 6.2 * S, 4.0 * S, 0.6 * S, 0.4 * S, "#ff4444", 1.7, 1);
     xfTo(Mh, 0, 1 * S, 7.0 * S, pose.muzzle);
-
     var MsL = mul(Mupper, TR(-15 * S, 22 * S, 0)); MsL = mul(MsL, RX(-armL));
     pushBucky(BUCKY_SMALL, mul(MsL, TR(0, -7 * S, 0)), 5.5 * S, C, 1.1, 0.92);
     pushBucky(BUCKY_SMALL, mul(MsL, TR(0, -14 * S, 0)), 4.0 * S, CHI, 1.0, 0.92);
     var MeL = mul(MsL, TR(0, -18 * S, 0)); MeL = mul(MeL, RX(-elbowL));
     pushBucky(BUCKY_SMALL, mul(MeL, TR(0, -6 * S, 0)), 4.0 * S, CDK, 1.0, 0.92);
     pushBucky(BUCKY_SMALL, mul(MeL, TR(0, -12 * S, 0)), 3.2 * S, C, 0.95, 0.92);
-
     var MsR = mul(Mupper, TR(15 * S, 22 * S, 0)); MsR = mul(MsR, RX(-armR));
     pushBucky(BUCKY_SMALL, mul(MsR, TR(0, -7 * S, 0)), 5.5 * S, C, 1.1, 0.92);
     pushBucky(BUCKY_SMALL, mul(MsR, TR(0, -14 * S, 0)), 4.0 * S, CHI, 1.0, 0.92);
     var MeR = mul(MsR, TR(0, -18 * S, 0)); MeR = mul(MeR, RX(-elbowR));
     pushBucky(BUCKY_SMALL, mul(MeR, TR(0, -6 * S, 0)), 4.0 * S, CDK, 1.0, 0.92);
     pushBucky(BUCKY_SMALL, mul(MeR, TR(0, -12 * S, 0)), 3.2 * S, C, 0.95, 0.92);
-
     var MhipL = mul(Mpelvis, TR(-6.5 * S, -2 * S, 0)); MhipL = mul(MhipL, RX(-thighL));
     pushBucky(BUCKY_SMALL, mul(MhipL, TR(0, -10 * S, 0)), 5.0 * S, C, 1.1, 0.92);
     pushBucky(BUCKY_SMALL, mul(MhipL, TR(0, -18 * S, 0)), 4.0 * S, CDK, 1.0, 0.92);
@@ -1394,7 +1133,6 @@
     pushFoot(FOOT_GEO, MakL, 1.0 * S, CDK, 1.2, 0.92);
     pushBox(MakL, 0, -6 * S, 2 * S, 4.0 * S, 0.6 * S, 3 * S, C, 1.0, 0.92);
     xfTo(MakL, 0, -6 * S, 2 * S, pose.footL);
-
     var MhipR = mul(Mpelvis, TR(6.5 * S, -2 * S, 0)); MhipR = mul(MhipR, RX(-thighR));
     pushBucky(BUCKY_SMALL, mul(MhipR, TR(0, -10 * S, 0)), 5.0 * S, C, 1.1, 0.92);
     pushBucky(BUCKY_SMALL, mul(MhipR, TR(0, -18 * S, 0)), 4.0 * S, CDK, 1.0, 0.92);
@@ -1407,9 +1145,6 @@
     xfTo(MakR, 0, -6 * S, 2 * S, pose.footR);
   }
 
-  /* ==================================================================
-     12d. SWAT SOLDIER — detailed helmeted enemy
-     ================================================================== */
   var SWAT_COLORS = {
     primary: "#1a1a1a", hi: "#2a2a2a", dark: "#0a0a0a",
     helmet: "#111111", helmetHi: "#222222",
@@ -1420,8 +1155,7 @@
   };
 
   function buildSWAT(pose, opts, jumpY){
-    var g = pose.gait;
-    var ph = pose.phase;
+    var g = pose.gait, ph = pose.phase;
     var S = opts.scale || 1.0;
     var jy = jumpY || 0;
     var sL = Math.sin(ph), cL = Math.cos(ph);
@@ -1432,12 +1166,8 @@
     var bodyY = 51.5 * S - drop + (g.freq < 1 ? breathe : 0);
     var ab = pose.aimBlend || 0;
     if(pose.downed) bodyY *= 0.55;
-
-    var thighL = sL * g.thigh;
-    var thighR = sR * g.thigh;
-    var kneeL = g.kneeB + swingL * g.knee;
-    var kneeR = g.kneeB + swingR * g.knee;
-
+    var thighL = sL * g.thigh, thighR = sR * g.thigh;
+    var kneeL = g.kneeB + swingL * g.knee, kneeR = g.kneeB + swingR * g.knee;
     var armL0 = sR * g.arm + 0.06 + breathe * 0.025;
     var armR0 = 0.34 + sL * g.arm * 0.25;
     var armL = armL0 * (1 - ab) + 1.10 * ab;
@@ -1448,26 +1178,20 @@
     var twist = sL * g.twist * (1 - ab * 0.7);
     var nod = -lean * 0.8 - ab * 0.1 + Math.sin(performance.now() * 0.0009) * 0.02;
     var headYaw = (g.freq < 1 ? Math.sin(performance.now() * 0.0005) * 0.12 : sL * 0.03) * (1 - ab);
-    var ankleL = (thighL - kneeL) * 0.85;
-    var ankleR = (thighR - kneeR) * 0.85;
-
+    var ankleL = (thighL - kneeL) * 0.85, ankleR = (thighR - kneeR) * 0.85;
     var C = SWAT_COLORS;
     var P = C.primary, H = C.hi, D = C.dark;
     var Hel = C.helmet, HelHi = C.helmetHi, Vis = C.visor;
     var Rifle = C.rifle, RifleHi = C.rifleHi, Emit = C.emitter;
     var Glove = C.glove, Boot = C.boot;
-
     var Mroot = mul(TR(pose.x, jy, pose.z), RY(pose.facing));
     var Mpelvis = mul(Mroot, TR(0, bodyY, 0));
     var Mupper = mul(Mpelvis, TR(0, 4 * S, 0));
-    Mupper = mul(Mupper, RY(twist));
-    Mupper = mul(Mupper, RX(lean));
+    Mupper = mul(Mupper, RY(twist)); Mupper = mul(Mupper, RX(lean));
     if(pose.downed) Mupper = mul(Mupper, RX(0.5));
-
     pushBox(Mpelvis, 0, -1 * S, 0, 9.5 * S, 6 * S, 7 * S, D, 1.15, 0.92);
     pushBox(Mpelvis, 0, 4.5 * S, 0, 11.5 * S, 3 * S, 7.5 * S, P, 1.1, 0.92);
     pushBox(Mpelvis, 0, 4.5 * S, 8.2 * S, 2.5 * S, 2 * S, 1.2 * S, H, 0.9, 0.92);
-
     pushBox(Mupper, 0, 22 * S, 0, 11 * S, 13 * S, 7 * S, D, 1.25, 0.92);
     pushBox(Mupper, 0, 20 * S, 0.5 * S, 12.5 * S, 12 * S, 8.5 * S, P, 1.3, 0.92);
     pushBox(Mupper, -6 * S, 13.5 * S, 10 * S, 3.8 * S, 4.5 * S, 2 * S, H, 0.9, 0.92);
@@ -1475,10 +1199,7 @@
     pushBox(Mupper, 6 * S, 13.5 * S, 10 * S, 3.8 * S, 4.5 * S, 2 * S, H, 0.9, 0.92);
     pushBox(Mupper, -13 * S, 30 * S, 0, 4.5 * S, 4 * S, 6.5 * S, H, 1.0, 0.92);
     pushBox(Mupper, 13 * S, 30 * S, 0, 4.5 * S, 4 * S, 6.5 * S, H, 1.0, 0.92);
-
-    var Mh = mul(Mupper, TR(0, 39 * S, 0));
-    Mh = mul(Mh, RY(headYaw));
-    Mh = mul(Mh, RX(nod));
+    var Mh = mul(Mupper, TR(0, 39 * S, 0)); Mh = mul(Mh, RY(headYaw)); Mh = mul(Mh, RX(nod));
     pushBox(Mh, 0, -6 * S, 0, 4 * S, 4 * S, 4 * S, D, 0.85, 0.92);
     pushBox(Mh, 0, 6 * S, 0.5 * S, 5.5 * S, 5 * S, 6 * S, Hel, 1.15, 0.92);
     pushBox(Mh, 0, 11 * S, -0.5 * S, 6 * S, 2 * S, 6 * S, HelHi, 1.05, 0.92);
@@ -1489,20 +1210,17 @@
     pushBox(Mh, 0, 4.5 * S, 5.8 * S, 4.2 * S, 1.4 * S, 0.4 * S, Vis, 1.2, 1);
     pushBox(Mh, -5 * S, -1 * S, 4.2 * S, 0.6 * S, 2.5 * S, 0.4 * S, D, 0.8, 0.92);
     pushBox(Mh, 5 * S, -1 * S, 4.2 * S, 0.6 * S, 2.5 * S, 0.4 * S, D, 0.8, 0.92);
-
     var MsL = mul(Mupper, TR(-13 * S, 28 * S, 0)); MsL = mul(MsL, RX(-armL));
     pushBox(MsL, 0, -8 * S, 0, 3.2 * S, 8 * S, 3.2 * S, P, 1.05, 0.92);
     var MeL = mul(MsL, TR(0, -16 * S, 0)); MeL = mul(MeL, RX(-elbowL));
     pushBox(MeL, 0, -7.5 * S, 0, 2.8 * S, 7.5 * S, 2.8 * S, D, 1.0, 0.92);
     pushBox(MeL, 0, -17 * S, 0, 3 * S, 3 * S, 3.2 * S, Glove, 0.95, 0.92);
-
     var MsR = mul(Mupper, TR(13 * S, 28 * S, 0)); MsR = mul(MsR, RX(-armR));
     pushBox(MsR, 0, -8 * S, 0, 3.2 * S, 8 * S, 3.2 * S, P, 1.05, 0.92);
     var MeR = mul(MsR, TR(0, -16 * S, 0)); MeR = mul(MeR, RX(-elbowR));
     pushBox(MeR, 0, -7.5 * S, 0, 2.8 * S, 7.5 * S, 2.8 * S, D, 1.0, 0.92);
     var MhR = mul(MeR, TR(0, -17 * S, 0));
     pushBox(MhR, 0, 0, 0, 3 * S, 3 * S, 3.2 * S, Glove, 0.95, 0.92);
-
     pushBox(MhR, 0, -2 * S, 0, 2 * S, 6.5 * S, 1.9 * S, Rifle, 1.0, 0.92);
     pushBox(MhR, 0, -13.5 * S, 0.4 * S, 1 * S, 7.5 * S, 1.2 * S, Rifle, 0.9, 0.92);
     pushBox(MhR, 0, -21 * S, 0.4 * S, 1.4 * S, 1.2 * S, 1.5 * S, RifleHi, 1.0, 0.92);
@@ -1513,7 +1231,6 @@
     pushBox(MhR, -2.2 * S, -4 * S, 0, 0.5 * S, 3 * S, 1.4 * S, Rifle, 0.8, 0.92);
     pushBox(MhR, 0, -8 * S, -2.6 * S, 1 * S, 3 * S, 1.2 * S, Emit, 1.2, 1);
     xfTo(MhR, 0, -23 * S, 0.4 * S, pose.muzzle);
-
     var MhipL = mul(Mpelvis, TR(-6.5 * S, -2 * S, 0)); MhipL = mul(MhipL, RX(-thighL));
     pushBox(MhipL, 0, -10.5 * S, 0, 4.6 * S, 10.5 * S, 4.6 * S, P, 1.15, 0.92);
     pushBox(MhipL, 0, -20 * S, 2.8 * S, 4.9 * S, 4 * S, 2.2 * S, H, 0.95, 0.92);
@@ -1522,7 +1239,6 @@
     var MakL = mul(MknL, TR(0, -22 * S, 0)); MakL = mul(MakL, RX(ankleL));
     pushBox(MakL, 0, -3.5 * S, 2.5 * S, 4.6 * S, 3.5 * S, 7 * S, Boot, 1.15, 0.92);
     xfTo(MakL, 0, -6 * S, 2 * S, pose.footL);
-
     var MhipR = mul(Mpelvis, TR(6.5 * S, -2 * S, 0)); MhipR = mul(MhipR, RX(-thighR));
     pushBox(MhipR, 0, -10.5 * S, 0, 4.6 * S, 10.5 * S, 4.6 * S, P, 1.15, 0.92);
     pushBox(MhipR, 0, -20 * S, 2.8 * S, 4.9 * S, 4 * S, 2.2 * S, H, 0.95, 0.92);
@@ -1533,245 +1249,6 @@
     xfTo(MakR, 0, -6 * S, 2 * S, pose.footR);
   }
 
-  /* ==================================================================
-     12e. QUAD SPIDER — sleek polygonal body, 4 long animated legs
-     ------------------------------------------------------------------
-     Body is built from tapered hexagonal prisms (sleek, non-blocky).
-     Legs are 4-segment tapered hexagonal prisms with realistic joint
-     articulation (coxa, femur, tibia, tarsus).
-     Fangs are tapered polygonal spikes.
-     Eyes are octahedral gems clustered on the front.
-     ================================================================== */
-  var SPIDER_S = 1.6;
-  var SPIDER_BODY_H = 48;
-
-  function pushPrism(geo, m, len, r1Scale, r2Scale, stroke, sw, fo){
-    /* Rebuild prism geometry scaled by len for z and radii */
-    var v = [], i;
-    var r1 = 1.0 * r1Scale, r2 = 1.0 * r2Scale;
-    for(i = 0; i < 6; i++){
-      var a = PI / 3 * i + PI / 6;
-      v.push({ x: Math.cos(a) * r1, y: Math.sin(a) * r1 * 0.9, z: -len / 2 });
-    }
-    for(i = 0; i < 6; i++){
-      var a = PI / 3 * i + PI / 6;
-      v.push({ x: Math.cos(a) * r2, y: Math.sin(a) * r2 * 0.9, z: len / 2 });
-    }
-    var faces = [];
-    for(i = 0; i < 6; i++) faces.push([i, (i + 1) % 6, 6 + (i + 1) % 6, 6 + i]);
-    faces.push([0, 1, 2, 3, 4, 5]);
-    faces.push([11, 10, 9, 8, 7, 6]);
-    var out = [];
-    for(var fi = 0; fi < faces.length; fi++){
-      var idx = faces[fi];
-      var v0 = v[idx[0]], v1 = v[idx[1]], v2 = v[idx[2]];
-      var ax = v1.x-v0.x, ay = v1.y-v0.y, az = v1.z-v0.z;
-      var bx = v2.x-v0.x, by = v2.y-v0.y, bz = v2.z-v0.z;
-      var n = { x: ay*bz-az*by, y: az*bx-ax*bz, z: ax*by-ay*bx };
-      var nl = Math.sqrt(n.x*n.x + n.y*n.y + n.z*n.z) || 1;
-      n = { x:n.x/nl, y:n.y/nl, z:n.z/nl };
-      var fx = 0, fy = 0, fz = 0;
-      for(var j = 0; j < idx.length; j++){ fx += v[idx[j]].x; fy += v[idx[j]].y; fz += v[idx[j]].z; }
-      fx /= idx.length; fy /= idx.length; fz /= idx.length;
-      if(fi < 6){
-        if(n.x*fx + n.z*fz < 0){ idx = idx.slice().reverse(); n = { x:-n.x, y:-n.y, z:-n.z }; }
-      } else {
-        if(fz > 0 && n.z < 0 || fz < 0 && n.z > 0){ idx = idx.slice().reverse(); n = { x:-n.x, y:-n.y, z:-n.z }; }
-      }
-      out.push({ i: idx, n: n });
-    }
-    var geo = { v: v, f: out };
-    for(i = 0; i < geo.v.length; i++){
-      var vp = geo.v[i];
-      xfTo(m, vp.x, vp.y, vp.z, scratchV[i]);
-    }
-    for(i = 0; i < geo.f.length; i++){
-      var nn = geo.f[i].n;
-      xfN(m, nn.x, nn.y, nn.z, tmpN);
-      processFace(scratchV, geo.f[i].i, tmpN.x, tmpN.y, tmpN.z, stroke, sw, fo);
-    }
-  }
-
-  function pushSpike(m, baseR, length, stroke, sw, fo){
-    /* Cone-like spike: hexagonal base ring + apex */
-    var v = [], i;
-    for(i = 0; i < 6; i++){
-      var a = PI / 3 * i + PI / 6;
-      v.push({ x: Math.cos(a) * baseR, y: Math.sin(a) * baseR, z: 0 });
-    }
-    v.push({ x: 0, y: 0, z: length });
-    v.push({ x: 0, y: 0, z: 0 });
-    var faces = [];
-    for(i = 0; i < 6; i++){
-      faces.push([i, (i + 1) % 6, 6]);
-    }
-    faces.push([11, 10, 9, 8, 7, 6]); /* wrong idx, use base cap */
-    faces.pop();
-    /* base cap reversed */
-    var baseCap = [];
-    for(i = 5; i >= 0; i--) baseCap.push(i);
-    faces.push(baseCap);
-    var out = [];
-    for(var fi = 0; fi < faces.length; fi++){
-      var idx = faces[fi];
-      var v0 = v[idx[0]], v1 = v[idx[1]], v2 = v[idx[2]];
-      var ax = v1.x-v0.x, ay = v1.y-v0.y, az = v1.z-v0.z;
-      var bx = v2.x-v0.x, by = v2.y-v0.y, bz = v2.z-v0.z;
-      var n = { x: ay*bz-az*by, y: az*bx-ax*bz, z: ax*by-ay*bx };
-      var nl = Math.sqrt(n.x*n.x + n.y*n.y + n.z*n.z) || 1;
-      n = { x:n.x/nl, y:n.y/nl, z:n.z/nl };
-      /* orient outward from origin */
-      var fx = 0, fy = 0, fz = 0;
-      for(var j = 0; j < idx.length; j++){ fx += v[idx[j]].x; fy += v[idx[j]].y; fz += v[idx[j]].z; }
-      fx /= idx.length; fy /= idx.length; fz /= idx.length;
-      if(n.x*fx + n.y*fy + n.z*fz < 0){
-        idx = idx.slice().reverse();
-        n = { x:-n.x, y:-n.y, z:-n.z };
-      }
-      out.push({ i: idx, n: n });
-    }
-    var geo = { v: v, f: out };
-    for(i = 0; i < geo.v.length; i++){
-      var vp = geo.v[i];
-      xfTo(m, vp.x, vp.y, vp.z, scratchV[i]);
-    }
-    for(i = 0; i < geo.f.length; i++){
-      var nn = geo.f[i].n;
-      xfN(m, nn.x, nn.y, nn.z, tmpN);
-      processFace(scratchV, geo.f[i].i, tmpN.x, tmpN.y, tmpN.z, stroke, sw, fo);
-    }
-  }
-
-  function buildSpider(pose){
-    var S = SPIDER_S;
-    var ph = pose.walkPhase;
-    var att = pose.attackPhase || 0;
-    var bob = Math.sin(ph * 2) * 1.5;
-
-    var Mroot = mul(TR(pose.x, 0, pose.z), RY(pose.facing));
-    var bodyY = SPIDER_BODY_H + bob;
-
-    /* ============= SLEEK CEPHALOTHORAX (front body) ============= */
-    /* Tapered hex prism: wider front, narrowing to rear */
-    scCur = SC_ENEMY;
-    var Mceph = mul(Mroot, TR(20 * S, bodyY, 0));
-    pushPrism(null, mul(Mceph, RY(PI / 2)), 52 * S, 22 * S, 16 * S, SPIDER_ORANGE, 1.8, 0.95);
-    /* top ridge accent */
-    pushBox(Mceph, 0, 14 * S, 0, 16 * S, 1.2 * S, 22 * S, SPIDER_ORANGE_HI, 1.4, 0.95);
-    /* white face plate on front */
-    var Mface = mul(Mceph, TR(0, 2 * S, 28 * S));
-    pushPrism(null, mul(Mface, RY(PI / 2)), 8 * S, 20 * S, 14 * S, SPIDER_FACE, 1.6, 0.95);
-
-    /* ============= SLEEK ABDOMEN (rear body) ============= */
-    var Mabdo = mul(Mroot, TR(-34 * S, bodyY - 2 * S, 0));
-    pushPrism(null, mul(Mabdo, RY(PI / 2)), 62 * S, 26 * S, 8 * S, SPIDER_ORANGE, 1.8, 0.95);
-    /* abdomen white underside */
-    pushPrism(null, mul(Mabdo, mul(RY(PI / 2), RX(PI))), 54 * S, 22 * S, 10 * S, SPIDER_FACE_HI, 1.6, 0.95);
-    /* abdomen dorsal ridge markings */
-    pushBox(Mabdo, 0, 22 * S, 0, 2 * S, 1.4 * S, 40 * S, SPIDER_ORANGE_HI, 1.4, 0.95);
-    pushBox(Mabdo, -8 * S, 14 * S, 12 * S, 1.4 * S, 2.4 * S, 24 * S, SPIDER_ORANGE_HI, 1.2, 0.95);
-    pushBox(Mabdo,  8 * S, 14 * S, 12 * S, 1.4 * S, 2.4 * S, 24 * S, SPIDER_ORANGE_HI, 1.2, 0.95);
-    /* rear spinneret */
-    pushSpike(mul(Mabdo, TR(0, -2 * S, -34 * S)), 6 * S, 10 * S, SPIDER_ORANGE_DK, 1.4, 0.95);
-
-    /* ============= EYE CLUSTER (front, gem-like) ============= */
-    var Mex = mul(Mroot, TR(46 * S, bodyY + 4 * S, 0));
-    pushOcta(mul(Mex, TR(-6 * S,  4 * S, 0)), 2.2 * S, SPIDER_EYE, 1.8, 1);
-    pushOcta(mul(Mex, TR( 6 * S,  4 * S, 0)), 2.2 * S, SPIDER_EYE, 1.8, 1);
-    pushOcta(mul(Mex, TR(-3 * S,  8 * S, 0)), 1.8 * S, SPIDER_EYE_HI, 1.6, 1);
-    pushOcta(mul(Mex, TR( 3 * S,  8 * S, 0)), 1.8 * S, SPIDER_EYE_HI, 1.6, 1);
-    pushOcta(mul(Mex, TR(-2 * S,  1 * S, 0)), 1.4 * S, SPIDER_EYE, 1.4, 1);
-    pushOcta(mul(Mex, TR( 2 * S,  1 * S, 0)), 1.4 * S, SPIDER_EYE, 1.4, 1);
-    pushOcta(mul(Mex, TR(-5 * S,  0 * S, 0)), 1.1 * S, SPIDER_EYE_HI, 1.2, 1);
-    pushOcta(mul(Mex, TR( 5 * S,  0 * S, 0)), 1.1 * S, SPIDER_EYE_HI, 1.2, 1);
-
-    /* ============= FANGS (polygonal spikes) ============= */
-    var Mfang = mul(Mroot, TR(50 * S, bodyY - 6 * S, 0));
-    var fangL = mul(Mfang, TR(-4 * S, 0, 0));
-    fangL = mul(fangL, RX(-1.4));
-    pushSpike(fangL, 2.0 * S, 10 * S, SPIDER_FANG, 1.4, 0.95);
-    var fangR = mul(Mfang, TR(4 * S, 0, 0));
-    fangR = mul(fangR, RX(-1.4));
-    pushSpike(fangR, 2.0 * S, 10 * S, SPIDER_FANG, 1.4, 0.95);
-
-    /* ============= PEDIPALPS (small feeler legs) ============= */
-    var Mped = mul(Mroot, TR(52 * S, bodyY, 0));
-    var pedL = mul(Mped, TR(-6 * S, 0, 0));
-    pedL = mul(pedL, RY(0.6));
-    pushPrism(null, mul(pedL, mul(RX(PI / 2), RY(0.4))), 14 * S, 2.4 * S, 1.6 * S, SPIDER_ORANGE, 1.4, 0.95);
-    var pedR = mul(Mped, TR(6 * S, 0, 0));
-    pedR = mul(pedR, RY(-0.6));
-    pushPrism(null, mul(pedR, mul(RX(PI / 2), RY(-0.4))), 14 * S, 2.4 * S, 1.6 * S, SPIDER_ORANGE, 1.4, 0.95);
-
-    /* ============= 4 LONG QUAD LEGS ============= */
-    /* Phases: FL=0, FR=0.5, RL=0.5, RR=0 */
-    buildSleekLeg(Mroot, bodyY, +1, -1, ph,             0.0, S, "FL");
-    buildSleekLeg(Mroot, bodyY, -1, -1, ph + PI,        PI,  S, "FR");
-    buildSleekLeg(Mroot, bodyY, +1, +1, ph + PI,        PI,  S, "RL");
-    buildSleekLeg(Mroot, bodyY, -1, +1, ph,             0.0, S, "RR");
-  }
-
-  function buildSleekLeg(Mroot, bodyY, sideX, sideZ, phase, phaseOffset, S, tag){
-    /* Leg origin: forward legs come from front of cephalothorax,
-       rear legs from abdomen. */
-    var isFront = (sideZ < 0);
-    var baseX = isFront ? 14 : -18;
-    var baseZ = sideX * (isFront ? 22 : 28);
-    var baseY = bodyY - 6 * S;
-
-    var Manchor = mul(Mroot, TR(baseX, baseY, baseZ));
-
-    /* Walk animation: each leg lifts and reaches */
-    var gaitPhase = phase + phaseOffset;
-    var lift = Math.max(0, Math.sin(gaitPhase)) * 1.0;
-    var swing = Math.cos(gaitPhase) * 0.5;
-    var plant = 0.5 - 0.5 * Math.cos(gaitPhase); /* 0 = planted, 1 = lifted */
-
-    /* Attach angle: legs splay outward from body */
-    var attachAngle = sideX * sideZ * 0.55;
-    var reachAngle = swing * 0.35;
-
-    /* --- COX A (short hip segment) --- */
-    var Mc = mul(Manchor, RY(attachAngle * 0.4));
-    Mc = mul(Mc, RZ(sideX * 0.4));
-    pushPrism(null, mul(Mc, mul(RY(PI / 2), RY(sideZ * PI / 4))), 6 * S, 3.6 * S, 3.2 * S, SPIDER_ORANGE_DK, 1.5, 0.95);
-
-    /* --- FEMUR (long upper leg, angled outward and upward) --- */
-    var Mf = mul(Mc, TR(0, 0, sideX * 5 * S));
-    Mf = mul(Mf, RY(sideZ * -0.9 + reachAngle));
-    Mf = mul(Mf, RZ(sideX * 1.4 + lift * 0.4));
-    var femurLen = 26 * S;
-    pushPrism(null, mul(Mf, RY(PI / 2)), femurLen, 3.0 * S, 2.4 * S, SPIDER_ORANGE, 1.8, 0.95);
-    /* femur accent ridge */
-    pushBox(mul(Mf, TR(0, 0, femurLen / 2)), 0, 2.6 * S, 0, 1.4 * S, 0.6 * S, femurLen * 0.55, SPIDER_ORANGE_HI, 1.2, 0.95);
-
-    /* --- TIBIA (long lower leg, angled down) --- */
-    var Mt = mul(Mf, TR(0, 0, femurLen));
-    Mt = mul(Mt, RZ(sideX * -1.4 - lift * 0.5));
-    Mt = mul(Mt, RY(sideZ * 0.3));
-    var tibiaLen = 30 * S;
-    pushPrism(null, mul(Mt, RY(PI / 2)), tibiaLen, 2.4 * S, 1.8 * S, SPIDER_ORANGE, 1.8, 0.95);
-    pushBox(mul(Mt, TR(0, 0, tibiaLen / 2)), 0, 2.0 * S, 0, 1.2 * S, 0.5 * S, tibiaLen * 0.5, SPIDER_ORANGE_HI, 1.2, 0.95);
-    /* knee joint knob */
-    pushOcta(mul(Mf, TR(0, 0, femurLen)), 2.6 * S, SPIDER_ORANGE_DK, 1.6, 0.95);
-
-    /* --- TARSUS (foot segment, angled down to ground) --- */
-    var Mta = mul(Mt, TR(0, 0, tibiaLen));
-    Mta = mul(Mta, RZ(sideX * -0.6 + plant * 0.15));
-    var tarsusLen = 14 * S;
-    pushPrism(null, mul(Mta, RY(PI / 2)), tarsusLen, 1.8 * S, 0.9 * S, SPIDER_ORANGE_HI, 1.6, 0.95);
-    /* ankle joint */
-    pushOcta(mul(Mt, TR(0, 0, tibiaLen)), 2.0 * S, SPIDER_ORANGE_DK, 1.5, 0.95);
-
-    /* --- CLAW (sharp tip) --- */
-    var Mcl = mul(Mta, TR(0, 0, tarsusLen));
-    Mcl = mul(Mcl, RZ(sideX * -0.4));
-    pushSpike(Mcl, 1.0 * S, 6 * S, "#ffffff", 1.4, 0.95);
-  }
-
-  /* ==================================================================
-     13. FLOOR / SHADOW / RINGS / MOTES
-     ================================================================== */
   var HSIZE = 78, COLST = HSIZE * 1.5, ROWST = HSIZE * 1.7320508;
   function renderFloor(t){
     var q0 = Math.round(player.x / COLST), r0 = Math.round(player.z / ROWST), list = [];
@@ -1860,9 +1337,6 @@
     }
   }
 
-  /* ==================================================================
-     15. SPAWNERS
-     ================================================================== */
   function spawnEnemy(){
     var ex = 0, ez = 0, t;
     for(t = 0; t < 80; t++){
@@ -1883,33 +1357,7 @@
       class: "m88"
     });
   }
-  function spawnSpider(){
-    var ex = 0, ez = 0, t;
-    for(t = 0; t < 100; t++){
-      var a = rnd(0, TAU), dist = rnd(500, 900);
-      ex = clamp(player.x + Math.cos(a) * dist, -ARENA + 100, ARENA - 100);
-      ez = clamp(player.z + Math.sin(a) * dist, -ARENA + 100, ARENA - 100);
-      if(!isNearBuilding(ex, ez, 60)) break;
-    }
-    spiders.push({
-      x: ex, z: ez, facing: rnd(0, TAU),
-      hp: 220, maxHp: 220,
-      walkPhase: rnd(0, TAU),
-      attackPhase: 0,
-      biteCD: rnd(1.8, 3.2),
-      state: "patrol",
-      patrolX: ex + rnd(-360, 360),
-      patrolZ: ez + rnd(-360, 360),
-      alertT: 0,
-      speed: 55,
-      class: "spider"
-    });
-    showToast("QUAD SPIDER INBOUND");
-  }
 
-  /* ==================================================================
-     16. VFX
-     ================================================================== */
   function muzzleFlash(p, col){
     if(muzzleF.length >= MAX_MUZZ) muzzleF.shift();
     muzzleF.push({ x: p.x, y: p.y, z: p.z, life: 0.07, max: 0.07, col: col || "#ff4444" });
@@ -2059,18 +1507,11 @@
     }
   }
 
-  /* ==================================================================
-     17. SHOOTING / TARGETING
-     ================================================================== */
   function castShot(o, d){
     var best = 1e9, kind = "sky", obj = null, t, i;
     for(i = 0; i < enemies.length; i++){
       t = raySphere(o, d, enemies[i].x, 52, enemies[i].z, 42);
       if(t > 0 && t < best){ best = t; kind = "enemy"; obj = enemies[i]; }
-    }
-    for(i = 0; i < spiders.length; i++){
-      t = raySphere(o, d, spiders[i].x, SPIDER_BODY_H, spiders[i].z, 44);
-      if(t > 0 && t < best){ best = t; kind = "spider"; obj = spiders[i]; }
     }
     for(i = 0; i < buildings.length; i++){
       t = rayBoxHit(o, d, buildings[i]);
@@ -2081,10 +1522,7 @@
       if(t > 0 && t < best){ best = t; kind = "ground"; obj = null; }
     }
     var tc = best > 2000 ? 2000 : best;
-    return {
-      t: best, kind: kind, obj: obj,
-      x: o.x + d.x * tc, y: o.y + d.y * tc, z: o.z + d.z * tc
-    };
+    return { t: best, kind: kind, obj: obj, x: o.x + d.x * tc, y: o.y + d.y * tc, z: o.z + d.z * tc };
   }
   function angErr(o, d, cx, cy, cz){
     var ox = cx - o.x, oy = cy - o.y, oz = cz - o.z;
@@ -2098,10 +1536,6 @@
       e = enemies[i]; c = angErr(o, d, e.x, 52, e.z);
       if(c.ang < bestA && c.dist < 900){ bestA = c.ang; best = e; }
     }
-    for(i = 0; i < spiders.length; i++){
-      e = spiders[i]; c = angErr(o, d, e.x, SPIDER_BODY_H, e.z);
-      if(c.ang < bestA && c.dist < 1000){ bestA = c.ang; best = e; }
-    }
     return best;
   }
   function killEnemy(en){
@@ -2109,15 +1543,6 @@
     killFeed("SWAT DOWN +400");
     explosion(en.x, 52, en.z, true);
     enemies.splice(enemies.indexOf(en), 1);
-  }
-  function killSpider(sp){
-    score += 900; kills++;
-    killFeed("QUAD SPIDER DESTROYED +900");
-    explosion(sp.x, SPIDER_BODY_H, sp.z, true);
-    spawnRing(sp.x, sp.z, SPIDER_ORANGE, 120);
-    spawnRing(sp.x, sp.z, RA_GREEN, 80);
-    spiders.splice(spiders.indexOf(sp), 1);
-    showToast("SPIDER SPLASH");
   }
   function playerFire(){
     if(player.reloadT > 0) return;
@@ -2135,7 +1560,7 @@
     var asst = findAimAssist(cam, d);
     if(asst && !(lockTarget && lockTarget.hp > 0)){
       var tx = asst.x;
-      var ty = asst.class === "spider" ? SPIDER_BODY_H : 52;
+      var ty = 52;
       var tz = asst.z;
       var dx = tx - cam.x, dy = ty - cam.y, dz = tz - cam.z;
       var dl = Math.sqrt(dx*dx + dy*dy + dz*dz) || 1;
@@ -2153,16 +1578,6 @@
       hitT = 0.2; hitKill = hit.obj.hp <= 0;
       sparks(hit.x, hit.y, hit.z, 4, ENEMY_RED);
       if(hit.obj.hp <= 0) killEnemy(hit.obj);
-    } else if(hit.kind === "spider"){
-      var eyeHit = Math.abs(hit.x - (hit.obj.x + Math.cos(hit.obj.facing) * 44)) < 20
-                && Math.abs(hit.z - (hit.obj.z - Math.sin(hit.obj.facing) * 44)) < 20
-                && hit.y > SPIDER_BODY_H - 2 && hit.y < SPIDER_BODY_H + 14;
-      var dmg = eyeHit ? 34 * 2.4 : 34;
-      hit.obj.hp -= dmg;
-      hitT = 0.22; hitKill = hit.obj.hp <= 0;
-      sparks(hit.x, hit.y, hit.z, eyeHit ? 8 : 5, eyeHit ? SPIDER_EYE : SPIDER_ORANGE_HI);
-      if(eyeHit){ showToast("EYE SHOT x2.4"); shake = Math.min(0.14, shake + 0.05); }
-      if(hit.obj.hp <= 0) killSpider(hit.obj);
     } else if(hit.kind !== "sky"){
       sparks(hit.x, hit.y, hit.z, 3, hit.kind === "ground" ? FLOOR_RED : BUILDING_STROKE);
     }
@@ -2175,7 +1590,7 @@
   function allyFire(){
     var t = ally.target;
     if(!t) return;
-    var ty = t.class === "spider" ? SPIDER_BODY_H : 52;
+    var ty = 52;
     var dx = t.x - ally.x, dy = ty - 45, dz = t.z - ally.z;
     var l = Math.sqrt(dx*dx + dy*dy + dz*dz) || 1;
     dx /= l; dy /= l; dz /= l;
@@ -2188,18 +1603,11 @@
       hit.obj.hp -= 12;
       sparks(hit.x, hit.y, hit.z, 2, ENEMY_RED);
       if(hit.obj.hp <= 0) killEnemy(hit.obj);
-    } else if(hit.kind === "spider"){
-      hit.obj.hp -= 10;
-      sparks(hit.x, hit.y, hit.z, 2, SPIDER_ORANGE_HI);
-      if(hit.obj.hp <= 0) killSpider(hit.obj);
     } else {
       sparks(hit.x, hit.y, hit.z, 2, FLOOR_RED);
     }
   }
 
-  /* ==================================================================
-     18. UPDATES
-     ================================================================== */
   function updatePlayer(dt){
     var ix = ((keys.KeyD || keys.ArrowRight) ? 1 : 0) - ((keys.KeyA || keys.ArrowLeft) ? 1 : 0);
     var iz = ((keys.KeyW || keys.ArrowUp) ? 1 : 0) - ((keys.KeyS || keys.ArrowDown) ? 1 : 0);
@@ -2277,18 +1685,12 @@
       e = enemies[i]; dx = e.x - ally.x; dz = e.z - ally.z; d = Math.sqrt(dx*dx + dz*dz);
       if(d < bd){ bd = d; best = e; }
     }
-    for(i = 0; i < spiders.length; i++){
-      e = spiders[i]; dx = e.x - ally.x; dz = e.z - ally.z; d = Math.sqrt(dx*dx + dz*dz);
-      if(d < bd){ bd = d; best = e; }
-    }
     ally.target = best;
     var mvx = 0, mvz = 0, wantSpeed = 0;
     if(best){
       dx = best.x - ally.x; dz = best.z - ally.z; d = Math.sqrt(dx*dx + dz*dz) || 1;
       ally.facing = lerpAngle(ally.facing, Math.atan2(dx, dz), 1 - Math.exp(-8 * dt));
-      if(d > 240){
-        mvx = dx / d; mvz = dz / d; wantSpeed = 150;
-      }
+      if(d > 240){ mvx = dx / d; mvz = dz / d; wantSpeed = 150; }
       ally.fireT -= dt;
       if(ally.fireT <= 0 && ally.burst <= 0){ ally.burst = 3; ally.burstT = 0; }
       if(ally.burst > 0){
@@ -2367,11 +1769,7 @@
           ddx = ddx / dl + rnd(-0.06, 0.06);
           ddy = ddy / dl + rnd(-0.04, 0.04);
           ddz = ddz / dl + rnd(-0.06, 0.06);
-          eBullets.push({
-            x: gx, y: gy, z: gz,
-            vx: ddx * 300, vy: ddy * 300, vz: ddz * 300,
-            life: 2.6, dmg: 9
-          });
+          eBullets.push({ x: gx, y: gy, z: gz, vx: ddx * 300, vy: ddy * 300, vz: ddz * 300, life: 2.6, dmg: 9 });
         }
       }
       if(mx !== 0 || mz !== 0){
@@ -2382,70 +1780,6 @@
       var pc = Math.cos(r.walkPhase);
       if(r.walking && Math.sin(r.walkPhase) * Math.sin(r.walkPhase - dt * 5) < 0)
         spawnRing(r.x, r.z, theme, 10);
-    }
-  }
-  function updateSpiders(dt){
-    var theme = waveTheme(wave);
-    for(var i = spiders.length - 1; i >= 0; i--){
-      var sp = spiders[i];
-      var toX = player.x - sp.x, toZ = player.z - sp.z;
-      var dist = Math.sqrt(toX*toX + toZ*toZ);
-
-      if(dist < 480){ sp.state = dist < 200 ? "attack" : "chase"; sp.alertT = 6; }
-      else if(sp.alertT > 0){ sp.alertT -= dt; sp.state = "chase"; }
-      else sp.state = "patrol";
-
-      var mx = 0, mz = 0;
-
-      if(sp.state === "patrol"){
-        var pdx = sp.patrolX - sp.x, pdz = sp.patrolZ - sp.z;
-        var pd = Math.sqrt(pdx*pdx + pdz*pdz);
-        if(pd < 30){
-          sp.patrolX = sp.x + rnd(-360, 360);
-          sp.patrolZ = sp.z + rnd(-360, 360);
-        } else {
-          mx = pdx / pd * sp.speed * dt;
-          mz = pdz / pd * sp.speed * dt;
-          sp.facing = Math.atan2(pdx, pdz);
-        }
-      } else if(sp.state === "chase"){
-        if(dist > 60){
-          mx = toX / dist * (sp.speed + 40) * dt;
-          mz = toZ / dist * (sp.speed + 40) * dt;
-        }
-        sp.facing = Math.atan2(toX, toZ);
-      } else {
-        sp.facing = Math.atan2(toX, toZ);
-        sp.attackPhase = Math.min(1, (sp.attackPhase || 0) + dt * 2.4);
-        sp.biteCD -= dt;
-        if(sp.biteCD <= 0 && dist < 90){
-          sp.biteCD = rnd(1.6, 2.6);
-          if(dist < 80){
-            player.hp -= 18;
-            dmgT = 0.35;
-            sparks(player.x, 40, player.z, 5, ENEMY_RED);
-            if(player.hp <= 0){ player.hp = 0; gameOver(); }
-          }
-        }
-      }
-      if(sp.state !== "attack" && sp.attackPhase > 0){
-        sp.attackPhase = Math.max(0, sp.attackPhase - dt * 2.0);
-      }
-
-      if(mx !== 0 || mz !== 0){
-        var res = collideWorld(sp.x + mx, sp.z + mz, 30);
-        sp.x = res[0]; sp.z = res[1];
-      }
-
-      var moving = (mx !== 0 || mz !== 0);
-      sp.walkPhase += dt * (moving ? 3.2 : 0.9);
-
-      if(moving){
-        var pc = Math.cos(sp.walkPhase);
-        var c = Math.cos(sp.walkPhase - dt * 3.2);
-        if(pc > 0 && c <= 0) spawnRing(sp.x + 30, sp.z, theme, 12);
-        else if(pc < 0 && c >= 0) spawnRing(sp.x - 30, sp.z, theme, 12);
-      }
     }
   }
   function updateBullets(dt){
@@ -2540,7 +1874,7 @@
       pauseT -= dt;
       if(pauseT <= 0){
         wave++;
-        waveRSpawn = 0; waveSSpawn = 0; waveDSpawn = 0;
+        waveRSpawn = 0; waveDSpawn = 0;
         waveTextT = 3.0;
         spawnT = 0.5;
       }
@@ -2552,11 +1886,10 @@
       spawnT = 1.6;
       var tot = waveTotals(wave);
       if(waveRSpawn < tot.r && enemies.length < 8){ spawnEnemy(); waveRSpawn++; }
-      else if(waveSSpawn < tot.s && spiders.length < 4){ spawnSpider(); waveSSpawn++; }
       else if(waveDSpawn < tot.d && enemies.length < 10){ spawnEnemy(); waveDSpawn++; }
     }
     var tot2 = waveTotals(wave);
-    if(waveRSpawn >= tot2.r && waveSSpawn >= tot2.s && waveDSpawn >= tot2.d && enemies.length === 0 && spiders.length === 0){
+    if(waveRSpawn >= tot2.r && waveDSpawn >= tot2.d && enemies.length === 0){
       if(wave >= 10){
         victory = true; ended = true;
         score += 5000;
@@ -2569,19 +1902,12 @@
     }
   }
 
-  /* ==================================================================
-     19. LOCK-ON SYSTEM
-     ================================================================== */
   function acquireLock(){
     var d = camForward(), best = null, bestA = 0.42;
     var i, e, c;
     for(i = 0; i < enemies.length; i++){
       e = enemies[i]; c = angErr(cam, d, e.x, 52, e.z);
       if(c.ang < bestA && c.dist < 900){ bestA = c.ang; best = e; }
-    }
-    for(i = 0; i < spiders.length; i++){
-      e = spiders[i]; c = angErr(cam, d, e.x, SPIDER_BODY_H, e.z);
-      if(c.ang < bestA && c.dist < 1000){ bestA = c.ang; best = e; }
     }
     if(best){ lockTarget = best; showToast("TARGET LOCKED"); }
     else showToast("NO TARGET IN CONE");
@@ -2592,10 +1918,6 @@
       e = enemies[i]; c = angErr(cam, d, e.x, 52, e.z);
       if(c.dist < 1000) cands.push({ ref: e, a: c.ang });
     }
-    for(i = 0; i < spiders.length; i++){
-      e = spiders[i]; c = angErr(cam, d, e.x, SPIDER_BODY_H, e.z);
-      if(c.dist < 1000) cands.push({ ref: e, a: c.ang });
-    }
     cands.sort(function(a, b){ return a.a - b.a; });
     if(cands.length === 0){ lockTarget = null; return; }
     var idx = lockTarget ? cands.findIndex(function(x){ return x.ref === lockTarget; }) : -1;
@@ -2604,7 +1926,7 @@
   }
   function updateLock(dt){
     if(lockTarget){
-      var isAlive = (enemies.indexOf(lockTarget) >= 0) || (spiders.indexOf(lockTarget) >= 0);
+      var isAlive = enemies.indexOf(lockTarget) >= 0;
       if(lockTarget.hp <= 0 || !isAlive) lockTarget = null;
     }
     if(lockTarget){
@@ -2615,22 +1937,18 @@
   }
   function renderLock(){
     if(!lockTarget){ LOCKG.setAttribute("opacity", "0"); return; }
-    var ty = lockTarget.class === "spider" ? SPIDER_BODY_H : 52;
+    var ty = 52;
     var s = worldScreen(lockTarget.x, ty, lockTarget.z);
     if(!s){ LOCKG.setAttribute("opacity", "0"); return; }
     LOCKG.setAttribute("opacity", "1");
     var sc = clamp(3000 / s.d, 0.55, 2.4);
-    if(lockTarget.class === "spider") sc *= 1.35;
     LOCKG.setAttribute("transform",
       "translate(" + s.sx.toFixed(1) + "," + s.sy.toFixed(1) + ") scale(" + sc.toFixed(2) + ")");
     LK_HP.setAttribute("width", (94 * lockTarget.hp / lockTarget.maxHp).toFixed(1));
-    var label = lockTarget.class === "spider" ? "QUAD SPIDER" : "SWAT HOSTILE";
+    var label = "SWAT HOSTILE";
     LK_T.textContent = label + " // " + Math.max(0, Math.round(lockTarget.hp)) + " HP";
   }
 
-  /* ==================================================================
-     20. SCENE ASSEMBLY
-     ================================================================== */
   function renderScene(t){
     var theme = waveTheme(wave);
     var i;
@@ -2653,15 +1971,10 @@
       var m2 = mul(mul(TR(h.x, by2, h.z), RY(h.spin)), RX(0.4));
       pushOcta(m2, 16, "#8833cc", 1.7, 0.92);
     }
-
-    /* SWAT enemies */
     scCur = SC_ENEMY;
     var ePose = {
-      x: 0, z: 0, facing: 0, phase: 0,
-      gait: cur, aimBlend: 0,
-      muzzle: { x:0, y:0, z:0 },
-      footL: { x:0, y:0, z:0 }, footR: { x:0, y:0, z:0 },
-      downed: false
+      x: 0, z: 0, facing: 0, phase: 0, gait: cur, aimBlend: 0,
+      muzzle: { x:0, y:0, z:0 }, footL: { x:0, y:0, z:0 }, footR: { x:0, y:0, z:0 }, downed: false
     };
     for(i = 0; i < enemies.length; i++){
       var en = enemies[i];
@@ -2672,21 +1985,6 @@
       ePose.phase = en.walkPhase;
       buildSWAT(ePose, { scale: 1.0, colors: SWAT_COLORS }, 0);
     }
-
-    /* Quad spiders — sleek polygonal body, 4 long animated legs */
-    for(i = 0; i < spiders.length; i++){
-      var sp = spiders[i];
-      var sdx = sp.x - cam.x, sdz = sp.z - cam.z;
-      if(Math.sqrt(sdx*sdx + sdz*sdz) > FAR) continue;
-      buildSpider({
-        x: sp.x, z: sp.z,
-        facing: sp.facing,
-        walkPhase: sp.walkPhase,
-        attackPhase: sp.attackPhase || 0
-      });
-    }
-
-    /* enemy bullets */
     scCur = SC_FX;
     for(i = 0; i < eBullets.length; i++){
       var b = eBullets[i];
@@ -2694,15 +1992,10 @@
       if(Math.sqrt(bdx*bdx + bdz*bdz) > FAR) continue;
       pushOcta(mul(TR(b.x, b.y, b.z), RY(t * 6 + i)), 3.4, ENEMY_RED, 1.2, 0.92);
     }
-
-    /* ally */
     scCur = SC_ALLY;
     var aPose = {
-      x: ally.x, z: ally.z, facing: ally.facing, phase: ally.phase,
-      gait: cur, aimBlend: 0,
-      muzzle: ally.muzzle,
-      footL: { x:0, y:0, z:0 }, footR: { x:0, y:0, z:0 },
-      downed: ally.downT > 0
+      x: ally.x, z: ally.z, facing: ally.facing, phase: ally.phase, gait: cur, aimBlend: 0,
+      muzzle: ally.muzzle, footL: { x:0, y:0, z:0 }, footR: { x:0, y:0, z:0 }, downed: ally.downT > 0
     };
     buildSWAT(aPose, { scale: 0.72, colors: {
       primary: ALLY_GREEN, hi: ALLY_GREEN_HI, dark: ALLY_GREEN_DEEP,
@@ -2712,23 +2005,16 @@
       emitter: ALLY_GREEN_HI,
       glove: "#0a1a14", boot: "#0a1a14"
     } }, 0);
-
-    /* Aton RA (player) */
     scCur = SC_PLAYER;
     var pPose = {
       x: player.x, z: player.z, facing: player.facing, phase: player.phase,
-      gait: cur, aimBlend: aimBlend,
-      muzzle: player.muzzle,
+      gait: cur, aimBlend: aimBlend, muzzle: player.muzzle,
       footL: player.footL, footR: player.footR
     };
     buildAtonRa(pPose, player.jumpY);
-
     flushDraw();
   }
 
-  /* ==================================================================
-     21. MINIMAP
-     ================================================================== */
   function renderMinimap(t){
     var R = 104, scale = R / 1400, cy2 = Math.cos(cam.yaw), sy2 = Math.sin(cam.yaw);
     function toMap(wx, wz, o){
@@ -2759,22 +2045,11 @@
     for(i = 0; i < enemies.length && n < 30; i++){
       var e2 = mmEn[n++];
       toMap(enemies[i].x, enemies[i].z, mo);
-      e2.setAttribute("cx", mo.x.toFixed(1));
-      e2.setAttribute("cy", mo.y.toFixed(1));
+      e2.setAttribute("cx", mo.x.toFixed(1)); e2.setAttribute("cy", mo.y.toFixed(1));
       e2.setAttribute("r", "4.5");
       e2.setAttribute("fill", ENEMY_RED);
       e2.setAttribute("opacity", mo.edge ? "0.4" : "1");
       e2.removeAttribute("display");
-    }
-    for(i = 0; i < spiders.length && n < 30; i++){
-      var e2b = mmEn[n++];
-      toMap(spiders[i].x, spiders[i].z, mo);
-      e2b.setAttribute("cx", mo.x.toFixed(1));
-      e2b.setAttribute("cy", mo.y.toFixed(1));
-      e2b.setAttribute("r", "8");
-      e2b.setAttribute("fill", SPIDER_ORANGE);
-      e2b.setAttribute("opacity", mo.edge ? "0.4" : "1");
-      e2b.removeAttribute("display");
     }
     for(i = n; i < 30; i++) mmEn[i].setAttribute("display", "none");
     n = 0;
@@ -2804,9 +2079,6 @@
     MSWEEP.setAttribute("transform", "rotate(" + ((t * 57) % 360).toFixed(1) + ")");
   }
 
-  /* ==================================================================
-     22. HUD
-     ================================================================== */
   var fpsN = 0, fpsT = 0, fpsShown = 0;
   function updateHUD(dt){
     var hpk = clamp(player.hp / 100, 0, 1);
@@ -2823,8 +2095,7 @@
     FPS_T.textContent = fpsShown + " FPS";
     OSC_T.textContent = oscReady ? (oscOn ? "OSC " + scopeMode.toUpperCase() + " " + oscUsed + "/" + OSC_BUDGET : "OSC OFF [0]") : "OSC WAIT [0]";
     TCH_T.textContent = touchActivated ? "TOUCH ON" : (touchDetected ? "TOUCH READY" : (padConnected ? "PAD ON" : "TOUCH OFF"));
-    enMix.textContent = "x" + enemies.length + " · x" + spiders.length;
-
+    enMix.textContent = "x" + enemies.length;
     var g = 13 + player.spread * 300 - aimBlend * 5;
     g = clamp(g, 6, 60);
     CH_T.setAttribute("y1", (450 - g - 12).toFixed(1)); CH_T.setAttribute("y2", (450 - g).toFixed(1));
@@ -2862,7 +2133,6 @@
     else toast.setAttribute("opacity", "0");
     flashEl.setAttribute("opacity", dmgT > 0 ? (dmgT * 1.4).toFixed(2) : "0");
     lockHint.setAttribute("opacity", (started && !locked && !ended && !touchActivated) ? (0.5 + 0.5 * Math.sin(performance.now() * 0.004)).toFixed(2) : "0");
-
     if(touchActivated){
       setTouchFill("TC_FIRE", tFire ? "#cc2222" : "#fff0e8");
       setTouchFill("TC_ADS", tAim ? "#cc6622" : "#fff4e6");
@@ -2879,9 +2149,6 @@
     if(c) c.setAttribute("fill", col);
   }
 
-  /* ==================================================================
-     23. GAME OVER / RESTART
-     ================================================================== */
   function gameOver(){
     if(ended) return;
     ended = true;
@@ -2902,9 +2169,9 @@
     player.jumpY = 0; player.jumpV = 0; player.jumping = false;
     ally.x = 26; ally.z = -14; ally.hp = 60; ally.downT = 0;
     ally.target = null; ally.fireT = 0; ally.burst = 0;
-    enemies.length = 0; spiders.length = 0; eBullets.length = 0; blasts.length = 0;
+    enemies.length = 0; eBullets.length = 0; blasts.length = 0;
     tracers.length = 0; impacts.length = 0; explosions.length = 0;
-    wave = 1; waveRSpawn = 0; waveSSpawn = 0; waveDSpawn = 0;
+    wave = 1; waveRSpawn = 0; waveDSpawn = 0;
     spawnT = 1; pauseT = 0; waveTextT = 3;
     score = 0; kills = 0; gameTime = 0;
     ended = false; victory = false; lockTarget = null;
@@ -2913,9 +2180,6 @@
     showToast("REDEPLOYED");
   }
 
-  /* ==================================================================
-     24. INPUT KEYBOARD
-     ================================================================== */
   var CYCLE = ["AUTO", "IDLE", "WALK", "RUN"];
   function setAnim(m){ animMode = m; showToast(m === "AUTO" ? "AUTO GAIT" : m + " CYCLE"); }
   function cycleAnim(){ setAnim(CYCLE[(CYCLE.indexOf(animMode) + 1) % CYCLE.length]); }
@@ -2958,9 +2222,6 @@
   window.addEventListener("keyup", function(e){ keys[e.code] = false; });
   window.addEventListener("blur", function(){ keys = {}; mouseDown = false; aimDown = false; });
 
-  /* ==================================================================
-     25. INPUT MOUSE
-     ================================================================== */
   function tryLock(){ if(SVG.requestPointerLock) try{ SVG.requestPointerLock(); }catch(ex){} }
   document.addEventListener("pointerlockchange", function(){
     locked = document.pointerLockElement === SVG;
@@ -2997,9 +2258,6 @@
     cam.distBase = clamp(cam.distBase + e.deltaY * 0.35, 130, 500);
   }, { passive: true });
 
-  /* ==================================================================
-     25b. GAMEPAD INPUT
-     ================================================================== */
   window.addEventListener("gamepadconnected", function(e){
     padConnected = true;
     padIndex = e.gamepad.index;
@@ -3015,18 +2273,14 @@
     if(!padConnected || padIndex < 0) return;
     var gp = navigator.getGamepads ? navigator.getGamepads()[padIndex] : null;
     if(!gp) return;
-
     padLX = Math.abs(gp.axes[0]) > 0.12 ? gp.axes[0] : 0;
     padLY = Math.abs(gp.axes[1]) > 0.12 ? gp.axes[1] : 0;
     padRX = Math.abs(gp.axes[2]) > 0.12 ? gp.axes[2] : 0;
     padRY = Math.abs(gp.axes[3]) > 0.12 ? gp.axes[3] : 0;
-
     cam.yaw += padRX * 2.6 * dt;
     cam.pitch = clamp(cam.pitch - padRY * 2.2 * dt, -1.05, 0.45);
-
     padRT = gp.buttons[7] ? gp.buttons[7].value : 0;
     padLT = gp.buttons[6] ? gp.buttons[6].value : 0;
-
     var a = gp.buttons[0] && gp.buttons[0].pressed;
     var b = gp.buttons[1] && gp.buttons[1].pressed;
     var x = gp.buttons[2] && gp.buttons[2].pressed;
@@ -3035,7 +2289,6 @@
     var rb = gp.buttons[5] && gp.buttons[5].pressed;
     var startB = gp.buttons[9] && gp.buttons[9].pressed;
     var backB = gp.buttons[8] && gp.buttons[8].pressed;
-
     if(a && !padPrev.a) doJump();
     if(b && !padPrev.b) cycleLock();
     if(x && !padPrev.x) startReload();
@@ -3048,15 +2301,11 @@
       oscOn = !oscOn;
       showToast(oscOn ? "OSCILLOSCOPE ON" : "OSCILLOSCOPE OFF");
     }
-
     padPrev.a = a; padPrev.b = b; padPrev.x = x; padPrev.y = y;
     padPrev.lb = lb; padPrev.rb = rb;
     padPrev.start = startB; padPrev.back = backB;
   }
 
-  /* ==================================================================
-     26. INPUT TOUCH
-     ================================================================== */
   function enableTouch(){
     if(touchActivated) return;
     touchDetected = true;
@@ -3067,7 +2316,6 @@
     lockHint.setAttribute("opacity", "0");
     if(!started) startGame();
   }
-
   function hitCircle(elem, x, y){
     if(!elem) return false;
     var rect = elem.getBoundingClientRect();
@@ -3084,20 +2332,14 @@
   }
 
   function handleTouchStart(e){
-    if(!touchActivated){
-      enableTouch();
-      e.preventDefault();
-      return;
-    }
+    if(!touchActivated){ enableTouch(); e.preventDefault(); return; }
     if(!started){ startGame(); e.preventDefault(); return; }
     if(ended){ restart(); e.preventDefault(); return; }
-
     var tch = e.changedTouches;
     for(var i = 0; i < tch.length; i++){
       var t = tch[i];
       var x = t.clientX, y = t.clientY;
       var handled = false;
-
       if(hitCircle(document.getElementById("TC_FIRE").querySelector("circle"), x, y)){ tFire = true; handled = true; }
       else if(hitCircle(document.getElementById("TC_ADS").querySelector("circle"), x, y)){ tAim = true; handled = true; }
       else if(hitCircle(document.getElementById("TC_REL").querySelector("circle"), x, y)){ startReload(); handled = true; }
@@ -3110,7 +2352,6 @@
       else if(hitCircle(document.getElementById("TC_DN").querySelector("circle"), x, y)){ tDn = true; checkDpadSprint(); handled = true; }
       else if(hitCircle(document.getElementById("TC_LT").querySelector("circle"), x, y)){ tLf = true; checkDpadSprint(); handled = true; }
       else if(hitCircle(document.getElementById("TC_RT").querySelector("circle"), x, y)){ tRt = true; checkDpadSprint(); handled = true; }
-
       if(!handled){
         if(dragTouchId < 0){
           dragTouchId = t.identifier;
@@ -3190,14 +2431,10 @@
   document.addEventListener("touchmove", handleTouchMove, { passive: false });
   document.addEventListener("touchend", handleTouchEnd, { passive: false });
   document.addEventListener("touchcancel", handleTouchEnd, { passive: false });
-
   if(("ontouchstart" in window) || (navigator.maxTouchPoints > 0)){
     touchDetected = true;
   }
 
-  /* ==================================================================
-     27. START / MENU
-     ================================================================== */
   function startGame(){
     started = true;
     gMenu.setAttribute("display", "none");
@@ -3216,9 +2453,6 @@
     e.preventDefault();
   }, { passive: false });
 
-  /* ==================================================================
-     28. MAIN LOOP
-     ================================================================== */
   generateWorld();
   var lastT = performance.now();
 
@@ -3236,7 +2470,6 @@
       updatePlayer(dt);
       updateAlly(dt);
       updateEnemies(dt);
-      updateSpiders(dt);
       updateBullets(dt);
       updateBlasts(dt);
       updateCrystals();
@@ -3255,8 +2488,6 @@
     renderShadowAt(player.x, player.z, 0, 16);
     renderShadowAt(ally.x, ally.z, 1, 11);
     if(lockTarget) renderShadowAt(lockTarget.x, lockTarget.z, 2, 16);
-    for(var si = 0; si < Math.min(spiders.length, 3); si++)
-      renderShadowAt(spiders[si].x, spiders[si].z, 3 + si, 42);
 
     for(var i = 0; i < buildings.length; i++){
       var b = buildings[i];
