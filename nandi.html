@@ -1,41 +1,52 @@
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tbody>
-    <tr>    </tr>
-  </tbody>
-</table>
-<img src="nandi poster1.jpg" width="800" height="422" alt=""/>
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tbody>
-    <tr>    </tr>
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  /* This class will center everything inside it */
+  .center-container {
+    text-align: center;
+    width: 100%;
+    margin: 0 auto; /* Centers the container itself */
+  }
 
-  </tbody>
-</table>
-<img src="cmdnand.png" width="500" height="77" alt=""/>
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tbody>
-    <tr>
-      <th scope="col">&nbsp;</th>
-    </tr>
-    <div>
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/1ftBENs_wdY?si=xZpyYwWSGugkeeFZ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-    </div>
-    <tr> </tr>
-    <div>&nbsp;</div>
-    <tr>
-      <td>&nbsp;</td>
-    </tr>
-  </tbody>
-  <tbody>
-    <tr>
-      <th scope="col">&nbsp;</th>
-    </tr>
-    <tr>
-      <td>&nbsp;</td>
-    </tr>
-    <tr>
-      <td>&nbsp;</td>
-    </tr>
-  </tbody>
-  <tbody>
-  </tbody>
-</table>
+  /* This makes sure images don't overflow on smaller screens */
+  .center-container img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Adds a little space between the elements */
+  .center-container img, 
+  .center-container iframe {
+    margin-bottom: 20px;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Everything inside this div will be centered -->
+  <div class="center-container">
+    
+    <img src="nandi poster1.jpg" width="800" height="422" alt="Nandi Poster"/>
+    
+    <br> <!-- Line break to put the logo on a new line -->
+    
+    <img src="cmdnand.png" width="500" height="77" alt="Commander Nandi"/>
+    
+    <br><br> <!-- Line breaks for spacing -->
+    
+    <iframe 
+      width="560" 
+      height="315" 
+      src="https://www.youtube.com/embed/1ftBENs_wdY?si=xZpyYwWSGugkeeFZ" 
+      title="YouTube video player" 
+      frameborder="0" 
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+      referrerpolicy="strict-origin-when-cross-origin" 
+      allowfullscreen>
+    </iframe>
+
+  </div>
+
+</body>
+</html>
