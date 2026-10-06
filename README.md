@@ -2,7 +2,7 @@ https://www.loc.gov/preservation/digital/formats/fdd/fdd000515.shtml#specs~
 
 https://en.wikipedia.org/wiki/SVG
 
-NO ONE No PHD or PROFESSOR knew of this ability to make 3D SVG XML spatial games and simulations. no one.
+
 
 GOOGLE "za2play.svg"  The SVG XML becomes a game cartridge or Disc for a games consoles. 
 PLAY here with Playstation 5 Dualsense and X Box One Controller support - https://svgfpsaiagents.github.io/svgfpsgameAI/za2play.svg
