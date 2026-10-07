@@ -1,0 +1,1661 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1920" height="1080" viewBox="0 0 1920 1080"
+     font-family="Courier New, monospace"
+     style="background:#000;touch-action:none;-webkit-user-select:none;user-select:none" xmlns:c2pa="http://c2pa.org/manifest"><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTpmZjNmM2FjZi1mM2RlLTRiZWEtYjlkYS00MzZlYTgyZDY4ZWQAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaOxgy9gtubuGlimD72ndAhoAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDpiYjkxM2Q1YS0wZWYxLTRjY2EtOTE0Yy1lOWY1ZTViOWFjNmJscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNoggAP2elinmkLbqryecyDkAAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggAlI8Rd30zjzvuql62YL5iNKL3bBX++OMjsFockBs9CSkZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaN2Yiz7DpaiQxa5ZsM5pRvAAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRMAAAAAAAAAAAAAAAAZGhhc2hYIJ/FXmuEDajYSwuR49Tr0ASrmZ6Qp2t7rN3lpG6Pr2z+ZG5hbWVuanVtYmYgbWFuaWZlc3RqZXhjbHVzaW9uc4GiZXN0YXJ0GQFJZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOmZmM2YzYWNmLWYzZGUtNGJlYS1iOWRhLTQzNmVhODJkNjhlZC9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOmM1ZTUwMGNiLTVmOGUtNDk3NC1hNjFkLWI4MzVkNGMzZmVkYnJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCACUjxF3fTOPO+6qXrZgvmI0ovdsFf744yOwWhyQGz0JKJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggixkspL/1Zk+nif018NpuuCXmfaiVA4fZxNFIC8SYUGCiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFgg8Qepoz1Rp2JTMHHlICU8Yvm0ORSnPWuiq8dKK3ietiB0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQK9upPNRdVySCGlxKVPQzamo1Yj68bavgf1BIWN4KcpRA4UzoQA6Fm3s7UtpCFj4oJPVezKGa85d85/6oH9pjz4=</c2pa:manifest></metadata>
+
+  <title>MMA TILE ENGINE</title>
+  <desc>D = A·B + C tile primitive, modeled in a single SVG file</desc>
+
+  <defs>
+    <pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="4" fill="#000"/>
+      <rect width="4" height="2" fill="#020402"/>
+    </pattern>
+  </defs>
+
+  <rect width="1920" height="1080" fill="#000"/>
+  <g id="scene"></g>
+  <rect width="1920" height="1080" fill="url(#scan)" opacity="0.35" pointer-events="none"/>
+  <g id="hud"></g>
+
+  <script><![CDATA[
+// ============================================================
+// MMA TILE ENGINE
+//   D = A·B + C on 4×4 tiles
+//   fp16 inputs (optional), fp32 accumulation
+//   single SVG file, pure JS, no dependencies
+// ============================================================
+
+var $ = function(id){ return document.getElementById(id); };
+var _f32 = new Float32Array(1);
+var _i32 = new Int32Array(_f32.buffer);
+
+function ESC(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function FMT(v){
+  if(!isFinite(v)) return v > 0 ? '\u221E' : (v < 0 ? '-\u221E' : 'NaN');
+  if(Math.abs(v) >= 10000) return v.toExponential(1);
+  return String(Math.round(v*1000)/1000);
+}
+function label(x, y, txt, fs, color, anchor){
+  return '<text x="'+x+'" y="'+y+'" font-size="'+fs+'" fill="'+color+
+         '" text-anchor="'+(anchor||'middle')+'" font-family="Courier New, monospace" pointer-events="none">'+
+         ESC(txt)+'</text>';
+}
+
+// ---- FP16 emulation (round to nearest, flush subnormals) ----
+function fp16(x){
+  _f32[0] = x;
+  var i = _i32[0];
+  var s = i & 0x80000000;
+  var e = (i >>> 23) & 0xff;
+  var m = i & 0x7fffff;
+  if(e === 0xff) return x;
+  var ne = e - 112;
+  if(ne >= 31){ _i32[0] = s | 0x7f800000; return _f32[0]; }
+  if(ne <= 0) return s ? -0 : 0;
+  var m2 = (m + 0x1000) >>> 13;
+  if(m2 >= 0x400){
+    m2 = 0; ne++;
+    if(ne >= 31){ _i32[0] = s | 0x7f800000; return _f32[0]; }
+  }
+  _i32[0] = s | ((ne+112) << 23) | (m2 << 13);
+  return _f32[0];
+}
+function f32(x){ _f32[0] = x; return _f32[0]; }
+
+// ---- state ----
+var M = 4, K = 4, N = 4;
+var T = 4;
+var FP16 = false;
+var A, B, C;
+var refMaxAbs = 1;
+var accum = null;
+var curOp = null;
+var cursor = { ti:0, tj:0, tk:0, running:false, done:false, t:0, speed:0.5 };
+var preset = 's4';
+var sel = null, editBuf = null, freshEdit = true;
+var dirty = true, hudDirty = true;
+
+// ---- matrix allocation helpers ----
+function alloc(m, n, f){
+  var a = [];
+  for(var i = 0; i < m; i++){
+    a[i] = [];
+    for(var j = 0; j < n; j++) a[i][j] = f ? f(i,j) : 0;
+  }
+  return a;
+}
+function clone2D(X){
+  var a = [];
+  for(var i = 0; i < X.length; i++) a[i] = X[i].slice();
+  return a;
+}
+function loadTile(X, r, c){
+  var t = [];
+  for(var i = 0; i < T; i++){
+    t[i] = [];
+    for(var j = 0; j < T; j++){
+      t[i][j] = (X[r+i] !== undefined && X[r+i][c+j] !== undefined) ? X[r+i][c+j] : 0;
+    }
+  }
+  return t;
+}
+function storeTile(X, r, c, t){
+  for(var i = 0; i < T; i++)
+    for(var j = 0; j < T; j++)
+      if(X[r+i]) X[r+i][c+j] = t[i][j];
+}
+
+// ---- THE PRIMITIVE: D = A·B + C on one 4×4 tile ----
+function mmaTile(at, bt, ct, dt){
+  for(var i = 0; i < T; i++){
+    for(var j = 0; j < T; j++){
+      var s = ct[i][j];
+      for(var k = 0; k < T; k++){
+        var a = at[i][k], b = bt[k][j];
+        if(FP16){
+          a = fp16(a); b = fp16(b);
+          s = f32(s + a*b);
+        } else {
+          s = s + a*b;
+        }
+      }
+      dt[i][j] = s;
+    }
+  }
+}
+
+// ---- full reference compute (for static view + reference scale) ----
+function computeC(){
+  C = alloc(M, N, function(){ return 0; });
+  for(var ti = 0; ti < M; ti += T){
+    for(var tj = 0; tj < N; tj += T){
+      var acc = alloc(T, T, function(){ return 0; });
+      for(var tk = 0; tk < K; tk += T){
+        var at = loadTile(A, ti, tk);
+        var bt = loadTile(B, tk, tj);
+        mmaTile(at, bt, acc, acc);
+      }
+      storeTile(C, ti, tj, acc);
+    }
+  }
+  // Update reference max so the 3D view has a stable colour/height scale
+  var m = 0;
+  for(var i = 0; i < M; i++) for(var j = 0; j < N; j++){
+    var v = Math.abs(C[i][j]);
+    if(v > m) m = v;
+  }
+  refMaxAbs = m < 0.01 ? 1 : m;
+  // fp16-vs-fp32 error map must be recomputed lazily
+  if(typeof HW !== 'undefined' && HW) HW.errDirty = true;
+}
+
+// ---- setup / presets ----
+function setSize(m, k, n, p){
+  M = m; K = k; N = n; preset = p;
+  A = alloc(M, K, function(i,j){ return i===j ? 1 : 0; });
+  B = alloc(K, N, function(i,j){ return i===j ? 1 : 0; });
+  resetAnim();
+  computeC();
+  // Reset 3D camera distance to fit the new matrix
+  if(typeof V3 !== 'undefined'){ V3.dist = v3_defaultDist(); }
+  dirty = true; hudDirty = true;
+}
+function randomize(){
+  for(var i = 0; i < M; i++) for(var k = 0; k < K; k++) A[i][k] = Math.floor(Math.random()*19)-9;
+  for(var k2 = 0; k2 < K; k2++) for(var j = 0; j < N; j++) B[k2][j] = Math.floor(Math.random()*19)-9;
+  resetAnim(); computeC();
+  dirty = true; hudDirty = true;
+}
+// Fractional random values: NOT exactly representable in fp16, so the
+// FP16 toggle and the error map actually show rounding.
+function randomFrac(){
+  for(var i = 0; i < M; i++) for(var k = 0; k < K; k++)
+    A[i][k] = f32(Math.round((Math.random()*20-10)*1000)/1000);
+  for(var k2 = 0; k2 < K; k2++) for(var j = 0; j < N; j++)
+    B[k2][j] = f32(Math.round((Math.random()*20-10)*1000)/1000);
+  resetAnim(); computeC();
+  dirty = true; hudDirty = true;
+}
+function identity(){
+  for(var i = 0; i < M; i++) for(var k = 0; k < K; k++) A[i][k] = (i===k)?1:0;
+  for(var k2 = 0; k2 < K; k2++) for(var j = 0; j < N; j++) B[k2][j] = (k2===j)?1:0;
+  resetAnim(); computeC();
+  dirty = true; hudDirty = true;
+}
+
+// ---- animation cursor ----
+function resetAnim(){
+  cursor.ti = 0; cursor.tj = 0; cursor.tk = 0;
+  cursor.running = false; cursor.done = false; cursor.t = 0;
+  accum = null; curOp = null;
+  C = alloc(M, N, function(){ return 0; });
+  if(typeof hw_reset === 'function') hw_reset();
+}
+
+function step(){
+  if(cursor.done) return;
+  var ti = cursor.ti, tj = cursor.tj, tk = cursor.tk;
+
+  // phase 1: GLOBAL -> SHARED  (stage the A and B tiles)
+  hw_loadTileToShared(A, ti*T, tk*T, 'A');
+  hw_loadTileToShared(B, tk*T, tj*T, 'B');
+  // phase 2: SHARED -> REGS  (distribute fragments to lanes)
+  var at = hw_loadSharedToRegs('A');
+  var bt = hw_loadSharedToRegs('B');
+  if(!accum) accum = alloc(T, T, function(){ return 0; });
+
+  var before = clone2D(accum);
+  // phase 3: MMA  (registers only, accumulator stays in registers)
+  mmaTile(at, bt, accum, accum);
+  var after = clone2D(accum);
+  hw_recordMma();
+
+  curOp = { ti: ti, tj: tj, tk: tk, at: at, bt: bt, before: before, after: after };
+
+  cursor.tk++;
+  if(cursor.tk * T >= K){
+    // phase 4: REGS -> GLOBAL  (store the finished C tile once)
+    hw_storeTileToGlobal();
+    storeTile(C, ti*T, tj*T, accum);
+    accum = null;
+    cursor.tk = 0;
+    cursor.tj++;
+    if(cursor.tj * T >= N){
+      cursor.tj = 0;
+      cursor.ti++;
+      if(cursor.ti * T >= M){
+        cursor.done = true;
+        cursor.running = false;
+      }
+    }
+  }
+  dirty = true; hudDirty = true;
+}
+
+function togglePlay(){
+  if(cursor.done) resetAnim();
+  if(!cursor.running && !curOp){
+    C = alloc(M, N, function(){ return 0; });
+    accum = null;
+  }
+  cursor.running = !cursor.running;
+  cursor.t = 0;
+  dirty = true; hudDirty = true;
+}
+
+function stepOnce(){
+  if(cursor.done) return;
+  if(!curOp){
+    C = alloc(M, N, function(){ return 0; });
+    accum = null;
+  }
+  cursor.running = false;
+  step();
+}
+
+// ---- layout ----
+function layout(){
+  var maxDim = Math.max(M, K, N);
+  var STEP = Math.min(52, Math.floor(440 / maxDim));
+  STEP = Math.max(STEP, 20);
+
+  var aW = K*STEP, aH = M*STEP;
+  var bW = N*STEP, bH = K*STEP;
+  var cW = N*STEP, cH = M*STEP;
+  var opW = 70;
+  var totalW = aW + opW + bW + opW + cW;
+  var maxH = Math.max(aH, bH, cH);
+  var startX = (1920 - totalW) / 2;
+  var startY = 210;
+
+  return {
+    STEP: STEP,
+    ax: startX,                 ay: startY + (maxH-aH)/2,
+    bx: startX + aW + opW,      by: startY + (maxH-bH)/2,
+    cx: startX + aW + opW + bW + opW, cy: startY + (maxH-cH)/2,
+    aw: aW, ah: aH, bw: bW, bh: bH, cw: cW, ch: cH,
+    mulX: startX + aW + opW/2,
+    eqX:  startX + aW + opW + bW + opW/2,
+    mulY: startY + maxH/2,
+    eqY:  startY + maxH/2,
+    bottom: startY + maxH
+  };
+}
+
+// ---- drawing ----
+function brackets(x, y, w, h, color){
+  var pad = 12, ext = 10;
+  return '<path d="M '+(x-pad)+' '+(y-ext)+' L '+(x-pad-8)+' '+(y-ext)+
+         ' L '+(x-pad-8)+' '+(y+h+ext)+' L '+(x-pad)+' '+(y+h+ext)+
+         '" fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>'+
+         '<path d="M '+(x+w+pad)+' '+(y-ext)+' L '+(x+w+pad+8)+' '+(y-ext)+
+         ' L '+(x+w+pad+8)+' '+(y+h+ext)+' L '+(x+w+pad)+' '+(y+h+ext)+
+         '" fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>';
+}
+
+function drawMatrixCells(X, x, y, rows, cols, STEP, color, name){
+  var s = '';
+  var fs = Math.max(11, Math.floor(STEP * 0.42));
+  var editable = (name === 'A' || name === 'B') && !cursor.running && !cursor.done;
+
+  for(var i = 0; i < rows; i++){
+    for(var j = 0; j < cols; j++){
+      var cx = x + j*STEP, cy = y + i*STEP;
+      var active = sel && sel.m === name && sel.i === i && sel.j === j;
+      var stroke = active ? '#ffffff' : color;
+      var sw = active ? 2.5 : 0.6;
+      var fill = active ? '#0d2a18' : 'none';
+      var attrs = '';
+      if(editable){
+        attrs = ' data-m="'+name+'" data-i="'+i+'" data-j="'+j+'" style="cursor:pointer"';
+      }
+      s += '<rect x="'+cx+'" y="'+cy+'" width="'+STEP+'" height="'+STEP+
+           '" fill="'+fill+'" stroke="'+stroke+'" stroke-width="'+sw+
+           '" stroke-opacity="'+(active?1:0.6)+'"'+attrs+'/>';
+      var txt;
+      if(active && editBuf !== null) txt = editBuf;
+      else txt = FMT(X[i] ? X[i][j] : 0);
+      s += label(cx + STEP/2, cy + STEP/2 + fs*0.36, txt, fs, active ? '#ffffff' : color, 'middle');
+    }
+  }
+  for(var ti = T; ti < rows; ti += T){
+    s += '<line x1="'+x+'" y1="'+(y+ti*STEP)+'" x2="'+(x+cols*STEP)+'" y2="'+(y+ti*STEP)+
+         '" stroke="'+color+'" stroke-width="1.8" stroke-opacity="0.85" pointer-events="none"/>';
+  }
+  for(var tj = T; tj < cols; tj += T){
+    s += '<line x1="'+(x+tj*STEP)+'" y1="'+y+'" x2="'+(x+tj*STEP)+'" y2="'+(y+rows*STEP)+
+         '" stroke="'+color+'" stroke-width="1.8" stroke-opacity="0.85" pointer-events="none"/>';
+  }
+  return s;
+}
+
+function hlTile(x, y, STEP, ti, tj, color){
+  return '<rect x="'+(x+tj*T*STEP)+'" y="'+(y+ti*T*STEP)+
+         '" width="'+(T*STEP)+'" height="'+(T*STEP)+
+         '" fill="none" stroke="'+color+'" stroke-width="3.5" pointer-events="none"/>';
+}
+
+function drawMiniGrid(X, x, y, step, color){
+  var s = '';
+  var fs = Math.max(9, Math.floor(step * 0.42));
+  for(var i = 0; i < T; i++){
+    for(var j = 0; j < T; j++){
+      var cx = x + j*step, cy = y + i*step;
+      s += '<rect x="'+cx+'" y="'+cy+'" width="'+step+'" height="'+step+
+           '" fill="none" stroke="'+color+'" stroke-width="1.2" stroke-opacity="0.75" pointer-events="none"/>';
+      var v = X[i] ? X[i][j] : 0;
+      s += label(cx + step/2, cy + step/2 + fs*0.36, FMT(v), fs, color, 'middle');
+    }
+  }
+  return s;
+}
+
+// ---- workbench ----
+function drawWorkbench(y){
+  var h = 1080 - y - 40;
+  var s = '';
+  s += '<rect x="40" y="'+y+'" width="1840" height="'+h+
+       '" fill="#010801" stroke="#1f7a3d" stroke-width="2" pointer-events="none"/>';
+  s += label(60, y+28, '// WORKBENCH  \u2014  TILE PRIMITIVE  D = A_tile \u00B7 B_tile + C_acc',
+             16, '#1f7a3d', 'start');
+
+  if(!curOp){
+    s += label(960, y + h/2, 'PRESS  PLAY  OR  STEP  TO EXECUTE THE TILE LOOP',
+               22, '#1f7a3d', 'middle');
+    return s;
+  }
+
+  var lx = 80, ly = y + 66;
+  s += label(lx, ly, '// TILE CURSOR', 13, '#1f7a3d', 'start');
+  s += label(lx, ly+28, 'ti = '+curOp.ti+'   (row tile of C)', 17, '#4fc3ff', 'start');
+  s += label(lx, ly+52, 'tj = '+curOp.tj+'   (col tile of C)', 17, '#4fc3ff', 'start');
+  s += label(lx, ly+76, 'tk = '+curOp.tk+'   (K tile)', 17, '#4fc3ff', 'start');
+  s += label(lx, ly+112, 'A rows '+(curOp.ti*T)+'-'+(curOp.ti*T+T-1)+
+              ', cols '+(curOp.tk*T)+'-'+(curOp.tk*T+T-1), 13, '#39ff6e', 'start');
+  s += label(lx, ly+132, 'B rows '+(curOp.tk*T)+'-'+(curOp.tk*T+T-1)+
+              ', cols '+(curOp.tj*T)+'-'+(curOp.tj*T+T-1), 13, '#ffd23f', 'start');
+  s += label(lx, ly+164, FP16 ? 'fp16 in / fp32 accum' : 'fp32 in / fp32 accum',
+             13, '#1f7a3d', 'start');
+
+  var tstep = 28, tw = T*tstep;
+  var gx = 460, gy = y + 66;
+
+  var gxs = [
+    { x: gx,                  X: curOp.at,     col: '#39ff6e', t: 'A_tile' },
+    { x: gx + (tw+70),        X: curOp.bt,     col: '#ffd23f', t: 'B_tile' },
+    { x: gx + (tw+70)*2,      X: curOp.before, col: '#4fc3ff', t: 'C_acc' },
+    { x: gx + (tw+70)*3,      X: curOp.after,  col: '#ffffff', t: 'C_acc\'' }
+  ];
+  for(var i = 0; i < gxs.length; i++){
+    var g = gxs[i];
+    s += label(g.x, gy - 8, g.t, 13, g.col, 'start');
+    s += drawMiniGrid(g.X, g.x, gy, tstep, g.col);
+  }
+  var my = gy + tw/2;
+  s += label(gx + tw + 35,             my, '\u00D7', 30, '#1f7a3d');
+  s += label(gx + (tw+70) + tw + 35,   my, '+',     30, '#1f7a3d');
+  s += label(gx + (tw+70)*2 + tw + 35, my, '\u2192', 30, '#1f7a3d');
+
+  var nx = gx + (tw+70)*3 + tw + 60, ny = y + 66;
+  s += label(nx, ny,      '// PRIMITIVE', 13, '#1f7a3d', 'start');
+  s += label(nx, ny+26,   'D = A\u00B7B + C  on one tile', 15, '#b6ffd0', 'start');
+  s += label(nx, ny+52,   '4\u00D74 tile, 16 parallel MACs', 13, '#1f7a3d', 'start');
+  s += label(nx, ny+78,   'inputs rounded to 10 mantissa bits', 13, '#1f7a3d', 'start');
+  s += label(nx, ny+96,   'accumulator held in fp32', 13, '#1f7a3d', 'start');
+  s += label(nx, ny+122,  'stored to C when tk completes', 13, '#1f7a3d', 'start');
+  s += label(nx, ny+148,  'single-threaded model:', 13, '#1f7a3d', 'start');
+  s += label(nx, ny+166,  'models dataflow, not parallelism', 13, '#1f7a3d', 'start');
+
+  var laneY = y + 210;
+  if(laneY > y + h - 80) laneY = y + h - 80;
+  var i0 = 0, j0 = 0;
+  s += label(80, laneY, 'LANE ('+i0+','+j0+') OF TILE  \u2014  scalar reduction:', 14, '#1f7a3d', 'start');
+  var terms = [];
+  for(var k = 0; k < T; k++) terms.push(FMT(curOp.at[i0][k]) + '\u00B7' + FMT(curOp.bt[k][j0]));
+  s += label(80, laneY+26, '  '+terms.join('  +  '), 17, '#b6ffd0', 'start');
+  var b0 = curOp.before[i0][j0];
+  var a0 = curOp.after[i0][j0];
+  s += label(80, laneY+52,
+             '  acc = '+FMT(b0)+'  +  ('+FMT(a0-b0)+')  =  '+FMT(a0),
+             17, '#ffffff', 'start');
+
+  return s;
+}
+
+// ---- main render ----
+function render(){
+  var L = layout();
+  var s = '';
+
+  s += brackets(L.ax, L.ay, L.aw, L.ah, '#39ff6e');
+  s += drawMatrixCells(A, L.ax, L.ay, M, K, L.STEP, '#39ff6e', 'A');
+  s += label(L.ax + L.aw/2, L.ay - 28, 'A', 28, '#39ff6e');
+  s += label(L.ax + L.aw/2, L.ay + L.ah + 38, M+'\u00D7'+K, 15, '#1f7a3d');
+
+  s += label(L.mulX, L.mulY, '\u00D7', 56, '#1f7a3d');
+
+  s += brackets(L.bx, L.by, L.bw, L.bh, '#ffd23f');
+  s += drawMatrixCells(B, L.bx, L.by, K, N, L.STEP, '#ffd23f', 'B');
+  s += label(L.bx + L.bw/2, L.by - 28, 'B', 28, '#ffd23f');
+  s += label(L.bx + L.bw/2, L.by + L.bh + 38, K+'\u00D7'+N, 15, '#1f7a3d');
+
+  s += label(L.eqX, L.eqY, '=', 56, '#1f7a3d');
+
+  s += brackets(L.cx, L.cy, L.cw, L.ch, '#4fc3ff');
+  s += drawMatrixCells(C, L.cx, L.cy, M, N, L.STEP, '#4fc3ff', 'C');
+  s += label(L.cx + L.cw/2, L.cy - 28, 'C', 28, '#4fc3ff');
+  s += label(L.cx + L.cw/2, L.cy + L.ch + 38, M+'\u00D7'+N, 15, '#1f7a3d');
+
+  if(curOp){
+    s += hlTile(L.ax, L.ay, L.STEP, curOp.ti, curOp.tk, '#ffffff');
+    s += hlTile(L.bx, L.by, L.STEP, curOp.tk, curOp.tj, '#ffffff');
+    s += hlTile(L.cx, L.cy, L.STEP, curOp.ti, curOp.tj, '#ffffff');
+  }
+
+  var wbY = L.bottom + 70;
+  if(wbY > 820) wbY = 820;
+  s += drawWorkbench(wbY);
+
+  // ---- 3D LANDSCAPE OVERLAY (appended) ----
+  if(V3.open){ s += v3_render(); }
+
+  // ---- HARDWARE VIEW OVERLAY (appended) ----
+  if(HW.open){ s += hw_render(); }
+
+  $('scene').innerHTML = s;
+}
+
+// ---- HUD ----
+function renderHUD(){
+  var s = '';
+  s += label(60, 50, 'MMA TILE ENGINE', 30, '#39ff6e', 'start');
+  s += label(60, 76, 'D = A\u00B7B + C on 4\u00D74 tiles   //   single SVG file   //   pure JS',
+             14, '#1f7a3d', 'start');
+
+  var btns = [
+    { id: 's4',  l: '4\u00D74' },
+    { id: 's8',  l: '8\u00D78' },
+    { id: 's12', l: '12\u00D712' },
+    { id: 'sq',  l: 'NON-SQ' },
+    { id: 'rnd', l: 'RANDOM' },
+    { id: 'rf',  l: 'RND.FRAC' },
+    { id: 'idt', l: 'IDENTITY' },
+    { id: 'pl',  l: cursor.running ? 'PAUSE' : (cursor.done ? 'REPLAY' : 'PLAY') },
+    { id: 'st',  l: 'STEP' },
+    { id: 'rs',  l: 'RESET' },
+    { id: 'f16', l: FP16 ? 'FP16: ON' : 'FP16: OFF' },
+    { id: 'v3',  l: V3.open ? '3D: ON' : '3D VIEW' },
+    { id: 'hw',  l: HW.open ? 'HW: ON' : 'HW VIEW' }
+  ];
+
+  var bw = 116, bh = 38, gap = 8;
+  var bx = 60, by = 110;
+  for(var i = 0; i < btns.length; i++){
+    var b = btns[i];
+    var x = bx + i*(bw+gap);
+    var active = (b.id === preset) || (b.id === 'f16' && FP16) ||
+                 (b.id === 'v3' && V3.open) || (b.id === 'hw' && HW.open);
+    s += '<rect x="'+x+'" y="'+by+'" width="'+bw+'" height="'+bh+
+         '" fill="'+(active?'#0d2a18':'#000')+
+         '" stroke="'+(active?'#39ff6e':'#1f7a3d')+
+         '" stroke-width="2" data-act="'+b.id+'" style="cursor:pointer"/>';
+    s += label(x + bw/2, by + bh/2 + 6, b.l, 16, active ? '#39ff6e' : '#b6ffd0');
+  }
+
+  s += label(1860, 50,  'CLICK A CELL TO EDIT', 14, '#1f7a3d', 'end');
+  s += label(1860, 72,  'DIGITS  .  -  BACKSPACE  ENTER  ARROWS', 13, '#1f7a3d', 'end');
+
+  var status = cursor.done ? 'COMPLETE' : (cursor.running ? 'RUNNING' : (curOp ? 'STEPPED' : 'IDLE'));
+  s += label(1860, 110, 'STATUS: ' + status, 14, '#39ff6e', 'end');
+  var steps = cursor.ti*(N/T)*(K/T) + cursor.tj*(K/T) + cursor.tk;
+  var total = (M/T)*(N/T)*(K/T);
+  s += label(1860, 132, 'TILE: ' + steps + ' / ' + total, 14, '#1f7a3d', 'end');
+
+  $('hud').innerHTML = s;
+}
+
+// ---- input ----
+function findAct(el){
+  while(el && el !== document){
+    if(el.getAttribute){
+      var a = el.getAttribute('data-act');
+      if(a) return a;
+    }
+    el = el.parentNode;
+  }
+  return null;
+}
+
+function handleAct(a){
+  switch(a){
+    case 's4':  setSize(4,4,4,'s4'); break;
+    case 's8':  setSize(8,8,8,'s8'); break;
+    case 's12': setSize(12,12,12,'s12'); break;
+    case 'sq':  setSize(8,12,8,'sq'); break;
+    case 'rnd': randomize(); break;
+    case 'rf':  randomFrac(); break;
+    case 'idt': identity(); break;
+    case 'pl':  togglePlay(); break;
+    case 'st':  stepOnce(); break;
+    case 'rs':  resetAnim(); computeC(); dirty = true; hudDirty = true; break;
+    case 'f16': FP16 = !FP16; resetAnim(); computeC(); dirty = true; hudDirty = true; break;
+    case 'v3':
+      V3.open = !V3.open;
+      if(V3.open){
+        HW.open = false;
+        V3.autoSpin = true;
+        V3.dist = v3_defaultDist();
+        V3.yaw = 0.6;
+        V3.pit = 0.38;
+      }
+      dirty = true; hudDirty = true; break;
+    case 'hw':
+      HW.open = !HW.open;
+      if(HW.open){
+        V3.open = false;
+        if(sel){ commitEdit(); sel = null; editBuf = null; }
+      }
+      dirty = true; hudDirty = true; break;
+  }
+}
+
+$('hud').addEventListener('pointerdown', function(e){
+  var a = findAct(e.target);
+  if(a) handleAct(a);
+});
+
+$('scene').addEventListener('pointerdown', function(e){
+  var t = e.target;
+  if(!t.getAttribute) return;
+  var m = t.getAttribute('data-m');
+  if(!m) return;
+  if(cursor.running || cursor.done) return;
+  if(sel) commitEdit();
+  var i = parseInt(t.getAttribute('data-i'), 10);
+  var j = parseInt(t.getAttribute('data-j'), 10);
+  sel = { m: m, i: i, j: j };
+  editBuf = String(m === 'A' ? A[i][j] : B[i][j]);
+  freshEdit = true;
+  dirty = true;
+});
+
+function commitEdit(){
+  if(!sel || editBuf === null) return;
+  var v = parseFloat(editBuf);
+  if(!isFinite(v)) v = 0;
+  v = f32(v);
+  if(sel.m === 'A') A[sel.i][sel.j] = v;
+  else               B[sel.i][sel.j] = v;
+  resetAnim(); computeC();
+  dirty = true; hudDirty = true;
+}
+
+window.addEventListener('keydown', function(e){
+  if(!sel) return;
+  var k = e.key;
+  if(k === 'Escape'){ commitEdit(); sel = null; editBuf = null; dirty = true; return; }
+  if(k === 'Enter'){  commitEdit(); sel = null; editBuf = null; dirty = true; return; }
+  if(k === 'Backspace'){
+    e.preventDefault();
+    if(editBuf && editBuf.length > 0) editBuf = editBuf.slice(0, -1);
+    if(!editBuf || editBuf === '-' || editBuf === '.') editBuf = '0';
+    freshEdit = false; dirty = true; return;
+  }
+  if(k === 'ArrowLeft' || k === 'ArrowRight' || k === 'ArrowUp' || k === 'ArrowDown'){
+    e.preventDefault();
+    commitEdit();
+    var di = 0, dj = 0;
+    if(k === 'ArrowLeft')  dj = -1;
+    if(k === 'ArrowRight') dj = 1;
+    if(k === 'ArrowUp')    di = -1;
+    if(k === 'ArrowDown')  di = 1;
+    var rows = sel.m === 'A' ? M : K;
+    var cols = sel.m === 'A' ? K : N;
+    sel.i = (sel.i + di + rows) % rows;
+    sel.j = (sel.j + dj + cols) % cols;
+    editBuf = String(sel.m === 'A' ? A[sel.i][sel.j] : B[sel.i][sel.j]);
+    freshEdit = true; dirty = true; return;
+  }
+  if(/^[0-9]$/.test(k) || k === '-' || k === '.'){
+    e.preventDefault();
+    if(freshEdit){
+      if(k === '-')      editBuf = '-';
+      else if(k === '.') editBuf = '0.';
+      else               editBuf = k;
+      freshEdit = false;
+    } else {
+      if(k === '-' && editBuf.indexOf('-') >= 0) return;
+      if(k === '.' && editBuf.indexOf('.') >= 0) return;
+      editBuf += k;
+    }
+    dirty = true; return;
+  }
+});
+
+window.addEventListener('blur', function(){
+  if(sel){ commitEdit(); sel = null; editBuf = null; }
+});
+
+// ---- loop ----
+var lastT = 0;
+function loop(ts){
+  requestAnimationFrame(loop);
+  var dt = Math.min(0.05, (ts - lastT)/1000 || 0.016);
+  lastT = ts;
+  if(cursor.running){
+    cursor.t += dt;
+    if(cursor.t >= cursor.speed){
+      cursor.t = 0;
+      step();
+    }
+  }
+  // 3D auto-spin
+  if(V3.open && V3.autoSpin && !V3.drag){
+    V3.yaw += dt * 0.28;
+    dirty = true;
+  }
+  // HW view: animate the in-flight data packet while running
+  if(HW.open && cursor.running){
+    dirty = true;
+  }
+  if(hudDirty){ renderHUD(); hudDirty = false; }
+  if(dirty){ render(); dirty = false; }
+}
+
+// ============================================================
+// 3D LANDSCAPE VIEW  (appended, non-invasive)
+//   Renders the LIVE C matrix as a heightfield:
+//   x = column, z = row, y = value.
+//   During animation the active tile is overlaid with the
+//   accumulator so the surface builds smoothly, step by step.
+//   Modes: MESH (filled quads), DOTS (spheres), BOTH, FLAT
+//   Drag to orbit, scroll to zoom, ESC to close, 'r' to reset
+// ============================================================
+
+var V3 = {
+  open: false,
+  mode: 'mesh',
+  yaw: 0.6,
+  pit: 0.38,
+  dist: 12,
+  focus: 1400,
+  drag: null,
+  autoSpin: true
+};
+
+// Default camera distance proportional to matrix size
+function v3_defaultDist(){
+  var dim = Math.max(M, N);
+  return 5 + dim * 1.2;
+}
+
+function v3_proj(p){
+  var cx = 960, cy = 520;
+  var dx = p[0], dy = p[1], dz = p[2];
+  var cyaw = Math.cos(V3.yaw), syaw = Math.sin(V3.yaw);
+  var x1 = dx*cyaw - dz*syaw;
+  var z1 = dx*syaw + dz*cyaw;
+  var cp = Math.cos(V3.pit), sp = Math.sin(V3.pit);
+  var y2 = dy*cp + z1*sp;
+  var z2 = -dy*sp + z1*cp;
+  var d = z2 + V3.dist;
+  if(d < 0.6) d = 0.6;
+  return [cx + x1*V3.focus/d, cy - y2*V3.focus/d, d];
+}
+
+function v3_color(v, maxAbs){
+  var t = Math.max(-1, Math.min(1, v / maxAbs));
+  var r, g, b;
+  if(t >= 0){
+    r = 30 + Math.round(30 * t);
+    g = 100 + Math.round(155 * t);
+    b = 50 + Math.round(40 * t);
+  } else {
+    var at = -t;
+    r = 100 + Math.round(155 * at);
+    g = 30 + Math.round(30 * at);
+    b = 50 + Math.round(40 * at);
+  }
+  return 'rgb(' + r + ',' + g + ',' + b + ')';
+}
+
+// Merge completed C with the in-progress accumulator at the active tile
+function v3_liveMatrix(){
+  var live = clone2D(C);
+  if(curOp && accum){
+    var ti = curOp.ti, tj = curOp.tj;
+    for(var i = 0; i < T; i++){
+      for(var j = 0; j < T; j++){
+        var ri = ti*T + i, rj = tj*T + j;
+        if(ri < M && rj < N) live[ri][rj] = curOp.after[i][j];
+      }
+    }
+  }
+  return live;
+}
+
+function v3_buildData(){
+  var maxAbs = refMaxAbs;              // stable reference scale
+  var live = v3_liveMatrix();
+  var dim = Math.max(M, N);
+  var spacing = dim <= 4 ? 2 : (dim <= 8 ? 1.4 : 1.0);
+  var heightScale = 4.5 / maxAbs;
+  var cx = (N-1)/2, cz = (M-1)/2;
+  var pts = [];
+  for(var i = 0; i < M; i++){
+    pts[i] = [];
+    for(var j = 0; j < N; j++){
+      var v = live[i][j];
+      var x = (j - cx) * spacing;
+      var z = (i - cz) * spacing;
+      var y = v * heightScale;
+      pts[i][j] = { p: [x, y, z], v: v, i: i, j: j };
+    }
+  }
+  return { pts: pts, maxAbs: maxAbs, spacing: spacing, cx: cx, cz: cz };
+}
+
+function v3_lineStr(pts3, color, w, op){
+  var d = '';
+  for(var i = 0; i < pts3.length; i++){
+    var sp = v3_proj(pts3[i]);
+    d += (i === 0 ? 'M' : 'L') + sp[0].toFixed(1) + ',' + sp[1].toFixed(1);
+  }
+  return '<path d="' + d + '" fill="none" stroke="' + color +
+         '" stroke-width="' + w + '" stroke-opacity="' + op + '"/>';
+}
+
+function v3_render(){
+  if(!V3.open) return '';
+  var s = '';
+
+  s += '<rect x="0" y="0" width="1920" height="1080" fill="#000" fill-opacity="0.9"/>';
+
+  s += label(60, 46, '// C MATRIX \u2014 3D LANDSCAPE', 22, '#39ff6e', 'start');
+  s += label(60, 72, M + ' \u00D7 ' + N + ' cells   \u2022   height = value   \u2022   ' +
+             'drag = orbit   \u2022   scroll = zoom   \u2022   R = reset view   \u2022   ESC = close',
+             13, '#1f7a3d', 'start');
+
+  // Status readout (fix #3: status visible inside the 3D overlay)
+  var status = cursor.done ? 'COMPLETE' : (cursor.running ? 'RUNNING' : (curOp ? 'STEPPED' : 'IDLE'));
+  var stepsDone = cursor.ti*(N/T)*(K/T) + cursor.tj*(K/T) + cursor.tk;
+  var stepsTotal = (M/T)*(N/T)*(K/T);
+  s += label(960, 96,
+    'STATUS: ' + status + '   TILE: ' + stepsDone + ' / ' + stepsTotal +
+    '   FP16: ' + (FP16 ? 'ON' : 'OFF') +
+    '   max|C| = ' + FMT(refMaxAbs),
+    15, '#39ff6e', 'middle');
+
+  var modes = [
+    { id: 'mesh', l: 'MESH' },
+    { id: 'dots', l: 'DOTS' },
+    { id: 'both', l: 'BOTH' },
+    { id: 'flat', l: 'FLAT' }
+  ];
+  var mbw = 100, mbh = 32, mbx = 1180, mby = 30, mg = 8;
+  for(var mi = 0; mi < modes.length; mi++){
+    var mx = mbx + mi * (mbw + mg);
+    var act = V3.mode === modes[mi].id;
+    s += '<rect x="' + mx + '" y="' + mby + '" width="' + mbw + '" height="' + mbh +
+         '" fill="' + (act ? '#0d2a18' : '#000') + '" stroke="' + (act ? '#39ff6e' : '#1f7a3d') +
+         '" stroke-width="2" data-v3mode="' + modes[mi].id + '" style="cursor:pointer"/>';
+    s += label(mx + mbw/2, mby + mbh/2 + 6, modes[mi].l, 15, act ? '#39ff6e' : '#b6ffd0');
+  }
+
+  s += '<rect x="1800" y="30" width="100" height="32" fill="#000" stroke="#ff4444" ' +
+       'stroke-width="2" data-v3close="1" style="cursor:pointer"/>';
+  s += label(1850, 52, 'CLOSE', 15, '#ff4444');
+
+  var data = v3_buildData();
+  var pts = data.pts;
+  var maxAbs = data.maxAbs;
+  var spacing = data.spacing;
+  var vcx = data.cx, vcz = data.cz;
+
+  var DL = [];
+
+  // ground grid at y=0
+  for(var i = 0; i < M; i++){
+    var linePts = [];
+    for(var j = 0; j < N; j++){
+      linePts.push([(j - vcx) * spacing, 0, (i - vcz) * spacing]);
+    }
+    DL.push({ z: 50000 + i, s: v3_lineStr(linePts, '#0f3d1e', 1, 0.55) });
+  }
+  for(var j2 = 0; j2 < N; j2++){
+    var linePts2 = [];
+    for(var i2 = 0; i2 < M; i2++){
+      linePts2.push([(j2 - vcx) * spacing, 0, (i2 - vcz) * spacing]);
+    }
+    DL.push({ z: 50000 + j2 + 0.5, s: v3_lineStr(linePts2, '#0f3d1e', 1, 0.55) });
+  }
+
+  // Active tile highlight (dashed wireframe on the ground plane)
+  if(curOp && accum && !cursor.done){
+    var ati = curOp.ti, atj = curOp.tj;
+    var tx0 = (atj*T - vcx) * spacing - spacing/2;
+    var tx1 = ((atj*T + T - 1) - vcx) * spacing + spacing/2;
+    var tz0 = (ati*T - vcz) * spacing - spacing/2;
+    var tz1 = ((ati*T + T - 1) - vcz) * spacing + spacing/2;
+    var c0 = v3_proj([tx0, 0.01, tz0]);
+    var c1 = v3_proj([tx1, 0.01, tz0]);
+    var c2 = v3_proj([tx1, 0.01, tz1]);
+    var c3 = v3_proj([tx0, 0.01, tz1]);
+    var boxZ = (c0[2] + c1[2] + c2[2] + c3[2]) / 4 - 0.1;
+    var dstr = 'M' + c0[0].toFixed(1) + ',' + c0[1].toFixed(1) +
+               'L' + c1[0].toFixed(1) + ',' + c1[1].toFixed(1) +
+               'L' + c2[0].toFixed(1) + ',' + c2[1].toFixed(1) +
+               'L' + c3[0].toFixed(1) + ',' + c3[1].toFixed(1) + 'Z';
+    DL.push({
+      z: boxZ,
+      s: '<path d="' + dstr + '" fill="none" stroke="#ffffff" ' +
+         'stroke-width="2" stroke-dasharray="5,4" stroke-opacity="0.85"/>'
+    });
+  }
+
+  // vertical drop lines from each peak to the floor
+  for(var i = 0; i < M; i++){
+    for(var j = 0; j < N; j++){
+      var pt = pts[i][j];
+      if(Math.abs(pt.p[1]) < 0.01) continue;
+      var s0 = v3_proj(pt.p);
+      var s1 = v3_proj([pt.p[0], 0, pt.p[2]]);
+      var col = v3_color(pt.v, maxAbs);
+      DL.push({
+        z: (s0[2] + s1[2]) / 2 + 0.4,
+        s: '<line x1="' + s0[0].toFixed(1) + '" y1="' + s0[1].toFixed(1) +
+           '" x2="' + s1[0].toFixed(1) + '" y2="' + s1[1].toFixed(1) +
+           '" stroke="' + col + '" stroke-width="1" stroke-opacity="0.32"/>'
+      });
+    }
+  }
+
+  // filled mesh quads
+  if(V3.mode === 'mesh' || V3.mode === 'both'){
+    for(var i = 0; i < M - 1; i++){
+      for(var j = 0; j < N - 1; j++){
+        var p00 = pts[i][j].p;
+        var p01 = pts[i][j+1].p;
+        var p10 = pts[i+1][j].p;
+        var p11 = pts[i+1][j+1].p;
+        var s00 = v3_proj(p00);
+        var s01 = v3_proj(p01);
+        var s10 = v3_proj(p10);
+        var s11 = v3_proj(p11);
+        var avgZ = (s00[2] + s01[2] + s10[2] + s11[2]) / 4;
+        var avgV = (pts[i][j].v + pts[i][j+1].v + pts[i+1][j].v + pts[i+1][j+1].v) / 4;
+        var col = v3_color(avgV, maxAbs);
+        var dstr = 'M' + s00[0].toFixed(1) + ',' + s00[1].toFixed(1) +
+                   'L' + s01[0].toFixed(1) + ',' + s01[1].toFixed(1) +
+                   'L' + s11[0].toFixed(1) + ',' + s11[1].toFixed(1) +
+                   'L' + s10[0].toFixed(1) + ',' + s10[1].toFixed(1) + 'Z';
+        DL.push({
+          z: avgZ,
+          s: '<path d="' + dstr + '" fill="' + col + '" fill-opacity="0.55" ' +
+             'stroke="' + col + '" stroke-width="1.4" stroke-opacity="0.95" ' +
+             'stroke-linejoin="round"/>'
+        });
+      }
+    }
+  }
+
+  // dots at each cell
+  if(V3.mode === 'dots' || V3.mode === 'both' || V3.mode === 'flat'){
+    for(var i = 0; i < M; i++){
+      for(var j = 0; j < N; j++){
+        var pt2 = pts[i][j];
+        var scr = v3_proj(pt2.p);
+        var col2 = v3_color(pt2.v, maxAbs);
+        var mag = Math.abs(pt2.v) / maxAbs;
+        var r = (3 + 5 * mag) * (14 / scr[2]);
+        if(r < 2) r = 2;
+        if(r > 22) r = 22;
+        DL.push({
+          z: scr[2] - 0.02,
+          s: '<circle cx="' + scr[0].toFixed(1) + '" cy="' + scr[1].toFixed(1) +
+             '" r="' + r.toFixed(1) + '" fill="' + col2 +
+             '" stroke="#000" stroke-width="1.2"/>'
+        });
+      }
+    }
+  }
+
+  DL.sort(function(a, b){ return b.z - a.z; });
+  for(var d2 = 0; d2 < DL.length; d2++) s += DL[d2].s;
+
+  // legend with numeric bounds from refMaxAbs
+  var legendY = 1000;
+  s += label(60, legendY, 'C[i][j]:', 15, '#1f7a3d', 'start');
+  for(var lg = 0; lg < 8; lg++){
+    var lv = (lg / 7) * 2 - 1;
+    var lc = v3_color(lv * maxAbs, maxAbs);
+    s += '<rect x="' + (140 + lg * 26) + '" y="' + (legendY - 14) +
+         '" width="26" height="18" fill="' + lc + '" stroke="#1f7a3d" stroke-width="1"/>';
+  }
+  s += label(140, legendY + 30, '-' + FMT(maxAbs), 11, '#1f7a3d', 'start');
+  s += label(231, legendY + 30, '0', 11, '#1f7a3d', 'middle');
+  s += label(322, legendY + 30, '+' + FMT(maxAbs), 11, '#1f7a3d', 'end');
+
+  s += label(1860, 1000, 'max|C| = ' + FMT(maxAbs), 14, '#4fc3ff', 'end');
+  s += label(1860, 1024, 'mode: ' + V3.mode + '   autospin: ' + (V3.autoSpin ? 'on' : 'off'),
+             13, '#1f7a3d', 'end');
+
+  return s;
+}
+
+function v3_inScene(el){
+  while(el){
+    if(el.id === 'scene') return true;
+    if(el === document || el === document.body) return false;
+    el = el.parentNode;
+  }
+  return false;
+}
+
+function v3_handlePointer(e){
+  var t = e.target;
+  if(!t || !t.getAttribute) return;
+  var modeAttr = t.getAttribute('data-v3mode');
+  if(modeAttr){ V3.mode = modeAttr; dirty = true; hudDirty = true; return; }
+  var closeAttr = t.getAttribute('data-v3close');
+  if(closeAttr){ V3.open = false; V3.autoSpin = true; dirty = true; hudDirty = true; return; }
+  V3.drag = { x: e.clientX, y: e.clientY };
+  V3.autoSpin = false;
+  dirty = true; hudDirty = true;
+}
+
+document.addEventListener('pointerdown', function(e){
+  if(!V3.open) return;
+  if(!v3_inScene(e.target)) return;
+  e.stopPropagation();
+  e.preventDefault();
+  v3_handlePointer(e);
+}, true);
+
+window.addEventListener('pointermove', function(e){
+  if(!V3.drag) return;
+  var dx = e.clientX - V3.drag.x;
+  var dy = e.clientY - V3.drag.y;
+  V3.yaw += dx * 0.008;
+  V3.pit += dy * 0.006;
+  if(V3.pit > 1.5) V3.pit = 1.5;
+  if(V3.pit < -0.15) V3.pit = -0.15;
+  V3.drag.x = e.clientX;
+  V3.drag.y = e.clientY;
+  dirty = true;
+});
+
+window.addEventListener('pointerup', function(){
+  if(V3.drag){ V3.drag = null; }
+});
+
+window.addEventListener('wheel', function(e){
+  if(!V3.open) return;
+  e.preventDefault();
+  V3.dist += e.deltaY * 0.015;
+  if(V3.dist < 4) V3.dist = 4;
+  if(V3.dist > 60) V3.dist = 60;
+  dirty = true;
+}, { passive: false });
+
+window.addEventListener('keydown', function(e){
+  if(!V3.open) return;
+  if(e.key === 'Escape'){
+    V3.open = false; V3.autoSpin = true;
+    dirty = true; hudDirty = true;
+    e.preventDefault(); e.stopImmediatePropagation(); return;
+  }
+  if(e.key === 'r' || e.key === 'R'){
+    V3.yaw = 0.6; V3.pit = 0.38;
+    V3.dist = v3_defaultDist();          // reset to fitted distance
+    V3.autoSpin = true;
+    dirty = true; hudDirty = true;
+    e.preventDefault(); e.stopImmediatePropagation(); return;
+  }
+  e.preventDefault(); e.stopImmediatePropagation();
+}, true);
+
+// ============================================================
+// HARDWARE VIEW  (appended, non-invasive)
+//   Tabs:
+//     LANES     real mma.m16n8k16 fragment ownership for a 32-lane warp
+//     REGS      all 32 lanes' registers (a0..a7, b0..b3, c0..c3) with values
+//     PIPELINE  GLOBAL -> SHARED -> REGS -> TENSOR CORE, live counters
+//     TRAFFIC   naive vs tiled vs block-tiled global reads, reuse heatmaps
+//     FP16 ERR  per-cell error of fp16 inputs vs full fp32
+//   step() drives the pipeline phases explicitly, so every counter
+//   is incremented where the data actually moves.
+//   Keys: 1-5 tabs, arrows = lane, SPACE = play/pause, N = step, ESC = close
+// ============================================================
+
+var HW = {
+  open: false,
+  tab: 'lanes',          // lanes | regs | pipeline | traffic | error
+  lane: 0,               // selected lane, -1 = none
+  showVal: false,        // lane map cells show values instead of lane ids
+  R: 2,                  // block size (output tiles per side) for the reuse model
+  loadA: null,           // [tilesI][tilesK] load counts
+  loadB: null,           // [tilesK][tilesJ] load counts
+  err: null,
+  errDirty: true
+};
+
+var MEM = {
+  global: { reads: 0, writes: 0 },
+  shared: { reads: 0, writes: 0, tileA: null, tileB: null },
+  regs:   { reads: 0, writes: 0, mma: 0 }
+};
+
+function hw_reset(){
+  MEM.global.reads = 0; MEM.global.writes = 0;
+  MEM.shared.reads = 0; MEM.shared.writes = 0;
+  MEM.shared.tileA = null; MEM.shared.tileB = null;
+  MEM.regs.reads = 0; MEM.regs.writes = 0; MEM.regs.mma = 0;
+  var tm = Math.ceil(M / T), tk = Math.ceil(K / T), tn = Math.ceil(N / T);
+  HW.loadA = alloc(tm, tk, function(){ return 0; });
+  HW.loadB = alloc(tk, tn, function(){ return 0; });
+}
+
+// ---- the 4 pipeline phases (called from step()) ----
+function hw_loadTileToShared(X, r, c, which){        // phase 1: GLOBAL -> SHARED
+  var t = loadTile(X, r, c), e = T * T;
+  MEM.global.reads += e;
+  MEM.shared.writes += e;
+  MEM.shared['tile' + which] = { r: r, c: c, data: t };
+  if(!HW.loadA) hw_reset();
+  var ri = Math.floor(r / T), ci = Math.floor(c / T);
+  if(which === 'A'){ if(HW.loadA[ri] && HW.loadA[ri][ci] !== undefined) HW.loadA[ri][ci]++; }
+  else             { if(HW.loadB[ri] && HW.loadB[ri][ci] !== undefined) HW.loadB[ri][ci]++; }
+  return t;
+}
+function hw_loadSharedToRegs(which){                 // phase 2: SHARED -> REGS (fragments)
+  var e = T * T;
+  MEM.shared.reads += e;
+  MEM.regs.writes += e;
+  return MEM.shared['tile' + which].data;
+}
+function hw_recordMma(){                             // phase 3: MMA on registers
+  MEM.regs.reads += 2 * T * T * T;                   // operand reads (each element used T times)
+  MEM.regs.writes += T * T;                          // accumulator update
+  MEM.regs.mma += 1;
+}
+function hw_storeTileToGlobal(){                     // phase 4: REGS -> GLOBAL
+  MEM.regs.reads += T * T;
+  MEM.global.writes += T * T;
+}
+
+// ---- helpers ----
+function fullMatmul(useF16){
+  var save = FP16; FP16 = useF16;
+  var R = alloc(M, N, function(){ return 0; });
+  for(var ti = 0; ti < M; ti += T){
+    for(var tj = 0; tj < N; tj += T){
+      var acc = alloc(T, T, function(){ return 0; });
+      for(var tk = 0; tk < K; tk += T){
+        mmaTile(loadTile(A, ti, tk), loadTile(B, tk, tj), acc, acc);
+      }
+      storeTile(R, ti, tj, acc);
+    }
+  }
+  FP16 = save;
+  return R;
+}
+
+function hw_calcErr(){
+  var c16 = fullMatmul(true), c32 = fullMatmul(false);
+  var E = alloc(M, N, function(i, j){ return Math.abs(c16[i][j] - c32[i][j]); });
+  var mx = 0, sum = 0, rel = 0, wi = 0, wj = 0;
+  for(var i = 0; i < M; i++){
+    for(var j = 0; j < N; j++){
+      var v = E[i][j];
+      if(v > mx){ mx = v; wi = i; wj = j; }
+      sum += v;
+      var d = Math.abs(c32[i][j]);
+      if(d > 1e-9 && v / d > rel) rel = v / d;
+    }
+  }
+  HW.err = { E: E, max: mx, mean: sum / (M * N), rel: rel,
+             wi: wi, wj: wj, w16: c16[wi][wj], w32: c32[wi][wj] };
+  HW.errDirty = false;
+}
+
+function hw_val(X, r, c){
+  return (X[r] !== undefined && X[r][c] !== undefined) ? X[r][c] : 0;
+}
+function hw_in(v){ return FP16 ? fp16(v) : v; }           // registers hold fp16 inputs when FP16 is on
+function hw_n(v){ return String(Math.round(v)); }
+function hw_fe(v){ return v === 0 ? '0' : v.toExponential(0); }
+function hw_cv(v){                                         // compact value for tiny cells
+  if(!isFinite(v)) return v > 0 ? 'inf' : (v < 0 ? '-inf' : 'NaN');
+  var a = Math.abs(v);
+  if(a >= 1000) return v.toExponential(0);
+  if(a >= 100) return v.toFixed(0);
+  if(Math.floor(v) === v) return String(v);
+  return v.toFixed(1);
+}
+// lane colour: hue = group (lane/4), lightness = thread within group (lane%4)
+function hw_fill(lane){
+  return 'hsl(' + ((lane >> 2) * 45) + ',70%,' + (34 + (lane & 3) * 11) + '%)';
+}
+function hw_hue(lane){ return 'hsl(' + ((lane >> 2) * 45) + ',75%,62%)'; }
+
+// ---- PTX mma.m16n8k16 (f16) fragment layout ----
+function hw_fragA(lane, r){
+  var g = lane >> 2, t = lane & 3;
+  return [ g + ((r >> 1) & 1) * 8, t * 2 + (r & 1) + (r >> 2) * 8 ];
+}
+function hw_fragB(lane, r){
+  var g = lane >> 2, t = lane & 3;
+  return [ t * 2 + (r & 1) + (r >> 1) * 8, g ];
+}
+function hw_fragC(lane, r){
+  var g = lane >> 2, t = lane & 3;
+  return [ g + (r >> 1) * 8, t * 2 + (r & 1) ];
+}
+function hw_ownA(r, c){ return [ (r & 7) * 4 + ((c & 7) >> 1), 2 * (r >> 3) + (c & 1) + 4 * (c >> 3) ]; }
+function hw_ownB(r, c){ return [ c * 4 + ((r & 7) >> 1), (r & 1) + 2 * (r >> 3) ]; }
+function hw_ownC(r, c){ return [ (r & 7) * 4 + (c >> 1), (c & 1) + 2 * (r >> 3) ]; }
+
+// The 16x16 / 16x8 fragment windows normally cover the whole matrix (presets are <= 12).
+// If a matrix were larger, the window slides so the active tile stays inside it.
+function hw_org(n, size, cur){ return Math.max(0, Math.min(cur, n - size)); }
+function hw_window(){
+  var ti = curOp ? curOp.ti * T : 0, tj = curOp ? curOp.tj * T : 0, tk = curOp ? curOp.tk * T : 0;
+  return {
+    A: [ hw_org(M, 16, ti), hw_org(K, 16, tk) ],
+    B: [ hw_org(K, 16, tk), hw_org(N, 8, tj) ],
+    C: [ hw_org(M, 16, ti), hw_org(N, 8, tj) ]
+  };
+}
+
+function hw_map(x0, y0, rows, cols, st, own, pre, X, org, box){
+  var s = '', i, j, o, on, cx, cy, txt, fs;
+  var none = (HW.lane < 0);
+  for(i = 0; i < rows; i++){
+    for(j = 0; j < cols; j++){
+      o = own(i, j);
+      on = (o[0] === HW.lane);
+      cx = x0 + j * st; cy = y0 + i * st;
+      s += '<rect x="' + cx + '" y="' + cy + '" width="' + st + '" height="' + st +
+           '" fill="' + hw_fill(o[0]) + '" fill-opacity="' + (none ? 0.6 : (on ? 0.95 : 0.28)) +
+           '" stroke="#02150a" stroke-width="1" data-hwlane="' + o[0] + '" style="cursor:pointer"/>';
+      if(on){ txt = pre + o[1]; fs = 10; }
+      else if(HW.showVal){ txt = hw_cv(hw_in(hw_val(X, org[0] + i, org[1] + j))); fs = 8; }
+      else { txt = String(o[0]); fs = 9; }
+      s += label(cx + st / 2, cy + st / 2 + fs * 0.36, txt, fs, on ? '#ffffff' : '#b6ffd0', 'middle');
+    }
+  }
+  for(i = 0; i < rows; i++){
+    for(j = 0; j < cols; j++){
+      if(own(i, j)[0] !== HW.lane) continue;
+      s += '<rect x="' + (x0 + j * st) + '" y="' + (y0 + i * st) + '" width="' + st + '" height="' + st +
+           '" fill="none" stroke="#ffffff" stroke-width="2" pointer-events="none"/>';
+    }
+  }
+  if(box && box[0] >= 0 && box[1] >= 0 && box[0] < rows && box[1] < cols){
+    var bh = Math.min(box[2], rows - box[0]) * st, bw = Math.min(box[3], cols - box[1]) * st;
+    s += '<rect x="' + (x0 + box[1] * st) + '" y="' + (y0 + box[0] * st) + '" width="' + bw + '" height="' + bh +
+         '" fill="none" stroke="#ffd23f" stroke-width="3" stroke-dasharray="6,3" pointer-events="none"/>';
+  }
+  return s;
+}
+
+function hw_grid(X, x, y, st, color){
+  var s = '', i, j;
+  for(i = 0; i < T; i++){
+    for(j = 0; j < T; j++){
+      s += '<rect x="' + (x + j * st) + '" y="' + (y + i * st) + '" width="' + st + '" height="' + st +
+           '" fill="none" stroke="' + color + '" stroke-width="1.2" stroke-opacity="0.75" pointer-events="none"/>';
+      s += label(x + j * st + st / 2, y + i * st + st / 2 + 5, hw_cv(hw_val(X, i, j)), 13, color, 'middle');
+    }
+  }
+  return s;
+}
+
+function hw_panel(x, y, w, h, title){
+  return '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h +
+         '" fill="#010801" stroke="#1f7a3d" stroke-width="1.5" pointer-events="none"/>' +
+         label(x + 14, y + 24, title, 14, '#1f7a3d', 'start');
+}
+function hw_arrow(x, y1, y2, color){
+  return '<path d="M' + x + ',' + y1 + ' L' + x + ',' + y2 +
+         ' M' + (x - 6) + ',' + (y2 - 8) + ' L' + x + ',' + y2 + ' L' + (x + 6) + ',' + (y2 - 8) +
+         '" fill="none" stroke="' + color + '" stroke-width="2" pointer-events="none"/>';
+}
+function hw_btn(x, y, w, h, txt, active, attr){
+  return '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" fill="' + (active ? '#0d2a18' : '#000') +
+         '" stroke="' + (active ? '#39ff6e' : '#1f7a3d') + '" stroke-width="2" ' + attr + ' style="cursor:pointer"/>' +
+         label(x + w / 2, y + h / 2 + 5, txt, 14, active ? '#39ff6e' : '#b6ffd0');
+}
+
+function hw_head(){
+  var s = '<rect x="0" y="0" width="1920" height="1080" fill="#000" fill-opacity="0.95"/>';
+  var tabs = [ ['lanes', 'LANES'], ['regs', 'REGS'], ['pipeline', 'PIPELINE'], ['traffic', 'TRAFFIC'], ['error', 'FP16 ERR'] ];
+  for(var i = 0; i < tabs.length; i++){
+    s += hw_btn(60 + i * 136, 166, 126, 30, tabs[i][1], HW.tab === tabs[i][0], 'data-hwtab="' + tabs[i][0] + '"');
+  }
+  s += hw_btn(760, 166, 170, 30, HW.showVal ? 'CELLS: VALUE' : 'CELLS: LANE', HW.showVal, 'data-hwvals="1"');
+  s += '<rect x="1760" y="166" width="100" height="30" fill="#000" stroke="#ff4444" stroke-width="2" ' +
+       'data-hwclose="1" style="cursor:pointer"/>';
+  s += label(1810, 186, 'CLOSE', 14, '#ff4444');
+  s += label(60, 220, 'model, not cycle-accurate   \u2022   click a cell or lane (click again to clear)   \u2022   1-5 = tab   \u2022   ' +
+             'arrows = lane   \u2022   SPACE = play/pause   \u2022   N = step   \u2022   ESC = close', 12, '#1f7a3d', 'start');
+  return s;
+}
+
+// ================= tab: LANES =================
+function hw_renderLanes(){
+  var s = '', i, j, r, q, Ln = HW.lane;
+  var W = hw_window(), live = v3_liveMatrix();
+  var st = 26, y0 = 262, ax = 60, bx = 520, cx = 770;
+
+  s += label(ax, 252, 'A 16x16 @[' + W.A[0] + ',' + W.A[1] + ']  a0..a7', 13, '#39ff6e', 'start');
+  s += label(bx, 252, 'B 16x8 @[' + W.B[0] + ',' + W.B[1] + ']  b0..b3', 13, '#ffd23f', 'start');
+  s += label(cx, 252, 'C 16x8 @[' + W.C[0] + ',' + W.C[1] + ']  c0..c3', 13, '#4fc3ff', 'start');
+  var bA = curOp ? [curOp.ti * T - W.A[0], curOp.tk * T - W.A[1], T, T] : null;
+  var bB = curOp ? [curOp.tk * T - W.B[0], curOp.tj * T - W.B[1], T, T] : null;
+  var bC = curOp ? [curOp.ti * T - W.C[0], curOp.tj * T - W.C[1], T, T] : null;
+  s += hw_map(ax, y0, 16, 16, st, hw_ownA, 'a', A, W.A, bA);
+  s += hw_map(bx, y0, 16, 8, st, hw_ownB, 'b', B, W.B, bB);
+  s += hw_map(cx, y0, 16, 8, st, hw_ownC, 'c', live, W.C, bC);
+  var capY = y0 + 16 * st + 18;
+  s += label(ax, capY,      'lane = 4*(row%8) + (col%8)/2', 11, '#1f7a3d', 'start');
+  s += label(ax, capY + 15, 'reg  = 2*(row/8) + col%2 + 4*(col/8)', 11, '#1f7a3d', 'start');
+  s += label(bx, capY,      'lane = 4*col + (row%8)/2', 11, '#1f7a3d', 'start');
+  s += label(bx, capY + 15, 'reg  = row%2 + 2*(row/8)', 11, '#1f7a3d', 'start');
+  s += label(cx, capY,      'lane = 4*(row%8) + col/2', 11, '#1f7a3d', 'start');
+  s += label(cx, capY + 15, 'reg  = col%2 + 2*(row/8)', 11, '#1f7a3d', 'start');
+
+  s += label(ax, 760, 'colour: hue = group g (lane/4), lightness = thread t (lane%4)', 12, '#1f7a3d', 'start');
+  s += label(ax, 780, 'yellow dashed box = the ' + T + 'x' + T + ' tile the engine is processing now' +
+             (curOp ? ' (ti=' + curOp.ti + ' tj=' + curOp.tj + ' tk=' + curOp.tk + ')' : ' (press PLAY or STEP)'),
+             12, '#ffd23f', 'start');
+  s += label(ax, 800, 'a real mma instruction consumes the whole 16x16 A, 16x8 B and 16x8 C fragment at once;', 12, '#1f7a3d', 'start');
+  s += label(ax, 818, 'the engine\u2019s 4x4 tile is a scaled-down stand-in, so the box is a small part of the window.', 12, '#1f7a3d', 'start');
+  if(FP16) s += label(ax, 838, 'FP16 ON: A and B registers hold fp16-rounded values', 12, '#b6ffd0', 'start');
+
+  // lane grid
+  var needed = {};
+  if(Ln >= 0){
+    for(r = 0; r < 4; r++){
+      var ce = hw_fragC(Ln, r);
+      for(q = 0; q < 4; q++){
+        needed[(ce[0] & 7) * 4 + q] = 1;
+        needed[ce[1] * 4 + q] = 1;
+      }
+    }
+  }
+  var lgx = 1040, lgy = 282;
+  s += label(lgx, 252, '// LANES  (g rows, t cols)', 13, '#1f7a3d', 'start');
+  for(j = 0; j < 4; j++) s += label(lgx + j * 64 + 30, lgy - 6, 't=' + j, 11, '#1f7a3d', 'middle');
+  for(i = 0; i < 8; i++){
+    s += label(lgx - 8, lgy + i * 36 + 21, 'g' + i, 11, '#1f7a3d', 'end');
+    for(j = 0; j < 4; j++){
+      var ln = i * 4 + j;
+      var isSel = (ln === Ln);
+      var isNeed = needed[ln] === 1 && !isSel;
+      s += '<rect x="' + (lgx + j * 64) + '" y="' + (lgy + i * 36) + '" width="60" height="32" fill="' +
+           hw_fill(ln) + '" fill-opacity="' + (isSel ? 0.95 : 0.5) + '" stroke="' +
+           (isSel ? '#ffffff' : (isNeed ? '#4fc3ff' : '#02150a')) + '" stroke-width="' + (isSel ? 3 : (isNeed ? 2 : 1)) + '"' +
+           (isNeed ? ' stroke-dasharray="4,3"' : '') +
+           ' data-hwlane="' + ln + '" style="cursor:pointer"/>';
+      s += label(lgx + j * 64 + 30, lgy + i * 36 + 21, String(ln), 14, '#ffffff', 'middle');
+    }
+  }
+  s += label(lgx, lgy + 8 * 36 + 16, 'dashed = lanes holding operands for', 11, '#1f7a3d', 'start');
+  s += label(lgx, lgy + 8 * 36 + 30, 'this lane\u2019s c0..c3 outputs', 11, '#1f7a3d', 'start');
+
+  // register detail
+  var dx = 1340, dy = 252;
+  if(Ln < 0){
+    s += label(dx, dy, '// NO LANE SELECTED', 16, '#ffffff', 'start');
+    s += label(dx, dy + 26, 'click a cell in A, B or C, or a lane box,', 13, '#1f7a3d', 'start');
+    s += label(dx, dy + 44, 'to see which registers that lane holds.', 13, '#1f7a3d', 'start');
+    return s;
+  }
+  var gq = Ln >> 2, tq = Ln & 3;
+  s += label(dx, dy, '// LANE ' + Ln + '   g=' + gq + '  t=' + tq, 16, '#ffffff', 'start');
+  s += label(dx, dy + 26, '// A regs (4 x .f16x2)', 13, '#39ff6e', 'start');
+  for(r = 0; r < 8; r++){
+    var fa = hw_fragA(Ln, r);
+    s += label(dx, dy + 48 + r * 18, 'a' + r + '  A[' + (W.A[0] + fa[0]) + '][' + (W.A[1] + fa[1]) + '] = ' +
+               FMT(hw_in(hw_val(A, W.A[0] + fa[0], W.A[1] + fa[1]))), 13, '#b6ffd0', 'start');
+  }
+  s += label(dx + 260, dy + 26, '// B regs (2 x .f16x2)', 13, '#ffd23f', 'start');
+  for(r = 0; r < 4; r++){
+    var fb = hw_fragB(Ln, r);
+    s += label(dx + 260, dy + 48 + r * 18, 'b' + r + '  B[' + (W.B[0] + fb[0]) + '][' + (W.B[1] + fb[1]) + '] = ' +
+               FMT(hw_in(hw_val(B, W.B[0] + fb[0], W.B[1] + fb[1]))), 13, '#b6ffd0', 'start');
+  }
+  s += label(dx + 260, dy + 136, '// C/D regs (4 x .f32)', 13, '#4fc3ff', 'start');
+  for(r = 0; r < 4; r++){
+    var fc = hw_fragC(Ln, r);
+    s += label(dx + 260, dy + 158 + r * 18, 'c' + r + '  C[' + (W.C[0] + fc[0]) + '][' + (W.C[1] + fc[1]) + '] = ' +
+               FMT(hw_val(live, W.C[0] + fc[0], W.C[1] + fc[1])), 13, '#b6ffd0', 'start');
+  }
+  var ny0 = dy + 250;
+  s += label(dx, ny0, '// WHY MMA IS COLLECTIVE', 13, '#1f7a3d', 'start');
+  for(r = 0; r < 4; r++){
+    var fd = hw_fragC(Ln, r);
+    var aLo = (fd[0] & 7) * 4, bLo = fd[1] * 4;
+    var absR = W.C[0] + fd[0], absC = W.C[1] + fd[1];
+    s += label(dx, ny0 + 22 + r * 18,
+               'c' + r + '=C[' + absR + '][' + absC + ']: A row ' + absR + ' <- lanes ' + aLo + '-' + (aLo + 3) +
+               ' | B col ' + absC + ' <- lanes ' + bLo + '-' + (bLo + 3), 12, '#b6ffd0', 'start');
+  }
+  s += label(dx, ny0 + 22 + 4 * 18 + 8,  'each lane holds 4 of the 16 k-values of a row/column,', 12, '#1f7a3d', 'start');
+  s += label(dx, ny0 + 22 + 4 * 18 + 22, 'so no lane can finish a dot product alone: the whole', 12, '#1f7a3d', 'start');
+  s += label(dx, ny0 + 22 + 4 * 18 + 36, 'warp issues one instruction and the hardware exchanges operands.', 12, '#1f7a3d', 'start');
+  return s;
+}
+
+// ================= tab: REGS =================
+function hw_renderRegs(){
+  var s = '', g, t, r, W = hw_window(), live = v3_liveMatrix();
+  s += label(60, 252, '// ALL 32 LANES  \u2014  a0..a7 (A), b0..b3 (B), c0..c3 (C/D)   values read from the matrices' +
+             (FP16 ? '  (A, B rounded to fp16)' : ''), 13, '#39ff6e', 'start');
+  for(g = 0; g < 8; g++){
+    for(t = 0; t < 4; t++){
+      var L = g * 4 + t;
+      var x = 60 + g * 226, y = 276 + t * 128;
+      var hue = hw_hue(L), isSel = (L === HW.lane);
+      s += '<rect x="' + x + '" y="' + y + '" width="214" height="112" fill="' + hw_fill(L) + '" fill-opacity="' + (isSel ? 0.3 : 0.1) +
+           '" stroke="' + (isSel ? '#ffffff' : hue) + '" stroke-width="' + (isSel ? 3 : 1) + '" stroke-opacity="' + (isSel ? 1 : 0.6) +
+           '" data-hwlane="' + L + '" style="cursor:pointer"/>';
+      s += label(x + 6, y + 15, 'LANE ' + L + '  g' + g + ' t' + t, 12, hue, 'start');
+      for(r = 0; r < 8; r++){
+        var fa = hw_fragA(L, r);
+        var cxx = x + 4 + r * 25;
+        s += '<rect x="' + cxx + '" y="' + (y + 22) + '" width="25" height="34" fill="#000" fill-opacity="0.5" stroke="' + hue +
+             '" stroke-opacity="0.5" stroke-width="1" data-hwlane="' + L + '" style="cursor:pointer"/>';
+        s += label(cxx + 12.5, y + 31, 'a' + r, 7, '#39ff6e', 'middle');
+        s += label(cxx + 12.5, y + 48, hw_cv(hw_in(hw_val(A, W.A[0] + fa[0], W.A[1] + fa[1]))), 8, '#ffffff', 'middle');
+      }
+      for(r = 0; r < 4; r++){
+        var fb = hw_fragB(L, r);
+        var bxx = x + 4 + r * 25;
+        s += '<rect x="' + bxx + '" y="' + (y + 64) + '" width="25" height="34" fill="#000" fill-opacity="0.5" stroke="' + hue +
+             '" stroke-opacity="0.5" stroke-width="1" data-hwlane="' + L + '" style="cursor:pointer"/>';
+        s += label(bxx + 12.5, y + 73, 'b' + r, 7, '#ffd23f', 'middle');
+        s += label(bxx + 12.5, y + 90, hw_cv(hw_in(hw_val(B, W.B[0] + fb[0], W.B[1] + fb[1]))), 8, '#ffffff', 'middle');
+        var fc = hw_fragC(L, r);
+        var cxx2 = x + 108 + r * 25;
+        s += '<rect x="' + cxx2 + '" y="' + (y + 64) + '" width="25" height="34" fill="#000" fill-opacity="0.5" stroke="' + hue +
+             '" stroke-opacity="0.5" stroke-width="1" data-hwlane="' + L + '" style="cursor:pointer"/>';
+        s += label(cxx2 + 12.5, y + 73, 'c' + r, 7, '#4fc3ff', 'middle');
+        s += label(cxx2 + 12.5, y + 90, hw_cv(hw_val(live, W.C[0] + fc[0], W.C[1] + fc[1])), 8, '#ffffff', 'middle');
+      }
+    }
+  }
+  s += label(60, 812, '8 A + 4 B + 4 C values per lane x 32 lanes = 256 A + 128 B + 128 C elements = one m16n8k16 operand set.', 12, '#1f7a3d', 'start');
+  s += label(60, 830, 'A and B are packed two fp16 per 32-bit register; C/D are one fp32 per register.', 12, '#1f7a3d', 'start');
+  return s;
+}
+
+// ================= tab: PIPELINE =================
+function hw_renderPipeline(){
+  var s = '', i;
+  var p = null;
+  if(cursor.running && !cursor.done) p = Math.min(0.999, cursor.t / cursor.speed);
+  var actStage = (p === null) ? -1 : Math.min(3, Math.floor(p * 4));
+  var bytesPer = FP16 ? 2 : 4;
+  var flopsDone = MEM.regs.mma * 2 * T * T * T;
+
+  var stages = [
+    { n: 'GLOBAL  (HBM)',    c: '#ffd23f', sub: 'A ' + M + 'x' + K + '   B ' + K + 'x' + N + '   C ' + M + 'x' + N,
+      l1: 'reads  : ' + hw_n(MEM.global.reads) + ' elem', l2: 'writes : ' + hw_n(MEM.global.writes) + ' elem (C)' },
+    { n: 'SHARED  (SMEM)',   c: '#4fc3ff', sub: MEM.shared.tileA ? ('staging A(' + Math.floor(MEM.shared.tileA.r / T) + ',' + Math.floor(MEM.shared.tileA.c / T) +
+                                  ')  B(' + Math.floor(MEM.shared.tileB.r / T) + ',' + Math.floor(MEM.shared.tileB.c / T) + ')') : 'empty',
+      l1: 'writes : ' + hw_n(MEM.shared.writes) + ' elem', l2: 'reads  : ' + hw_n(MEM.shared.reads) + ' elem' },
+    { n: 'REGISTERS (warp)', c: '#39ff6e', sub: '32 lanes: a0-7 b0-3 c0-3',
+      l1: 'writes : ' + hw_n(MEM.regs.writes) + ' elem', l2: 'reads  : ' + hw_n(MEM.regs.reads) + ' elem' },
+    { n: 'TENSOR CORE',      c: '#ffffff', sub: 'D = A.B + C   (collective)',
+      l1: 'mma ops: ' + hw_n(MEM.regs.mma), l2: 'MACs   : ' + hw_n(MEM.regs.mma * T * T * T) }
+  ];
+  var gapNames = ['LDG / cp.async', 'ldmatrix', 'mma.sync'];
+  s += label(60, 252, '// MEMORY PIPELINE  \u2014  elements moved so far (one STEP runs all four phases)', 13, '#39ff6e', 'start');
+  for(i = 0; i < 4; i++){
+    var sy = 276 + i * 165, on = (i === actStage);
+    s += '<rect x="120" y="' + sy + '" width="440" height="110" fill="' + (on ? '#0d2a18' : '#010801') +
+         '" stroke="' + stages[i].c + '" stroke-width="' + (on ? 4 : 2) + '" stroke-opacity="' + (on ? 1 : 0.7) + '" pointer-events="none"/>';
+    s += label(136, sy + 30, stages[i].n, 20, stages[i].c, 'start');
+    s += label(136, sy + 52, stages[i].sub, 13, '#1f7a3d', 'start');
+    s += label(136, sy + 78, stages[i].l1, 14, '#b6ffd0', 'start');
+    s += label(136, sy + 98, stages[i].l2, 14, '#b6ffd0', 'start');
+    if(i < 3){
+      s += hw_arrow(340, sy + 112, sy + 163, '#1f7a3d');
+      s += label(360, sy + 143, gapNames[i], 13, '#4fc3ff', 'start');
+    }
+  }
+  if(p !== null){
+    var py = 331 + p * 495;
+    s += '<line x1="88" y1="331" x2="88" y2="826" stroke="#1f7a3d" stroke-width="1" stroke-dasharray="3,4" pointer-events="none"/>';
+    s += '<circle cx="88" cy="' + py.toFixed(1) + '" r="8" fill="#ffffff" pointer-events="none"/>';
+  }
+
+  // shared-memory staging view
+  s += label(700, 276, '// SHARED-MEMORY STAGING  (tiles of the last step)', 13, '#39ff6e', 'start');
+  if(MEM.shared.tileA){
+    var ta = MEM.shared.tileA, tb = MEM.shared.tileB;
+    s += label(700, 304, 'tileA @ A[' + ta.r + '..' + (ta.r + T - 1) + '][' + ta.c + '..' + (ta.c + T - 1) + ']', 12, '#39ff6e', 'start');
+    s += hw_grid(ta.data, 700, 316, 48, '#39ff6e');
+    s += label(980, 304, 'tileB @ B[' + tb.r + '..' + (tb.r + T - 1) + '][' + tb.c + '..' + (tb.c + T - 1) + ']', 12, '#ffd23f', 'start');
+    s += hw_grid(tb.data, 980, 316, 48, '#ffd23f');
+  } else {
+    s += label(700, 304, 'nothing staged yet \u2014 press PLAY or STEP', 12, '#1f7a3d', 'start');
+  }
+
+  s += label(700, 560, '// THE FOUR PHASES OF ONE STEP', 13, '#39ff6e', 'start');
+  s += label(700, 586, '1. GLOBAL -> SHARED : cp.async copies the A and B tiles (2 x T x T elems)', 13, '#b6ffd0', 'start');
+  s += label(700, 608, '2. SHARED -> REGS   : ldmatrix hands each lane its fragment elements', 13, '#b6ffd0', 'start');
+  s += label(700, 630, '3. MMA              : tensor core does D = A.B + C, accumulator stays in regs', 13, '#b6ffd0', 'start');
+  s += label(700, 652, '4. REGS -> GLOBAL   : C tile stored once, after the last k-tile', 13, '#b6ffd0', 'start');
+
+  s += label(700, 708, '// LIVE TOTALS', 13, '#39ff6e', 'start');
+  s += label(700, 734, 'global bytes read : ' + hw_n(MEM.global.reads * bytesPer) + '  (' + bytesPer + ' B/elem, ' + (FP16 ? 'fp16' : 'fp32') + ')', 13, '#b6ffd0', 'start');
+  s += label(700, 756, 'FLOPs executed    : ' + hw_n(flopsDone), 13, '#b6ffd0', 'start');
+  s += label(700, 778, 'intensity so far  : ' + (MEM.global.reads > 0 ? (flopsDone / MEM.global.reads).toFixed(2) : '0.00') + ' FLOP per global element read', 13, '#ffffff', 'start');
+  s += label(700, 804, 'this engine reloads both tiles for every MMA; see TRAFFIC for what blocking would save.', 12, '#1f7a3d', 'start');
+  return s;
+}
+
+// ================= tab: TRAFFIC =================
+function hw_traffic(){
+  var tm = Math.ceil(M / T), tk = Math.ceil(K / T), tn = Math.ceil(N / T), e2 = T * T;
+  var Rm = Math.min(HW.R, tm), Rn = Math.min(HW.R, tn);
+  var nA = Math.ceil(tn / Rn), nB = Math.ceil(tm / Rm);
+  return { tm: tm, tk: tk, tn: tn, Rm: Rm, Rn: Rn, nA: nA, nB: nB,
+           flops: 2 * M * N * K, naive: 2 * M * N * K,
+           tiled: e2 * (tm * tk * tn + tk * tn * tm),
+           blocked: e2 * (tm * tk * nA + tk * tn * nB) };
+}
+
+function hw_renderTraffic(){
+  var s = '', i, j, d = hw_traffic();
+  s += label(60, 252, '// DATA REUSE  \u2014  global element reads for the whole ' + M + 'x' + K + ' . ' + K + 'x' + N + ' multiply', 13, '#39ff6e', 'start');
+  var rows = [
+    { n: 'NAIVE  (every MAC re-reads A and B from global)', v: d.naive,   c: '#ff4444' },
+    { n: 'TILED  T=' + T + '  (this engine, accumulate in registers)', v: d.tiled, c: '#ffd23f' },
+    { n: 'BLOCKED  R=' + HW.R + '  (R x R output tiles share each load)', v: d.blocked, c: '#39ff6e' }
+  ];
+  for(i = 0; i < 3; i++){
+    var y = 290 + i * 90;
+    var w = Math.max(2, 900 * rows[i].v / d.naive);
+    s += label(80, y, rows[i].n, 14, rows[i].c, 'start');
+    s += '<rect x="80" y="' + (y + 10) + '" width="900" height="34" fill="#010801" stroke="#1f7a3d" stroke-width="1" pointer-events="none"/>';
+    s += '<rect x="80" y="' + (y + 10) + '" width="' + w.toFixed(1) + '" height="34" fill="' + rows[i].c + '" fill-opacity="0.55" pointer-events="none"/>';
+    s += label(970, y + 32, hw_n(rows[i].v) + ' reads    ' + (d.flops / rows[i].v).toFixed(1) + ' FLOP / element', 14, '#ffffff', 'end');
+  }
+  s += label(80, 580, 'tiled   -> reads / T      each loaded element feeds T multiply-adds', 12, '#1f7a3d', 'start');
+  s += label(80, 598, 'blocked -> reads / (T*R)  each A/B tile load serves R output tiles', 12, '#1f7a3d', 'start');
+  s += hw_btn(80, 614, 170, 34, 'BLOCK R: ' + HW.R, true, 'data-hwr="1"');
+  if(d.Rm !== HW.R || d.Rn !== HW.R){
+    s += label(270, 637, 'clipped to ' + d.Rm + 'x' + d.Rn + ' by matrix size', 12, '#1f7a3d', 'start');
+  }
+
+  var maxLoad = 1;
+  for(i = 0; i < d.tm; i++) for(j = 0; j < d.tk; j++) if(HW.loadA[i][j] > maxLoad) maxLoad = HW.loadA[i][j];
+  for(i = 0; i < d.tk; i++) for(j = 0; j < d.tn; j++) if(HW.loadB[i][j] > maxLoad) maxLoad = HW.loadB[i][j];
+  var hc = 44, hx = 80, hy = 704;
+  s += label(hx, hy - 12, 'A tile loads (live)', 13, '#39ff6e', 'start');
+  s += label(hx + 240, hy - 12, 'B tile loads (live)', 13, '#ffd23f', 'start');
+  for(i = 0; i < d.tm; i++){
+    for(j = 0; j < d.tk; j++){
+      var la = HW.loadA[i][j];
+      s += '<rect x="' + (hx + j * hc) + '" y="' + (hy + i * hc) + '" width="' + hc + '" height="' + hc +
+           '" fill="rgb(20,' + (50 + Math.round(170 * la / maxLoad)) + ',60)" stroke="#1f7a3d" stroke-width="1" pointer-events="none"/>';
+      s += label(hx + j * hc + hc / 2, hy + i * hc + hc / 2 + 5, String(la), 14, '#ffffff', 'middle');
+    }
+  }
+  for(i = 0; i < d.tk; i++){
+    for(j = 0; j < d.tn; j++){
+      var lb = HW.loadB[i][j];
+      s += '<rect x="' + (hx + 240 + j * hc) + '" y="' + (hy + i * hc) + '" width="' + hc + '" height="' + hc +
+           '" fill="rgb(20,' + (50 + Math.round(170 * lb / maxLoad)) + ',60)" stroke="#1f7a3d" stroke-width="1" pointer-events="none"/>';
+      s += label(hx + 240 + j * hc + hc / 2, hy + i * hc + hc / 2 + 5, String(lb), 14, '#ffffff', 'middle');
+    }
+  }
+  if(d.tm * d.tn === 1){
+    s += label(520, hy + 14, 'single output tile: each tile is loaded once,', 13, '#b6ffd0', 'start');
+    s += label(520, hy + 34, 'so there is nothing to reuse. Try 8x8 or 12x12.', 13, '#b6ffd0', 'start');
+  } else {
+    s += label(520, hy + 14, 'A tile: ' + d.tn + ' loads each -> ' + d.nA + ' at R=' + HW.R, 13, '#b6ffd0', 'start');
+    s += label(520, hy + 34, 'B tile: ' + d.tm + ' loads each -> ' + d.nB + ' at R=' + HW.R, 13, '#b6ffd0', 'start');
+    s += label(520, hy + 54, 'counts rise live during PLAY / STEP', 13, '#1f7a3d', 'start');
+  }
+
+  s += label(1080, 300, '// WHY THIS MATTERS', 14, '#39ff6e', 'start');
+  var notes = [
+    'Arithmetic is cheap; moving data is not.',
+    'Naive: every multiply-add re-reads its operands,',
+    '  so intensity is 1 FLOP per element read.',
+    'Tiled: a loaded tile is reused T times from registers.',
+    'Blocked: R x R output tiles share one load of each',
+    '  A and B tile, so intensity grows to T*R.',
+    'Real GPU kernels use ~128x128 output blocks, which',
+    '  gives on the order of 100 FLOP per element loaded:',
+    '  enough to keep the tensor cores fed.'
+  ];
+  for(i = 0; i < notes.length; i++) s += label(1080, 330 + i * 22, notes[i], 13, '#b6ffd0', 'start');
+  return s;
+}
+
+// ================= tab: FP16 ERROR =================
+function hw_renderError(){
+  var s = '', i, j, E = HW.err;
+  s += label(60, 252, '// FP16 INPUTS vs FP32  \u2014  per-cell |C16 - C32|  (fp16 in, fp32 accumulate vs all fp32)', 13, '#39ff6e', 'start');
+  var ecell = Math.min(48, Math.floor(560 / Math.max(M, N)));
+  var efs = Math.max(8, Math.floor(ecell * 0.28));
+  for(i = 0; i < M; i++){
+    for(j = 0; j < N; j++){
+      var ev = E.E[i][j], tt = E.max > 0 ? ev / E.max : 0;
+      s += '<rect x="' + (80 + j * ecell) + '" y="' + (280 + i * ecell) + '" width="' + ecell + '" height="' + ecell +
+           '" fill="rgb(' + (20 + Math.round(235 * tt)) + ',' + (50 + Math.round(70 * (1 - tt))) + ',40)" stroke="#1f7a3d" stroke-width="0.6" pointer-events="none"/>';
+      s += label(80 + j * ecell + ecell / 2, 280 + i * ecell + ecell / 2 + efs * 0.36, hw_fe(ev), efs, '#ffffff', 'middle');
+    }
+  }
+  var ly = 280 + M * ecell + 28;
+  s += label(80, ly + 12, '0', 12, '#1f7a3d', 'start');
+  for(i = 0; i < 8; i++){
+    var tl = i / 7;
+    s += '<rect x="' + (100 + i * 26) + '" y="' + ly + '" width="26" height="16" fill="rgb(' + (20 + Math.round(235 * tl)) +
+         ',' + (50 + Math.round(70 * (1 - tl))) + ',40)" stroke="#1f7a3d" stroke-width="1" pointer-events="none"/>';
+  }
+  s += label(316, ly + 12, hw_fe(E.max), 12, '#1f7a3d', 'start');
+
+  var tx = 800;
+  if(E.max === 0){
+    s += label(tx, 300, 'NO ERROR', 22, '#39ff6e', 'start');
+    s += label(tx, 330, 'every input and product here is exactly representable in fp16', 13, '#b6ffd0', 'start');
+    s += label(tx, 352, '(small integers are).', 13, '#b6ffd0', 'start');
+    s += label(tx, 386, 'press RND.FRAC in the top bar, or type 0.1 / 1000.3 into a cell,', 13, '#ffd23f', 'start');
+    s += label(tx, 408, 'then turn FP16 on to see the C matrix change too.', 13, '#ffd23f', 'start');
+  } else {
+    s += label(tx, 300, 'max |err|      = ' + E.max.toExponential(3), 15, '#ffffff', 'start');
+    s += label(tx, 326, 'mean |err|     = ' + E.mean.toExponential(3), 15, '#b6ffd0', 'start');
+    s += label(tx, 352, 'max relative   = ' + E.rel.toExponential(3), 15, '#b6ffd0', 'start');
+    s += label(tx, 388, 'worst cell C[' + E.wi + '][' + E.wj + ']', 14, '#ffd23f', 'start');
+    s += label(tx, 410, '  fp32 inputs : ' + E.w32.toPrecision(8), 13, '#b6ffd0', 'start');
+    s += label(tx, 430, '  fp16 inputs : ' + E.w16.toPrecision(8), 13, '#b6ffd0', 'start');
+  }
+  s += label(tx, 480, '// WHAT IS HAPPENING', 14, '#39ff6e', 'start');
+  var notes = [
+    'fp16 keeps 10 mantissa bits (~3 decimal digits). Each A and B',
+    'value is rounded before it is multiplied.',
+    'The accumulator stays fp32, so the sum does not also lose',
+    'precision: that is why tensor cores accumulate in fp32.',
+    'Error grows with K (more terms) and with value magnitude.',
+    'Subnormal fp16 values are flushed to zero in this model.'
+  ];
+  for(i = 0; i < notes.length; i++) s += label(tx, 508 + i * 22, notes[i], 13, '#b6ffd0', 'start');
+  return s;
+}
+
+// ================= overlay entry =================
+function hw_render(){
+  if(!HW.loadA) hw_reset();
+  if(HW.errDirty || !HW.err) hw_calcErr();
+  var s = hw_head();
+  if(HW.tab === 'lanes')    s += hw_renderLanes();
+  if(HW.tab === 'regs')     s += hw_renderRegs();
+  if(HW.tab === 'pipeline') s += hw_renderPipeline();
+  if(HW.tab === 'traffic')  s += hw_renderTraffic();
+  if(HW.tab === 'error')    s += hw_renderError();
+  return s;
+}
+
+// ---- HW input ----
+$('scene').addEventListener('pointerdown', function(e){
+  if(!HW.open) return;
+  var t = e.target;
+  if(!t || !t.getAttribute) return;
+  var tab = t.getAttribute('data-hwtab');
+  if(tab){ HW.tab = tab; dirty = true; return; }
+  if(t.getAttribute('data-hwvals')){ HW.showVal = !HW.showVal; dirty = true; return; }
+  var ln = t.getAttribute('data-hwlane');
+  if(ln !== null){
+    var n = parseInt(ln, 10) & 31;
+    HW.lane = (HW.lane === n) ? -1 : n;
+    dirty = true; return;
+  }
+  if(t.getAttribute('data-hwr')){
+    HW.R = (HW.R === 1) ? 2 : (HW.R === 2 ? 4 : 1);
+    dirty = true; return;
+  }
+  if(t.getAttribute('data-hwclose')){
+    HW.open = false; dirty = true; hudDirty = true; return;
+  }
+});
+
+function hw_moveLane(d){ HW.lane = (HW.lane < 0) ? 0 : (((HW.lane + d) % 32) + 32) % 32; }
+
+window.addEventListener('keydown', function(e){
+  if(!HW.open) return;
+  var k = e.key, used = true;
+  var tabs = ['lanes', 'regs', 'pipeline', 'traffic', 'error'];
+  if(k === 'Escape'){ HW.open = false; hudDirty = true; }
+  else if(k === 'ArrowRight') hw_moveLane(1);
+  else if(k === 'ArrowLeft')  hw_moveLane(-1);
+  else if(k === 'ArrowDown')  hw_moveLane(4);
+  else if(k === 'ArrowUp')    hw_moveLane(-4);
+  else if(k === ' ')          togglePlay();
+  else if(k === 'n' || k === 'N') stepOnce();
+  else if(k >= '1' && k <= '5') HW.tab = tabs[parseInt(k, 10) - 1];
+  else used = false;
+  if(used){
+    dirty = true;
+    e.preventDefault(); e.stopImmediatePropagation();
+  }
+}, true);
+
+// ============================================================
+// boot
+// ============================================================
+setSize(4, 4, 4, 's4');
+requestAnimationFrame(loop);
+  ]]></script>
+</svg>
