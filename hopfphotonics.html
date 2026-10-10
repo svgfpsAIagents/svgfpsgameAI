@@ -32,11 +32,16 @@ ol{max-width:72ch;padding-left:1.2em}
 <span>pitch</span><input id="pit" type="range" min="-90" max="90" value="20"><output></output></div></fieldset>
 <div id="pc"></div>
 <div class="res" id="res" aria-live="polite"></div>
+<fieldset><legend>Precision of the loop phase</legend>
+<div class="ctl"><span>photons N</span><input id="logn" type="range" min="2" max="12" step="1" value="6"><output id="lognout"></output></div>
+<div class="res" id="fi" aria-live="polite"></div>
+<p class="mut">Model: ideal shot-noise limit, fringe read at quadrature (or scanned), both interferometer ports counted, loop arm transmits amplitude V because the polarizer chain removes the rest. No path-length jitter, detector noise or wave-plate error. For sensing a displacement of one vertex, ordinary two-port polarimetry gives F = 1 per photon, while the loop-phase channel reaches at most 0.25 (only at the singular, orthogonal-state limit) in this model.</p>
+</fieldset>
 <h2 style="font-size:1.15rem;margin-top:22px">Bench protocol to run this for real</h2>
 <ol>
 <li>Laser (HeNe or 633 nm diode) into a Mach-Zehnder interferometer, with equal arms and a piezo mirror to scan path length.</li>
 <li>In one arm, place a polarizer to prepare state A, then step through states B and C with a quarter-wave plate + half-wave plate pair, and return to A with a final polarizer. Leave the other arm as a reference that is polarization-matched to A.</li>
-<li>Record the fringe pattern with the loop closed. Compare against a run where the arm goes straight from A to A.</li>
+<li>Record the fringe pattern with the loop closed. Compare against a run where the arm goes straight from A to A. Wave plates are unitary rotations and add their own dynamical phase, so either use polarizers at A, B and C (accepting the intensity loss, which is the V in the readout) or calibrate the wave-plate phase out with the A-to-A run.</li>
 <li>Prediction: the fringes shift by an amount equal to minus half the solid angle of the geodesic triangle ABC on the Poincaré sphere, with the sign set by traversal direction. Reverse the loop and the shift should flip sign.</li>
 <li>Control: vary only the dynamical path length with the piezo. This moves fringes but should not change the loop-induced offset.</li>
 </ol>
@@ -51,7 +56,7 @@ P.forEach((s,i)=>{const f=document.createElement('fieldset');f.innerHTML=`<legen
 <div class="ctl"><span>θ (S₃ tilt)</span><input type="range" min="0" max="180" value="${s.t}" data-i="${i}" data-k="t"><output>${s.t}°</output>
 <span>φ (azimuth)</span><input type="range" min="0" max="360" value="${s.p}" data-i="${i}" data-k="p"><output>${s.p}°</output></div>`;pc.appendChild(f)});
 document.addEventListener('input',e=>{const el=e.target;if(el.dataset.k){P[el.dataset.i][el.dataset.k]=+el.value}
- const o=el.nextElementSibling;if(o&&o.tagName==='OUTPUT')o.textContent=el.value+'°';draw()});
+ const o=el.nextElementSibling;if(o&&o.tagName==='OUTPUT'&&el.id!=='logn')o.textContent=el.value+'°';draw()});
 document.querySelectorAll('#yaw,#pit').forEach(e=>e.nextElementSibling.textContent=e.value+'°');
 const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const vec=s=>[Math.sin(s.t*D)*Math.cos(s.p*D),Math.sin(s.t*D)*Math.sin(s.p*D),Math.cos(s.t*D)];
@@ -86,17 +91,32 @@ function draw(){
   line(c,pts,css(cols[i]),2.5)});
  // phase
  const J=P.map(jones);
- const tri=cm(cm(inner(J[0],J[1]),inner(J[1],J[2])),inner(J[2],J[0]));
+ // amplitude after projecting A -> B -> C -> A is <A|C><C|B><B|A>; its phase is -Omega/2 for the loop A->B->C
+ const tri=cm(cm(inner(J[0],J[2]),inner(J[2],J[1])),inner(J[1],J[0]));
  const ph=Math.atan2(tri[1],tri[0]), mag=Math.hypot(...tri);
  const trip=dot(V[0],cr(V[1],V[2])),den=1+dot(V[0],V[1])+dot(V[1],V[2])+dot(V[2],V[0]);
  const om=2*Math.atan2(trip,den), pred=-om/2;
  let diff=((ph-pred)%TAU+3*Math.PI)%TAU-Math.PI;
  const ok=Math.abs(diff)<1e-6;
- $('res').innerHTML=`Pancharatnam phase arg(⟨A|B⟩⟨B|C⟩⟨C|A⟩) : ${(ph/D).toFixed(3)}°<br>
+
+ // shot-noise Fisher information for the loop phase (Mach-Zehnder, lossy loop arm, both ports detected, rate counting)
+ const N=Math.pow(10,+$('logn').value), V0=mag;
+ const Fopt=Math.pow(2*V0/(1+V0),2), Fbal=2*V0*V0/(1+V0*V0), fr=1/(1+V0);
+ const sig=F=>F<1e-12?'undefined (V≈0)':(1/Math.sqrt(N*F));
+ const fmt=F=>{const s=sig(F);return typeof s==='string'?s:(s/D).toPrecision(3)+'° ('+(s*1000).toPrecision(3)+' mrad)'};
+ const fmtO=F=>{const s=sig(F);return typeof s==='string'?s:(2*s/D).toPrecision(3)+'°'};
+ $('lognout').textContent='10^'+$('logn').value;
+ $('fi').innerHTML=`Fisher information F per input photon (phase φ)<br>
+Balanced 50:50 splitter, 2V²/(1+V²)        : ${Fbal.toFixed(4)}<br>
+Best splitter (${(100*fr).toFixed(1)}% into loop arm), (2V/(1+V))² : ${Fopt.toFixed(4)}<br>
+Cramér–Rao σ(φ) for N = 10^${$('logn').value}, balanced : ${fmt(Fbal)}<br>
+Cramér–Rao σ(φ) for N = 10^${$('logn').value}, best splitter : ${fmt(Fopt)}<br>
+Implied σ(Ω) = 2σ(φ), best splitter       : ${fmtO(Fopt)}`;
+ $('res').innerHTML=`Pancharatnam phase arg(⟨A|C⟩⟨C|B⟩⟨B|A⟩) : ${(ph/D).toFixed(3)}°<br>
 Geodesic triangle solid angle Ω            : ${(om/D).toFixed(3)}° (${om.toFixed(4)} sr)<br>
 Predicted phase −Ω/2                       : ${(pred/D).toFixed(3)}°<br>
 Difference (mod 360°)                      : ${(diff/D).toExponential(2)}° <span class="${ok?'ok':'bad'}">${ok?'agrees':'mismatch'}</span><br>
-Loop visibility |⟨A|B⟩⟨B|C⟩⟨C|A⟩|          : ${mag.toFixed(4)} (fringe contrast scale; 0 if two states are orthogonal)`;
+Loop visibility V = |⟨A|B⟩⟨B|C⟩⟨C|A⟩|     : ${mag.toFixed(4)} (fringe contrast scale; 0 if two states are orthogonal)`;
 }
 draw();
 </script></body></html>
