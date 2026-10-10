@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hopf fibration meets photonics: a geometric-phase bench</title>
+<style>
+:root{--bg:#f3f1ec;--fg:#1b1f24;--mut:#5b6470;--line:#c9c4b8;--a:#1f5fbf;--b:#b4380f;--c:#12805c;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14181d;--fg:#e6e9ee;--mut:#9aa4b2;--line:#323a45;--a:#6fa4ff;--b:#ff8f66;--c:#4fd1a1}}
+:root[data-theme="dark"]{--bg:#14181d;--fg:#e6e9ee;--mut:#9aa4b2;--line:#323a45;--a:#6fa4ff;--b:#ff8f66;--c:#4fd1a1}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 Georgia,"Iowan Old Style",serif}
+main{max-width:980px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:1.6rem;line-height:1.2;margin:.2em 0 .3em;font-weight:600}
+p{max-width:70ch;margin:.4em 0}.mut{color:var(--mut);font-size:.92rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin:16px 0}
+canvas{width:100%;max-width:420px;aspect-ratio:1;border:1px solid var(--line);border-radius:6px;display:block}
+.ctl{display:grid;grid-template-columns:auto 1fr 3.2em;gap:4px 8px;align-items:center;font:13px system-ui,sans-serif;margin:6px 0}
+.ctl output{text-align:right;color:var(--mut)}
+fieldset{border:1px solid var(--line);border-radius:6px;margin:10px 0;padding:8px 12px}
+legend{font:600 13px system-ui,sans-serif;padding:0 6px}
+.res{font:14px/1.6 ui-monospace,Menlo,Consolas,monospace;border:1px solid var(--line);border-radius:6px;padding:10px 12px;overflow-x:auto}
+.ok{color:var(--c)}.bad{color:var(--b)}
+ol{max-width:72ch;padding-left:1.2em}
+</style></head><body><main>
+<h1>Where the Hopf fibration really shows up in light</h1>
+<p>A fully polarized beam is a normalized Jones vector, a point on S³. Dropping the global phase gives a point on the Poincaré sphere S². That map is the Hopf map, and each fibre is the set of Jones vectors that differ only by global phase. The experiment below tests the one place this phase becomes measurable: the Pancharatnam (geometric) phase picked up when a beam passes through a cycle of three polarization states.</p>
+<div class="grid">
+ <div><canvas id="s2" width="420" height="420" aria-label="Poincaré sphere"></canvas><p class="mut">Poincaré sphere (S²) with the three polarization states and geodesic triangle.</p></div>
+ <div><canvas id="s3" width="420" height="420" aria-label="Hopf fibres"></canvas><p class="mut">Fibres of S³ over the same three states, stereographically projected to R³. Each fibre is a circle; any two distinct fibres link once.</p></div>
+</div>
+<fieldset><legend>View</legend>
+<div class="ctl"><span>yaw</span><input id="yaw" type="range" min="0" max="360" value="30"><output></output>
+<span>pitch</span><input id="pit" type="range" min="-90" max="90" value="20"><output></output></div></fieldset>
+<div id="pc"></div>
+<div class="res" id="res" aria-live="polite"></div>
+<h2 style="font-size:1.15rem;margin-top:22px">Bench protocol to run this for real</h2>
+<ol>
+<li>Laser (HeNe or 633 nm diode) into a Mach-Zehnder interferometer, with equal arms and a piezo mirror to scan path length.</li>
+<li>In one arm, place a polarizer to prepare state A, then step through states B and C with a quarter-wave plate + half-wave plate pair, and return to A with a final polarizer. Leave the other arm as a reference that is polarization-matched to A.</li>
+<li>Record the fringe pattern with the loop closed. Compare against a run where the arm goes straight from A to A.</li>
+<li>Prediction: the fringes shift by an amount equal to minus half the solid angle of the geodesic triangle ABC on the Poincaré sphere, with the sign set by traversal direction. Reverse the loop and the shift should flip sign.</li>
+<li>Control: vary only the dynamical path length with the piezo. This moves fringes but should not change the loop-induced offset.</li>
+</ol>
+<p class="mut">Status: the geometric phase itself is established physics (Pancharatnam 1956, Berry 1984, with polarization experiments by Bhandari and Samuel and later groups). This page does not test any claim that c, hydrogen or Zipf's law follow from the Hopf map; it only shows the verified link between the fibre structure and an observable.</p>
+</main>
+<script>
+const $=id=>document.getElementById(id), D=Math.PI/180, TAU=2*Math.PI;
+const P=[{t:50,p:0},{t:100,p:120},{t:70,p:250}];
+const cols=['--a','--b','--c'], names=['A','B','C'];
+const pc=$('pc');
+P.forEach((s,i)=>{const f=document.createElement('fieldset');f.innerHTML=`<legend>State ${names[i]}</legend>
+<div class="ctl"><span>θ (S₃ tilt)</span><input type="range" min="0" max="180" value="${s.t}" data-i="${i}" data-k="t"><output>${s.t}°</output>
+<span>φ (azimuth)</span><input type="range" min="0" max="360" value="${s.p}" data-i="${i}" data-k="p"><output>${s.p}°</output></div>`;pc.appendChild(f)});
+document.addEventListener('input',e=>{const el=e.target;if(el.dataset.k){P[el.dataset.i][el.dataset.k]=+el.value}
+ const o=el.nextElementSibling;if(o&&o.tagName==='OUTPUT')o.textContent=el.value+'°';draw()});
+document.querySelectorAll('#yaw,#pit').forEach(e=>e.nextElementSibling.textContent=e.value+'°');
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const vec=s=>[Math.sin(s.t*D)*Math.cos(s.p*D),Math.sin(s.t*D)*Math.sin(s.p*D),Math.cos(s.t*D)];
+const jones=s=>[[Math.cos(s.t*D/2),0],[Math.sin(s.t*D/2)*Math.cos(s.p*D),Math.sin(s.t*D/2)*Math.sin(s.p*D)]];
+const inner=(a,b)=>{let re=0,im=0;for(let i=0;i<2;i++){re+=a[i][0]*b[i][0]+a[i][1]*b[i][1];im+=a[i][0]*b[i][1]-a[i][1]*b[i][0]}return[re,im]};
+const cm=(a,b)=>[a[0]*b[0]-a[1]*b[1],a[0]*b[1]+a[1]*b[0]];
+const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+const cr=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+function rot(v){const y=$('yaw').value*D,p=$('pit').value*D;
+ let x=v[0]*Math.cos(y)-v[1]*Math.sin(y),yy=v[0]*Math.sin(y)+v[1]*Math.cos(y),z=v[2];
+ const y2=yy*Math.cos(p)-z*Math.sin(p),z2=yy*Math.sin(p)+z*Math.cos(p);return[x,-z2,y2]}
+function slerp(a,b,t){const w=Math.acos(Math.max(-1,Math.min(1,dot(a,b)))),s=Math.sin(w);
+ if(s<1e-6)return a;const k=Math.sin((1-t)*w)/s,l=Math.sin(t*w)/s;return[0,1,2].map(i=>k*a[i]+l*b[i])}
+function line(c,pts,col,w){c.strokeStyle=col;c.lineWidth=w;c.beginPath();pts.forEach((q,i)=>i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1]));c.stroke()}
+function draw(){
+ const line0=css('--line'),fg=css('--fg');
+ // S2
+ let c=$('s2').getContext('2d');c.clearRect(0,0,420,420);const R=160,O=210;
+ const sc=v=>{const r=rot(v);return[O+R*r[0],O+R*r[1],r[2]]};
+ for(let k=-60;k<=60;k+=30){const pts=[];for(let a=0;a<=360;a+=6){const z=Math.sin(k*D),r=Math.cos(k*D);pts.push(sc([r*Math.cos(a*D),r*Math.sin(a*D),z]))}line(c,pts,line0,1)}
+ for(let k=0;k<180;k+=30){const pts=[];for(let a=0;a<=360;a+=6)pts.push(sc([Math.cos(a*D)*Math.cos(k*D),Math.cos(a*D)*Math.sin(k*D),Math.sin(a*D)]));line(c,pts,line0,1)}
+ const V=P.map(vec);
+ for(let i=0;i<3;i++){const a=V[i],b=V[(i+1)%3],pts=[];for(let t=0;t<=1.001;t+=.03)pts.push(sc(slerp(a,b,t)));line(c,pts,fg,2)}
+ V.forEach((v,i)=>{const q=sc(v);c.fillStyle=css(cols[i]);c.beginPath();c.arc(q[0],q[1],6,0,TAU);c.fill();c.fillStyle=fg;c.font='14px system-ui';c.fillText(names[i],q[0]+9,q[1]-8)});
+ // S3 fibres
+ c=$('s3').getContext('2d');c.clearRect(0,0,420,420);
+ P.forEach((s,i)=>{const pts=[];const a0=Math.cos(s.t*D/2),b0=Math.sin(s.t*D/2);
+  for(let k=0;k<=160;k++){const x=k/160*TAU,cx=Math.cos(x),sx=Math.sin(x);
+   const x1=a0*cx,x2=a0*sx,x3=b0*Math.cos(s.p*D+x),x4=b0*Math.sin(s.p*D+x),d=1-x4;
+   let q=[x1/d,x2/d,x3/d];const m=Math.hypot(...q);if(m>3.2)q=q.map(u=>u*3.2/m);
+   const r=rot(q);pts.push([210+r[0]*60,210+r[1]*60])}
+  line(c,pts,css(cols[i]),2.5)});
+ // phase
+ const J=P.map(jones);
+ const tri=cm(cm(inner(J[0],J[1]),inner(J[1],J[2])),inner(J[2],J[0]));
+ const ph=Math.atan2(tri[1],tri[0]), mag=Math.hypot(...tri);
+ const trip=dot(V[0],cr(V[1],V[2])),den=1+dot(V[0],V[1])+dot(V[1],V[2])+dot(V[2],V[0]);
+ const om=2*Math.atan2(trip,den), pred=-om/2;
+ let diff=((ph-pred)%TAU+3*Math.PI)%TAU-Math.PI;
+ const ok=Math.abs(diff)<1e-6;
+ $('res').innerHTML=`Pancharatnam phase arg(⟨A|B⟩⟨B|C⟩⟨C|A⟩) : ${(ph/D).toFixed(3)}°<br>
+Geodesic triangle solid angle Ω            : ${(om/D).toFixed(3)}° (${om.toFixed(4)} sr)<br>
+Predicted phase −Ω/2                       : ${(pred/D).toFixed(3)}°<br>
+Difference (mod 360°)                      : ${(diff/D).toExponential(2)}° <span class="${ok?'ok':'bad'}">${ok?'agrees':'mismatch'}</span><br>
+Loop visibility |⟨A|B⟩⟨B|C⟩⟨C|A⟩|          : ${mag.toFixed(4)} (fringe contrast scale; 0 if two states are orthogonal)`;
+}
+draw();
+</script></body></html>
