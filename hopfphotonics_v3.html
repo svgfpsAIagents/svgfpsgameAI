@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hopf fibration meets photonics: a geometric-phase bench</title>
+<style>
+:root{--bg:#f3f1ec;--fg:#1b1f24;--mut:#5b6470;--line:#c9c4b8;--a:#1f5fbf;--b:#b4380f;--c:#12805c;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14181d;--fg:#e6e9ee;--mut:#9aa4b2;--line:#323a45;--a:#6fa4ff;--b:#ff8f66;--c:#4fd1a1}}
+:root[data-theme="dark"]{--bg:#14181d;--fg:#e6e9ee;--mut:#9aa4b2;--line:#323a45;--a:#6fa4ff;--b:#ff8f66;--c:#4fd1a1}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 Georgia,"Iowan Old Style",serif}
+main{max-width:980px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:1.6rem;line-height:1.2;margin:.2em 0 .3em;font-weight:600}
+p{max-width:70ch;margin:.4em 0}.mut{color:var(--mut);font-size:.92rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin:16px 0}
+canvas{width:100%;max-width:420px;aspect-ratio:1;border:1px solid var(--line);border-radius:6px;display:block}
+.ctl{display:grid;grid-template-columns:auto 1fr 4.8em;gap:4px 8px;align-items:center;font:13px system-ui,sans-serif;margin:6px 0}
+.ctl output{text-align:right;color:var(--mut)}
+fieldset{border:1px solid var(--line);border-radius:6px;margin:10px 0;padding:8px 12px}
+legend{font:600 13px system-ui,sans-serif;padding:0 6px}
+.res{font:14px/1.6 ui-monospace,Menlo,Consolas,monospace;border:1px solid var(--line);border-radius:6px;padding:10px 12px;overflow-x:auto}
+.ok{color:var(--c)}.bad{color:var(--b)}
+ol{max-width:72ch;padding-left:1.2em}
+@media(max-width:480px){.ctl{grid-template-columns:1fr 4.8em}.ctl span{grid-column:1/-1}}textarea{background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;margin:4px 0}</style></head><body><main>
+<h1>Where the Hopf fibration really shows up in light</h1>
+<p>A fully polarized beam is a normalized Jones vector, a point on S³. Dropping the global phase gives a point on the Poincaré sphere S². That map is the Hopf map, and each fibre is the set of Jones vectors that differ only by global phase. The experiment below tests the one place this phase becomes measurable: the Pancharatnam (geometric) phase picked up when a beam passes through a cycle of three polarization states.</p>
+<div class="grid">
+ <div><canvas id="s2" width="420" height="420" aria-label="Poincaré sphere"></canvas><p class="mut">Poincaré sphere (S²) with the three polarization states and geodesic triangle.</p></div>
+ <div><canvas id="s3" width="420" height="420" aria-label="Hopf fibres"></canvas><p class="mut">Fibres of S³ over the same three states, stereographically projected to R³. Each fibre is a circle; any two distinct fibres link once. Far from the centre the projection is compressed so near-pole fibres stay on screen.</p></div>
+</div>
+<fieldset><legend>View</legend>
+<div class="ctl"><span>yaw</span><input id="yaw" type="range" min="0" max="360" value="30"><output></output>
+<span>pitch</span><input id="pit" type="range" min="-90" max="90" value="20"><output></output></div></fieldset>
+<div id="pc"></div>
+<div class="res" id="res" aria-live="polite"></div>
+<fieldset><legend>Precision of the loop phase</legend>
+<div class="ctl"><span>photons N</span><input id="logn" data-nd="1" type="range" min="2" max="12" step="1" value="6"><output id="lognout"></output></div>
+<div class="res" id="fi" aria-live="polite"></div>
+<p class="mut">Model: ideal shot-noise limit, fringe read at quadrature (or scanned), both interferometer ports counted, loop arm transmits amplitude V because the polarizer chain removes the rest. No path-length jitter, detector noise or wave-plate error. For sensing a displacement of one vertex, ordinary two-port polarimetry gives F = 1 per photon, while the loop-phase channel reaches at most 0.25 (only at the singular, orthogonal-state limit) in this model.</p>
+</fieldset>
+<fieldset><legend>Holonomy: horizontal lift of the loop in S³ (dashed curve, right panel)</legend>
+<div class="res" id="lift"></div><p class="mut">Each leg is lifted so the phase never changes along it. The lift starts on fibre A and ends on the same fibre, short of closing by the thick arc. That arc is the geometric phase, −Ω/2. For a polarizer chain, check that the measured Pancharatnam phase is the complete geometric phase for your projection scheme; the page assumes it is.</p></fieldset>
+<fieldset><legend>Noise budget against the Fisher bound (N from the slider above)</legend><div class="ctl"><span>fast jitter σ (rad)</span><input id="jit" data-nd="1" type="range" min="0" max="1.5" step="0.01" value="0.1"><output></output><span>run-to-run drift σ (rad)</span><input id="drf" data-nd="1" type="range" min="0" max="0.3" step="0.005" value="0.01"><output></output><span>random vertex error per run σ (°)</span><input id="ver" data-nd="1" type="range" min="0" max="5" step="0.1" value="0.5"><output></output><span>dark counts per port, 10^x</span><input id="drk" data-nd="1" type="range" min="-7" max="-1" step="0.5" value="-4"><output></output><span>fixed vertex misalignment (°)</span><input id="mis" data-nd="1" type="range" min="0" max="5" step="0.1" value="0.5"><output></output><span>interferometer contrast</span><input id="ctr" data-nd="1" type="range" min="0.5" max="1" step="0.01" value="0.97"><output></output></div>
+<div class="res" id="nb"></div><p class="mut">A polarizer angle error α moves a linear-state vertex by 2α. Fast jitter lowers contrast by exp(−σ²/2). Drift between the loop run and the A→A reference run adds directly to the phase error. Random vertex error changes from run to run; a fixed misalignment is a bias and is reported separately. The splitter ratio is re-optimized for the noise settings.</p></fieldset>
+<fieldset><legend>Fit your bench data (loop run minus A→A reference run)</legend><textarea id="dat" rows="4" style="width:100%;font:13px ui-monospace,monospace" placeholder="Loop closed: piezo phase (rad), counts per line"></textarea><textarea id="ref" rows="4" style="width:100%;font:13px ui-monospace,monospace" placeholder="Reference run, arm goes A to A: piezo phase (rad), counts per line"></textarea><div class="ctl"><span>scan sign</span><select id="dsg" data-nd="1"><option value="1">shift = loop − reference</option><option value="-1">shift = reference − loop</option></select><output></output></div><div class="res" id="fit"></div><p class="mut">Both runs must use the same piezo axis. Subtracting the reference run removes the interferometer's arbitrary offset. Counts = a + b·cos x + c·sin x is fitted to each run.</p></fieldset>
+<fieldset><legend>Sensing one vertex, and the three-photon tritter</legend>
+<div class="ctl"><span>vertex</span><select id="vsel"><option value="0">A</option><option value="1" selected>B</option><option value="2">C</option></select><output></output><span>direction on sphere (°)</span><input id="vdir" data-nd="1" type="range" min="0" max="360" step="5" value="0"><output></output></div>
+<div class="res" id="vx"></div><div class="ctl" style="margin-top:8px"><span>overlap in other degrees of freedom μ</span><input id="mu" data-nd="1" type="range" min="0" max="1" step="0.01" value="1"><output></output></div><div class="res" id="tr" style="margin-top:8px"></div>
+<p class="mut">Tritter: three photons with these polarizations enter a balanced three-port Fourier splitter. Output probabilities depend only on the overlaps and the triad phase, so A, B, C set that phase directly. μ = 1 means identical in time, frequency and spatial mode; lower μ models partial distinguishability with one common overlap for every pair. Loss only lowers the coincidence rate.</p></fieldset>
+<details><summary>Derivations</summary><div class="res" style="white-space:pre-wrap">With Bloch vectors a,b,c and ρ=(1+n·σ)/2: Δ3 = ⟨A|B⟩⟨B|C⟩⟨C|A⟩ = Tr(ρaρbρc) = (W + iT)/4,
+W = 1+a·b+b·c+c·a, T = a·(b×c). So arg Δ3 = atan2(T,W) = Ω/2 and V² = |Δ3|² = (1+a·b)(1+b·c)(1+c·a)/8.
+Successive projections A→B→C→A give the conjugate, so the measured shift is −Ω/2.
+Gradient: ∇_b φ = [W(c×a) − T(a+c)]/(W²+T²), cyclic for a and c. ∇_b V² = [a(1+b·c)+c(1+a·b)](1+c·a)/8.
+Fringe: loop arm amplitude s=√u·V, reference q=√(1−u), ports P± = (q²+s² ± 2qs·cos(φ+ψ))/2 (rate model).
+F = Σ(∂P)²/P = 4q²s²sin²x·(q²+s²)/((q²+s²)² − 4q²s²cos²x), largest at x=π/2: F = 4q²s²/(q²+s²).
+Maximizing over u gives u = 1/(1+V) and F = (2V/(1+V))². A balanced splitter gives 2V²/(1+V²).
+Scanning the piezo uniformly gives the average F = 2·min(q², s²). Cramér–Rao: σ(φ) ≥ 1/√(NF), σ(Ω) = 2σ(φ).
+Vertex sensing: F_θ = F·(∂φ/∂θ)² for the phase channel. Two-port polarimetry with an optimal probe gives 1.
+Fixed misalignment bias = misalignment × √(Σ|∇_tan φ|²) at worst; typical = worst/√2.
+Tritter: p(o) = (1/∏nₖ!) Σ_{σ,τ∈S3} ∏ⱼ U_{oⱼσ(j)} U*_{oⱼτ(j)} ⟨ψ_τ(j)|ψ_σ(j)⟩, U = Fourier matrix/√3.</div></details>
+<h2 style="font-size:1.15rem;margin-top:22px">Bench protocol to run this for real</h2>
+<ol>
+<li>Laser (HeNe or 633 nm diode) into a Mach-Zehnder interferometer, with equal arms and a piezo mirror to scan path length.</li>
+<li>In one arm, place a polarizer to prepare state A, then step through states B and C with a quarter-wave plate + half-wave plate pair, and return to A with a final polarizer. Leave the other arm as a reference that is polarization-matched to A.</li>
+<li>Record the fringe pattern with the loop closed. Compare against a run where the arm goes straight from A to A. Wave plates are unitary rotations and add their own dynamical phase, so either use polarizers at A, B and C (accepting the intensity loss, which is the V in the readout) or calibrate the wave-plate phase out with the A-to-A run.</li>
+<li>Prediction: the fringes shift by an amount equal to minus half the solid angle of the geodesic triangle ABC on the Poincaré sphere, with the sign set by traversal direction. Reverse the loop and the shift should flip sign.</li>
+<li>Control: vary only the dynamical path length with the piezo. This moves fringes but should not change the loop-induced offset.</li>
+</ol>
+<p class="mut">Status: the geometric phase itself is established physics (Pancharatnam 1956, Berry 1984, with polarization experiments by Bhandari and Samuel and later groups). This page does not test any claim that c, hydrogen or Zipf's law follow from the Hopf map; it only shows the verified link between the fibre structure and an observable.</p>
+</main>
+<script>
+const $=id=>document.getElementById(id), D=Math.PI/180, TAU=2*Math.PI;
+const P=[{t:50,p:0},{t:100,p:120},{t:70,p:250}];
+const cols=['--a','--b','--c'], names=['A','B','C'];
+let PH=0;const pc=$('pc');
+P.forEach((s,i)=>{const f=document.createElement('fieldset');f.innerHTML=`<legend>State ${names[i]}</legend>
+<div class="ctl"><span>θ (S₃ tilt)</span><input type="range" min="0" max="180" value="${s.t}" data-i="${i}" data-k="t"><output>${s.t}°</output>
+<span>φ (azimuth)</span><input type="range" min="0" max="360" value="${s.p}" data-i="${i}" data-k="p"><output>${s.p}°</output></div>`;pc.appendChild(f)});
+document.addEventListener('input',e=>{const el=e.target;if(el.dataset.k){P[el.dataset.i][el.dataset.k]=+el.value}
+ const o=el.nextElementSibling;if(o&&o.tagName==='OUTPUT'&&!el.dataset.nd)o.textContent=el.value+'°';draw()});
+document.querySelectorAll('#yaw,#pit').forEach(e=>e.nextElementSibling.textContent=e.value+'°');
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const vec=s=>[Math.sin(s.t*D)*Math.cos(s.p*D),Math.sin(s.t*D)*Math.sin(s.p*D),Math.cos(s.t*D)];
+const jones=s=>[[Math.cos(s.t*D/2),0],[Math.sin(s.t*D/2)*Math.cos(s.p*D),Math.sin(s.t*D/2)*Math.sin(s.p*D)]];
+const inner=(a,b)=>{let re=0,im=0;for(let i=0;i<2;i++){re+=a[i][0]*b[i][0]+a[i][1]*b[i][1];im+=a[i][0]*b[i][1]-a[i][1]*b[i][0]}return[re,im]};
+const cm=(a,b)=>[a[0]*b[0]-a[1]*b[1],a[0]*b[1]+a[1]*b[0]];
+const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+const cr=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+function rot(v){const y=$('yaw').value*D,p=$('pit').value*D;
+ let x=v[0]*Math.cos(y)-v[1]*Math.sin(y),yy=v[0]*Math.sin(y)+v[1]*Math.cos(y),z=v[2];
+ const y2=yy*Math.cos(p)-z*Math.sin(p),z2=yy*Math.sin(p)+z*Math.cos(p);return[x,-z2,y2]}
+function slerp(a,b,t){const w=Math.acos(Math.max(-1,Math.min(1,dot(a,b)))),s=Math.sin(w);
+ if(s<1e-6)return a;const k=Math.sin((1-t)*w)/s,l=Math.sin(t*w)/s;return[0,1,2].map(i=>k*a[i]+l*b[i])}
+function line(c,pts,col,w){c.strokeStyle=col;c.lineWidth=w;c.beginPath();pts.forEach((q,i)=>i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1]));c.stroke()}
+function draw(){
+ const line0=css('--line'),fg=css('--fg');
+ // S2
+ let c=$('s2').getContext('2d');c.clearRect(0,0,420,420);const R=160,O=210;
+ const sc=v=>{const r=rot(v);return[O+R*r[0],O+R*r[1],r[2]]};
+ for(let k=-60;k<=60;k+=30){const pts=[];for(let a=0;a<=360;a+=6){const z=Math.sin(k*D),r=Math.cos(k*D);pts.push(sc([r*Math.cos(a*D),r*Math.sin(a*D),z]))}line(c,pts,line0,1)}
+ for(let k=0;k<180;k+=30){const pts=[];for(let a=0;a<=360;a+=6)pts.push(sc([Math.cos(a*D)*Math.cos(k*D),Math.cos(a*D)*Math.sin(k*D),Math.sin(a*D)]));line(c,pts,line0,1)}
+ const V=P.map(vec);
+ for(let i=0;i<3;i++){const a=V[i],b=V[(i+1)%3],pts=[];for(let t=0;t<=1.001;t+=.03)pts.push(sc(slerp(a,b,t)));line(c,pts,fg,2)}
+ V.forEach((v,i)=>{const q=sc(v);c.fillStyle=css(cols[i]);c.beginPath();c.arc(q[0],q[1],6,0,TAU);c.fill();c.fillStyle=fg;c.font='14px system-ui';c.fillText(names[i],q[0]+9,q[1]-8)});
+ // S3 fibres
+ c=$('s3').getContext('2d');c.clearRect(0,0,420,420);
+ P.forEach((s,i)=>{const pts=[];const a0=Math.cos(s.t*D/2),b0=Math.sin(s.t*D/2);
+  for(let k=0;k<=160;k++){const x=k/160*TAU,cx=Math.cos(x),sx=Math.sin(x);
+   const x1=a0*cx,x2=a0*sx,x3=b0*Math.cos(s.p*D+x),x4=b0*Math.sin(s.p*D+x),d=Math.max(1-x4,1e-6);
+   let q=sq([x1/d,x2/d,x3/d]);
+   const r=rot(q);pts.push([210+r[0]*60,210+r[1]*60])}
+  line(c,pts,css(cols[i]),2.5)});
+ // phase
+ const J=P.map(jones);
+ // amplitude after projecting A -> B -> C -> A is <A|C><C|B><B|A>; its phase is -Omega/2 for the loop A->B->C
+ const tri=cm(cm(inner(J[0],J[2]),inner(J[2],J[1])),inner(J[1],J[0]));
+ const ph=Math.atan2(tri[1],tri[0]), mag=Math.hypot(...tri);
+ const trip=dot(V[0],cr(V[1],V[2])),den=1+dot(V[0],V[1])+dot(V[1],V[2])+dot(V[2],V[0]);
+ const om=2*Math.atan2(trip,den), pred=-om/2;
+ let diff=((ph-pred)%TAU+3*Math.PI)%TAU-Math.PI;
+ const ok=Math.abs(diff)<1e-6;PH=ph;
+
+ // shot-noise Fisher information for the loop phase (Mach-Zehnder, lossy loop arm, both ports detected, rate counting)
+ const N=Math.pow(10,+$('logn').value), V0=mag;
+ const Fopt=Math.pow(2*V0/(1+V0),2), Fbal=2*V0*V0/(1+V0*V0), fr=1/(1+V0);
+ const sig=F=>F<1e-12?'undefined (V≈0)':(1/Math.sqrt(N*F));
+ const fmt=F=>{const s=sig(F);return typeof s==='string'?s:(s/D).toPrecision(3)+'° ('+(s*1000).toPrecision(3)+' mrad)'};
+ const fmtO=F=>{const s=sig(F);return typeof s==='string'?s:(2*s/D).toPrecision(3)+'°'};
+ $('lognout').textContent='10^'+$('logn').value;
+ $('fi').innerHTML=`Fisher information F per input photon (phase φ)<br>
+Balanced 50:50 splitter, 2V²/(1+V²)        : ${Fbal.toFixed(4)}<br>
+Best splitter (${(100*fr).toFixed(1)}% into loop arm), (2V/(1+V))² : ${Fopt.toFixed(4)}<br>
+Cramér–Rao σ(φ) for N = 10^${$('logn').value}, balanced : ${fmt(Fbal)}<br>
+Cramér–Rao σ(φ) for N = 10^${$('logn').value}, best splitter : ${fmt(Fopt)}<br>
+Implied σ(Ω) = 2σ(φ), best splitter       : ${fmtO(Fopt)}`;
+ $('res').innerHTML=`Pancharatnam phase arg(⟨A|C⟩⟨C|B⟩⟨B|A⟩) : ${(ph/D).toFixed(3)}°<br>
+Geodesic triangle solid angle Ω            : ${(om/D).toFixed(3)}° (${om.toFixed(4)} sr)<br>
+Predicted phase −Ω/2                       : ${(pred/D).toFixed(3)}°<br>
+Difference (mod 360°)                      : ${(diff/D).toExponential(2)}° <span class="${ok?'ok':'bad'}">${ok?'agrees':'mismatch'}</span><br>
+Loop visibility V = |⟨A|B⟩⟨B|C⟩⟨C|A⟩|     : ${mag.toFixed(4)} (fringe contrast scale; 0 if two states are orthogonal)`;
+}
+
+function sq(q){const m=Math.hypot(...q);return m>2?q.map(u=>u*(2+Math.tanh(m-2))/m):q}
+const cj=z=>[z[0],-z[1]],cr3=cr,add3=(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]],sc3=(a,k)=>a.map(x=>x*k);
+const tj=v=>{const t=Math.acos(Math.max(-1,Math.min(1,v[2]))),p=Math.atan2(v[1],v[0]);return[[Math.cos(t/2),0],[Math.sin(t/2)*Math.cos(p),Math.sin(t/2)*Math.sin(p)]]};
+const perms=[[0,1,2],[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]],w3=2*Math.PI/3;
+const U3=(o,i)=>[Math.cos(w3*o*i)/Math.sqrt(3),Math.sin(w3*o*i)/Math.sqrt(3)];
+function grad(i,V){const[a,b,c]=[V[i],V[(i+1)%3],V[(i+2)%3]],W=1+dot(a,b)+dot(b,c)+dot(c,a),T=dot(a,cr(b,c)),k=W*W+T*T;
+ if(k<1e-12)return{g:[0,0,0],h:[0,0,0]};const g=add3(sc3(cr(b,c),W/k),sc3(add3(b,c),-T/k)),h=sc3(add3(sc3(b,1+dot(a,c)),sc3(c,1+dot(a,b))),(1+dot(b,c))/8);return{g,h}}
+function Fbest(V,dphi,dV,dk,nu){let best=0,bu=.5;
+ for(let ui=1;ui<50;ui++){const u=ui/50,q2=1-u,q=Math.sqrt(q2),r=Math.sqrt(u);
+  for(let k=0;k<180;k++){const x=k*Math.PI/90;let F=0;for(const sg of[1,-1]){const P=(q2+u*V*V+sg*2*nu*q*r*V*Math.cos(x))/2+dk;
+   const d=-sg*nu*q*r*V*Math.sin(x)*dphi+(u*V+sg*nu*q*r*Math.cos(x))*dV;if(P>1e-14)F+=d*d/P}
+   if(F>best){best=F;bu=u}}}
+ Fbest.u=bu;return best}
+function extras(){
+ const Vs=P.map(vec),J=P.map(jones),c=$('s3').getContext('2d'),fg=css('--fg');
+ // 1. horizontal lift
+ const Vabs=Math.hypot(...cm(cm(inner(J[0],J[2]),inner(J[2],J[1])),inner(J[1],J[0]))),anti=[[0,1],[1,2],[2,0]].some(([i,j])=>dot(Vs[i],Vs[j])<-1+1e-9),deg=Vabs<1e-6;let cur=J[0];const pts=[cur];if(!anti){
+ for(let i=0;i<3;i++)for(let k=1;k<=60;k++){const n=tj(slerp(Vs[i],Vs[(i+1)%3],k/60)),o=inner(n,cur),m=Math.hypot(o[0],o[1])||1;
+  cur=n.map(z=>cm(z,[o[0]/m,o[1]/m]));pts.push(cur)}
+ const pr=z=>{const d=Math.max(1-z[1][1],1e-6);let q=sq([z[0][0]/d,z[0][1]/d,z[1][0]/d]);const r=rot(q);return[210+r[0]*60,210+r[1]*60]};
+ c.setLineDash([6,4]);line(c,pts.map(pr),fg,1.6);c.setLineDash([]);
+ const e=inner(J[0],cur),gam=Math.atan2(e[1],e[0]),T0=dot(Vs[0],cr(Vs[1],Vs[2])),W0=1+dot(Vs[0],Vs[1])+dot(Vs[1],Vs[2])+dot(Vs[2],Vs[0]),mo=-Math.atan2(T0,W0);
+ const arc=[];for(let k=0;k<=30;k++){const x=gam*k/30,ph=[Math.cos(x),Math.sin(x)];arc.push(pr(J[0].map(z=>cm(z,ph))))}
+ line(c,arc,fg,5);c.fillStyle=fg;const e1=pr(cur),s1=pr(J[0]);c.beginPath();c.arc(e1[0],e1[1],4,0,TAU);c.fill();c.strokeStyle=fg;c.beginPath();c.arc(s1[0],s1[1],5,0,TAU);c.stroke();
+ let dl=((gam-mo)%TAU+3*Math.PI)%TAU-Math.PI;
+ $('lift').innerHTML=`Lift end vs start (phase gap along fibre A) : ${(gam/D).toFixed(3)}°<br>−Ω/2 from the triangle              : ${(mo/D).toFixed(3)}°<br>Difference (60 steps per leg)          : ${(dl/D).toExponential(2)}° <span class="${Math.abs(dl)<1e-3?'ok':'bad'}">${Math.abs(dl)<1e-3?'agrees':'mismatch'}</span>`;
+}else $('lift').textContent='Two of the states are antipodal (orthogonal), so the geodesic between them is not unique. The loop and its lift are undefined here.';
+ // 2. noise budget
+ const V=Vabs,N=Math.pow(10,+$('logn').value),F0=Math.pow(2*V/(1+V),2);if(!deg){
+ const jit=+$('jit').value,drf=+$('drf').value,ver=+$('ver').value*D,dk=Math.pow(10,+$('drk').value),nu=+$('ctr').value*Math.exp(-jit*jit/2);
+ [['jit','rad'],['drf','rad'],['ver','°'],['ctr',''],['mis','°'],['mu','']].forEach(([id,u])=>$(id).nextElementSibling.textContent=$(id).value+u);$('drk').nextElementSibling.textContent='10^'+$('drk').value;
+ const F1=Fbest(V,1,0,dk,nu),sb=1/Math.sqrt(N*F0),ss=1/Math.sqrt(N*Math.max(F1,1e-300));
+ let sw=0;for(let i=0;i<3;i++){const g=grad(i,Vs).g;sw+=dot(g,g)-Math.pow(dot(g,Vs[i]),2)}const gn=Math.sqrt(sw),bw=+$('mis').value*D*gn,bt=bw/Math.SQRT2;sw=ver*gn;
+ const tot=Math.hypot(ss,sw,drf),f=x=>(x/D).toPrecision(3)+'°';
+ $('nb').innerHTML=`Ideal shot-noise bound σ(φ)                       : ${f(sb)}<br>Shot noise with contrast, dark counts (${(100*Fbest.u).toFixed(0)}% into loop arm) : ${f(ss)}<br>Random vertex error per run                    : ${f(sw)}<br>Run-to-run drift                               : ${f(drf)}<br>Total random σ(φ)                              : ${f(tot)}  (${(100*sb/tot).toFixed(1)}% of the bound)<br>Fixed misalignment bias, typical / worst case  : ${f(bt)} / ${f(bw)}<br>Largest random term                            : ${['shot noise','vertex error','drift'][[ss,sw,drf].indexOf(Math.max(ss,sw,drf))]}`;
+}else $('nb').textContent='Phase undefined: |⟨A|B⟩⟨B|C⟩⟨C|A⟩| ≈ 0, so there is no fringe to measure.';
+ // 3. data fit
+ const fit1=t=>{const rows=t.split('\n').map(l=>l.split(/[ ,;\t]+/).map(Number)).filter(r=>r.length>=2&&r.every(isFinite));if(rows.length<4)return null;
+  const S=[[0,0,0],[0,0,0],[0,0,0]],R=[0,0,0];let Nn=0;rows.forEach(([x,y])=>{const b=[1,Math.cos(x),Math.sin(x)];for(let i=0;i<3;i++){R[i]+=b[i]*y;for(let j=0;j<3;j++)S[i][j]+=b[i]*b[j]}Nn+=y});
+  const det=m=>m[0][0]*(m[1][1]*m[2][2]-m[1][2]*m[2][1])-m[0][1]*(m[1][0]*m[2][2]-m[1][2]*m[2][0])+m[0][2]*(m[1][0]*m[2][1]-m[1][1]*m[2][0]),d0=det(S);
+  if(Math.abs(d0)<1e-9)return null;
+  const so=[0,1,2].map(k=>det(S.map((r,i)=>r.map((v,j)=>j===k?R[i]:v)))/d0),vis=Math.hypot(so[1],so[2])/so[0];
+  return{ph:Math.atan2(-so[2],so[1]),vis,sg:Math.sqrt(2/Nn)/Math.max(vis,1e-9)}};
+ const fl=fit1($('dat').value),fr=fit1($('ref').value),wr=x=>((x%TAU)+3*Math.PI)%TAU-Math.PI;
+ $('fit').innerHTML=!fl||!fr?'Paste at least 4 lines in each box (loop run and reference run).':(()=>{const sh=wr(+$('dsg').value*(fl.ph-fr.ph)),rs=wr(sh-PH),sg=Math.hypot(fl.sg,fr.sg);
+  return `Loop run: phase ${(fl.ph/D).toFixed(2)}°, visibility ${fl.vis.toFixed(3)}<br>Reference run: phase ${(fr.ph/D).toFixed(2)}°, visibility ${fr.vis.toFixed(3)}<br>Measured shift ${(sh/D).toFixed(2)}° against predicted ${(PH/D).toFixed(2)}°<br>Residual ${(rs/D).toFixed(2)}°, statistical σ ≈ ${(sg/D).toFixed(2)}° (${(Math.abs(rs)/sg).toFixed(1)}σ)`})();
+ // 4. vertex sensing
+ const vi=+$('vsel').value,v=Vs[vi],{g,h}=grad(vi,Vs),bt=$('vdir').value*D;$('vdir').nextElementSibling.textContent=$('vdir').value+'°';
+ let e1v=cr(v,[0,0,1]);if(Math.hypot(...e1v)<1e-6)e1v=cr(v,[1,0,0]);e1v=sc3(e1v,1/Math.hypot(...e1v));const e2v=cr(v,e1v),t=add3(sc3(e1v,Math.cos(bt)),sc3(e2v,Math.sin(bt)));
+ const dphi=dot(g,t),dV=V>1e-9?dot(h,t)/(2*V):0,Ft=Fbest(V,dphi,dV,0,1);
+ $('vx').innerHTML=deg?'Phase undefined: two of the states are orthogonal (V ≈ 0), so the loop has no fringe.':`Moving vertex ${names[vi]} along ${$('vdir').value}° : ∂φ/∂θ = ${dphi.toFixed(4)}, ∂V/∂θ = ${dV.toFixed(4)}<br>Phase channel only, F = (2V/(1+V))²(∂φ/∂θ)² : ${(F0*dphi*dphi).toFixed(4)}<br>Phase and amplitude together          : ${Ft.toFixed(4)}<br>Two-port polarimetry, optimal probe     : 1.0000`;
+ // 5. tritter
+ const mu=+$('mu').value,G0=(i,j)=>inner(J[i],J[j]),G=(i,j)=>{const z=G0(i,j);return i===j?z:[z[0]*mu,z[1]*mu]};
+ const pat=n=>{const o=[];n.forEach((m,k)=>{for(let i=0;i<m;i++)o.push(k)});let f=1,re=0;n.forEach(m=>{for(let i=2;i<=m;i++)f*=i});
+  for(const sg of perms)for(const tt of perms){let z=[1,0];for(let j=0;j<3;j++)z=cm(z,cm(cm(U3(o[j],sg[j]),cj(U3(o[j],tt[j]))),G(tt[j],sg[j])));re+=z[0]}return re/f};
+ let tot3=0;for(let a=0;a<=3;a++)for(let b=0;a+b<=3;b++)tot3+=pat([a,b,3-a-b]);
+ const d3=cm(cm(G0(0,1),G0(1,2)),G0(2,0)),p111=pat([1,1,1]);
+ $('tr').innerHTML=`Overlaps |⟨A|B⟩|², |⟨B|C⟩|², |⟨C|A⟩|² : ${[G0(0,1),G0(1,2),G0(2,0)].map(z=>(z[0]*z[0]+z[1]*z[1]).toFixed(4)).join(', ')}<br>Triad phase arg⟨A|B⟩⟨B|C⟩⟨C|A⟩ : ${(Math.atan2(d3[1],d3[0])/D).toFixed(2)}°, |Δ3| = ${Math.hypot(...d3).toFixed(4)}<br>One photon per output : ${p111.toFixed(4)}; two or more together : ${(1-p111).toFixed(4)}; all three together : ${(pat([3,0,0])+pat([0,3,0])+pat([0,0,3])).toFixed(4)}<br>Probability sum check : ${tot3.toFixed(6)}`}
+const draw0=draw;draw=function(){draw0();extras()};
+draw();
+</script></body></html>
