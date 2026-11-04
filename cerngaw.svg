@@ -715,6 +715,24 @@ layout();
 setStatus('STATUS: AWAITING DATA', 'LOAD A CSV/TXT OR PRESS DEMO');
 updateStats();
 syncButtons();
+
+// --- AUTO-LOAD FUNCTIONALITY ---
+setStatus('STATUS: FETCHING REMOTE DATA...', '');
+fetch('https://svgfpsaiagents.github.io/svgfpsgameAI/MuRun2010B_0.txt')
+  .then(function(response) {
+    if (!response.ok) throw new Error('Network response was not ok');
+    return response.text();
+  })
+  .then(function(text) {
+    parseCERNData(text, 'REMOTE');
+  })
+  .catch(function(error) {
+    console.error('Auto-load failed:', error);
+    setStatus('STATUS: AUTOLOAD FAILED', 'PRESS DEMO OR LOAD CSV');
+    syncButtons();
+  });
+// -------------------------------
+
 })();
 ]]></script>
 </svg>
