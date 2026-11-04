@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="viewport" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="-640 -400 1280 800" preserveAspectRatio="xMidYMid meet">
+<title>CERN SVG SCANNER</title>
+
+<style><![CDATA[
+  svg { touch-action:none; background:#000; font-family:'Courier New',Courier,monospace; -webkit-user-select:none; user-select:none; }
+  .ui-text { fill:#00ffcc; font-size:11px; letter-spacing:1px; pointer-events:none; }
+  .ui-dim  { fill:#00ffcc; font-size:10px; letter-spacing:1px; opacity:.7; pointer-events:none; }
+  .btn { cursor:pointer; pointer-events:all; }
+  .btn rect, .btn circle { fill:rgba(0,255,204,.10); stroke:#00ffcc; stroke-width:1; transition:fill .25s; filter: drop-shadow(0 0 2px #00ffcc); }
+  .btn text { fill:#00ffcc; font-size:11px; font-weight:bold; letter-spacing:1px; text-anchor:middle; pointer-events:none; }
+  .btn.round text { font-size:22px; }
+  .btn:hover rect, .btn:hover circle, .btn.active rect, .btn.active circle { fill:#00ffcc; }
+  .btn:hover text, .btn.active text { fill:#000; }
+  .glow-line { filter: drop-shadow(0 0 1.5px #00ffcc); }
+  .glow-bloom { filter: drop-shadow(0 0 4px #ff3300); }
+  
+  .tooltip-bg { fill: rgba(0, 0, 0, 0.9); stroke: #00ffcc; stroke-width: 1px; filter: drop-shadow(0 0 5px #00ffcc); }
+  .tooltip-text { fill: #ffffff; font-size: 11px; pointer-events: none; }
+  .highlight-line { fill: none; stroke: #ffffff; stroke-width: 2; filter: drop-shadow(0 0 8px #ffffff); vector-effect: non-scaling-stroke; }
+]]></style>
+
+<defs>
+  <radialGradient id="particleGrad" cx="50%" cy="50%" r="50%">
+    <stop offset="0%"   stop-color="#ffffff"/>
+    <stop offset="10%"  stop-color="#ffcc00"/>
+    <stop offset="30%"  stop-color="#ff3300"/>
+    <stop offset="70%"  stop-color="#990000"/>
+    <stop offset="100%" stop-color="#1a0000"/>
+  </radialGradient>
+  <radialGradient id="vignette" cx="50%" cy="50%" r="70%">
+    <stop offset="50%"  stop-color="#000" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#000" stop-opacity="0.9"/>
+  </radialGradient>
+</defs>
+
+<rect id="bg"  x="-640" y="-400" width="1280" height="800" fill="#000"/>
+<rect id="vig" x="-640" y="-400" width="1280" height="800" fill="url(#vignette)" pointer-events="none"/>
+
+<g id="scene">
+  <path id="hex-floor" fill="none" stroke="#00BFFF" stroke-width="1" opacity="0.15" vector-effect="non-scaling-stroke"/>
+  
+  <path id="vector-bloom" fill="none" stroke="url(#particleGrad)" stroke-width="3" opacity="0.5" class="glow-bloom" vector-effect="non-scaling-stroke"/>
+  <path id="vector-paths" fill="none" stroke="url(#particleGrad)" stroke-width="1" opacity="0.9" vector-effect="non-scaling-stroke"/>
+  
+  <line id="highlight-line" class="highlight-line" display="none" />
+
+  <g id="hull-group" display="none">
+    <path id="hull-fill" fill="#ff4400" fill-opacity="0.15" stroke="#ffaa00" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+    <path id="hull-edges" fill="none" stroke="#00ffcc" stroke-width="1.5" class="glow-line" vector-effect="non-scaling-stroke"/>
+  </g>
+
+  <g id="cross" opacity="0.8" pointer-events="none">
+    <path d="M0 -15V15M-15 0H15" stroke="#00ffcc" stroke-width="1" opacity="0.5"/>
+    <circle r="5" fill="none" stroke="#00ffcc" stroke-width="1"/>
+  </g>
+</g>
+
+<g id="ui">
+  <g id="ui-btns"></g>
+  
+  <g id="zoom-in"  class="btn round" transform="translate(600,-350)"><circle r="24"/><text y="8">+</text></g>
+  <g id="zoom-out" class="btn round" transform="translate(600,-290)"><circle r="24"/><text y="7">-</text></g>
+
+  <text id="title" class="ui-text" x="-620" y="380">OSCILLO-DETECTOR // SVG SCANNER</text>
+  <text id="help" class="ui-text" text-anchor="end" x="620" y="380">DRAG ROTATE / WHEEL ZOOM / DROP FILE</text>
+  
+  <text id="st0" class="ui-text" x="-620" y="-370"></text>
+  <text id="st1" class="ui-text" x="-620" y="-355"></text>
+  <text id="st2" class="ui-dim"  x="-620" y="-340"></text>
+  
+  <text id="sx0" class="ui-dim" x="-620" y="340"></text>
+  <text id="sx1" class="ui-dim" x="-620" y="355"></text>
+  <text id="sx2" class="ui-dim" x="-620" y="370"></text>
+</g>
+
+<g id="tooltip" display="none" pointer-events="none">
+  <rect id="tooltip-bg" class="tooltip-bg" rx="4" ry="4" />
+  <text id="tooltip-text" class="tooltip-text"></text>
+</g>
+
+<script><![CDATA[
+(function () {
+'use strict';
+var SVGNS = 'http://www.w3.org/2000/svg', XHTML = 'http://www.w3.org/1999/xhtml';
+var $ = function (id) { return document.getElementById(id); };
+
+var svg = $('viewport'), scene = $('scene');
+var hexFloor = $('hex-floor');
+var vectorPath = $('vector-paths'), vectorBloom = $('vector-bloom');
+var hullGroup = $('hull-group'), hullFill = $('hull-fill'), hullEdges = $('hull-edges');
+var uiBtns = $('ui-btns');
+var stEl = [$('st0'), $('st1'), $('st2')];
+var sxEl = [$('sx0'), $('sx1'), $('sx2')];
+
+var W = 1280, H_ = 800;
+var rotX = 0.8, rotY = 0.0, zoom = 1.0, targetZoom = 1.0;
+var autoRotate = false, showHull = false;
+var px = [], py = [], pz = [], maxNorm = 0, trackCount = 0, dataLabel = '';
+var HULL = null;
+var ZOOM_MIN = 0.05, ZOOM_MAX = 20, ZOOM_STEP = 1.2;
+
+/* THE SLICING SYSTEM */
+var MAX_DRAW = 2000; 
+var sliceStart = 0; // The current starting index
+var scanMode = false; // If true, rotation is locked so you can click
+
+var highlightLine = $('highlight-line');
+var tooltipGroup = $('tooltip');
+var tooltipBg = $('tooltip-bg');
+var tooltipText = $('tooltip-text');
+
+var cX = 1, sX = 0, cY = 1, sY = 0, camD = 800, PXo = 0, PYo = 0;
+function setCam() {
+  cX = Math.cos(rotX); sX = Math.sin(rotX);
+  cY = Math.cos(rotY); sY = Math.sin(rotY);
+  camD = 800 / zoom;
+}
+function proj(x, y, z) {
+  var y1 = y * cX - z * sX, z1 = y * sX + z * cX;
+  var x1 = x * cY - z1 * sY, z2 = x * sY + z1 * cY;
+  var s = 600 / Math.max(10, z2 + camD);
+  PXo = x1 * s; PYo = y1 * s;
+  return {x: PXo, y: PYo, z: z2};
+}
+
+var fileInput = document.createElementNS(XHTML, 'input');
+fileInput.type = 'file';
+fileInput.accept = '.txt,.csv,.tsv';
+fileInput.style.display = 'none';
+document.documentElement.appendChild(fileInput);
+fileInput.addEventListener('change', function (e) { 
+    if (e.target.files[0]) readFile(e.target.files[0]); 
+    fileInput.value = ''; 
+});
+
+var BTNS = [
+  { id: 'load', label: 'LOAD CSV', fn: function () { fileInput.click(); } },
+  { id: 'demo', label: 'DEMO DATA', fn: loadDemo },
+  { id: 'scan', label: 'SCAN MODE', fn: toggleScanMode },
+  { id: 'next', label: 'NEXT 2000', fn: nextSlice },
+  { id: 'obj',  label: 'DRAW HULL', fn: toggleObject },
+  { id: 'spin', label: 'SPIN', fn: function () { autoRotate = !autoRotate; syncButtons(); updateRender(); } },
+  { id: 'snap', label: 'SAVE SVG', fn: snapSVG }
+];
+
+BTNS.forEach(function (def) {
+  var g = document.createElementNS(SVGNS, 'g'); g.setAttribute('class', 'btn');
+  var r = document.createElementNS(SVGNS, 'rect'), t = document.createElementNS(SVGNS, 'text');
+  def.w = Math.ceil(def.label.length * 7.5 + 20);
+  r.setAttribute('width', def.w); r.setAttribute('height', 30); r.setAttribute('rx', 4);
+  t.setAttribute('x', def.w / 2); t.setAttribute('y', 19); t.textContent = def.label;
+  g.appendChild(r); g.appendChild(t);
+  g.addEventListener('click', def.fn);
+  uiBtns.appendChild(g); def.g = g;
+});
+
+function btn(id) { for (var i = 0; i < BTNS.length; i++) if (BTNS[i].id === id) return BTNS[i]; }
+function setActive(id, on) { btn(id).g.classList.toggle('active', !!on); }
+function syncButtons() { 
+    setActive('obj', !!HULL); 
+    setActive('spin', autoRotate); 
+    setActive('scan', scanMode);
+    btn('next').g.style.display = scanMode ? 'block' : 'none';
+}
+
+function toggleScanMode() {
+    scanMode = !scanMode;
+    if (scanMode) {
+        autoRotate = false;
+        setStatus('STATUS: SCAN MODE ACTIVE', 'CLICK A LINE TO INSPECT');
+    } else {
+        highlightLine.setAttribute('display', 'none');
+        tooltipGroup.setAttribute('display', 'none');
+        setStatus('STATUS: FREE ROAM', '');
+    }
+    syncButtons();
+    updateRender();
+}
+
+function nextSlice() {
+    if (px.length === 0) return;
+    sliceStart += MAX_DRAW;
+    if (sliceStart >= px.length) sliceStart = 0;
+    
+    updateStats();
+    highlightLine.setAttribute('display', 'none');
+    tooltipGroup.setAttribute('display', 'none');
+    updateRender();
+}
+
+$('zoom-in').addEventListener('click',  function () { targetZoom = Math.min(ZOOM_MAX, targetZoom * ZOOM_STEP); updateRender(); });
+$('zoom-out').addEventListener('click', function () { targetZoom = Math.max(ZOOM_MIN, targetZoom / ZOOM_STEP); updateRender(); });
+
+function layout() {
+  var r = svg.getBoundingClientRect();
+  W = r.width || window.innerWidth; H_ = r.height || window.innerHeight;
+  svg.setAttribute('viewBox', (-W / 2) + ' ' + (-H_ / 2) + ' ' + W + ' ' + H_);
+  [ 'bg', 'vig' ].forEach(function(id) { 
+      var el = $(id);
+      if (el) { el.setAttribute('x', -W/2); el.setAttribute('y', -H_/2); el.setAttribute('width', W); el.setAttribute('height', H_); }
+  });
+  
+  var x0 = -W / 2 + 20, x = x0, y = -H_ / 2 + 20, maxX = W / 2 - 80;
+  BTNS.forEach(function (def) {
+    if (x + def.w > maxX && x > x0) { x = x0; y += 38; }
+    def.g.setAttribute('transform', 'translate(' + x + ',' + y + ')');
+    x += def.w + 8;
+  });
+  
+  $('zoom-in').setAttribute('transform', 'translate(' + (W/2-44) + ',' + (-H_/2+44) + ')');
+  $('zoom-out').setAttribute('transform', 'translate(' + (W/2-44) + ',' + (-H_/2+100) + ')');
+  $('help').setAttribute('x', W/2 - 20); $('help').setAttribute('y', H_/2 - 20);
+  $('title').setAttribute('x', -W/2 + 20); $('title').setAttribute('y', H_/2 - 20);
+  sxEl.forEach(function(e, i) { e.setAttribute('x', -W/2 + 20); e.setAttribute('y', H_/2 - 40 - (2-i)*15); });
+  $('cross').setAttribute('transform', 'translate(0,0)');
+  updateRender();
+}
+window.addEventListener('resize', layout);
+
+function setStatus(a, b, c) { stEl[0].textContent = a || ''; stEl[1].textContent = b || ''; stEl[2].textContent = c || ''; }
+function updateStats() {
+  sxEl[0].textContent = trackCount ? ('VECTORS ' + trackCount + (dataLabel ? ' [' + dataLabel + ']' : '')) : '';
+  sxEl[1].textContent = trackCount ? ('MAX |P| ' + maxNorm.toFixed(1) + ' GEV') : '';
+  
+  if (scanMode && trackCount > 0) {
+      var end = Math.min(sliceStart + MAX_DRAW, trackCount);
+      sxEl[2].textContent = 'VIEWING SLICE: ' + sliceStart + ' TO ' + end;
+  } else if (trackCount > 0) {
+      sxEl[2].textContent = 'SHOWING ALL 20,000 (LOD ACTIVE ON DRAG)';
+  } else {
+      sxEl[2].textContent = '';
+  }
+}
+
+var ptrs = new Map(), pinchDist = 0;
+function pdist() { var a = Array.from(ptrs.values()); return Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y); }
+svg.addEventListener('pointerdown', function (e) {
+  if (e.target.closest && e.target.closest('.btn')) return;
+  
+  if (scanMode) {
+      handlePrecisePick(e);
+      return;
+  }
+
+  ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (autoRotate) { autoRotate = false; syncButtons(); }
+  try { svg.setPointerCapture(e.pointerId); } catch (_) {}
+  if (ptrs.size === 2) pinchDist = pdist();
+});
+svg.addEventListener('pointermove', function (e) {
+  if (scanMode) return; 
+  var p = ptrs.get(e.pointerId); if (!p) return;
+  var dx = e.clientX - p.x, dy = e.clientY - p.y;
+  p.x = e.clientX; p.y = e.clientY;
+  if (ptrs.size === 1) {
+    rotY += dx * 0.005; rotX += dy * 0.005;
+    rotX = Math.max(0.05, Math.min(Math.PI / 2.1, rotX));
+    updateRender();
+  } else if (ptrs.size === 2) {
+    var nd = pdist();
+    if (pinchDist > 0) { targetZoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, targetZoom * nd / pinchDist)); }
+    pinchDist = nd;
+    updateRender();
+  }
+});
+function endPtr(e) { ptrs.delete(e.pointerId); pinchDist = 0; try { svg.releasePointerCapture(e.pointerId); } catch (_) {} updateRender(); }
+svg.addEventListener('pointerup', endPtr);
+svg.addEventListener('pointercancel', endPtr);
+svg.addEventListener('wheel', function (ev) {
+  ev.preventDefault();
+  targetZoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, targetZoom * (ev.deltaY < 0 ? ZOOM_STEP : 1/ZOOM_STEP)));
+  updateRender();
+}, { passive: false });
+svg.addEventListener('dragover', function (e) { e.preventDefault(); });
+svg.addEventListener('drop', function (e) {
+  e.preventDefault();
+  var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if (f) readFile(f);
+});
+
+/* PRECISE PICKING - Only iterates over the current 2000 visible lines */
+function handlePrecisePick(e) {
+    if (px.length === 0) return;
+    
+    var rect = svg.getBoundingClientRect();
+    var mouseX = e.clientX - rect.left - rect.width/2;
+    var mouseY = e.clientY - rect.top - rect.height/2;
+
+    var sf = 300 / Math.max(20, Math.min(maxNorm, 120));
+    
+    // We only search the specific SLICE that is currently rendered
+    var endIdx = Math.min(sliceStart + MAX_DRAW, px.length);
+    
+    var minDistSq = 400; // Click radius (20px)
+    var bestIdx = -1;
+    var bestEndX = 0, bestEndY = 0;
+
+    // Only search the 2000 visible lines
+    for (var i = sliceStart; i < endIdx; i++) {
+        var p = proj(px[i] * sf, py[i] * sf, pz[i] * sf);
+        var dx = mouseX - p.x;
+        var dy = mouseY - p.y;
+        var distSq = dx*dx + dy*dy;
+
+        if (distSq < minDistSq) {
+            minDistSq = distSq;
+            bestIdx = i;
+            bestEndX = p.x;
+            bestEndY = p.y;
+        }
+    }
+
+    if (bestIdx !== -1) {
+        var origin = proj(0,0,0);
+        highlightLine.setAttribute('x1', origin.x);
+        highlightLine.setAttribute('y1', origin.y);
+        highlightLine.setAttribute('x2', bestEndX);
+        highlightLine.setAttribute('y2', bestEndY);
+        highlightLine.setAttribute('display', 'inline');
+
+        var pX = px[bestIdx], pY = py[bestIdx], pZ = pz[bestIdx];
+        var pMag = Math.sqrt(pX*pX + pY*pY + pZ*pZ);
+
+        var textLines = [
+            "INDEX: " + bestIdx,
+            "PX: " + pX.toFixed(2) + " GeV",
+            "PY: " + pY.toFixed(2) + " GeV",
+            "PZ: " + pZ.toFixed(2) + " GeV",
+            "E:  " + pMag.toFixed(2) + " GeV"
+        ];
+        
+        tooltipText.setAttribute('x', bestEndX + 15);
+        tooltipText.setAttribute('y', bestEndY - 15);
+        
+        var svgText = '';
+        textLines.forEach(function(line, idx) {
+            svgText += '<tspan x="' + (bestEndX + 15) + '" dy="' + (idx === 0 ? 0 : 14) + '">' + line + '</tspan>';
+        });
+        tooltipText.innerHTML = svgText;
+
+        var bbox = tooltipText.getBBox();
+        tooltipBg.setAttribute('x', bbox.x - 5);
+        tooltipBg.setAttribute('y', bbox.y - 5);
+        tooltipBg.setAttribute('width', bbox.width + 10);
+        tooltipBg.setAttribute('height', bbox.height + 10);
+        
+        tooltipGroup.setAttribute('display', 'inline');
+    } else {
+        highlightLine.setAttribute('display', 'none');
+        tooltipGroup.setAttribute('display', 'none');
+    }
+}
+
+function resetData() { px = []; py = []; pz = []; maxNorm = 0; trackCount = 0; HULL = null; showHull = false; sliceStart = 0; syncButtons(); }
+function afterLoad() { updateStats(); updateRender(); }
+
+function parseCERNData(text, label) {
+  setStatus('STATUS: PARSING DATA...');
+  resetData();
+  var lines = text.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n').split('\n').filter(function (l) { return l.trim().length > 0; });
+  if (!lines.length) { setStatus('STATUS: EMPTY FILE'); return; }
+  
+  var first = lines[0].split(/[,\t;\s]+/).filter(Boolean);
+  var startIdx = (first.length > 4 && isFinite(parseFloat(first[4]))) ? 0 : 1;
+
+  for (var i = startIdx; i < lines.length; i++) {
+    var p = lines[i].trim().split(/[,\t;\s]+/);
+    if (p.length < 16) continue;
+    var a1 = parseFloat(p[4]), b1 = parseFloat(p[5]), c1 = parseFloat(p[6]);
+    var a2 = parseFloat(p[13]), b2 = parseFloat(p[14]), c2 = parseFloat(p[15]);
+    if (isFinite(a1) && isFinite(b1) && isFinite(c1)) {
+      px.push(a1); py.push(b1); pz.push(c1);
+      maxNorm = Math.max(maxNorm, Math.sqrt(a1*a1 + b1*b1 + c1*c1));
+      trackCount++;
+    }
+    if (isFinite(a2) && isFinite(b2) && isFinite(c2)) {
+      px.push(a2); py.push(b2); pz.push(c2);
+      maxNorm = Math.max(maxNorm, Math.sqrt(a2*a2 + b2*b2 + c2*c2));
+      trackCount++;
+    }
+  }
+  dataLabel = label || 'FILE';
+  setStatus('STATUS: LOADED', trackCount + ' TRACKS');
+  afterLoad();
+}
+
+function loadDemo() {
+  setStatus('STATUS: GENERATING DEMO...');
+  resetData();
+  var s = 2010 >>> 0;
+  function rnd() { s = (s + 0x6D2B79F5) >>> 0; var t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }
+  function gauss() { return Math.sqrt(-2 * Math.log(1 - rnd())) * Math.cos(2 * Math.PI * rnd()); }
+  var N = 2000;
+  for (var i = 0; i < N; i++) {
+    var r = rnd(), M = (r < 0.2) ? 3.097 + 0.05*gauss() : (r < 0.5 ? 9.46 + 0.25*gauss() : 91.19 + 2.5*gauss());
+    var pT = -Math.log(1 - rnd()) * (6 + M * 0.12), yy = gauss() * 1.6, ph = 2 * Math.PI * rnd();
+    var mT = Math.sqrt(M * M + pT * pT);
+    px.push(pT * Math.cos(ph)); py.push(pT * Math.sin(ph)); pz.push(mT * Math.sinh(yy));
+    maxNorm = Math.max(maxNorm, Math.sqrt(pT*pT + mT*mT));
+    trackCount++;
+  }
+  dataLabel = 'SYNTHETIC';
+  setStatus('STATUS: DEMO LOADED', trackCount + ' TRACKS');
+  afterLoad();
+}
+
+function readFile(file) {
+  var reader = new FileReader();
+  reader.onload = function (ev) { parseCERNData(ev.target.result, file.name.slice(0, 15).toUpperCase()); };
+  reader.readAsText(file);
+}
+
+function computeHull() {
+  if (px.length < 4) return null;
+  var minX=Infinity, maxX=-Infinity, minY=Infinity, maxY=-Infinity, minZ=Infinity, maxZ=-Infinity;
+  for (var i = 0; i < px.length; i++) {
+    if (px[i] < minX) minX = px[i]; if (px[i] > maxX) maxX = px[i];
+    if (py[i] < minY) minY = py[i]; if (py[i] > maxY) maxY = py[i];
+    if (pz[i] < minZ) minZ = pz[i]; if (pz[i] > maxZ) maxZ = pz[i];
+  }
+  return {
+    nV: 8, nF: 12,
+    vx: [minX, maxX, minX, maxX, minX, maxX, minX, maxX],
+    vy: [minY, minY, maxY, maxY, minY, minY, maxY, maxY],
+    vz: [minZ, minZ, minZ, minZ, maxZ, maxZ, maxZ, maxZ],
+    faces: [[0,1,3],[0,3,2],[4,6,7],[4,7,5],[0,4,5],[0,5,1],[2,3,7],[2,7,6],[0,2,6],[0,6,4],[1,5,7],[1,7,3]]
+  };
+}
+
+function toggleObject() {
+  if (HULL) { HULL = null; syncButtons(); updateRender(); return; }
+  setStatus('STATUS: COMPUTING HULL...');
+  setTimeout(function() {
+    HULL = computeHull();
+    setStatus(HULL ? 'STATUS: HULL ACTIVE' : 'STATUS: FAILED');
+    syncButtons(); updateRender();
+  }, 10);
+}
+
+var renderTimeout = null;
+function updateRender() {
+  if (renderTimeout) return;
+  renderTimeout = requestAnimationFrame(doRender);
+}
+
+function doRender() {
+  renderTimeout = null;
+  setCam();
+  
+  if (Math.abs(zoom - targetZoom) > 0.001) {
+    zoom += (targetZoom - zoom) * 0.15;
+    updateRender();
+  }
+
+  var d = '';
+  var yPlane = 350, HEX_R = 35;
+  for (var q = -12; q <= 12; q++) for (var r = -12; r <= 12; r++) {
+    if (Math.abs(q) + Math.abs(r) > 14) continue;
+    var hx = HEX_R * Math.sqrt(3) * (q + r / 2), hz = HEX_R * 1.5 * r;
+    for (var i = 0; i < 6; i++) {
+      var a = Math.PI / 3 * i;
+      proj(hx + Math.cos(a)*HEX_R, yPlane, hz + Math.sin(a)*HEX_R);
+      d += (i ? 'L' : 'M') + PXo.toFixed(1) + ',' + PYo.toFixed(1);
+    }
+    d += 'Z';
+  }
+  hexFloor.setAttribute('d', d);
+
+  if (px.length > 0) {
+    var sf = 300 / Math.max(20, Math.min(maxNorm, 120));
+    
+    var start = 0;
+    var end = px.length;
+    var stride = 1;
+
+    // SLICING LOGIC
+    if (scanMode) {
+        start = sliceStart;
+        end = Math.min(sliceStart + MAX_DRAW, px.length);
+        stride = 1; // Draw every single line in this slice
+    } else {
+        var isMoving = ptrs.size > 0 || autoRotate;
+        stride = isMoving ? Math.ceil(px.length / MAX_DRAW) : 1;
+    }
+    
+    proj(0, 0, 0);
+    var head = 'M' + PXo.toFixed(1) + ',' + PYo.toFixed(1) + 'L', v = '';
+    
+    for (var j = start; j < end; j += stride) {
+      proj(px[j] * sf, py[j] * sf, pz[j] * sf);
+      v += head + PXo.toFixed(1) + ',' + PYo.toFixed(1);
+    }
+    vectorPath.setAttribute('d', v);
+    vectorBloom.setAttribute('d', v);
+  } else {
+    vectorPath.setAttribute('d', '');
+    vectorBloom.setAttribute('d', '');
+  }
+
+  if (HULL) {
+    var sf2 = 300 / Math.max(20, Math.min(maxNorm, 120));
+    var projVerts = [], k;
+    for (k = 0; k < HULL.nV; k++) {
+      proj(HULL.vx[k]*sf2, HULL.vy[k]*sf2, HULL.vz[k]*sf2);
+      projVerts.push({x: PXo, y: PYo});
+    }
+    
+    var fPath = '';
+    for (k = 0; k < HULL.nF; k++) {
+      var f = HULL.faces[k];
+      fPath += 'M' + projVerts[f[0]].x.toFixed(1) + ',' + projVerts[f[0]].y.toFixed(1);
+      fPath += 'L' + projVerts[f[1]].x.toFixed(1) + ',' + projVerts[f[1]].y.toFixed(1);
+      fPath += 'L' + projVerts[f[2]].x.toFixed(1) + ',' + projVerts[f[2]].y.toFixed(1) + 'Z';
+    }
+    hullFill.setAttribute('d', fPath);
+    
+    var ePath = '';
+    for (k = 0; k < HULL.nF; k++) {
+        var f = HULL.faces[k];
+        for(var e=0; e<3; e++) {
+            ePath += 'M' + projVerts[f[e]].x.toFixed(1) + ',' + projVerts[f[e]].y.toFixed(1) + 'L' + projVerts[f[(e+1)%3]].x.toFixed(1) + ',' + projVerts[f[(e+1)%3]].y.toFixed(1);
+        }
+    }
+    hullEdges.setAttribute('d', ePath);
+    hullGroup.setAttribute('display', 'inline');
+  } else {
+    hullGroup.setAttribute('display', 'none');
+  }
+
+  if (autoRotate) {
+    rotY += 0.005;
+    updateRender();
+  }
+}
+
+function snapSVG() {
+  var c = svg.cloneNode(true);
+  var ui = c.getElementById('ui');
+  if (ui) ui.remove();
+  var style = c.querySelector('style');
+  if (style) style.textContent = style.textContent.replace(/cursor:pointer;/g, '');
+  c.setAttribute('width', Math.round(W)); c.setAttribute('height', Math.round(H_));
+  var s = new XMLSerializer().serializeToString(c);
+  var blob = new Blob([s], {type: 'image/svg+xml'});
+  var a = document.createElementNS(XHTML, 'a');
+  a.href = URL.createObjectURL(blob); a.download = 'cern_oscillo.svg';
+  document.documentElement.appendChild(a); a.click();
+  setTimeout(function() { a.remove(); URL.revokeObjectURL(a.href); }, 1000);
+}
+
+layout();
+setStatus('STATUS: AWAITING DATA', 'LOAD A CSV/TXT OR PRESS DEMO');
+updateStats();
+})();
+]]></script>
+</svg>

@@ -1,0 +1,720 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="viewport" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="-640 -400 1280 800" preserveAspectRatio="xMidYMid meet">
+<title>CERN SVG PAIR SCANNER</title>
+
+<style><![CDATA[
+  svg { touch-action:none; background:#000; font-family:'Courier New',Courier,monospace; -webkit-user-select:none; user-select:none; }
+  .ui-text { fill:#00ffcc; font-size:11px; letter-spacing:1px; pointer-events:none; }
+  .ui-dim  { fill:#00ffcc; font-size:10px; letter-spacing:1px; opacity:.7; pointer-events:none; }
+  .btn { cursor:pointer; pointer-events:all; }
+  .btn rect, .btn circle { fill:rgba(0,255,204,.10); stroke:#00ffcc; stroke-width:1; transition:fill .25s; filter: drop-shadow(0 0 2px #00ffcc); }
+  .btn text { fill:#00ffcc; font-size:11px; font-weight:bold; letter-spacing:1px; text-anchor:middle; pointer-events:none; }
+  .btn.round text { font-size:22px; }
+  .btn:hover rect, .btn:hover circle, .btn.active rect, .btn.active circle { fill:#00ffcc; }
+  .btn:hover text, .btn.active text { fill:#000; }
+
+  .tooltip-bg { fill: rgba(0, 0, 0, 0.9); stroke: #00ffcc; stroke-width: 1px; filter: drop-shadow(0 0 5px #00ffcc); }
+  .tooltip-text { fill: #ffffff; font-size: 11px; pointer-events: none; }
+
+  .hl-primary { fill: none; stroke: #ffffff; stroke-width: 2; filter: drop-shadow(0 0 8px #ffffff); vector-effect: non-scaling-stroke; }
+  .hl-partner { fill: none; stroke: #ffcc00; stroke-width: 2; filter: drop-shadow(0 0 8px #ffcc00); vector-effect: non-scaling-stroke; }
+
+  .event-line { fill: none; stroke-width: 1; opacity: 0.8; vector-effect: non-scaling-stroke; }
+  .event-line:hover { opacity: 1; stroke-width: 2; }
+
+  .legend-bg { fill: rgba(0, 20, 15, 0.85); stroke: #00ffcc; stroke-width: 1; filter: drop-shadow(0 0 5px #00ffcc); }
+  .legend-text { fill: #00ffcc; font-size: 10px; pointer-events: none; }
+  .legend-hl { fill: #ffffff; font-weight: bold; }
+
+  .hist-bg { fill: rgba(0, 20, 15, 0.85); stroke: #00ffcc; stroke-width: 1; filter: drop-shadow(0 0 5px #00ffcc); }
+  .hist-bar { fill: #00ffcc; opacity: 0.6; transition: opacity 0.2s; }
+  .hist-bar:hover { opacity: 1; fill: #ffffff; }
+  .hist-axis { stroke: #00ffcc; stroke-width: 0.5; opacity: 0.5; }
+  .hist-text { fill: #00ffcc; font-size: 8px; pointer-events: none; font-family: 'Courier New',Courier,monospace; }
+]]></style>
+
+<defs>
+  <radialGradient id="vignette" cx="50%" cy="50%" r="70%">
+    <stop offset="50%"  stop-color="#000" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#000" stop-opacity="0.9"/>
+  </radialGradient>
+</defs>
+
+<rect id="bg"  x="-640" y="-400" width="1280" height="800" fill="#000"/>
+<rect id="vig" x="-640" y="-400" width="1280" height="800" fill="url(#vignette)" pointer-events="none"/>
+
+<g id="scene">
+  <path id="hex-floor" fill="none" stroke="#00BFFF" stroke-width="1" opacity="0.15" vector-effect="non-scaling-stroke"/>
+
+  <g id="vector-container"></g>
+
+  <line id="hl-line-1" class="hl-primary" display="none" />
+  <line id="hl-line-2" class="hl-partner" display="none" />
+
+  <g id="cross" opacity="0.8" pointer-events="none">
+    <path d="M0 -15V15M-15 0H15" stroke="#00ffcc" stroke-width="1" opacity="0.5"/>
+    <circle r="5" fill="none" stroke="#00ffcc" stroke-width="1"/>
+  </g>
+</g>
+
+<g id="ui">
+  <g id="ui-btns"></g>
+
+  <g id="zoom-in"  class="btn round" transform="translate(600,-350)"><circle r="24"/><text y="8">+</text></g>
+  <g id="zoom-out" class="btn round" transform="translate(600,-290)"><circle r="24"/><text y="7">-</text></g>
+
+  <text id="title" class="ui-text" x="-620" y="380">OSCILLO-DETECTOR // PAIR SCANNER</text>
+  <text id="help" class="ui-text" text-anchor="end" x="620" y="380">DRAG ROTATE / WHEEL ZOOM / DROP FILE</text>
+
+  <text id="st0" class="ui-text" x="-620" y="-370"></text>
+  <text id="st1" class="ui-text" x="-620" y="-355"></text>
+  <text id="st2" class="ui-dim"  x="-620" y="-340"></text>
+
+  <text id="sx0" class="ui-dim" x="-620" y="340"></text>
+  <text id="sx1" class="ui-dim" x="-620" y="355"></text>
+  <text id="sx2" class="ui-dim" x="-620" y="370"></text>
+</g>
+
+<g id="legend" transform="translate(440, 10)">
+  <rect class="legend-bg" width="190" height="220" rx="4" />
+  <text class="legend-text" x="10" y="20" font-weight="bold">COLOR KEY / PHYSICS</text>
+  <text class="legend-text" x="10" y="38">Event mode: each color</text>
+  <text class="legend-text" x="10" y="52">is one collision pair.</text>
+
+  <text class="legend-text legend-hl" x="10" y="80">MASS MODE:</text>
+  <text class="legend-text" x="10" y="96">Red   = 0-10 GeV (J/ψ, Υ)</text>
+  <text class="legend-text" x="10" y="110">Green = 10-80 GeV</text>
+  <text class="legend-text" x="10" y="124">Blue  = 80-100 GeV (Z)</text>
+  <text class="legend-text" x="10" y="138">Purple = >100 GeV</text>
+
+  <text class="legend-text legend-hl" x="10" y="165">SCAN MODE:</text>
+  <text class="legend-text" x="10" y="181">White  = clicked muon</text>
+  <text class="legend-text" x="10" y="195">Yellow = partner muon</text>
+</g>
+
+<g id="histogram" transform="translate(0, 0)" display="none">
+  <rect class="hist-bg" x="0" y="0" width="280" height="160" rx="4" />
+  <text class="legend-text" x="10" y="20" font-weight="bold">INVARIANT MASS DISTRIBUTION</text>
+  <text class="hist-text" x="10" y="35">Log-scale bins (GeV). Look for peaks:</text>
+  <text class="hist-text" x="10" y="47">J/ψ ~3.1 | Υ ~9.5 | Z ~91</text>
+
+  <line class="hist-axis" x1="30" y1="145" x2="270" y2="145" />
+  <line class="hist-axis" x1="30" y1="145" x2="30" y2="55" />
+
+  <g id="hist-bars"></g>
+</g>
+
+<g id="tooltip" display="none" pointer-events="none">
+  <rect id="tooltip-bg" class="tooltip-bg" rx="4" ry="4" />
+  <text id="tooltip-text" class="tooltip-text"></text>
+</g>
+
+<script><![CDATA[
+(function () {
+'use strict';
+var SVGNS = 'http://www.w3.org/2000/svg', XHTML = 'http://www.w3.org/1999/xhtml';
+var $ = function (id) { return document.getElementById(id); };
+
+var svg = $('viewport'), scene = $('scene');
+var hexFloor = $('hex-floor');
+var vectorContainer = $('vector-container');
+var hlLine1 = $('hl-line-1'), hlLine2 = $('hl-line-2');
+var uiBtns = $('ui-btns');
+var stEl = [$('st0'), $('st1'), $('st2')];
+var sxEl = [$('sx0'), $('sx1'), $('sx2')];
+var tooltipGroup = $('tooltip'), tooltipBg = $('tooltip-bg'), tooltipText = $('tooltip-text');
+var legendGroup = $('legend');
+var histGroup = $('histogram'), histBars = $('hist-bars');
+
+var W = 1280, H_ = 800;
+var rotX = 0.8, rotY = 0.0, zoom = 1.0, targetZoom = 1.0;
+var autoRotate = false;
+var maxNorm = 0, trackCount = 0, eventCount = 0, dataLabel = '';
+var ZOOM_MIN = 0.05, ZOOM_MAX = 20, ZOOM_STEP = 1.2;
+
+var MAX_DRAW = 2000;
+var sliceStart = 0;
+var scanMode = false;
+var showLegend = true;
+var colorByMass = false;
+
+var events = [];
+
+var cX = 1, sX = 0, cY = 1, sY = 0, camD = 800, PXo = 0, PYo = 0;
+function setCam() {
+  cX = Math.cos(rotX); sX = Math.sin(rotX);
+  cY = Math.cos(rotY); sY = Math.sin(rotY);
+  camD = 800 / zoom;
+}
+function proj(x, y, z) {
+  var y1 = y * cX - z * sX, z1 = y * sX + z * cX;
+  var x1 = x * cY - z1 * sY, z2 = x * sY + z1 * cY;
+  var s = 600 / Math.max(10, z2 + camD);
+  PXo = x1 * s; PYo = y1 * s;
+  return {x: PXo, y: PYo, z: z2};
+}
+
+var fileInput = document.createElementNS(XHTML, 'input');
+fileInput.type = 'file';
+fileInput.accept = '.txt,.csv,.tsv';
+fileInput.style.display = 'none';
+document.documentElement.appendChild(fileInput);
+fileInput.addEventListener('change', function (e) {
+    if (e.target.files[0]) readFile(e.target.files[0]);
+    fileInput.value = '';
+});
+
+var BTNS = [
+  { id: 'load', label: 'LOAD CSV', fn: function () { fileInput.click(); } },
+  { id: 'demo', label: 'DEMO DATA', fn: loadDemo },
+  { id: 'scan', label: 'SCAN MODE', fn: toggleScanMode },
+  { id: 'next', label: 'NEXT SLICE', fn: nextSlice },
+  { id: 'mass', label: 'COLOR: MASS', fn: toggleMassColor },
+  { id: 'key',  label: 'TOGGLE KEY', fn: toggleLegend },
+  { id: 'spin', label: 'SPIN', fn: function () { autoRotate = !autoRotate; syncButtons(); updateRender(); } },
+  { id: 'snap', label: 'SAVE SVG', fn: snapSVG }
+];
+
+BTNS.forEach(function (def) {
+  var g = document.createElementNS(SVGNS, 'g'); g.setAttribute('class', 'btn');
+  var r = document.createElementNS(SVGNS, 'rect'), t = document.createElementNS(SVGNS, 'text');
+  def.w = Math.ceil(def.label.length * 7.5 + 20);
+  r.setAttribute('width', def.w); r.setAttribute('height', 30); r.setAttribute('rx', 4);
+  t.setAttribute('x', def.w / 2); t.setAttribute('y', 19); t.textContent = def.label;
+  g.appendChild(r); g.appendChild(t);
+  g.addEventListener('click', def.fn);
+  uiBtns.appendChild(g); def.g = g;
+});
+
+function btn(id) { for (var i = 0; i < BTNS.length; i++) if (BTNS[i].id === id) return BTNS[i]; }
+function setActive(id, on) { btn(id).g.classList.toggle('active', !!on); }
+function syncButtons() {
+    setActive('spin', autoRotate);
+    setActive('scan', scanMode);
+    setActive('key', showLegend);
+    setActive('mass', colorByMass);
+    btn('next').g.style.display = scanMode ? 'block' : 'none';
+}
+
+function toggleLegend() {
+    showLegend = !showLegend;
+    legendGroup.setAttribute('display', showLegend ? 'inline' : 'none');
+    syncButtons();
+}
+
+function toggleMassColor() {
+    colorByMass = !colorByMass;
+    syncButtons();
+    updateRender();
+}
+
+function toggleScanMode() {
+    scanMode = !scanMode;
+    if (scanMode) {
+        autoRotate = false;
+        setStatus('STATUS: SCAN MODE', 'CLICK A LINE TO INSPECT A DIMUON');
+    } else {
+        hlLine1.setAttribute('display', 'none');
+        hlLine2.setAttribute('display', 'none');
+        tooltipGroup.setAttribute('display', 'none');
+        setStatus('STATUS: FREE ROAM', '');
+        var marker = document.getElementById('hist-marker');
+        if (marker) marker.style.display = 'none';
+    }
+    syncButtons();
+    updateRender();
+}
+
+function nextSlice() {
+    if (events.length === 0) return;
+    sliceStart += MAX_DRAW;
+    if (sliceStart >= events.length) sliceStart = 0;
+    updateStats();
+    hlLine1.setAttribute('display', 'none');
+    hlLine2.setAttribute('display', 'none');
+    tooltipGroup.setAttribute('display', 'none');
+    var marker = document.getElementById('hist-marker');
+    if (marker) marker.style.display = 'none';
+    updateRender();
+}
+
+$('zoom-in').addEventListener('click',  function () { targetZoom = Math.min(ZOOM_MAX, targetZoom * ZOOM_STEP); updateRender(); });
+$('zoom-out').addEventListener('click', function () { targetZoom = Math.max(ZOOM_MIN, targetZoom / ZOOM_STEP); updateRender(); });
+
+function layout() {
+  var r = svg.getBoundingClientRect();
+  W = r.width || window.innerWidth; H_ = r.height || window.innerHeight;
+  svg.setAttribute('viewBox', (-W / 2) + ' ' + (-H_ / 2) + ' ' + W + ' ' + H_);
+  [ 'bg', 'vig' ].forEach(function(id) {
+      var el = $(id);
+      if (el) { el.setAttribute('x', -W/2); el.setAttribute('y', -H_/2); el.setAttribute('width', W); el.setAttribute('height', H_); }
+  });
+  var x0 = -W / 2 + 20, x = x0, y = -H_ / 2 + 20, maxX = W / 2 - 80;
+  BTNS.forEach(function (def) {
+    if (x + def.w > maxX && x > x0) { x = x0; y += 38; }
+    def.g.setAttribute('transform', 'translate(' + x + ',' + y + ')');
+    x += def.w + 8;
+  });
+  var sy = y + 50;
+  stEl.forEach(function (e, i) { e.setAttribute('x', x0); e.setAttribute('y', sy + i * 15); });
+  $('zoom-in').setAttribute('transform', 'translate(' + (W/2-44) + ',' + (-H_/2+44) + ')');
+  $('zoom-out').setAttribute('transform', 'translate(' + (W/2-44) + ',' + (-H_/2+100) + ')');
+  $('help').setAttribute('x', W/2 - 20); $('help').setAttribute('y', H_/2 - 20);
+  $('title').setAttribute('x', -W/2 + 20); $('title').setAttribute('y', H_/2 - 20);
+  sxEl.forEach(function(e, i) { e.setAttribute('x', -W/2 + 20); e.setAttribute('y', H_/2 - 40 - (2-i)*15); });
+  $('cross').setAttribute('transform', 'translate(0,0)');
+
+  legendGroup.setAttribute('transform', 'translate(' + (W/2 - 210) + ',' + (-H_/2 + 20) + ')');
+  histGroup.setAttribute('transform', 'translate(' + (W/2 - 300) + ',' + (H_/2 - 180) + ')');
+
+  updateRender();
+}
+window.addEventListener('resize', layout);
+
+function setStatus(a, b, c) { stEl[0].textContent = a || ''; stEl[1].textContent = b || ''; stEl[2].textContent = c || ''; }
+function updateStats() {
+  sxEl[0].textContent = eventCount ? ('EVENTS ' + eventCount + ' (' + (eventCount*2) + ' MUONS)') : '';
+  sxEl[1].textContent = eventCount ? ('MAX |P| ' + maxNorm.toFixed(1) + ' GEV') : '';
+  if (scanMode && eventCount > 0) {
+      var end = Math.min(sliceStart + MAX_DRAW, eventCount);
+      sxEl[2].textContent = 'VIEWING EVENTS: ' + sliceStart + ' TO ' + end;
+  } else if (eventCount > 0) {
+      sxEl[2].textContent = 'SHOWING ALL (LOD ACTIVE)';
+  } else {
+      sxEl[2].textContent = '';
+  }
+}
+
+var ptrs = new Map(), pinchDist = 0;
+function pdist() { var a = Array.from(ptrs.values()); return Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y); }
+svg.addEventListener('pointerdown', function (e) {
+  if (e.target.closest && e.target.closest('.btn')) return;
+  if (scanMode) { handlePrecisePick(e); return; }
+  ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (autoRotate) { autoRotate = false; syncButtons(); }
+  try { svg.setPointerCapture(e.pointerId); } catch (_) {}
+  if (ptrs.size === 2) pinchDist = pdist();
+});
+svg.addEventListener('pointermove', function (e) {
+  if (scanMode) return;
+  var p = ptrs.get(e.pointerId); if (!p) return;
+  var dx = e.clientX - p.x, dy = e.clientY - p.y;
+  p.x = e.clientX; p.y = e.clientY;
+  if (ptrs.size === 1) {
+    rotY += dx * 0.005; rotX += dy * 0.005;
+    rotX = Math.max(0.05, Math.min(Math.PI / 2.1, rotX));
+    updateRender();
+  } else if (ptrs.size === 2) {
+    var nd = pdist();
+    if (pinchDist > 0) { targetZoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, targetZoom * nd / pinchDist)); }
+    pinchDist = nd;
+    updateRender();
+  }
+});
+function endPtr(e) { ptrs.delete(e.pointerId); pinchDist = 0; try { svg.releasePointerCapture(e.pointerId); } catch (_) {} updateRender(); }
+svg.addEventListener('pointerup', endPtr);
+svg.addEventListener('pointercancel', endPtr);
+svg.addEventListener('wheel', function (ev) {
+  ev.preventDefault();
+  targetZoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, targetZoom * (ev.deltaY < 0 ? ZOOM_STEP : 1/ZOOM_STEP)));
+  updateRender();
+}, { passive: false });
+svg.addEventListener('dragover', function (e) { e.preventDefault(); });
+svg.addEventListener('drop', function (e) {
+  e.preventDefault();
+  var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if (f) readFile(f);
+});
+
+function handlePrecisePick(e) {
+    if (events.length === 0) return;
+    var rect = svg.getBoundingClientRect();
+    var mouseX = e.clientX - rect.left - rect.width/2;
+    var mouseY = e.clientY - rect.top - rect.height/2;
+
+    var sf = 300 / Math.max(20, Math.min(maxNorm, 120));
+    var endIdx = Math.min(sliceStart + MAX_DRAW, events.length);
+
+    var minDistSq = 100;
+    var bestEventIdx = -1;
+    var bestParticle = null;
+    var bestEndPos = null;
+
+    for (var i = sliceStart; i < endIdx; i++) {
+        var ev = events[i];
+        if (!ev.p1) continue;
+
+        var pos1 = proj(ev.p1.x * sf, ev.p1.y * sf, ev.p1.z * sf);
+        var dx1 = mouseX - pos1.x, dy1 = mouseY - pos1.y;
+        if (dx1*dx1 + dy1*dy1 < minDistSq) {
+            minDistSq = dx1*dx1 + dy1*dy1;
+            bestEventIdx = i; bestParticle = 1; bestEndPos = pos1;
+        }
+
+        if (ev.p2) {
+            var pos2 = proj(ev.p2.x * sf, ev.p2.y * sf, ev.p2.z * sf);
+            var dx2 = mouseX - pos2.x, dy2 = mouseY - pos2.y;
+            if (dx2*dx2 + dy2*dy2 < minDistSq) {
+                minDistSq = dx2*dx2 + dy2*dy2;
+                bestEventIdx = i; bestParticle = 2; bestEndPos = pos2;
+            }
+        }
+    }
+
+    var origin = proj(0,0,0);
+    var marker = document.getElementById('hist-marker');
+
+    if (bestEventIdx !== -1) {
+        var ev = events[bestEventIdx];
+
+        hlLine1.setAttribute('x1', origin.x); hlLine1.setAttribute('y1', origin.y);
+        hlLine1.setAttribute('x2', bestEndPos.x); hlLine1.setAttribute('y2', bestEndPos.y);
+        hlLine1.setAttribute('display', 'inline');
+
+        var partner = (bestParticle === 1) ? ev.p2 : ev.p1;
+        if (partner) {
+            var pPos = proj(partner.x * sf, partner.y * sf, partner.z * sf);
+            hlLine2.setAttribute('x1', origin.x); hlLine2.setAttribute('y1', origin.y);
+            hlLine2.setAttribute('x2', pPos.x); hlLine2.setAttribute('y2', pPos.y);
+            hlLine2.setAttribute('display', 'inline');
+        } else {
+            hlLine2.setAttribute('display', 'none');
+        }
+
+        var mag1 = Math.sqrt(ev.p1.x*ev.p1.x + ev.p1.y*ev.p1.y + ev.p1.z*ev.p1.z);
+        var mag2 = partner ? Math.sqrt(partner.x*partner.x + partner.y*partner.y + partner.z*partner.z) : 0;
+
+        var lines = [
+            "EVENT ID: " + ev.id,
+            "DIMUON PAIR  (CMS Run2010B)",
+            "M(pair) = " + (ev.mass ? ev.mass.toFixed(3) : "n/a") + " GeV",
+            "",
+            "MUON 1  [type " + (ev.type1 || "?") + "]  (White)",
+            "  PX: " + ev.p1.x.toFixed(2) + " | PY: " + ev.p1.y.toFixed(2),
+            "  PZ: " + ev.p1.z.toFixed(2) + " | |P|: " + mag1.toFixed(2)
+        ];
+        if (partner) {
+            lines.push("");
+            lines.push("MUON 2  [type " + (ev.type2 || "?") + "]  (Yellow)");
+            lines.push("  PX: " + partner.x.toFixed(2) + " | PY: " + partner.y.toFixed(2));
+            lines.push("  PZ: " + partner.z.toFixed(2) + " | |P|: " + mag2.toFixed(2));
+        }
+
+        tooltipText.setAttribute('x', bestEndPos.x + 15);
+        tooltipText.setAttribute('y', bestEndPos.y - 15);
+        var svgText = '';
+        lines.forEach(function(line, idx) {
+            svgText += '<tspan x="' + (bestEndPos.x + 15) + '" dy="' + (idx === 0 ? 0 : 14) + '">' + line + '</tspan>';
+        });
+        tooltipText.innerHTML = svgText;
+
+        var bbox = tooltipText.getBBox();
+        tooltipBg.setAttribute('x', bbox.x - 5);
+        tooltipBg.setAttribute('y', bbox.y - 5);
+        tooltipBg.setAttribute('width', bbox.width + 10);
+        tooltipBg.setAttribute('height', bbox.height + 10);
+        tooltipGroup.setAttribute('display', 'inline');
+
+        if (ev.mass && histGroup.getAttribute('display') !== 'none') {
+            var logMin = Math.log10(0.1), logMax = Math.log10(200);
+            var logM = Math.log10(ev.mass);
+            if (logM >= logMin && logM <= logMax) {
+                var chartW = 240;
+                var px = 30 + ((logM - logMin) / (logMax - logMin)) * chartW;
+                if (!marker) {
+                    marker = document.createElementNS(SVGNS, 'line');
+                    marker.id = 'hist-marker';
+                    marker.setAttribute('stroke', '#ffffff');
+                    marker.setAttribute('stroke-width', '2');
+                    marker.setAttribute('filter', 'drop-shadow(0 0 4px #ffffff)');
+                    histBars.appendChild(marker);
+                }
+                marker.setAttribute('x1', px);
+                marker.setAttribute('y1', 45);
+                marker.setAttribute('x2', px);
+                marker.setAttribute('y2', 145);
+                marker.style.display = 'block';
+            }
+        } else if (marker) {
+            marker.style.display = 'none';
+        }
+    } else {
+        hlLine1.setAttribute('display', 'none');
+        hlLine2.setAttribute('display', 'none');
+        tooltipGroup.setAttribute('display', 'none');
+        if (marker) marker.style.display = 'none';
+    }
+}
+
+function resetData() { events = []; maxNorm = 0; eventCount = 0; sliceStart = 0; syncButtons(); }
+function afterLoad() { updateStats(); buildHistogram(); updateRender(); }
+
+function getEventColor(idx) {
+    var hue = (idx * 137.5) % 360;
+    return 'hsl(' + hue + ', 80%, 60%)';
+}
+
+function getMassColor(m) {
+    if (!isFinite(m)) return '#888888';
+    if (m < 10) return '#ff4444';
+    if (m < 80) return '#44ff44';
+    if (m < 100) return '#4444ff';
+    return '#cc44ff';
+}
+
+function buildHistogram() {
+    var oldMarker = document.getElementById('hist-marker');
+    if (oldMarker) oldMarker.remove();
+
+    if (eventCount === 0) { histGroup.setAttribute('display', 'none'); return; }
+
+    var hasMass = false;
+    for (var i = 0; i < eventCount; i++) {
+        if (events[i].mass) { hasMass = true; break; }
+    }
+    if (!hasMass) { histGroup.setAttribute('display', 'none'); return; }
+
+    histGroup.setAttribute('display', 'inline');
+    histBars.innerHTML = '';
+
+    var logMin = Math.log10(0.1), logMax = Math.log10(200);
+    var numBins = 50;
+    var bins = new Array(numBins).fill(0);
+    var maxBin = 0;
+
+    for (var j = 0; j < eventCount; j++) {
+        var m = events[j].mass;
+        if (!m || m <= 0) continue;
+        var logM = Math.log10(m);
+        if (logM < logMin || logM > logMax) continue;
+        var binIdx = Math.floor(((logM - logMin) / (logMax - logMin)) * numBins);
+        if (binIdx >= 0 && binIdx < numBins) {
+            bins[binIdx]++;
+            if (bins[binIdx] > maxBin) maxBin = bins[binIdx];
+        }
+    }
+
+    if (maxBin === 0) return;
+
+    var chartW = 240, chartH = 90;
+    var barW = chartW / numBins;
+
+    for (var b = 0; b < numBins; b++) {
+        if (bins[b] === 0) continue;
+        var h = (bins[b] / maxBin) * chartH;
+        var x = 30 + b * barW;
+        var y = 145 - h;
+
+        var rect = document.createElementNS(SVGNS, 'rect');
+        rect.setAttribute('class', 'hist-bar');
+        rect.setAttribute('x', x.toFixed(1));
+        rect.setAttribute('y', y.toFixed(1));
+        rect.setAttribute('width', (barW - 0.5).toFixed(1));
+        rect.setAttribute('height', h.toFixed(1));
+        histBars.appendChild(rect);
+    }
+
+    var peaks = [
+        { m: 3.1, label: 'J/ψ' },
+        { m: 9.5, label: 'Υ' },
+        { m: 91, label: 'Z' }
+    ];
+
+    peaks.forEach(function(p) {
+        var logP = Math.log10(p.m);
+        if (logP < logMin || logP > logMax) return;
+        var px = 30 + ((logP - logMin) / (logMax - logMin)) * chartW;
+
+        var line = document.createElementNS(SVGNS, 'line');
+        line.setAttribute('class', 'hist-axis');
+        line.setAttribute('x1', px.toFixed(1)); line.setAttribute('y1', 145);
+        line.setAttribute('x2', px.toFixed(1)); line.setAttribute('y2', 148);
+        histBars.appendChild(line);
+
+        var txt = document.createElementNS(SVGNS, 'text');
+        txt.setAttribute('class', 'hist-text');
+        txt.setAttribute('x', px.toFixed(1));
+        txt.setAttribute('y', 158);
+        txt.setAttribute('text-anchor', 'middle');
+        txt.textContent = p.label;
+        histBars.appendChild(txt);
+    });
+}
+
+function parseCERNData(text, label) {
+  setStatus('STATUS: PARSING DATA...');
+  resetData();
+  var lines = text.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n').split('\n').filter(function (l) { return l.trim().length > 0; });
+  if (!lines.length) { setStatus('STATUS: EMPTY FILE'); return; }
+
+  var first = lines[0].trim().split(/[,\t;\s]+/);
+  var startIdx = isFinite(parseFloat(first[0])) ? 0 : 1;
+
+  var muon1 = 0, muon2 = 0;
+  for (var i = startIdx; i < lines.length; i++) {
+    var p = lines[i].trim().split(/[,\t;\s]+/);
+    if (p.length < 16) continue;
+
+    var a1 = parseFloat(p[4]), b1 = parseFloat(p[5]), c1 = parseFloat(p[6]);
+    var a2 = parseFloat(p[13]), b2 = parseFloat(p[14]), c2 = parseFloat(p[15]);
+
+    var t1 = (p[2] || '').toUpperCase();
+    var t2 = (p[11] || '').toUpperCase();
+    var mass = p.length > 20 ? parseFloat(p[20]) : NaN;
+
+    if (isFinite(a1) && isFinite(b1) && isFinite(c1)) {
+      var mag1 = Math.sqrt(a1*a1 + b1*b1 + c1*c1);
+      maxNorm = Math.max(maxNorm, mag1);
+
+      var evObj = {
+          id: p[1] || ('E' + i),
+          type1: t1,
+          p1: {x: a1, y: b1, z: c1},
+          p2: null,
+          mass: isFinite(mass) ? mass : null,
+          color: getEventColor(eventCount)
+      };
+      if (t1 === 'G') muon1++;
+
+      if (isFinite(a2) && isFinite(b2) && isFinite(c2)) {
+          evObj.p2 = {x: a2, y: b2, z: c2};
+          evObj.type2 = t2;
+          if (t2 === 'G') muon2++;
+          var mag2 = Math.sqrt(a2*a2 + b2*b2 + c2*c2);
+          maxNorm = Math.max(maxNorm, mag2);
+      }
+
+      events.push(evObj);
+      eventCount++;
+    }
+  }
+
+  if (events.length === 0) { setStatus('STATUS: NO VALID DATA'); return; }
+
+  dataLabel = label || 'FILE';
+  setStatus('STATUS: LOADED', eventCount + ' DIMUON EVENTS',
+            'G-TYPE MUONS: ' + muon1 + ' / ' + muon2);
+  afterLoad();
+}
+
+function loadDemo() {
+  setStatus('STATUS: GENERATING DEMO...');
+  resetData();
+  var s = 2010 >>> 0;
+  function rnd() { s = (s + 0x6D2B79F5) >>> 0; var t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }
+  function gauss() { return Math.sqrt(-2 * Math.log(1 - rnd())) * Math.cos(2 * Math.PI * rnd()); }
+  var N = 1000;
+  for (var i = 0; i < N; i++) {
+    var r = rnd(), M = (r < 0.2) ? 3.097 + 0.05*gauss() : (r < 0.5 ? 9.46 + 0.25*gauss() : 91.19 + 2.5*gauss());
+    var pT = -Math.log(1 - rnd()) * (6 + M * 0.12), yy = gauss() * 1.6, ph = 2 * Math.PI * rnd();
+    var mT = Math.sqrt(M * M + pT * pT);
+    var px1 = pT * Math.cos(ph), py1 = pT * Math.sin(ph), pz1 = mT * Math.sinh(yy);
+    var px2 = -px1 * (0.8 + rnd()*0.4), py2 = -py1 * (0.8 + rnd()*0.4), pz2 = -pz1 * (0.8 + rnd()*0.4);
+    maxNorm = Math.max(maxNorm, Math.sqrt(px1*px1 + py1*py1 + pz1*pz1));
+    events.push({
+        id: 'DEMO-' + i,
+        type1: 'G', type2: 'G',
+        p1: {x: px1, y: py1, z: pz1},
+        p2: {x: px2, y: py2, z: pz2},
+        mass: M,
+        color: getEventColor(i)
+    });
+    eventCount++;
+  }
+  dataLabel = 'SYNTHETIC';
+  setStatus('STATUS: DEMO LOADED', eventCount + ' DIMUON EVENTS');
+  afterLoad();
+}
+
+function readFile(file) {
+  var reader = new FileReader();
+  reader.onload = function (ev) { parseCERNData(ev.target.result, file.name.slice(0, 15).toUpperCase()); };
+  reader.readAsText(file);
+}
+
+var renderTimeout = null;
+function updateRender() {
+  if (renderTimeout) return;
+  renderTimeout = requestAnimationFrame(doRender);
+}
+
+function doRender() {
+  renderTimeout = null;
+  setCam();
+  if (Math.abs(zoom - targetZoom) > 0.001) {
+    zoom += (targetZoom - zoom) * 0.15;
+    updateRender();
+  }
+  var d = '';
+  var yPlane = 350, HEX_R = 35;
+  for (var q = -12; q <= 12; q++) for (var r = -12; r <= 12; r++) {
+    if (Math.abs(q) + Math.abs(r) > 14) continue;
+    var hx = HEX_R * Math.sqrt(3) * (q + r / 2), hz = HEX_R * 1.5 * r;
+    for (var i = 0; i < 6; i++) {
+      var a = Math.PI / 3 * i;
+      proj(hx + Math.cos(a)*HEX_R, yPlane, hz + Math.sin(a)*HEX_R);
+      d += (i ? 'L' : 'M') + PXo.toFixed(1) + ',' + PYo.toFixed(1);
+    }
+    d += 'Z';
+  }
+  hexFloor.setAttribute('d', d);
+
+  if (eventCount > 0) {
+    var sf = 300 / Math.max(20, Math.min(maxNorm, 120));
+    var start = 0, end = eventCount;
+    if (scanMode) {
+        start = sliceStart;
+        end = Math.min(sliceStart + MAX_DRAW, eventCount);
+    }
+    var origin = proj(0, 0, 0);
+    var html = '';
+    for (var j = start; j < end; j++) {
+        var ev = events[j];
+        var pathData = '';
+        var p1 = proj(ev.p1.x * sf, ev.p1.y * sf, ev.p1.z * sf);
+        pathData += 'M' + origin.x + ',' + origin.y + 'L' + p1.x + ',' + p1.y;
+        if (ev.p2) {
+            var p2 = proj(ev.p2.x * sf, ev.p2.y * sf, ev.p2.z * sf);
+            pathData += 'M' + origin.x + ',' + origin.y + 'L' + p2.x + ',' + p2.y;
+        }
+
+        var strokeColor = colorByMass ? getMassColor(ev.mass) : ev.color;
+        html += '<path class="event-line" d="' + pathData + '" stroke="' + strokeColor + '"/>';
+    }
+    vectorContainer.innerHTML = html;
+  } else {
+    vectorContainer.innerHTML = '';
+  }
+
+  if (autoRotate) {
+    rotY += 0.005;
+    updateRender();
+  }
+}
+
+function snapSVG() {
+  var c = svg.cloneNode(true);
+  var ui = c.getElementById('ui');
+  if (ui) ui.remove();
+  var legend = c.getElementById('legend');
+  if (legend) legend.remove();
+  var hist = c.getElementById('histogram');
+  if (hist) hist.remove();
+  var style = c.querySelector('style');
+  if (style) style.textContent = style.textContent.replace(/cursor:pointer;/g, '');
+  c.setAttribute('width', Math.round(W)); c.setAttribute('height', Math.round(H_));
+  var s = new XMLSerializer().serializeToString(c);
+  var blob = new Blob([s], {type: 'image/svg+xml'});
+  var a = document.createElementNS(XHTML, 'a');
+  a.href = URL.createObjectURL(blob); a.download = 'cern_oscillo_snapshot.svg';
+  document.documentElement.appendChild(a); a.click();
+  setTimeout(function() { a.remove(); URL.revokeObjectURL(a.href); }, 1000);
+}
+
+layout();
+setStatus('STATUS: AWAITING DATA', 'LOAD A CSV/TXT OR PRESS DEMO');
+updateStats();
+syncButtons();
+})();
+]]></script>
+</svg>
