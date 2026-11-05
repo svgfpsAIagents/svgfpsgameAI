@@ -1,113 +1,167 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg id="viewport" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="-640 -400 1280 800" preserveAspectRatio="xMidYMid meet">
-<title>CERN SVG PAIR SCANNER</title>
+<title>OSCILLO-DETECTOR // PAIR SCANNER + 3D ENVELOPE</title>
 
 <style><![CDATA[
-  svg { touch-action:none; background:#000; font-family:'Courier New',Courier,monospace; -webkit-user-select:none; user-select:none; }
+  svg { touch-action:none; background:#000; font-family:'Courier New',Courier,monospace;
+        -webkit-user-select:none; user-select:none; }
   .ui-text { fill:#00ffcc; font-size:11px; letter-spacing:1px; pointer-events:none; }
   .ui-dim  { fill:#00ffcc; font-size:10px; letter-spacing:1px; opacity:.7; pointer-events:none; }
-  .btn { cursor:pointer; pointer-events:all; }
-  .btn rect, .btn circle { fill:rgba(0,255,204,.10); stroke:#00ffcc; stroke-width:1; transition:fill .25s; filter: drop-shadow(0 0 2px #00ffcc); }
+  .info-text { fill:#ffffff; font-size:11px; pointer-events:none; }
+  .btn { cursor:pointer; }
+  .btn rect, .btn circle { fill:rgba(0,255,204,.10); stroke:#00ffcc; stroke-width:1; filter:url(#uiGlow); transition:fill .25s; }
   .btn text { fill:#00ffcc; font-size:11px; font-weight:bold; letter-spacing:1px; text-anchor:middle; pointer-events:none; }
   .btn.round text { font-size:22px; }
   .btn:hover rect, .btn:hover circle, .btn.active rect, .btn.active circle { fill:#00ffcc; }
   .btn:hover text, .btn.active text { fill:#000; }
-
-  .tooltip-bg { fill: rgba(0, 0, 0, 0.9); stroke: #00ffcc; stroke-width: 1px; filter: drop-shadow(0 0 5px #00ffcc); }
-  .tooltip-text { fill: #ffffff; font-size: 11px; pointer-events: none; }
-
-  .hl-primary { fill: none; stroke: #ffffff; stroke-width: 2; filter: drop-shadow(0 0 8px #ffffff); vector-effect: non-scaling-stroke; }
-  .hl-partner { fill: none; stroke: #ffcc00; stroke-width: 2; filter: drop-shadow(0 0 8px #ffcc00); vector-effect: non-scaling-stroke; }
-
-  .event-line { fill: none; stroke-width: 1; opacity: 0.8; vector-effect: non-scaling-stroke; }
-  .event-line:hover { opacity: 1; stroke-width: 2; }
-
-  .legend-bg { fill: rgba(0, 20, 15, 0.85); stroke: #00ffcc; stroke-width: 1; filter: drop-shadow(0 0 5px #00ffcc); }
-  .legend-text { fill: #00ffcc; font-size: 10px; pointer-events: none; }
-  .legend-hl { fill: #ffffff; font-weight: bold; }
-
-  .hist-bg { fill: rgba(0, 20, 15, 0.85); stroke: #00ffcc; stroke-width: 1; filter: drop-shadow(0 0 5px #00ffcc); }
-  .hist-bar { fill: #00ffcc; opacity: 0.6; transition: opacity 0.2s; }
-  .hist-bar:hover { opacity: 1; fill: #ffffff; }
-  .hist-axis { stroke: #00ffcc; stroke-width: 0.5; opacity: 0.5; }
-  .hist-text { fill: #00ffcc; font-size: 8px; pointer-events: none; font-family: 'Courier New',Courier,monospace; }
+  .panel-bg { fill:rgba(0,20,15,.85); stroke:#00ffcc; stroke-width:1; }
+  .legend-text { fill:#00ffcc; font-size:10px; pointer-events:none; }
+  .legend-hl { fill:#ffffff; font-weight:bold; }
+  .hist-bar { fill:#00ffcc; opacity:.6; }
+  .hist-axis { stroke:#00ffcc; stroke-width:.5; opacity:.5; }
+  .hist-text { fill:#00ffcc; font-size:8px; pointer-events:none; }
+  .hist-bar.ss { fill:#ff44cc; }
+  .hist-bar.sel { fill:#ffffff; opacity:.95; }
+  .hist-grid { stroke:#00ffcc; stroke-width:.5; opacity:.16; pointer-events:none; }
+  .hist-over { fill:none; stroke:#ff44cc; stroke-width:1; pointer-events:none; }
+  .hist-fit { fill:none; stroke:#ffcc00; stroke-width:1.6; pointer-events:none; }
+  .hist-win { fill:#ffcc00; fill-opacity:.07; pointer-events:none; }
+  .hit { fill:#ffffff; fill-opacity:0; cursor:pointer; pointer-events:all; }
+  .hit:hover { fill-opacity:.14; }
+  .slider-hit { fill:#ffffff; fill-opacity:0; cursor:ew-resize; pointer-events:all; }
 ]]></style>
 
 <defs>
+  <filter id="bloom" filterUnits="userSpaceOnUse" x="-3000" y="-3000" width="6000" height="6000">
+    <feGaussianBlur stdDeviation="8" result="blur"/>
+    <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+  </filter>
+  <filter id="lineGlow" filterUnits="userSpaceOnUse" x="-3000" y="-3000" width="6000" height="6000">
+    <feGaussianBlur stdDeviation="3" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="uiGlow" x="-30%" y="-30%" width="160%" height="160%">
+    <feGaussianBlur stdDeviation="2.5" result="b"/>
+    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <radialGradient id="particleGrad" cx="0" cy="0" r="600" gradientUnits="userSpaceOnUse">
+    <stop offset="0%"   stop-color="#ffffff"/>
+    <stop offset="10%"  stop-color="#ffcc00"/>
+    <stop offset="30%"  stop-color="#ff3300"/>
+    <stop offset="70%"  stop-color="#990000"/>
+    <stop offset="100%" stop-color="#1a0000"/>
+  </radialGradient>
   <radialGradient id="vignette" cx="50%" cy="50%" r="70%">
     <stop offset="50%"  stop-color="#000" stop-opacity="0"/>
-    <stop offset="100%" stop-color="#000" stop-opacity="0.9"/>
+    <stop offset="100%" stop-color="#000" stop-opacity="0.8"/>
   </radialGradient>
+  <pattern id="scanlines" width="4" height="4" patternUnits="userSpaceOnUse">
+    <rect x="0" y="2" width="4" height="2" fill="#000" fill-opacity="0.22"/>
+  </pattern>
 </defs>
 
 <rect id="bg"  x="-640" y="-400" width="1280" height="800" fill="#000"/>
 <rect id="vig" x="-640" y="-400" width="1280" height="800" fill="url(#vignette)" pointer-events="none"/>
 
+<!-- ============ 3D SCENE (scaled to fit window) ============ -->
 <g id="scene">
-  <path id="hex-floor" fill="none" stroke="#00BFFF" stroke-width="1" opacity="0.15" vector-effect="non-scaling-stroke"/>
+  <g id="floor-group">
+    <path id="hex-floor" fill="none" stroke="#00BFFF" stroke-width="1" opacity="0.3" vector-effect="non-scaling-stroke"/>
+    <path id="radar-sweep" fill="none" stroke="#00ffff" stroke-width="2" opacity="0.6" filter="url(#lineGlow)" vector-effect="non-scaling-stroke"/>
+  </g>
 
-  <g id="vector-container"></g>
+  <g id="hull-group" display="none">
+    <path id="hull-fill" fill="#ff4400" fill-opacity="0.15" stroke="#ff4400" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+    <path id="hull-edges" fill="none" stroke="#ffaa00" stroke-width="1" opacity="0.5" vector-effect="non-scaling-stroke"/>
+  </g>
 
-  <line id="hl-line-1" class="hl-primary" display="none" />
-  <line id="hl-line-2" class="hl-partner" display="none" />
+  <!-- far side of the 3D object -->
+  <g id="obj-back" display="none">
+    <path id="obj-edges-back" fill="none" stroke="#00ffcc" stroke-width="1" opacity="0.22" vector-effect="non-scaling-stroke"/>
+  </g>
 
+  <g id="data-group">
+    <path id="vector-bloom" fill="none" stroke="url(#particleGrad)" stroke-width="4" opacity="0.4" filter="url(#lineGlow)" vector-effect="non-scaling-stroke"/>
+    <path id="vector-paths" fill="none" stroke="url(#particleGrad)" stroke-width="1" opacity="0.9" vector-effect="non-scaling-stroke"/>
+    <g id="bucket-paths" display="none" fill="none" stroke-width="1" opacity="0.85"></g>
+    <path id="point-paths" fill="#ffffff" opacity="0.8" filter="url(#bloom)"/>
+  </g>
+
+  <!-- scan-mode highlights -->
+  <line id="hl-line-1" display="none" stroke="#ffffff" stroke-width="2.5" filter="url(#lineGlow)" vector-effect="non-scaling-stroke"/>
+  <line id="hl-line-2" display="none" stroke="#ffcc00" stroke-width="2.5" filter="url(#lineGlow)" vector-effect="non-scaling-stroke"/>
+
+  <!-- near side of the 3D object -->
+  <g id="obj-front" display="none">
+    <g id="obj-faces"></g>
+    <path id="obj-edges" fill="none" stroke="#00ffcc" stroke-width="1.4" filter="url(#lineGlow)" vector-effect="non-scaling-stroke"/>
+    <path id="obj-verts" fill="#ffffff" opacity="0.95" filter="url(#bloom)"/>
+  </g>
+</g>
+
+<!-- ============ PANELS (under the UI so they never block clicks) ============ -->
+<g id="legend" pointer-events="none" transform="translate(440,140)">
+  <rect class="panel-bg" width="196" height="246" rx="4"/>
+  <text class="legend-text legend-hl" x="10" y="18">COLOR KEY / PHYSICS</text>
+  <text class="legend-text legend-hl" x="10" y="38">HEAT:</text>
+  <text class="legend-text" x="10" y="51">white-hot near the origin</text>
+  <text class="legend-text legend-hl" x="10" y="71">MASS:</text>
+  <text class="legend-text" x="10" y="84"><tspan fill="#ff4444">Red</tspan> 0-10 GeV (J/ψ, Υ)</text>
+  <text class="legend-text" x="10" y="97"><tspan fill="#44ff44">Green</tspan> 10-80 GeV</text>
+  <text class="legend-text" x="10" y="110"><tspan fill="#6666ff">Blue</tspan> 80-100 GeV (Z)</text>
+  <text class="legend-text" x="10" y="123"><tspan fill="#cc44ff">Purple</tspan> over 100 GeV</text>
+  <text class="legend-text" x="10" y="136">Grey = no pair mass</text>
+  <text class="legend-text legend-hl" x="10" y="156">PAIR:</text>
+  <text class="legend-text" x="10" y="169">24 hues cycling per collision</text>
+  <text class="legend-text legend-hl" x="10" y="189">SCAN MODE:</text>
+  <text class="legend-text" x="10" y="202">White = clicked muon</text>
+  <text class="legend-text" x="10" y="215">Yellow = partner muon</text>
+  <text class="legend-text legend-hl" x="10" y="235">3D OBJECT: cyan envelope</text>
+</g>
+
+<g id="histogram" pointer-events="none" display="none" transform="translate(340,195)">
+  <rect class="panel-bg" x="0" y="0" width="320" height="214" rx="4"/>
+  <g id="hist-body"></g>
+  <line id="hist-marker" display="none" stroke="#ffffff" stroke-width="2" x1="0" y1="46" x2="0" y2="150"/>
+</g>
+
+<!-- ============ UI (native SVG, pixel units) ============ -->
+<g id="ui">
   <g id="cross" opacity="0.8" pointer-events="none">
     <path d="M0 -15V15M-15 0H15" stroke="#00ffcc" stroke-width="1" opacity="0.5"/>
     <circle r="5" fill="none" stroke="#00ffcc" stroke-width="1"/>
   </g>
-</g>
-
-<g id="ui">
   <g id="ui-btns"></g>
+  <g id="cuts"><rect class="panel-bg" width="290" height="70" rx="4" pointer-events="none"/><text id="cuts-title" class="ui-text" x="10" y="15"></text></g>
+  <text id="st0" class="ui-text"></text>
+  <text id="st1" class="ui-text"></text>
+  <text id="st2" class="ui-dim"></text>
 
-  <g id="zoom-in"  class="btn round" transform="translate(600,-350)"><circle r="24"/><text y="8">+</text></g>
-  <g id="zoom-out" class="btn round" transform="translate(600,-290)"><circle r="24"/><text y="7">-</text></g>
+  <rect id="info-bg" class="panel-bg" display="none" pointer-events="none" rx="4" width="290" height="100"/>
+  <text id="inf0" class="info-text"></text><text id="inf1" class="info-text"></text>
+  <text id="inf2" class="info-text"></text><text id="inf3" class="info-text"></text>
+  <text id="inf4" class="info-text"></text><text id="inf5" class="info-text"></text>
+  <text id="inf6" class="info-text"></text><text id="inf7" class="info-text"></text>
+  <text id="inf8" class="info-text"></text><text id="inf9" class="info-text"></text>
+  <text id="inf10" class="info-text"></text><text id="inf11" class="info-text"></text>
 
-  <text id="title" class="ui-text" x="-620" y="380">OSCILLO-DETECTOR // PAIR SCANNER</text>
-  <text id="help" class="ui-text" text-anchor="end" x="620" y="380">DRAG ROTATE / WHEEL ZOOM / DROP FILE</text>
+  <g id="zoom-in"  class="btn round"><circle r="24"/><text y="8">+</text></g>
+  <g id="zoom-out" class="btn round"><circle r="24"/><text y="7">-</text></g>
 
-  <text id="st0" class="ui-text" x="-620" y="-370"></text>
-  <text id="st1" class="ui-text" x="-620" y="-355"></text>
-  <text id="st2" class="ui-dim"  x="-620" y="-340"></text>
-
-  <text id="sx0" class="ui-dim" x="-620" y="340"></text>
-  <text id="sx1" class="ui-dim" x="-620" y="355"></text>
-  <text id="sx2" class="ui-dim" x="-620" y="370"></text>
+  <text id="sx0" class="ui-dim"></text>
+  <text id="sx1" class="ui-dim"></text>
+  <text id="sx2" class="ui-dim"></text>
+  <text id="sx3" class="ui-dim"></text>
+  <text id="sx4" class="ui-dim"></text>
+  <text id="title" class="ui-text">OSCILLO-DETECTOR // PAIR SCANNER + 3D ENVELOPE</text>
+  <text id="help" class="ui-text" text-anchor="end">DRAG ROTATE / WHEEL OR PINCH ZOOM / DROP FILE</text>
 </g>
 
-<g id="legend" transform="translate(440, 10)">
-  <rect class="legend-bg" width="190" height="220" rx="4" />
-  <text class="legend-text" x="10" y="20" font-weight="bold">COLOR KEY / PHYSICS</text>
-  <text class="legend-text" x="10" y="38">Event mode: each color</text>
-  <text class="legend-text" x="10" y="52">is one collision pair.</text>
+<rect id="scan" x="-640" y="-400" width="1280" height="800" fill="url(#scanlines)" pointer-events="none"/>
 
-  <text class="legend-text legend-hl" x="10" y="80">MASS MODE:</text>
-  <text class="legend-text" x="10" y="96">Red   = 0-10 GeV (J/ψ, Υ)</text>
-  <text class="legend-text" x="10" y="110">Green = 10-80 GeV</text>
-  <text class="legend-text" x="10" y="124">Blue  = 80-100 GeV (Z)</text>
-  <text class="legend-text" x="10" y="138">Purple = >100 GeV</text>
-
-  <text class="legend-text legend-hl" x="10" y="165">SCAN MODE:</text>
-  <text class="legend-text" x="10" y="181">White  = clicked muon</text>
-  <text class="legend-text" x="10" y="195">Yellow = partner muon</text>
-</g>
-
-<g id="histogram" transform="translate(0, 0)" display="none">
-  <rect class="hist-bg" x="0" y="0" width="280" height="160" rx="4" />
-  <text class="legend-text" x="10" y="20" font-weight="bold">INVARIANT MASS DISTRIBUTION</text>
-  <text class="hist-text" x="10" y="35">Log-scale bins (GeV). Look for peaks:</text>
-  <text class="hist-text" x="10" y="47">J/ψ ~3.1 | Υ ~9.5 | Z ~91</text>
-
-  <line class="hist-axis" x1="30" y1="145" x2="270" y2="145" />
-  <line class="hist-axis" x1="30" y1="145" x2="30" y2="55" />
-
-  <g id="hist-bars"></g>
-</g>
-
-<g id="tooltip" display="none" pointer-events="none">
-  <rect id="tooltip-bg" class="tooltip-bg" rx="4" ry="4" />
-  <text id="tooltip-text" class="tooltip-text"></text>
-</g>
+<foreignObject x="0" y="0" width="1" height="1" style="opacity:0;pointer-events:none">
+  <input xmlns="http://www.w3.org/1999/xhtml" id="file-input" type="file" accept=".txt,.csv,.tsv,text/plain,text/csv,text/tab-separated-values"/>
+</foreignObject>
 
 <script><![CDATA[
 (function () {
@@ -115,32 +169,57 @@
 var SVGNS = 'http://www.w3.org/2000/svg', XHTML = 'http://www.w3.org/1999/xhtml';
 var $ = function (id) { return document.getElementById(id); };
 
-var svg = $('viewport'), scene = $('scene');
-var hexFloor = $('hex-floor');
-var vectorContainer = $('vector-container');
-var hlLine1 = $('hl-line-1'), hlLine2 = $('hl-line-2');
-var uiBtns = $('ui-btns');
+var svg = $('viewport'), scene = $('scene'), bg = $('bg'), vig = $('vig'), scan = $('scan');
+var hexFloor = $('hex-floor'), radarSweep = $('radar-sweep');
+var vectorPath = $('vector-paths'), vectorBloom = $('vector-bloom'), pointPath = $('point-paths');
+var bucketGroup = $('bucket-paths');
+var hl1 = $('hl-line-1'), hl2 = $('hl-line-2');
+var hullGroup = $('hull-group'), hullFill = $('hull-fill'), hullEdges = $('hull-edges');
+var objBack = $('obj-back'), objBackEdges = $('obj-edges-back'), objFront = $('obj-front');
+var objFaces = $('obj-faces'), objEdges = $('obj-edges'), objVerts = $('obj-verts');
+var uiBtns = $('ui-btns'), fileInput = $('file-input');
 var stEl = [$('st0'), $('st1'), $('st2')];
-var sxEl = [$('sx0'), $('sx1'), $('sx2')];
-var tooltipGroup = $('tooltip'), tooltipBg = $('tooltip-bg'), tooltipText = $('tooltip-text');
-var legendGroup = $('legend');
-var histGroup = $('histogram'), histBars = $('hist-bars');
+var sxEl = [$('sx0'), $('sx1'), $('sx2'), $('sx3'), $('sx4')];
+var infEl = [], infoBg = $('info-bg'), i_;
+for (i_ = 0; i_ < 12; i_++) infEl.push($('inf' + i_));
+var titleEl = $('title'), helpEl = $('help');
+var legendGroup = $('legend'), histGroup = $('histogram'), histBody = $('hist-body'), histMarker = $('hist-marker');
+var cutsG = $('cuts'), cutsTitle = $('cuts-title');
 
-var W = 1280, H_ = 800;
-var rotX = 0.8, rotY = 0.0, zoom = 1.0, targetZoom = 1.0;
-var autoRotate = false;
-var maxNorm = 0, trackCount = 0, eventCount = 0, dataLabel = '';
-var ZOOM_MIN = 0.05, ZOOM_MAX = 20, ZOOM_STEP = 1.2;
+/* ---------- state ---------- */
+var W = 1280, H_ = 800, K = 1;
+var rotX = 1.0, rotY = 0.0, zoom = 1.0, targetZoom = 1.0, sweepAngle = 0;
+var autoRotate = true, showHull = false, scanMode = false, showLegend = true, colorMode = 0;
+var objOn = false, objStart = 0, objT = 1, objAnimating = false, objDirty = true;
+var events = [], px = [], py = [], pz = [], vecStart = [], bMass = [], bPair = [];
+var maxMomentum = 0, maxNorm = 0, dataLabel = '';
+var sliceStart = 0, selEv = -1, selWhich = 1, selDirty = true;
+var HULL = null, hullMs = 0, lastKey = '', lodStride = 1;
+var AUTO_URL = 'https://svgfpsaiagents.github.io/svgfpsgameAI/MuRun2010B_0.txt';
+var AUTO_LABEL = 'MURUN2010B_0';
+var loadToken = 0, loading = false, autoAbort = null, heavyData = false;
+var hullBusy = false, hullWaiters = [];
+/* selection state: sign + pT/eta cuts + isolated histogram bin decide which events the 3D view shows */
+var vev = [], dataMax = 0, signMode = 0, cutPt = 0, cutEta = Infinity, binSel = null;
+var histMode = 0, fitHalf = 0.30, histData = null, histSub = null;
+var envPct = 99, hullStale = true, hullTimer = 0, zoomBeforeBin = null;
+var SIGN_NAMES = ['OS', 'SS', 'ALL'], ENV_PCTS = [90, 95, 98, 99, 99.9, 100];
+var CUTS_H = 70, SL_X0 = 124, SL_X1 = 274;
+var HP = { L: 44, R: 308, T: 46, B: 150 };
+var HMODES = [
+  { name: 'LOG', log: true, nb: 50 },
+  /* add more linear windows here, e.g. { name: 'Z', log: false, nb: 60, lo: 60, hi: 120, peak: 91.19 } */
+  { name: 'J/\u03C8', log: false, nb: 50, lo: 2.6, hi: 3.6, peak: 3.097 }
+];
+var SPLIT = /[,\t;\s]+/;
+var MAX_DRAW = 25000, MAX_SCAN = 2000;
+var ZOOM_MIN = 0.05, ZOOM_MAX = 20, ZOOM_STEP = 1.5;
+var LOG_MIN = Math.log10(0.1), LOG_MAX = Math.log10(200);
+var MASS_COL = ['#ff4444', '#44ff44', '#6666ff', '#cc44ff', '#888888'];
+var COLOR_NAMES = ['HEAT', 'MASS', 'PAIR'];
 
-var MAX_DRAW = 2000;
-var sliceStart = 0;
-var scanMode = false;
-var showLegend = true;
-var colorByMass = false;
-
-var events = [];
-
-var cX = 1, sX = 0, cY = 1, sY = 0, camD = 800, PXo = 0, PYo = 0;
+/* ---------- camera ---------- */
+var cX = 1, sX = 0, cY = 1, sY = 0, camD = 800, PXo = 0, PYo = 0, PDo = 0;
 function setCam() {
   cX = Math.cos(rotX); sX = Math.sin(rotX);
   cY = Math.cos(rotY); sY = Math.sin(rotY);
@@ -149,175 +228,499 @@ function setCam() {
 function proj(x, y, z) {
   var y1 = y * cX - z * sX, z1 = y * sX + z * cX;
   var x1 = x * cY - z1 * sY, z2 = x * sY + z1 * cY;
-  var s = 600 / Math.max(10, z2 + camD);
+  PDo = z2 + camD;
+  var s = 600 / Math.max(10, PDo);
   PXo = x1 * s; PYo = y1 * s;
-  return {x: PXo, y: PYo, z: z2};
+}
+function scaleFactor() { return 300 / Math.max(20, Math.min(dataMax, 120)); }
+
+/* ---------- 2D convex hull (monotone chain) ---------- */
+function hull2D(points) {
+  if (points.length < 3) return points;
+  var pts = points.slice().sort(function (a, b) { return a.x === b.x ? a.y - b.y : a.x - b.x; });
+  function cross(o, a, b) { return (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x); }
+  var lower = [], upper = [], i;
+  for (i = 0; i < pts.length; i++) {
+    while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], pts[i]) <= 0) lower.pop();
+    lower.push(pts[i]);
+  }
+  for (i = pts.length - 1; i >= 0; i--) {
+    while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], pts[i]) <= 0) upper.pop();
+    upper.push(pts[i]);
+  }
+  upper.pop(); lower.pop();
+  return lower.concat(upper);
 }
 
-var fileInput = document.createElementNS(XHTML, 'input');
-fileInput.type = 'file';
-fileInput.accept = '.txt,.csv,.tsv';
-fileInput.style.display = 'none';
-document.documentElement.appendChild(fileInput);
-fileInput.addEventListener('change', function (e) {
-    if (e.target.files[0]) readFile(e.target.files[0]);
-    fileInput.value = '';
-});
+/* ---------- 3D convex hull (incremental) ---------- */
+function computeHull(X, Y, Z, opts) {
+  var n = X.length, i, k;
+  if (n < 4) return null;
+  var scale = 0;
+  for (i = 0; i < n; i++) {
+    var a_ = Math.abs(X[i]), b_ = Math.abs(Y[i]), c_ = Math.abs(Z[i]);
+    if (a_ > scale) scale = a_; if (b_ > scale) scale = b_; if (c_ > scale) scale = c_;
+  }
+  if (!(scale > 0)) return null;
+  var eps = 1e-9 * scale;
 
+  var D = [[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]];
+  for (var sa = -1; sa <= 1; sa += 2) for (var sb = -1; sb <= 1; sb += 2) for (var sc = -1; sc <= 1; sc += 2) D.push([sa, sb, sc]);
+  var nd = D.length, bv = new Float64Array(nd).fill(-Infinity), bi = new Int32Array(nd);
+  for (i = 0; i < n; i++) {
+    var x = X[i], y = Y[i], z = Z[i];
+    for (k = 0; k < nd; k++) {
+      var d = D[k], v = d[0] * x + d[1] * y + d[2] * z;
+      if (v > bv[k]) { bv[k] = v; bi[k] = i; }
+    }
+  }
+
+  var i0 = bi[1], i1 = -1, best = -1;
+  for (i = 0; i < n; i++) {
+    var dx = X[i] - X[i0], dy = Y[i] - Y[i0], dz = Z[i] - Z[i0], d2 = dx*dx + dy*dy + dz*dz;
+    if (d2 > best) { best = d2; i1 = i; }
+  }
+  if (Math.sqrt(best) <= eps) return null;
+  var lx = X[i1] - X[i0], ly = Y[i1] - Y[i0], lz = Z[i1] - Z[i0];
+  var ll = Math.sqrt(lx*lx + ly*ly + lz*lz);
+  var i2 = -1; best = -1;
+  for (i = 0; i < n; i++) {
+    var ex = X[i] - X[i0], ey = Y[i] - Y[i0], ez = Z[i] - Z[i0];
+    var qx = ey*lz - ez*ly, qy = ez*lx - ex*lz, qz = ex*ly - ey*lx, q2 = qx*qx + qy*qy + qz*qz;
+    if (q2 > best) { best = q2; i2 = i; }
+  }
+  if (Math.sqrt(best) / ll <= eps) return null;
+  var bx = X[i2] - X[i0], by = Y[i2] - Y[i0], bz = Z[i2] - Z[i0];
+  var nx0 = ly*bz - lz*by, ny0 = lz*bx - lx*bz, nz0 = lx*by - ly*bx;
+  var nl = Math.sqrt(nx0*nx0 + ny0*ny0 + nz0*nz0);
+  nx0 /= nl; ny0 /= nl; nz0 /= nl;
+  var i3 = -1; best = -1;
+  for (i = 0; i < n; i++) {
+    var dd = Math.abs((X[i]-X[i0])*nx0 + (Y[i]-Y[i0])*ny0 + (Z[i]-Z[i0])*nz0);
+    if (dd > best) { best = dd; i3 = i; }
+  }
+  if (best <= eps) return null;
+
+  var cx0 = (X[i0]+X[i1]+X[i2]+X[i3]) / 4, cy0 = (Y[i0]+Y[i1]+Y[i2]+Y[i3]) / 4, cz0 = (Z[i0]+Z[i1]+Z[i2]+Z[i3]) / 4;
+
+  function mk(a, b, c) {
+    var ux = X[b]-X[a], uy = Y[b]-Y[a], uz = Z[b]-Z[a], wx = X[c]-X[a], wy = Y[c]-Y[a], wz = Z[c]-Z[a];
+    var nx = uy*wz - uz*wy, ny = uz*wx - ux*wz, nz = ux*wy - uy*wx;
+    var len = Math.sqrt(nx*nx + ny*ny + nz*nz);
+    if (!(len > 1e-300)) return null;
+    nx /= len; ny /= len; nz /= len;
+    var dpl = nx*X[a] + ny*Y[a] + nz*Z[a];
+    if (nx*cx0 + ny*cy0 + nz*cz0 - dpl > 0) { nx = -nx; ny = -ny; nz = -nz; dpl = -dpl; var t = b; b = c; c = t; }
+    return { a: a, b: b, c: c, nx: nx, ny: ny, nz: nz, d: dpl, dead: false };
+  }
+
+  var faces = [mk(i0,i1,i2), mk(i0,i1,i3), mk(i0,i2,i3), mk(i1,i2,i3)].filter(Boolean);
+
+  function add(p) {
+    var x = X[p], y = Y[p], z = Z[p], vis = null, j;
+    for (j = 0; j < faces.length; j++) {
+      var f = faces[j];
+      if (f.nx*x + f.ny*y + f.nz*z - f.d > eps) { if (vis === null) vis = []; vis.push(f); }
+    }
+    if (vis === null) return;
+    var set = new Set(), nf = [];
+    vis.forEach(function (f) { set.add(f.a*n + f.b); set.add(f.b*n + f.c); set.add(f.c*n + f.a); });
+    vis.forEach(function (f) {
+      f.dead = true;
+      var es = [[f.a, f.b], [f.b, f.c], [f.c, f.a]];
+      for (var e = 0; e < 3; e++) {
+        if (!set.has(es[e][1]*n + es[e][0])) {
+          var g = mk(es[e][0], es[e][1], p);
+          if (g) nf.push(g);
+        }
+      }
+    });
+    faces = faces.filter(function (f) { return !f.dead; }).concat(nf);
+  }
+
+  var seeds = Array.from(new Set(Array.from(bi)));
+  for (i = 0; i < seeds.length; i++) add(seeds[i]);
+  for (i = 0; i < n; i++) add(i);
+  if (faces.length < 4) return null;
+
+  var map = new Int32Array(n).fill(-1), vx = [], vy = [], vz = [];
+  var F = faces.length, T = new Int32Array(F * 3);
+  for (k = 0; k < F; k++) {
+    var fv = [faces[k].a, faces[k].b, faces[k].c];
+    for (var j2 = 0; j2 < 3; j2++) {
+      var vv = fv[j2];
+      if (map[vv] < 0) { map[vv] = vx.length; vx.push(X[vv]); vy.push(Y[vv]); vz.push(Z[vv]); }
+      T[3*k + j2] = map[vv];
+    }
+  }
+  var m = vx.length;
+
+  var em = new Map(), ea = [], eb = [], f1 = [], f2 = [];
+  for (k = 0; k < F; k++) {
+    for (var jj = 0; jj < 3; jj++) {
+      var A = T[3*k + jj], B = T[3*k + (jj + 1) % 3];
+      var lo = Math.min(A, B), hi = Math.max(A, B), key = lo*m + hi, e = em.get(key);
+      if (e === undefined) { em.set(key, ea.length); ea.push(lo); eb.push(hi); f1.push(k); f2.push(-1); }
+      else f2[e] = k;
+    }
+  }
+  var nEall = ea.length, nE = nEall, eo = [];
+  for (k = 0; k < nEall; k++) {
+    if (opts && opts.noFlatEdges && f2[k] >= 0) {          // skip diagonals inside a flat (coplanar) facet
+      var g1 = faces[f1[k]], g2 = faces[f2[k]];
+      if (g1.nx*g2.nx + g1.ny*g2.ny + g1.nz*g2.nz > 1 - 1e-9) continue;
+    }
+    eo.push(k);
+  }
+  nE = eo.length;
+  var eaz = eo.map(function (q) { return Math.atan2(vz[ea[q]] + vz[eb[q]], vx[ea[q]] + vx[eb[q]]); });
+  eo.sort(function (p, q) { return eaz[p] - eaz[q]; });
+  var vo = []; for (k = 0; k < m; k++) vo.push(k);
+  vo.sort(function (p, q) { return Math.atan2(vz[p], vx[p]) - Math.atan2(vz[q], vx[q]); });
+
+  var vol = 0, area = 0, rmax = 0;
+  for (k = 0; k < F; k++) {
+    var a = T[3*k], b = T[3*k+1], c = T[3*k+2];
+    var cxp = vy[b]*vz[c] - vz[b]*vy[c], cyp = vz[b]*vx[c] - vx[b]*vz[c], czp = vx[b]*vy[c] - vy[b]*vx[c];
+    vol += (vx[a]*cxp + vy[a]*cyp + vz[a]*czp) / 6;
+    var ux = vx[b]-vx[a], uy = vy[b]-vy[a], uz = vz[b]-vz[a], wx = vx[c]-vx[a], wy = vy[c]-vy[a], wz = vz[c]-vz[a];
+    var ax = uy*wz - uz*wy, ay = uz*wx - ux*wz, az = ux*wy - uy*wx;
+    area += 0.5 * Math.sqrt(ax*ax + ay*ay + az*az);
+  }
+  for (k = 0; k < m; k++) rmax = Math.max(rmax, Math.sqrt(vx[k]*vx[k] + vy[k]*vy[k] + vz[k]*vz[k]));
+  if (m - nEall + F !== 2) console.warn('[hull] Euler characteristic check failed: V-E+F =', m - nEall + F);
+
+  return {
+    nV: m, nE: nE, nF: F, vol: Math.abs(vol), area: area, rmax: rmax,
+    vx: Float64Array.from(vx), vy: Float64Array.from(vy), vz: Float64Array.from(vz), T: T,
+    EA: Int32Array.from(eo.map(function (q) { return ea[q]; })),
+    EB: Int32Array.from(eo.map(function (q) { return eb[q]; })),
+    F1: Int32Array.from(eo.map(function (q) { return f1[q]; })),
+    F2: Int32Array.from(eo.map(function (q) { return f2[q]; })),
+    VO: Int32Array.from(vo),
+    RX: new Float64Array(m), RY: new Float64Array(m), RZ: new Float64Array(m),
+    SX: new Float64Array(m), SY: new Float64Array(m), BAD: new Uint8Array(m),
+    fvis: new Uint8Array(F)
+  };
+}
+
+/* ---------- small helpers ---------- */
+function mk(tag, attrs, parent, text) {
+  var e = document.createElementNS(SVGNS, tag), k;
+  if (attrs) for (k in attrs) e.setAttribute(k, attrs[k]);
+  if (text !== undefined) e.textContent = text;
+  if (parent) parent.appendChild(e);
+  return e;
+}
+
+/* p-th percentile (0..100) of a typed array in O(n): 4096-bin histogram with linear interpolation */
+function quant(v, p) {
+  var n = v.length, lo = Infinity, hi = -Infinity, i, x;
+  for (i = 0; i < n; i++) { x = v[i]; if (x < lo) lo = x; if (x > hi) hi = x; }
+  if (!(hi > lo)) return lo;
+  if (p >= 100) return hi;
+  if (p <= 0) return lo;
+  var NB = 4096, c = new Uint32Array(NB), sc = (NB - 1e-6) / (hi - lo), b;
+  for (i = 0; i < n; i++) c[((v[i] - lo) * sc) | 0]++;
+  var target = p / 100 * n, cum = 0;
+  for (b = 0; b < NB; b++) {
+    if (cum + c[b] >= target) return lo + (b + (c[b] ? (target - cum) / c[b] : 0)) / sc;
+    cum += c[b];
+  }
+  return hi;
+}
+
+/* Gauss-Jordan inverse of an n x n matrix (array of arrays); null if singular */
+function inv(M, n) {
+  var A = [], i, j, k;
+  for (i = 0; i < n; i++) { A.push(M[i].slice()); for (j = 0; j < n; j++) A[i].push(i === j ? 1 : 0); }
+  for (i = 0; i < n; i++) {
+    var piv = i;
+    for (k = i + 1; k < n; k++) if (Math.abs(A[k][i]) > Math.abs(A[piv][i])) piv = k;
+    if (Math.abs(A[piv][i]) < 1e-300) return null;
+    var t = A[i]; A[i] = A[piv]; A[piv] = t;
+    var d = A[i][i];
+    for (j = 0; j < 2 * n; j++) A[i][j] /= d;
+    for (k = 0; k < n; k++) if (k !== i) {
+      var f = A[k][i];
+      if (f !== 0) for (j = 0; j < 2 * n; j++) A[k][j] -= f * A[i][j];
+    }
+  }
+  return A.map(function (r) { return r.slice(n); });
+}
+
+/* Levenberg-Marquardt fit of  A*exp(-(x-mu)^2/(2 sigma^2)) + b0 + b1*(x-x0)  to bin counts (Neyman weights) */
+function fitGaussBkg(xs, ys, x0, binW) {
+  var n = xs.length, i, a, b;
+  if (n < 8) return null;
+  var wlo = xs[0], whi = xs[n - 1], span = Math.max(binW, whi - wlo);
+  var mi = 0; for (i = 1; i < n; i++) if (ys[i] > ys[mi]) mi = i;
+  var edge = (ys[0] + ys[1] + ys[n - 1] + ys[n - 2]) / 4;
+  var p = [Math.max(1, ys[mi] - edge), xs[mi], Math.max(binW, span / 8), edge, 0];
+  function f(x, q) { var t = (x - q[1]) / q[2]; return q[0] * Math.exp(-0.5 * t * t) + q[3] + q[4] * (x - x0); }
+  function chi2(q) { var s = 0, r, k; for (k = 0; k < n; k++) { r = ys[k] - f(xs[k], q); s += r * r / Math.max(1, ys[k]); } return s; }
+  function normal(q) {
+    var JJ = [], Jr = [0, 0, 0, 0, 0], k, a_, b_, t, g, w, d, r;
+    for (a_ = 0; a_ < 5; a_++) JJ.push([0, 0, 0, 0, 0]);
+    for (k = 0; k < n; k++) {
+      t = (xs[k] - q[1]) / q[2]; g = Math.exp(-0.5 * t * t); w = 1 / Math.max(1, ys[k]);
+      d = [g, q[0] * g * t / q[2], q[0] * g * t * t / q[2], 1, xs[k] - x0];
+      r = ys[k] - f(xs[k], q);
+      for (a_ = 0; a_ < 5; a_++) { Jr[a_] += w * d[a_] * r; for (b_ = 0; b_ < 5; b_++) JJ[a_][b_] += w * d[a_] * d[b_]; }
+    }
+    return { JJ: JJ, Jr: Jr };
+  }
+  var c0 = chi2(p), lam = 1e-3, it;
+  for (it = 0; it < 120; it++) {
+    var nm = normal(p), M = [];
+    for (a = 0; a < 5; a++) { M.push(nm.JJ[a].slice()); M[a][a] *= (1 + lam); }
+    var Mi = inv(M, 5);
+    if (!Mi) { lam *= 10; if (lam > 1e9) break; continue; }
+    var q = p.slice();
+    for (a = 0; a < 5; a++) { var sum = 0; for (b = 0; b < 5; b++) sum += Mi[a][b] * nm.Jr[b]; q[a] += sum; }
+    q[0] = Math.max(0, q[0]);
+    q[1] = Math.max(wlo, Math.min(whi, q[1]));
+    q[2] = Math.max(binW * 0.2, Math.min(span, q[2]));
+    var c1 = chi2(q);
+    if (c1 < c0) {
+      var done = (c0 - c1) < 1e-9 * Math.max(1, c0);
+      p = q; c0 = c1; lam = Math.max(lam / 3, 1e-9);
+      if (done) break;
+    } else { lam *= 4; if (lam > 1e9) break; }
+  }
+  var cov = inv(normal(p).JJ, 5), sc = Math.sqrt(Math.max(1, c0 / Math.max(1, n - 5))), err = [0, 0, 0, 0, 0];
+  if (cov) for (a = 0; a < 5; a++) err[a] = Math.sqrt(Math.max(0, cov[a][a])) * sc;
+  return {
+    A: p[0], mu: p[1], sigma: p[2], err: err, chi2: c0, ndf: n - 5,
+    N: p[0] * p[2] * Math.sqrt(2 * Math.PI) / binW,
+    f: function (x) { return f(x, p); },
+    bg: function (x) { return p[3] + p[4] * (x - x0); }
+  };
+}
+
+/* Percentile envelope.
+   The convex hull is the intersection of half-spaces  d.x <= max(d.P)  over every direction d.
+   Here each half-space is placed at the pct-th percentile of the projections d.(P-c) instead of the max,
+   over 192 directions, so the few extreme vectors (outliers) along each direction cannot stretch the
+   shape. The intersection is built through duality (convex hull of the points d/h), then handed to
+   computeHull() once more to get a triangle mesh the renderer already understands.
+   pct = 100 skips all of this and returns the exact convex hull. */
+function computeEnvelope(X, Y, Z, pct) {
+  var n = X.length, i, k;
+  if (n < 8) return null;
+  if (pct >= 100) {                                         // MAX = the exact convex hull of every vector, as before
+    var exact = computeHull(X, Y, Z);
+    if (exact) { exact.pct = 100; exact.nDir = 0; exact.nSample = n; }
+    return exact;
+  }
+  var stride = Math.max(1, Math.ceil(n / 120000));          // large selections: percentiles from a sample
+  if (stride > 1 && stride % 2 === 0) stride++;             // odd stride: keeps both muons of a pair in the sample
+  var m = Math.ceil(n / stride);
+  var sx = new Float64Array(m), sy = new Float64Array(m), sz = new Float64Array(m);
+  for (i = 0; i < m; i++) { sx[i] = X[i * stride]; sy[i] = Y[i * stride]; sz[i] = Z[i * stride]; }
+  var cx = quant(sx, 50), cy = quant(sy, 50), cz = quant(sz, 50);
+
+  var M2 = 96, dirs = [];                                   // Fibonacci hemisphere + mirror = 192 symmetric directions
+  for (k = 0; k < M2; k++) {
+    var zz = 1 - (k + 0.5) / M2, rr = Math.sqrt(1 - zz * zz), th = k * 2.399963229728653;
+    var ddx = rr * Math.cos(th), ddy = rr * Math.sin(th);
+    dirs.push([ddx, ddy, zz]); dirs.push([-ddx, -ddy, -zz]);
+  }
+  var K = dirs.length, H = new Float64Array(K), pj = new Float64Array(m), maxH = 0, d;
+  for (k = 0; k < K; k++) {
+    d = dirs[k];
+    for (i = 0; i < m; i++) pj[i] = d[0] * (sx[i] - cx) + d[1] * (sy[i] - cy) + d[2] * (sz[i] - cz);
+    H[k] = quant(pj, pct);
+    if (H[k] > maxH) maxH = H[k];
+  }
+  if (!(maxH > 0)) return null;
+  var floorH = 0.02 * maxH;                                 // keep every half-space on the positive side of the centre
+  var qx = new Float64Array(K), qy = new Float64Array(K), qz = new Float64Array(K), h;
+  for (k = 0; k < K; k++) {
+    h = Math.max(H[k], floorH);
+    qx[k] = dirs[k][0] / h; qy[k] = dirs[k][1] / h; qz[k] = dirs[k][2] / h;
+  }
+  var dual = computeHull(qx, qy, qz);
+  if (!dual) return null;
+  var PX = [], PY = [], PZ = [], lim = 1e4 * maxH;
+  for (k = 0; k < dual.nF; k++) {                           // each dual facet = one vertex of the envelope
+    var a = dual.T[3 * k], b = dual.T[3 * k + 1], c = dual.T[3 * k + 2];
+    var ux = dual.vx[b] - dual.vx[a], uy = dual.vy[b] - dual.vy[a], uz = dual.vz[b] - dual.vz[a];
+    var wx = dual.vx[c] - dual.vx[a], wy = dual.vy[c] - dual.vy[a], wz = dual.vz[c] - dual.vz[a];
+    var nx = uy * wz - uz * wy, ny = uz * wx - ux * wz, nz = ux * wy - uy * wx;
+    var dd = nx * dual.vx[a] + ny * dual.vy[a] + nz * dual.vz[a];
+    if (dd < 0) { nx = -nx; ny = -ny; nz = -nz; dd = -dd; }
+    if (!(dd > 1e-300)) continue;
+    var vx_ = nx / dd, vy_ = ny / dd, vz_ = nz / dd;
+    if (Math.abs(vx_) > lim || Math.abs(vy_) > lim || Math.abs(vz_) > lim) continue;
+    PX.push(vx_ + cx); PY.push(vy_ + cy); PZ.push(vz_ + cz);
+  }
+  var env = computeHull(PX, PY, PZ, { noFlatEdges: true });
+  if (env) { env.pct = pct; env.nDir = K; env.nSample = m; }
+  return env;
+}
+
+/* ---------- buttons ---------- */
 var BTNS = [
-  { id: 'load', label: 'LOAD CSV', fn: function () { fileInput.click(); } },
-  { id: 'demo', label: 'DEMO DATA', fn: loadDemo },
-  { id: 'scan', label: 'SCAN MODE', fn: toggleScanMode },
-  { id: 'next', label: 'NEXT SLICE', fn: nextSlice },
-  { id: 'mass', label: 'COLOR: MASS', fn: toggleMassColor },
-  { id: 'key',  label: 'TOGGLE KEY', fn: toggleLegend },
-  { id: 'spin', label: 'SPIN', fn: function () { autoRotate = !autoRotate; syncButtons(); updateRender(); } },
-  { id: 'snap', label: 'SAVE SVG', fn: snapSVG }
+  { id: 'auto',   label: 'AUTO LOAD',            fn: autoLoad },
+  { id: 'load',   label: 'LOAD CSV',             fn: function () { fileInput.click(); } },
+  { id: 'demo',   label: 'DEMO DATA',            fn: loadDemo },
+  { id: 'scan',   label: 'SCAN MODE',            fn: toggleScanMode },
+  { id: 'next',   label: 'NEXT SLICE',           fn: nextSlice, hidden: true },
+  { id: 'sign',   label: 'SIGN: OS',             fn: cycleSign },
+  { id: 'hmode',  label: 'HIST: LOG',            fn: cycleHistMode },
+  { id: 'fitm',   label: 'FIT WIN -',            fn: function () { stepFit(-1); }, hidden: true },
+  { id: 'fitp',   label: 'FIT WIN +',            fn: function () { stepFit(1); },  hidden: true },
+  { id: 'clrbin', label: 'CLEAR BIN',            fn: clearBin, hidden: true },
+  { id: 'col',    label: 'COLOR: HEAT',          fn: cycleColor },
+  { id: 'key',    label: 'TOGGLE KEY',           fn: toggleLegend },
+  { id: 'hull',   label: '\u2B21 2D ENVELOPE',   fn: toggleHull2D },
+  { id: 'envp',   label: 'ENV: P99',             fn: cycleEnv },
+  { id: 'obj',    label: '\u25C6 DRAW 3D OBJECT', fn: toggleObject },
+  { id: 'spin',   label: '\u21BB SPIN',          fn: function () { autoRotate = !autoRotate; syncButtons(); } },
+  { id: 'objx',   label: '\u21E9 OBJ',           fn: exportOBJ },
+  { id: 'snap',   label: '\u21E9 SVG',           fn: snapSVG }
 ];
-
+function sizeBtn(def) {
+  def.w = Math.ceil(def.label.length * 7.6 + 28);
+  def.r.setAttribute('width', def.w);
+  def.t.setAttribute('x', def.w / 2); def.t.textContent = def.label;
+}
 BTNS.forEach(function (def) {
   var g = document.createElementNS(SVGNS, 'g'); g.setAttribute('class', 'btn');
   var r = document.createElementNS(SVGNS, 'rect'), t = document.createElementNS(SVGNS, 'text');
-  def.w = Math.ceil(def.label.length * 7.5 + 20);
-  r.setAttribute('width', def.w); r.setAttribute('height', 30); r.setAttribute('rx', 4);
-  t.setAttribute('x', def.w / 2); t.setAttribute('y', 19); t.textContent = def.label;
+  r.setAttribute('height', 30); t.setAttribute('y', 19);
   g.appendChild(r); g.appendChild(t);
+  def.r = r; def.t = t; def.g = g; sizeBtn(def);
   g.addEventListener('click', def.fn);
-  uiBtns.appendChild(g); def.g = g;
+  if (def.hidden) g.setAttribute('display', 'none');
+  uiBtns.appendChild(g);
 });
-
 function btn(id) { for (var i = 0; i < BTNS.length; i++) if (BTNS[i].id === id) return BTNS[i]; }
 function setActive(id, on) { btn(id).g.classList.toggle('active', !!on); }
+function setHidden(id, hid) { var b = btn(id); b.hidden = hid; b.g.setAttribute('display', hid ? 'none' : 'inline'); }
+function relabel(id, text) { var b = btn(id); if (b.label !== text) { b.label = text; sizeBtn(b); } }
+function histLinear() { return !HMODES[histMode].log; }
 function syncButtons() {
-    setActive('spin', autoRotate);
-    setActive('scan', scanMode);
-    setActive('key', showLegend);
-    setActive('mass', colorByMass);
-    btn('next').g.style.display = scanMode ? 'block' : 'none';
+  setActive('hull', showHull); setActive('obj', objOn); setActive('spin', autoRotate);
+  setActive('scan', scanMode); setActive('key', showLegend); setActive('col', colorMode !== 0);
+  setHidden('next', !scanMode);
+  setHidden('fitm', !histLinear()); setHidden('fitp', !histLinear());
+  setHidden('clrbin', !binSel);
+  relabel('col', 'COLOR: ' + COLOR_NAMES[colorMode]);
+  relabel('sign', 'SIGN: ' + SIGN_NAMES[signMode]);
+  relabel('hmode', 'HIST: ' + HMODES[histMode].name);
+  relabel('envp', 'ENV: ' + (envPct >= 100 ? 'MAX' : 'P' + envPct));
+  layoutButtons();
 }
 
-function toggleLegend() {
-    showLegend = !showLegend;
-    legendGroup.setAttribute('display', showLegend ? 'inline' : 'none');
-    syncButtons();
+$('zoom-in').addEventListener('click',  function () { targetZoom = Math.min(ZOOM_MAX, targetZoom * ZOOM_STEP); });
+$('zoom-out').addEventListener('click', function () { targetZoom = Math.max(ZOOM_MIN, targetZoom / ZOOM_STEP); });
+
+function setStatus(a, b, c) { stEl[0].textContent = a || ''; stEl[1].textContent = b || ''; stEl[2].textContent = c || ''; }
+function fmt(v) { return v.toExponential(2).toUpperCase(); }
+function mfmt(m) { return m.toFixed(m < 10 ? 3 : 2); }
+function selSummary() {
+  var t = 'SIGN ' + SIGN_NAMES[signMode];
+  if (cutPt > 0) t += '  PT>=' + cutPt.toFixed(1);
+  if (isFinite(cutEta)) t += '  |ETA|<=' + cutEta.toFixed(1);
+  if (binSel) t += '  M ' + mfmt(binSel.lo) + '-' + mfmt(binSel.hi);
+  return t;
+}
+function updateStats() {
+  var ne = events.length, nv = px.length, ns = vev.length;
+  sxEl[0].textContent = ne ? ('EVENTS ' + ns + ' / ' + ne + '  VECTORS ' + nv + (dataLabel ? '  [' + dataLabel + ']' : '')) : '';
+  sxEl[1].textContent = ne ? ('MAX |P| ' + maxNorm.toFixed(1) + ' GEV   ' + selSummary()) : '';
+  if (!ne) sxEl[2].textContent = '';
+  else if (scanMode) sxEl[2].textContent = 'SCAN VIEW: EVENTS ' + sliceStart + ' TO ' + Math.min(sliceStart + MAX_SCAN, ns) + ' OF ' + ns;
+  else sxEl[2].textContent = lodStride > 1 ? ('DRAWING 1 IN ' + lodStride + ' VECTORS WHILE MOVING (PRESS SPIN TO PAUSE: FULL DENSITY)') : 'DRAWING ALL VECTORS';
+  sxEl[3].textContent = HULL ? ('ENVELOPE ' + (HULL.pct >= 100 ? 'MAX' : 'P' + HULL.pct) + ' OF SELECTION  VERTICES ' + HULL.nV + '  EDGES ' + HULL.nE + '  FACES ' + HULL.nF + '  (' + hullMs.toFixed(0) + ' MS)') : '';
+  sxEl[4].textContent = HULL ? ('ENVELOPE VOLUME ' + fmt(HULL.vol) + ' GEV\u00B3   SURFACE ' + fmt(HULL.area) + ' GEV\u00B2') : '';
+  cutsTitle.textContent = (ne && histData) ? ('CUTS (BOTH MUONS)  ' + histData.nPass + '/' + ne + ' PASS') : 'CUTS (BOTH MUONS)';
 }
 
-function toggleMassColor() {
-    colorByMass = !colorByMass;
-    syncButtons();
-    updateRender();
-}
-
-function toggleScanMode() {
-    scanMode = !scanMode;
-    if (scanMode) {
-        autoRotate = false;
-        setStatus('STATUS: SCAN MODE', 'CLICK A LINE TO INSPECT A DIMUON');
-    } else {
-        hlLine1.setAttribute('display', 'none');
-        hlLine2.setAttribute('display', 'none');
-        tooltipGroup.setAttribute('display', 'none');
-        setStatus('STATUS: FREE ROAM', '');
-        var marker = document.getElementById('hist-marker');
-        if (marker) marker.style.display = 'none';
-    }
-    syncButtons();
-    updateRender();
-}
-
-function nextSlice() {
-    if (events.length === 0) return;
-    sliceStart += MAX_DRAW;
-    if (sliceStart >= events.length) sliceStart = 0;
-    updateStats();
-    hlLine1.setAttribute('display', 'none');
-    hlLine2.setAttribute('display', 'none');
-    tooltipGroup.setAttribute('display', 'none');
-    var marker = document.getElementById('hist-marker');
-    if (marker) marker.style.display = 'none';
-    updateRender();
-}
-
-$('zoom-in').addEventListener('click',  function () { targetZoom = Math.min(ZOOM_MAX, targetZoom * ZOOM_STEP); updateRender(); });
-$('zoom-out').addEventListener('click', function () { targetZoom = Math.max(ZOOM_MIN, targetZoom / ZOOM_STEP); updateRender(); });
-
-function layout() {
-  var r = svg.getBoundingClientRect();
-  W = r.width || window.innerWidth; H_ = r.height || window.innerHeight;
-  svg.setAttribute('viewBox', (-W / 2) + ' ' + (-H_ / 2) + ' ' + W + ' ' + H_);
-  [ 'bg', 'vig' ].forEach(function(id) {
-      var el = $(id);
-      if (el) { el.setAttribute('x', -W/2); el.setAttribute('y', -H_/2); el.setAttribute('width', W); el.setAttribute('height', H_); }
-  });
-  var x0 = -W / 2 + 20, x = x0, y = -H_ / 2 + 20, maxX = W / 2 - 80;
+/* ---------- layout ---------- */
+var infoTop = 100;
+function layoutButtons() {
+  var x0 = -W / 2 + 20, x = x0, y = -H_ / 2 + 20, maxX = W / 2 - 90;
   BTNS.forEach(function (def) {
+    if (def.hidden) return;
     if (x + def.w > maxX && x > x0) { x = x0; y += 38; }
     def.g.setAttribute('transform', 'translate(' + x + ',' + y + ')');
     x += def.w + 8;
   });
-  var sy = y + 50;
+  var sy = y + 52;
   stEl.forEach(function (e, i) { e.setAttribute('x', x0); e.setAttribute('y', sy + i * 15); });
-  $('zoom-in').setAttribute('transform', 'translate(' + (W/2-44) + ',' + (-H_/2+44) + ')');
-  $('zoom-out').setAttribute('transform', 'translate(' + (W/2-44) + ',' + (-H_/2+100) + ')');
-  $('help').setAttribute('x', W/2 - 20); $('help').setAttribute('y', H_/2 - 20);
-  $('title').setAttribute('x', -W/2 + 20); $('title').setAttribute('y', H_/2 - 20);
-  sxEl.forEach(function(e, i) { e.setAttribute('x', -W/2 + 20); e.setAttribute('y', H_/2 - 40 - (2-i)*15); });
-  $('cross').setAttribute('transform', 'translate(0,0)');
-
-  legendGroup.setAttribute('transform', 'translate(' + (W/2 - 210) + ',' + (-H_/2 + 20) + ')');
-  histGroup.setAttribute('transform', 'translate(' + (W/2 - 300) + ',' + (H_/2 - 180) + ')');
-
-  updateRender();
+  var cutsTop = sy + 3 * 15 + 6;
+  cutsG.setAttribute('transform', 'translate(' + (x0 - 8) + ',' + cutsTop + ')');
+  infoTop = cutsTop + CUTS_H + 6;
+  infoBg.setAttribute('x', x0 - 8); infoBg.setAttribute('y', infoTop);
+  infEl.forEach(function (e, i) { e.setAttribute('x', x0); e.setAttribute('y', infoTop + 17 + i * 13); });
+}
+function updateVisibility() {
+  var big = W >= 760 && H_ >= 560;
+  legendGroup.setAttribute('display', (showLegend && W >= 700 && H_ >= (histReady ? 650 : 620)) ? 'inline' : 'none');
+  histGroup.setAttribute('display', (histReady && big) ? 'inline' : 'none');
+  helpEl.setAttribute('display', W < 760 ? 'none' : 'inline');
+}
+var histReady = false;
+function layout() {
+  var r = svg.getBoundingClientRect();
+  W = r.width || window.innerWidth; H_ = r.height || window.innerHeight;
+  svg.setAttribute('viewBox', (-W / 2) + ' ' + (-H_ / 2) + ' ' + W + ' ' + H_);
+  [bg, vig, scan].forEach(function (e) {
+    e.setAttribute('x', -W / 2); e.setAttribute('y', -H_ / 2); e.setAttribute('width', W); e.setAttribute('height', H_);
+  });
+  K = Math.min(W, H_) / 1300;
+  scene.setAttribute('transform', 'scale(' + K + ')');
+  layoutButtons();
+  $('zoom-in').setAttribute('transform',  'translate(' + (W / 2 - 44) + ',' + (-H_ / 2 + 44) + ')');
+  $('zoom-out').setAttribute('transform', 'translate(' + (W / 2 - 44) + ',' + (-H_ / 2 + 100) + ')');
+  var x0 = -W / 2 + 20;
+  titleEl.setAttribute('x', x0); titleEl.setAttribute('y', H_ / 2 - 20);
+  sxEl.forEach(function (e, i) { e.setAttribute('x', x0); e.setAttribute('y', H_ / 2 - 40 - (sxEl.length - 1 - i) * 14); });
+  helpEl.setAttribute('x', W / 2 - 20); helpEl.setAttribute('y', H_ / 2 - 20);
+  legendGroup.setAttribute('transform', 'translate(' + (W / 2 - 216) + ',' + (-H_ / 2 + 140) + ')');
+  histGroup.setAttribute('transform', 'translate(' + (W / 2 - 340) + ',' + (H_ / 2 - 258) + ')');
+  updateVisibility();
+  lastKey = '';
 }
 window.addEventListener('resize', layout);
 
-function setStatus(a, b, c) { stEl[0].textContent = a || ''; stEl[1].textContent = b || ''; stEl[2].textContent = c || ''; }
-function updateStats() {
-  sxEl[0].textContent = eventCount ? ('EVENTS ' + eventCount + ' (' + (eventCount*2) + ' MUONS)') : '';
-  sxEl[1].textContent = eventCount ? ('MAX |P| ' + maxNorm.toFixed(1) + ' GEV') : '';
-  if (scanMode && eventCount > 0) {
-      var end = Math.min(sliceStart + MAX_DRAW, eventCount);
-      sxEl[2].textContent = 'VIEWING EVENTS: ' + sliceStart + ' TO ' + end;
-  } else if (eventCount > 0) {
-      sxEl[2].textContent = 'SHOWING ALL (LOD ACTIVE)';
-  } else {
-      sxEl[2].textContent = '';
-  }
-}
-
+/* ---------- interaction ---------- */
 var ptrs = new Map(), pinchDist = 0;
 function pdist() { var a = Array.from(ptrs.values()); return Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y); }
 svg.addEventListener('pointerdown', function (e) {
-  if (e.target.closest && e.target.closest('.btn')) return;
-  if (scanMode) { handlePrecisePick(e); return; }
-  ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (e.target.closest && e.target.closest('.btn,.hit,.slider-hit')) return;
+  ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY, moved: 0 });
   if (autoRotate) { autoRotate = false; syncButtons(); }
   try { svg.setPointerCapture(e.pointerId); } catch (_) {}
   if (ptrs.size === 2) pinchDist = pdist();
 });
 svg.addEventListener('pointermove', function (e) {
-  if (scanMode) return;
   var p = ptrs.get(e.pointerId); if (!p) return;
   var dx = e.clientX - p.x, dy = e.clientY - p.y;
-  p.x = e.clientX; p.y = e.clientY;
+  p.x = e.clientX; p.y = e.clientY; p.moved += Math.abs(dx) + Math.abs(dy);
   if (ptrs.size === 1) {
     rotY += dx * 0.005; rotX += dy * 0.005;
     rotX = Math.max(0.05, Math.min(Math.PI / 2.1, rotX));
-    updateRender();
   } else if (ptrs.size === 2) {
     var nd = pdist();
-    if (pinchDist > 0) { targetZoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, targetZoom * nd / pinchDist)); }
+    if (pinchDist > 0) targetZoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, targetZoom * nd / pinchDist));
     pinchDist = nd;
-    updateRender();
   }
 });
-function endPtr(e) { ptrs.delete(e.pointerId); pinchDist = 0; try { svg.releasePointerCapture(e.pointerId); } catch (_) {} updateRender(); }
-svg.addEventListener('pointerup', endPtr);
+function endPtr(e) { ptrs.delete(e.pointerId); pinchDist = 0; try { svg.releasePointerCapture(e.pointerId); } catch (_) {} }
+svg.addEventListener('pointerup', function (e) {
+  var p = ptrs.get(e.pointerId);
+  var wasClick = p && ptrs.size === 1 && p.moved < 6;
+  endPtr(e);
+  if (wasClick && scanMode) pick(e);
+});
 svg.addEventListener('pointercancel', endPtr);
 svg.addEventListener('wheel', function (ev) {
   ev.preventDefault();
-  targetZoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, targetZoom * (ev.deltaY < 0 ? ZOOM_STEP : 1/ZOOM_STEP)));
-  updateRender();
+  targetZoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, targetZoom * (ev.deltaY < 0 ? 1.1 : 1 / 1.1)));
 }, { passive: false });
 svg.addEventListener('dragover', function (e) { e.preventDefault(); });
 svg.addEventListener('drop', function (e) {
@@ -326,413 +729,871 @@ svg.addEventListener('drop', function (e) {
   if (f) readFile(f);
 });
 
-function handlePrecisePick(e) {
-    if (events.length === 0) return;
-    var rect = svg.getBoundingClientRect();
-    var mouseX = e.clientX - rect.left - rect.width/2;
-    var mouseY = e.clientY - rect.top - rect.height/2;
+/* ---------- modes ---------- */
+function toggleLegend() { showLegend = !showLegend; updateVisibility(); syncButtons(); }
+function cycleColor() { colorMode = (colorMode + 1) % 3; applyColorMode(); lastKey = ''; syncButtons(); }
+function toggleScanMode() {
+  scanMode = !scanMode;
+  if (scanMode) {
+    autoRotate = false;
+    setStatus('STATUS: SCAN MODE', 'CLICK A MUON TO INSPECT ITS PAIR', events.length ? '' : 'LOAD DATA OR PRESS DEMO FIRST');
+  } else {
+    clearSel();
+    setStatus('STATUS: FREE ROAM', '');
+  }
+  lastKey = ''; syncButtons(); updateStats();
+}
+function nextSlice() {
+  if (!vev.length) return;
+  sliceStart += MAX_SCAN;
+  if (sliceStart >= vev.length) sliceStart = 0;
+  clearSel(); lastKey = ''; updateStats();
+}
+function toggleHull2D() {
+  showHull = !showHull; syncButtons();
+  if (showHull) withHull(function () { objDirty = true; }); else objDirty = true;
+}
 
-    var sf = 300 / Math.max(20, Math.min(maxNorm, 120));
-    var endIdx = Math.min(sliceStart + MAX_DRAW, events.length);
+/* ---------- colour buckets ---------- */
+var BP = [];
+(function () {
+  for (var k = 0; k < 24; k++) {
+    var p = document.createElementNS(SVGNS, 'path');
+    p.setAttribute('vector-effect', 'non-scaling-stroke');
+    bucketGroup.appendChild(p); BP.push(p);
+  }
+})();
+function applyColorMode() {
+  var k;
+  for (k = 0; k < 24; k++) {
+    if (colorMode === 1) BP[k].setAttribute('stroke', k < 5 ? MASS_COL[k] : '#000');
+    else BP[k].setAttribute('stroke', 'hsl(' + ((k * 137.5) % 360).toFixed(0) + ',80%,60%)');
+    BP[k].setAttribute('d', '');
+  }
+  var heat = colorMode === 0;
+  bucketGroup.setAttribute('display', heat ? 'none' : 'inline');
+  vectorPath.setAttribute('display', heat ? 'inline' : 'none');
+  vectorBloom.setAttribute('display', (heat && !heavyData) ? 'inline' : 'none');
+}
+function massBucket(m) {
+  if (m === null || !isFinite(m)) return 4;
+  if (m < 10) return 0; if (m < 80) return 1; if (m < 100) return 2; return 3;
+}
 
-    var minDistSq = 100;
-    var bestEventIdx = -1;
-    var bestParticle = null;
-    var bestEndPos = null;
+/* ---------- data ---------- */
+/* events = everything loaded. vev = the events that pass sign + cuts + isolated bin.
+   px/py/pz/vecStart/bMass/bPair are the display arrays, always rebuilt from vev. */
+function etaOf(v) {
+  var pt = Math.sqrt(v[0] * v[0] + v[1] * v[1]);
+  if (pt < 1e-9) return v[2] >= 0 ? 99 : -99;
+  var t = v[2] / pt;
+  return Math.log(t + Math.sqrt(t * t + 1));
+}
+function resetData() {
+  events = []; vev = []; px = []; py = []; pz = []; vecStart = []; bMass = []; bPair = [];
+  maxMomentum = 0; maxNorm = 0; dataMax = 0; sliceStart = 0;
+  HULL = null; hullStale = true; selEv = -1; selDirty = true; lastKey = ''; objDirty = true;
+  binSel = null; histData = null; zoomBeforeBin = null;
+  drawHistogram(); syncButtons();
+}
+function vs(i) { return i < vecStart.length ? vecStart[i] : px.length; }
+function applyQuality() {
+  // very large files: no glow filters (they re-run over every vector on every repaint)
+  heavyData = px.length > MAX_DRAW;
+  if (heavyData) { pointPath.removeAttribute('filter'); vectorBloom.setAttribute('d', ''); }
+  else pointPath.setAttribute('filter', 'url(#bloom)');
+  applyColorMode();
+}
+function addVec(a, b, c) {
+  px.push(a); py.push(b); pz.push(c);
+  maxMomentum = Math.max(maxMomentum, Math.abs(a), Math.abs(b), Math.abs(c));
+  maxNorm = Math.max(maxNorm, Math.sqrt(a * a + b * b + c * c));
+}
+function addEvent(ev) {
+  ev.i = events.length;
+  ev.pt1 = Math.sqrt(ev.p1[0] * ev.p1[0] + ev.p1[1] * ev.p1[1]); ev.eta1 = etaOf(ev.p1);
+  if (ev.p2) { ev.pt2 = Math.sqrt(ev.p2[0] * ev.p2[0] + ev.p2[1] * ev.p2[1]); ev.eta2 = etaOf(ev.p2); }
+  ev.ss = (ev.p2 && ev.q1 && ev.q2) ? ((ev.q1 > 0) === (ev.q2 > 0)) : null;   // true = same sign, false = opposite, null = unknown
+  for (var j = 0; j < 3; j++) {
+    dataMax = Math.max(dataMax, Math.abs(ev.p1[j]));
+    if (ev.p2) dataMax = Math.max(dataMax, Math.abs(ev.p2[j]));
+  }
+  events.push(ev);
+}
 
-    for (var i = sliceStart; i < endIdx; i++) {
-        var ev = events[i];
-        if (!ev.p1) continue;
+/* selection */
+function passCuts(ev) {
+  if (ev.pt1 < cutPt || Math.abs(ev.eta1) > cutEta) return false;
+  if (ev.p2 && (ev.pt2 < cutPt || Math.abs(ev.eta2) > cutEta)) return false;
+  return true;
+}
+function passSign(ev) { return signMode === 2 || (signMode === 0 ? ev.ss === false : ev.ss === true); }
+function passBin(ev) { return !binSel || (ev.mass !== null && ev.mass >= binSel.lo && ev.mass < binSel.hi); }
 
-        var pos1 = proj(ev.p1.x * sf, ev.p1.y * sf, ev.p1.z * sf);
-        var dx1 = mouseX - pos1.x, dy1 = mouseY - pos1.y;
-        if (dx1*dx1 + dy1*dy1 < minDistSq) {
-            minDistSq = dx1*dx1 + dy1*dy1;
-            bestEventIdx = i; bestParticle = 1; bestEndPos = pos1;
-        }
+function rebuildView() {
+  var i, ev, bm, bp;
+  vev = []; px = []; py = []; pz = []; vecStart = []; bMass = []; bPair = [];
+  maxMomentum = 0; maxNorm = 0;
+  for (i = 0; i < events.length; i++) {
+    ev = events[i];
+    if (!passCuts(ev) || !passSign(ev) || !passBin(ev)) continue;
+    bm = massBucket(ev.mass); bp = ev.i % 24;              // colours stay tied to the original event number
+    vecStart.push(px.length);
+    addVec(ev.p1[0], ev.p1[1], ev.p1[2]); bMass.push(bm); bPair.push(bp);
+    if (ev.p2) { addVec(ev.p2[0], ev.p2[1], ev.p2[2]); bMass.push(bm); bPair.push(bp); }
+    vev.push(ev);
+  }
+  vecStart.push(px.length);
+  if (sliceStart >= vev.length) sliceStart = 0;
+  lastKey = ''; objDirty = true;
+  if (!px.length) HULL = null;
+  applyQuality();
+  invalidateHull();
+  updateStats();
+}
+function finishLoad(label) {
+  loading = false;
+  dataLabel = label || 'FILE';
+  binSel = null; zoomBeforeBin = null;
+  computeHist(); drawHistogram();
+  rebuildView();
+  clearSel(); syncButtons();
+  if (objOn) { objOn = false; toggleObject(); }
+  else if (showHull) withHull(function () { objDirty = true; });
+}
 
-        if (ev.p2) {
-            var pos2 = proj(ev.p2.x * sf, ev.p2.y * sf, ev.p2.z * sf);
-            var dx2 = mouseX - pos2.x, dy2 = mouseY - pos2.y;
-            if (dx2*dx2 + dy2*dy2 < minDistSq) {
-                minDistSq = dx2*dx2 + dy2*dy2;
-                bestEventIdx = i; bestParticle = 2; bestEndPos = pos2;
-            }
-        }
-    }
+function pairMass(a, b, E1, E2) {
+  if (!b) return null;
+  var mm = 0.10566;
+  var e1 = isFinite(E1) ? E1 : Math.sqrt(a[0]*a[0] + a[1]*a[1] + a[2]*a[2] + mm*mm);
+  var e2 = isFinite(E2) ? E2 : Math.sqrt(b[0]*b[0] + b[1]*b[1] + b[2]*b[2] + mm*mm);
+  var sx = a[0] + b[0], sy = a[1] + b[1], sz = a[2] + b[2], et = e1 + e2;
+  var m2 = et * et - (sx*sx + sy*sy + sz*sz);
+  return m2 > 0 ? Math.sqrt(m2) : null;
+}
+function parseCERNData(text, label, token) {
+  setStatus('STATUS: PARSING DATA...', '', '');
+  resetData(); loading = true;
+  var lines = text.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n').split('\n');
+  var li = 0; while (li < lines.length && !lines[li].trim()) li++;
+  if (li >= lines.length) { setStatus('STATUS: EMPTY FILE'); finishLoad(''); return; }
+  var first = lines[li].trim().split(SPLIT);
+  var i = (first.length > 4 && isFinite(parseFloat(first[4]))) ? li : li + 1;
+  var total = lines.length, skipped = 0, massFromFile = 0, CHUNK = 4000, nextRebuild = 0;
 
-    var origin = proj(0,0,0);
-    var marker = document.getElementById('hist-marker');
-
-    if (bestEventIdx !== -1) {
-        var ev = events[bestEventIdx];
-
-        hlLine1.setAttribute('x1', origin.x); hlLine1.setAttribute('y1', origin.y);
-        hlLine1.setAttribute('x2', bestEndPos.x); hlLine1.setAttribute('y2', bestEndPos.y);
-        hlLine1.setAttribute('display', 'inline');
-
-        var partner = (bestParticle === 1) ? ev.p2 : ev.p1;
-        if (partner) {
-            var pPos = proj(partner.x * sf, partner.y * sf, partner.z * sf);
-            hlLine2.setAttribute('x1', origin.x); hlLine2.setAttribute('y1', origin.y);
-            hlLine2.setAttribute('x2', pPos.x); hlLine2.setAttribute('y2', pPos.y);
-            hlLine2.setAttribute('display', 'inline');
-        } else {
-            hlLine2.setAttribute('display', 'none');
-        }
-
-        var mag1 = Math.sqrt(ev.p1.x*ev.p1.x + ev.p1.y*ev.p1.y + ev.p1.z*ev.p1.z);
-        var mag2 = partner ? Math.sqrt(partner.x*partner.x + partner.y*partner.y + partner.z*partner.z) : 0;
-
-        var lines = [
-            "EVENT ID: " + ev.id,
-            "DIMUON PAIR  (CMS Run2010B)",
-            "M(pair) = " + (ev.mass ? ev.mass.toFixed(3) : "n/a") + " GeV",
-            "",
-            "MUON 1  [type " + (ev.type1 || "?") + "]  (White)",
-            "  PX: " + ev.p1.x.toFixed(2) + " | PY: " + ev.p1.y.toFixed(2),
-            "  PZ: " + ev.p1.z.toFixed(2) + " | |P|: " + mag1.toFixed(2)
-        ];
-        if (partner) {
-            lines.push("");
-            lines.push("MUON 2  [type " + (ev.type2 || "?") + "]  (Yellow)");
-            lines.push("  PX: " + partner.x.toFixed(2) + " | PY: " + partner.y.toFixed(2));
-            lines.push("  PZ: " + partner.z.toFixed(2) + " | |P|: " + mag2.toFixed(2));
-        }
-
-        tooltipText.setAttribute('x', bestEndPos.x + 15);
-        tooltipText.setAttribute('y', bestEndPos.y - 15);
-        var svgText = '';
-        lines.forEach(function(line, idx) {
-            svgText += '<tspan x="' + (bestEndPos.x + 15) + '" dy="' + (idx === 0 ? 0 : 14) + '">' + line + '</tspan>';
+  function step() {
+    if (token !== loadToken) return;               // a newer load replaced this one
+    try {
+      var end = Math.min(total, i + CHUNK);
+      for (; i < end; i++) {
+        var ln = lines[i].trim(); if (!ln) continue;
+        var p = ln.split(SPLIT);
+        if (p.length < 16) { skipped++; continue; }
+        var v1 = [parseFloat(p[4]), parseFloat(p[5]), parseFloat(p[6])];
+        var v2 = [parseFloat(p[13]), parseFloat(p[14]), parseFloat(p[15])];
+        var ok1 = isFinite(v1[0]) && isFinite(v1[1]) && isFinite(v1[2]);
+        var ok2 = isFinite(v2[0]) && isFinite(v2[1]) && isFinite(v2[2]);
+        if (!ok1 && !ok2) { skipped++; continue; }
+        var mFile = p.length > 20 ? parseFloat(p[20]) : NaN, mass;
+        if (isFinite(mFile)) { mass = mFile; massFromFile++; }
+        else mass = (ok1 && ok2) ? pairMass(v1, v2, parseFloat(p[3]), parseFloat(p[12])) : null;
+        var t1 = (p[2] || '').toUpperCase(), t2 = (p[11] || '').toUpperCase();
+        var Q1 = parseFloat(p[10]), Q2 = parseFloat(p[19]);      // CMS dimuon columns Q1 and Q2
+        addEvent({
+          run: p[0], id: p[1] || ('E' + i), mass: mass,
+          p1: ok1 ? v1 : v2, t1: ok1 ? t1 : t2, q1: ok1 ? Q1 : Q2,
+          p2: (ok1 && ok2) ? v2 : null, t2: t2, q2: Q2
         });
-        tooltipText.innerHTML = svgText;
-
-        var bbox = tooltipText.getBBox();
-        tooltipBg.setAttribute('x', bbox.x - 5);
-        tooltipBg.setAttribute('y', bbox.y - 5);
-        tooltipBg.setAttribute('width', bbox.width + 10);
-        tooltipBg.setAttribute('height', bbox.height + 10);
-        tooltipGroup.setAttribute('display', 'inline');
-
-        if (ev.mass && histGroup.getAttribute('display') !== 'none') {
-            var logMin = Math.log10(0.1), logMax = Math.log10(200);
-            var logM = Math.log10(ev.mass);
-            if (logM >= logMin && logM <= logMax) {
-                var chartW = 240;
-                var px = 30 + ((logM - logMin) / (logMax - logMin)) * chartW;
-                if (!marker) {
-                    marker = document.createElementNS(SVGNS, 'line');
-                    marker.id = 'hist-marker';
-                    marker.setAttribute('stroke', '#ffffff');
-                    marker.setAttribute('stroke-width', '2');
-                    marker.setAttribute('filter', 'drop-shadow(0 0 4px #ffffff)');
-                    histBars.appendChild(marker);
-                }
-                marker.setAttribute('x1', px);
-                marker.setAttribute('y1', 45);
-                marker.setAttribute('x2', px);
-                marker.setAttribute('y2', 145);
-                marker.style.display = 'block';
-            }
-        } else if (marker) {
-            marker.style.display = 'none';
-        }
-    } else {
-        hlLine1.setAttribute('display', 'none');
-        hlLine2.setAttribute('display', 'none');
-        tooltipGroup.setAttribute('display', 'none');
-        if (marker) marker.style.display = 'none';
-    }
-}
-
-function resetData() { events = []; maxNorm = 0; eventCount = 0; sliceStart = 0; syncButtons(); }
-function afterLoad() { updateStats(); buildHistogram(); updateRender(); }
-
-function getEventColor(idx) {
-    var hue = (idx * 137.5) % 360;
-    return 'hsl(' + hue + ', 80%, 60%)';
-}
-
-function getMassColor(m) {
-    if (!isFinite(m)) return '#888888';
-    if (m < 10) return '#ff4444';
-    if (m < 80) return '#44ff44';
-    if (m < 100) return '#4444ff';
-    return '#cc44ff';
-}
-
-function buildHistogram() {
-    var oldMarker = document.getElementById('hist-marker');
-    if (oldMarker) oldMarker.remove();
-
-    if (eventCount === 0) { histGroup.setAttribute('display', 'none'); return; }
-
-    var hasMass = false;
-    for (var i = 0; i < eventCount; i++) {
-        if (events[i].mass) { hasMass = true; break; }
-    }
-    if (!hasMass) { histGroup.setAttribute('display', 'none'); return; }
-
-    histGroup.setAttribute('display', 'inline');
-    histBars.innerHTML = '';
-
-    var logMin = Math.log10(0.1), logMax = Math.log10(200);
-    var numBins = 50;
-    var bins = new Array(numBins).fill(0);
-    var maxBin = 0;
-
-    for (var j = 0; j < eventCount; j++) {
-        var m = events[j].mass;
-        if (!m || m <= 0) continue;
-        var logM = Math.log10(m);
-        if (logM < logMin || logM > logMax) continue;
-        var binIdx = Math.floor(((logM - logMin) / (logMax - logMin)) * numBins);
-        if (binIdx >= 0 && binIdx < numBins) {
-            bins[binIdx]++;
-            if (bins[binIdx] > maxBin) maxBin = bins[binIdx];
-        }
-    }
-
-    if (maxBin === 0) return;
-
-    var chartW = 240, chartH = 90;
-    var barW = chartW / numBins;
-
-    for (var b = 0; b < numBins; b++) {
-        if (bins[b] === 0) continue;
-        var h = (bins[b] / maxBin) * chartH;
-        var x = 30 + b * barW;
-        var y = 145 - h;
-
-        var rect = document.createElementNS(SVGNS, 'rect');
-        rect.setAttribute('class', 'hist-bar');
-        rect.setAttribute('x', x.toFixed(1));
-        rect.setAttribute('y', y.toFixed(1));
-        rect.setAttribute('width', (barW - 0.5).toFixed(1));
-        rect.setAttribute('height', h.toFixed(1));
-        histBars.appendChild(rect);
-    }
-
-    var peaks = [
-        { m: 3.1, label: 'J/ψ' },
-        { m: 9.5, label: 'Υ' },
-        { m: 91, label: 'Z' }
-    ];
-
-    peaks.forEach(function(p) {
-        var logP = Math.log10(p.m);
-        if (logP < logMin || logP > logMax) return;
-        var px = 30 + ((logP - logMin) / (logMax - logMin)) * chartW;
-
-        var line = document.createElementNS(SVGNS, 'line');
-        line.setAttribute('class', 'hist-axis');
-        line.setAttribute('x1', px.toFixed(1)); line.setAttribute('y1', 145);
-        line.setAttribute('x2', px.toFixed(1)); line.setAttribute('y2', 148);
-        histBars.appendChild(line);
-
-        var txt = document.createElementNS(SVGNS, 'text');
-        txt.setAttribute('class', 'hist-text');
-        txt.setAttribute('x', px.toFixed(1));
-        txt.setAttribute('y', 158);
-        txt.setAttribute('text-anchor', 'middle');
-        txt.textContent = p.label;
-        histBars.appendChild(txt);
-    });
-}
-
-function parseCERNData(text, label) {
-  setStatus('STATUS: PARSING DATA...');
-  resetData();
-  var lines = text.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n').split('\n').filter(function (l) { return l.trim().length > 0; });
-  if (!lines.length) { setStatus('STATUS: EMPTY FILE'); return; }
-
-  var first = lines[0].trim().split(/[,\t;\s]+/);
-  var startIdx = isFinite(parseFloat(first[0])) ? 0 : 1;
-
-  var muon1 = 0, muon2 = 0;
-  for (var i = startIdx; i < lines.length; i++) {
-    var p = lines[i].trim().split(/[,\t;\s]+/);
-    if (p.length < 16) continue;
-
-    var a1 = parseFloat(p[4]), b1 = parseFloat(p[5]), c1 = parseFloat(p[6]);
-    var a2 = parseFloat(p[13]), b2 = parseFloat(p[14]), c2 = parseFloat(p[15]);
-
-    var t1 = (p[2] || '').toUpperCase();
-    var t2 = (p[11] || '').toUpperCase();
-    var mass = p.length > 20 ? parseFloat(p[20]) : NaN;
-
-    if (isFinite(a1) && isFinite(b1) && isFinite(c1)) {
-      var mag1 = Math.sqrt(a1*a1 + b1*b1 + c1*c1);
-      maxNorm = Math.max(maxNorm, mag1);
-
-      var evObj = {
-          id: p[1] || ('E' + i),
-          type1: t1,
-          p1: {x: a1, y: b1, z: c1},
-          p2: null,
-          mass: isFinite(mass) ? mass : null,
-          color: getEventColor(eventCount)
-      };
-      if (t1 === 'G') muon1++;
-
-      if (isFinite(a2) && isFinite(b2) && isFinite(c2)) {
-          evObj.p2 = {x: a2, y: b2, z: c2};
-          evObj.type2 = t2;
-          if (t2 === 'G') muon2++;
-          var mag2 = Math.sqrt(a2*a2 + b2*b2 + c2*c2);
-          maxNorm = Math.max(maxNorm, mag2);
       }
-
-      events.push(evObj);
-      eventCount++;
+      if (i < total) {
+        if (events.length >= nextRebuild) { rebuildView(); nextRebuild = Math.floor(events.length * 1.5) + 5000; }
+        setStatus('STATUS: PARSING DATA...', events.length + ' EVENTS  (' + Math.round(i / total * 100) + '%)', '');
+        setTimeout(step, 0); return;
+      }
+      if (!events.length) { setStatus('STATUS: NO VALID DATA', 'CHECK COLUMNS 5-7 AND 14-16'); finishLoad(''); return; }
+      setStatus('STATUS: LOADED', events.length + ' DIMUON EVENTS',
+        (skipped ? 'SKIPPED ' + skipped + ' ROWS. ' : '') + 'PAIR MASS FROM FILE: ' + massFromFile + '/' + events.length + ' (REST COMPUTED)');
+      finishLoad(label);
+    } catch (err) {
+      console.error(err); setStatus('STATUS: PARSE ERROR', String(err && err.message || err), '');
+      finishLoad(events.length ? label : '');
     }
   }
+  step();
+}
+function abortAuto() { if (autoAbort) { try { autoAbort.abort(); } catch (_) {} autoAbort = null; } }
+function readFile(file) {
+  var token = ++loadToken; abortAuto();
+  setStatus('STATUS: READING FILE...', file.name, '');
+  var reader = new FileReader();
+  reader.onerror = function () { if (token === loadToken) setStatus('STATUS: READ ERROR'); };
+  reader.onload = function (ev) {
+    if (token !== loadToken) return;
+    try { parseCERNData(ev.target.result, file.name.toUpperCase().slice(0, 20), token); }
+    catch (err) { console.error(err); setStatus('STATUS: PARSE ERROR'); }
+  };
+  reader.readAsText(file);
+}
+fileInput.addEventListener('change', function (e) {
+  var f = e.target.files[0]; if (f) readFile(f); fileInput.value = '';
+});
 
-  if (events.length === 0) { setStatus('STATUS: NO VALID DATA'); return; }
-
-  dataLabel = label || 'FILE';
-  setStatus('STATUS: LOADED', eventCount + ' DIMUON EVENTS',
-            'G-TYPE MUONS: ' + muon1 + ' / ' + muon2);
-  afterLoad();
+/* ---------- AUTO LOADER: downloads the CMS 2010B dimuon file, then parses it ---------- */
+function autoLoad() {
+  var token = ++loadToken; abortAuto();
+  var stale = function () { return token !== loadToken; };
+  var fail = function (err) {
+    if (stale()) return;
+    console.error(err);
+    setStatus('STATUS: AUTO LOAD FAILED', String(err && err.message || err),
+      'USE LOAD CSV, DROP A FILE, OR PRESS DEMO DATA');
+  };
+  if (typeof fetch !== 'function') { fail(new Error('FETCH NOT SUPPORTED')); return; }
+  setStatus('STATUS: AUTO LOAD', 'CONNECTING: ' + AUTO_URL.replace(/^https?:\/\//, ''), '');
+  var opts = { mode: 'cors', credentials: 'omit' };
+  if (typeof AbortController === 'function') { autoAbort = new AbortController(); opts.signal = autoAbort.signal; }
+  fetch(AUTO_URL, opts).then(function (resp) {
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    var total = parseInt(resp.headers.get('content-length'), 10) || 0;
+    if (!resp.body || !resp.body.getReader || typeof TextDecoder !== 'function') return resp.text();
+    var reader = resp.body.getReader(), dec = new TextDecoder('utf-8'), parts = [], got = 0;
+    function pump() {
+      return reader.read().then(function (r) {
+        if (stale()) { try { reader.cancel(); } catch (_) {} return ''; }
+        if (r.done) { parts.push(dec.decode()); return parts.join(''); }
+        got += r.value.length; parts.push(dec.decode(r.value, { stream: true }));
+        setStatus('STATUS: AUTO LOAD',
+          'DOWNLOADING ' + (got / 1048576).toFixed(1) + ' MB' +
+          (total ? ' / ' + (total / 1048576).toFixed(1) + ' MB (' + Math.min(100, Math.round(got / total * 100)) + '%)' : ''), '');
+        return pump();
+      });
+    }
+    return pump();
+  }).then(function (text) {
+    if (stale()) return;
+    autoAbort = null;
+    if (!text || !text.trim()) throw new Error('SERVER RETURNED NO DATA');
+    parseCERNData(text, AUTO_LABEL, token);
+  }).catch(function (err) {
+    if (err && err.name === 'AbortError') return;
+    fail(err);
+  });
 }
 
+/* Synthetic dimuon-like events (J/psi, Upsilon, Z + continuum). Muons come from a real two-body decay,
+   so the stored pair mass equals the invariant mass of the two vectors. NOT real CERN data. */
 function loadDemo() {
-  setStatus('STATUS: GENERATING DEMO...');
-  resetData();
+  ++loadToken; abortAuto();
   var s = 2010 >>> 0;
   function rnd() { s = (s + 0x6D2B79F5) >>> 0; var t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }
   function gauss() { return Math.sqrt(-2 * Math.log(1 - rnd())) * Math.cos(2 * Math.PI * rnd()); }
-  var N = 1000;
-  for (var i = 0; i < N; i++) {
-    var r = rnd(), M = (r < 0.2) ? 3.097 + 0.05*gauss() : (r < 0.5 ? 9.46 + 0.25*gauss() : 91.19 + 2.5*gauss());
-    var pT = -Math.log(1 - rnd()) * (6 + M * 0.12), yy = gauss() * 1.6, ph = 2 * Math.PI * rnd();
+  resetData();
+  for (var i = 0; i < 4000; i++) {
+    var r = rnd(), M;
+    if (r < 0.12) M = 3.097 + 0.05 * gauss();
+    else if (r < 0.20) M = 9.46 + 0.25 * gauss();
+    else if (r < 0.45) M = 91.19 + 2.5 * gauss();
+    else M = 2 - Math.log(1 - rnd()) * 12;
+    M = Math.max(M, 1.5);
+    var pT = Math.min(150, -Math.log(1 - rnd()) * (6 + M * 0.12)), yy = Math.max(-2.4, Math.min(2.4, gauss() * 1.1)), ph = 2 * Math.PI * rnd();
     var mT = Math.sqrt(M * M + pT * pT);
-    var px1 = pT * Math.cos(ph), py1 = pT * Math.sin(ph), pz1 = mT * Math.sinh(yy);
-    var px2 = -px1 * (0.8 + rnd()*0.4), py2 = -py1 * (0.8 + rnd()*0.4), pz2 = -pz1 * (0.8 + rnd()*0.4);
-    maxNorm = Math.max(maxNorm, Math.sqrt(px1*px1 + py1*py1 + pz1*pz1));
-    events.push({
-        id: 'DEMO-' + i,
-        type1: 'G', type2: 'G',
-        p1: {x: px1, y: py1, z: pz1},
-        p2: {x: px2, y: py2, z: pz2},
-        mass: M,
-        color: getEventColor(i)
+    var Px = pT * Math.cos(ph), Py = pT * Math.sin(ph), Pz = mT * Math.sinh(yy), E = mT * Math.cosh(yy);
+    var ct = 2 * rnd() - 1, st = Math.sqrt(1 - ct * ct), ph2 = 2 * Math.PI * rnd(), ps = M / 2;
+    var qx = ps * st * Math.cos(ph2), qy = ps * st * Math.sin(ph2), qz = ps * ct, Es = M / 2;
+    var bx = Px / E, by = Py / E, bz = Pz / E, b2 = bx*bx + by*by + bz*bz, g = E / M;
+    var bp = bx*qx + by*qy + bz*qz;
+    var k1 = 0, k2 = 0;
+    if (b2 > 1e-12) { k1 = (g - 1) * bp / b2 + g * Es; k2 = (g - 1) * (-bp) / b2 + g * Es; }
+    var q1 = rnd() < 0.5 ? 1 : -1, ssPair = r >= 0.45 && rnd() < 0.25, q2 = ssPair ? q1 : -q1;   // resonances are opposite-sign; 25% of continuum is same-sign
+    addEvent({
+      run: 'DEMO', id: String(i), mass: M, t1: 'G', t2: 'G', q1: q1, q2: q2,
+      p1: [qx + k1*bx, qy + k1*by, qz + k1*bz],
+      p2: [-qx + k2*bx, -qy + k2*by, -qz + k2*bz]
     });
-    eventCount++;
   }
-  dataLabel = 'SYNTHETIC';
-  setStatus('STATUS: DEMO LOADED', eventCount + ' DIMUON EVENTS');
-  afterLoad();
+  setStatus('STATUS: DEMO LOADED', events.length + ' SYNTHETIC EVENTS, NOT CERN DATA', 'MUON CHARGES ARE SIMULATED: RESONANCES OS, 25% OF CONTINUUM SS');
+  finishLoad('SYNTHETIC DEMO');
 }
 
-function readFile(file) {
-  var reader = new FileReader();
-  reader.onload = function (ev) { parseCERNData(ev.target.result, file.name.slice(0, 15).toUpperCase()); };
-  reader.readAsText(file);
+/* ---------- histogram: counts axis, OS/SS, J/psi fit window, clickable bins ---------- */
+function clearChildren(el) { while (el.firstChild) el.removeChild(el.firstChild); }
+function niceStep(v, n) {
+  var raw = v / n, p = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / p;
+  return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p;
+}
+function fmtCount(v) { return v >= 10000 ? (v / 1000).toFixed(v % 1000 ? 1 : 0) + 'k' : String(Math.round(v)); }
+
+function computeHist() {
+  var sp = HMODES[histMode], nb = sp.nb, lo = sp.log ? LOG_MIN : sp.lo, hi = sp.log ? LOG_MAX : sp.hi;
+  var os = new Array(nb).fill(0), ss = new Array(nb).fill(0), un = new Array(nb).fill(0), nPass = 0;
+  var i, ev, m, u, b;
+  for (i = 0; i < events.length; i++) {
+    ev = events[i];
+    if (!passCuts(ev)) continue;
+    nPass++;
+    m = ev.mass; if (m === null || !(m > 0)) continue;
+    u = sp.log ? Math.log10(m) : m;
+    if (u < lo || u >= hi) continue;
+    b = Math.min(nb - 1, Math.floor((u - lo) / (hi - lo) * nb));
+    if (ev.ss === false) os[b]++; else if (ev.ss === true) ss[b]++; else un[b]++;
+  }
+  histData = { sp: sp, nb: nb, lo: lo, hi: hi, os: os, ss: ss, un: un, nPass: nPass };
+}
+function histSeries(hd) {
+  var out = [], i;
+  for (i = 0; i < hd.nb; i++) out.push(signMode === 0 ? hd.os[i] : signMode === 1 ? hd.ss[i] : hd.os[i] + hd.ss[i] + hd.un[i]);
+  return out;
+}
+function binRange(hd, q) {
+  var a = hd.lo + q * (hd.hi - hd.lo) / hd.nb, b = hd.lo + (q + 1) * (hd.hi - hd.lo) / hd.nb;
+  return hd.sp.log ? [Math.pow(10, a), Math.pow(10, b)] : [a, b];
+}
+function massToX(m) {
+  var hd = histData;
+  if (!hd || !(m > 0)) return null;
+  var u = hd.sp.log ? Math.log10(m) : m;
+  if (u < hd.lo || u > hd.hi) return null;
+  return HP.L + (u - hd.lo) / (hd.hi - hd.lo) * (HP.R - HP.L);
+}
+function subDefault() {
+  if (binSel && binSel.mode === histMode) return 'ISOLATED ' + mfmt(binSel.lo) + '-' + mfmt(binSel.hi) + ' GEV. CLICK THE BIN AGAIN TO CLEAR';
+  return 'CLICK A BIN TO SHOW ONLY ITS EVENTS IN 3D';
+}
+function hoverBin(q) {
+  if (!histSub || !histData) return;
+  if (q < 0) { histSub.textContent = subDefault(); return; }
+  var r = binRange(histData, q);
+  histSub.textContent = 'BIN ' + mfmt(r[0]) + '-' + mfmt(r[1]) + ' GEV: ' + histSeries(histData)[q] + ' EVENTS';
 }
 
-var renderTimeout = null;
-function updateRender() {
-  if (renderTimeout) return;
-  renderTimeout = requestAnimationFrame(doRender);
+function drawHistogram() {
+  clearChildren(histBody); histMarker.setAttribute('display', 'none'); histSub = null;
+  var hd = histData;
+  histReady = !!(hd && events.length);
+  if (!histReady) { updateVisibility(); return; }
+
+  var sp = hd.sp, nb = hd.nb, L = HP.L, R = HP.R, T = HP.T, B = HP.B, barW = (R - L) / nb, i;
+  var main = histSeries(hd), over = signMode === 0 ? hd.ss : null, ymax = 0;
+  for (i = 0; i < nb; i++) { if (main[i] > ymax) ymax = main[i]; if (over && over[i] > ymax) ymax = over[i]; }
+  var ystep = Math.max(1, niceStep(Math.max(1, ymax) * 1.05, 4));
+  var ytop = Math.max(ystep, Math.ceil(Math.max(1, ymax) * 1.05 / ystep) * ystep);
+  function yOf(c) { return B - Math.min(c, ytop) / ytop * (B - T); }
+  function xOf(u) { return L + (u - hd.lo) / (hd.hi - hd.lo) * (R - L); }
+
+  mk('text', { class: 'legend-text legend-hl', x: 10, y: 14 }, histBody,
+     'INVARIANT MASS \u00B7 ' + SIGN_NAMES[signMode] + (sp.log ? ' \u00B7 LOG X' : ' \u00B7 LINEAR X'));
+  histSub = mk('text', { class: 'hist-text', x: 10, y: 27 }, histBody, subDefault());
+
+  // counts axis + grid
+  mk('line', { class: 'hist-axis', x1: L, y1: T, x2: L, y2: B }, histBody);
+  mk('line', { class: 'hist-axis', x1: L, y1: B, x2: R, y2: B }, histBody);
+  mk('text', { class: 'hist-text', x: L - 4, y: T - 5, 'text-anchor': 'end' }, histBody, 'COUNTS');
+  for (var t = 0; t <= ytop + 1e-9; t += ystep) {
+    var yy = yOf(t);
+    if (t > 0) mk('line', { class: 'hist-grid', x1: L, y1: yy, x2: R, y2: yy }, histBody);
+    mk('text', { class: 'hist-text', x: L - 4, y: yy + 3, 'text-anchor': 'end' }, histBody, fmtCount(t));
+  }
+
+  // mass axis
+  var lines = ['', '', ''], fitInfo = null, wlo = 0, whi = 0;
+  if (sp.log) {
+    [0.1, 1, 10, 100].forEach(function (v) {
+      var x = xOf(Math.log10(v));
+      mk('line', { class: 'hist-axis', x1: x, y1: B, x2: x, y2: B + 3 }, histBody);
+      mk('text', { class: 'hist-text', x: x, y: B + 12, 'text-anchor': 'middle' }, histBody, String(v));
+    });
+  } else {
+    var xs = niceStep(hd.hi - hd.lo, 5), dec = Math.max(0, -Math.floor(Math.log10(xs) + 1e-9));
+    for (var xv = Math.ceil(hd.lo / xs - 1e-9) * xs; xv <= hd.hi + 1e-9; xv += xs) {
+      var xt = xOf(xv);
+      mk('line', { class: 'hist-axis', x1: xt, y1: B, x2: xt, y2: B + 3 }, histBody);
+      mk('text', { class: 'hist-text', x: xt, y: B + 12, 'text-anchor': 'middle' }, histBody, xv.toFixed(dec));
+    }
+  }
+  mk('text', { class: 'hist-text', x: (L + R) / 2, y: B + 23, 'text-anchor': 'middle' }, histBody, 'M(\u03BC\u03BC) [GEV]');
+
+  // fit window (drawn under the bars)
+  var bw = (hd.hi - hd.lo) / nb, fxs = [], fys = [], tot = 0;
+  if (!sp.log && sp.peak) {
+    wlo = Math.max(hd.lo, sp.peak - fitHalf); whi = Math.min(hd.hi, sp.peak + fitHalf);
+    mk('rect', { class: 'hist-win', x: xOf(wlo), y: T, width: xOf(whi) - xOf(wlo), height: B - T }, histBody);
+    [wlo, whi].forEach(function (u) {
+      mk('line', { x1: xOf(u), y1: T, x2: xOf(u), y2: B, stroke: '#ffcc00', 'stroke-width': 1, 'stroke-dasharray': '3 2', opacity: 0.7, 'pointer-events': 'none' }, histBody);
+    });
+    for (i = 0; i < nb; i++) {
+      var cx = hd.lo + (i + 0.5) * bw;
+      if (cx >= wlo && cx <= whi) { fxs.push(cx); fys.push(main[i]); tot += main[i]; }
+    }
+    if (tot >= 20) fitInfo = fitGaussBkg(fxs, fys, sp.peak, bw);
+  }
+
+  // bars
+  for (i = 0; i < nb; i++) {
+    if (!main[i]) continue;
+    var yb = yOf(main[i]);
+    var cls = 'hist-bar' + (signMode === 1 ? ' ss' : '') + ((binSel && binSel.mode === histMode && binSel.q === i) ? ' sel' : '');
+    mk('rect', { class: cls, x: (L + i * barW).toFixed(1), y: yb.toFixed(1), width: Math.max(0.5, barW - 0.6).toFixed(1), height: (B - yb).toFixed(1) }, histBody);
+  }
+  // same-sign outline = background estimate under the opposite-sign peaks
+  if (over) {
+    var od = '';
+    for (i = 0; i < nb; i++) {
+      var x0 = L + i * barW, x1 = x0 + barW, y0 = yOf(over[i]);
+      od += (i ? 'L' : 'M') + x0.toFixed(1) + ',' + y0.toFixed(1) + 'L' + x1.toFixed(1) + ',' + y0.toFixed(1);
+    }
+    mk('path', { class: 'hist-over', d: od }, histBody);
+  }
+
+  // resonance markers
+  var marks = sp.log ? [{ m: 3.1, l: 'J/\u03C8' }, { m: 9.5, l: '\u03A5' }, { m: 91, l: 'Z' }] : [{ m: sp.peak, l: sp.name }];
+  marks.forEach(function (pk) {
+    var x = massToX(pk.m);
+    if (x === null) return;
+    mk('line', { class: 'hist-grid', x1: x, y1: T, x2: x, y2: B }, histBody);
+    mk('text', { class: 'hist-text', x: x, y: T - 3, 'text-anchor': 'middle' }, histBody, pk.l);
+  });
+
+  // fit curve + results
+  if (sp.log) {
+    lines[0] = 'PEAKS: J/\u03C8 ~3.1 | \u03A5 ~9.5 | Z ~91 GEV';
+    lines[1] = 'COUNTS PER LOG BIN. HIST BUTTON: J/\u03C8 FIT';
+    lines[2] = 'PASS CUTS: ' + hd.nPass + ' / ' + events.length + ' EVENTS';
+  } else if (fitInfo) {
+    var NS = 90, cd = '', j;
+    for (j = 0; j <= NS; j++) {
+      var xx = wlo + (whi - wlo) * j / NS;
+      cd += (j ? 'L' : 'M') + xOf(xx).toFixed(1) + ',' + yOf(fitInfo.f(xx)).toFixed(1);
+    }
+    mk('path', { class: 'hist-fit', d: cd }, histBody);
+    mk('line', { x1: xOf(wlo), y1: yOf(fitInfo.bg(wlo)), x2: xOf(whi), y2: yOf(fitInfo.bg(whi)), stroke: '#ffcc00', 'stroke-width': 1, 'stroke-dasharray': '4 3', opacity: 0.8, 'pointer-events': 'none' }, histBody);
+    lines[0] = 'FIT ' + wlo.toFixed(2) + '-' + whi.toFixed(2) + ' GEV: GAUSS + LINEAR BKG';
+    lines[1] = 'MU ' + fitInfo.mu.toFixed(4) + ' +/- ' + fitInfo.err[1].toFixed(4) + '  SIGMA ' + (fitInfo.sigma * 1000).toFixed(1) + ' +/- ' + (fitInfo.err[2] * 1000).toFixed(1) + ' MEV';
+    lines[2] = 'N(SIG) ' + Math.round(fitInfo.N) + '  CHI2/NDF ' + fitInfo.chi2.toFixed(1) + '/' + fitInfo.ndf;
+  } else {
+    lines[0] = 'FIT WINDOW ' + wlo.toFixed(2) + '-' + whi.toFixed(2) + ' GEV';
+    lines[1] = 'TOO FEW EVENTS IN THE WINDOW TO FIT';
+  }
+  for (i = 0; i < 3; i++) {
+    if (lines[i]) mk('text', { class: 'hist-text', x: 10, y: B + 37 + i * 11, style: 'fill:#ffcc00' }, histBody, lines[i]);
+  }
+
+  // one invisible hit rectangle per bin (on top, so clicks land on it)
+  for (i = 0; i < nb; i++) (function (q) {
+    var h = mk('rect', { class: 'hit', x: (L + q * barW).toFixed(2), y: T, width: barW.toFixed(2), height: B - T }, histBody);
+    h.addEventListener('click', function () { onBinClick(q); });
+    h.addEventListener('pointerenter', function () { hoverBin(q); });
+    h.addEventListener('pointerleave', function () { hoverBin(-1); });
+  })(i);
+  updateVisibility();
 }
 
-function doRender() {
-  renderTimeout = null;
+function onBinClick(q) {
+  var hd = histData;
+  if (!hd) return;
+  if (binSel && binSel.mode === histMode && binSel.q === q) { clearBin(); return; }
+  var r = binRange(hd, q);
+  if (!binSel) zoomBeforeBin = targetZoom;
+  binSel = { q: q, mode: histMode, lo: r[0], hi: r[1] };
+  drawHistogram(); rebuildView(); clearSel(); syncButtons();
+  if (px.length) targetZoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, 380 / Math.max(1, maxNorm * scaleFactor())));   // frame the isolated events
+  setStatus('STATUS: BIN ISOLATED', 'M = ' + mfmt(r[0]) + ' TO ' + mfmt(r[1]) + ' GEV', vev.length + ' EVENTS SHOWN IN THE 3D VIEW');
+}
+function clearBin() {
+  if (!binSel) return;
+  binSel = null;
+  if (zoomBeforeBin !== null) { targetZoom = zoomBeforeBin; zoomBeforeBin = null; }
+  drawHistogram(); rebuildView(); clearSel(); syncButtons();
+  setStatus('STATUS: BIN CLEARED', 'SHOWING ALL EVENTS THAT PASS THE SIGN AND CUTS', '');
+}
+function cycleSign() {
+  signMode = (signMode + 1) % 3;
+  drawHistogram(); rebuildView(); clearSel(); syncButtons();
+  setStatus('STATUS: SIGN ' + SIGN_NAMES[signMode], signMode === 0 ? 'OPPOSITE-SIGN PAIRS (SAME-SIGN OUTLINE IN MAGENTA)' : signMode === 1 ? 'SAME-SIGN PAIRS ONLY: THE COMBINATORIAL BACKGROUND' : 'ALL PAIRS', '');
+}
+function cycleHistMode() {
+  histMode = (histMode + 1) % HMODES.length;
+  if (binSel && zoomBeforeBin !== null) { targetZoom = zoomBeforeBin; zoomBeforeBin = null; }
+  binSel = null;
+  computeHist(); drawHistogram(); rebuildView(); clearSel(); syncButtons();
+}
+function stepFit(dir) {
+  fitHalf = Math.max(0.10, Math.min(0.50, +(fitHalf + dir * 0.05).toFixed(2)));
+  drawHistogram();
+}
+function cycleEnv() {
+  envPct = ENV_PCTS[(ENV_PCTS.indexOf(envPct) + 1) % ENV_PCTS.length];
+  syncButtons(); hullStale = true; invalidateHull();
+  setStatus('STATUS: ENVELOPE PERCENTILE ' + (envPct >= 100 ? 'MAX (HULL)' : envPct), envPct >= 100 ? 'NO OUTLIER REJECTION' : 'IGNORES THE OUTER ' + (100 - envPct).toFixed(1) + '% ALONG EACH DIRECTION', '');
+}
+
+/* pT / eta sliders */
+var refreshPending = false;
+function scheduleRefresh() {
+  if (refreshPending) return;
+  refreshPending = true;
+  requestAnimationFrame(function () {
+    refreshPending = false;
+    computeHist(); drawHistogram(); rebuildView(); clearSel(); syncButtons();
+    setStatus('STATUS: CUTS UPDATED', vev.length + ' EVENTS SHOWN IN THE 3D VIEW', '');
+  });
+}
+var SLIDERS = [
+  { min: 0, max: 40, step: 0.5, dflt: 0, val: 0,
+    txt: function (v) { return 'PT MIN ' + v.toFixed(1) + ' GEV'; },
+    apply: function (v) { cutPt = v; } },
+  { min: 0.2, max: 2.5, step: 0.1, dflt: 2.5, val: 2.5,
+    txt: function (v) { return '|ETA| MAX ' + (v >= 2.5 ? 'OFF' : v.toFixed(1)); },
+    apply: function (v) { cutEta = v >= 2.5 ? Infinity : v; } }
+];
+function paintSlider(sl) {
+  var x = SL_X0 + (sl.val - sl.min) / (sl.max - sl.min) * (SL_X1 - SL_X0);
+  sl.fill.setAttribute('x2', x); sl.knob.setAttribute('cx', x); sl.lab.textContent = sl.txt(sl.val);
+}
+function sliderMove(sl, e) {
+  var r = sl.hit.getBoundingClientRect(), tw = SL_X1 - SL_X0;
+  var u = (e.clientX - r.left) / r.width * (tw + 12) - 6;
+  var f = Math.max(0, Math.min(1, u / tw));
+  var v = sl.min + Math.round(f * (sl.max - sl.min) / sl.step) * sl.step;
+  v = Math.max(sl.min, Math.min(sl.max, +v.toFixed(3)));
+  if (v !== sl.val) { sl.val = v; paintSlider(sl); sl.apply(v); scheduleRefresh(); }
+}
+function buildCuts() {
+  SLIDERS.forEach(function (sl, idx) {
+    var y = 38 + idx * 22;
+    sl.lab = mk('text', { class: 'ui-dim', x: 10, y: y + 3 }, cutsG);
+    mk('line', { x1: SL_X0, x2: SL_X1, y1: y, y2: y, stroke: '#00ffcc', 'stroke-width': 1, opacity: 0.35, 'pointer-events': 'none' }, cutsG);
+    sl.fill = mk('line', { x1: SL_X0, x2: SL_X0, y1: y, y2: y, stroke: '#00ffcc', 'stroke-width': 2, 'pointer-events': 'none' }, cutsG);
+    sl.knob = mk('circle', { cy: y, r: 5, fill: '#00ffcc', filter: 'url(#uiGlow)', 'pointer-events': 'none' }, cutsG);
+    sl.hit = mk('rect', { class: 'slider-hit', x: SL_X0 - 6, y: y - 10, width: SL_X1 - SL_X0 + 12, height: 20 }, cutsG);
+    sl.drag = false;
+    sl.hit.addEventListener('pointerdown', function (e) {
+      e.preventDefault(); sl.drag = true;
+      try { sl.hit.setPointerCapture(e.pointerId); } catch (_) {}
+      sliderMove(sl, e);
+    });
+    sl.hit.addEventListener('pointermove', function (e) { if (sl.drag) sliderMove(sl, e); });
+    var end = function (e) { sl.drag = false; try { sl.hit.releasePointerCapture(e.pointerId); } catch (_) {} };
+    sl.hit.addEventListener('pointerup', end); sl.hit.addEventListener('pointercancel', end);
+    sl.hit.addEventListener('dblclick', function () { sl.val = sl.dflt; paintSlider(sl); sl.apply(sl.val); scheduleRefresh(); });
+    paintSlider(sl);
+  });
+}
+
+/* ---------- scan-mode picking ---------- */
+function clearSel() {
+  selEv = -1; selDirty = true;
+  infoBg.setAttribute('display', 'none');
+  infEl.forEach(function (e) { e.textContent = ''; });
+  histMarker.setAttribute('display', 'none');
+}
+function qtxt(q) { return q > 0 ? '+' : q < 0 ? '-' : '?'; }
+function vtxt(label, v, type, q) {
+  var mag = Math.sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]), pt = Math.sqrt(v[0]*v[0] + v[1]*v[1]);
+  return [label + ' [TYPE ' + (type || '?') + ']  Q ' + qtxt(q),
+          '  PX ' + v[0].toFixed(2) + '  PY ' + v[1].toFixed(2),
+          '  PZ ' + v[2].toFixed(2) + '  |P| ' + mag.toFixed(2),
+          '  PT ' + pt.toFixed(2) + '  ETA ' + etaOf(v).toFixed(2)];
+}
+function updateInfo() {
+  if (selEv < 0) { clearSel(); return; }
+  var ev = vev[selEv], lines = [];
+  var cl = selWhich === 1 ? ev.p1 : ev.p2, ct = selWhich === 1 ? ev.t1 : ev.t2, cq = selWhich === 1 ? ev.q1 : ev.q2;
+  var pa = selWhich === 1 ? ev.p2 : ev.p1, pt = selWhich === 1 ? ev.t2 : ev.t1, pq = selWhich === 1 ? ev.q2 : ev.q1;
+  lines.push('RUN ' + ev.run + '  EVENT ' + ev.id);
+  lines.push('M(PAIR) = ' + (ev.mass !== null && isFinite(ev.mass) ? ev.mass.toFixed(3) + ' GEV' : 'N/A') +
+             (ev.ss === true ? '  [SAME SIGN]' : ev.ss === false ? '  [OPPOSITE SIGN]' : ''));
+  lines.push('');
+  lines = lines.concat(vtxt('CLICKED MUON (WHITE)', cl, ct, cq));
+  if (pa) { lines.push(''); lines = lines.concat(vtxt('PARTNER MUON (YELLOW)', pa, pt, pq)); }
+  infEl.forEach(function (e, i) { e.textContent = lines[i] || ''; });
+  infoBg.setAttribute('height', lines.length * 13 + 12);
+  infoBg.setAttribute('display', 'inline');
+  var x = (ev.mass !== null && histReady && !histGroup.getAttribute('display').match(/none/)) ? massToX(ev.mass) : null;
+  if (x !== null) {
+    histMarker.setAttribute('x1', x); histMarker.setAttribute('x2', x); histMarker.setAttribute('display', 'inline');
+  } else histMarker.setAttribute('display', 'none');
+}
+function pick(e) {
+  if (!vev.length) return;
+  var r = svg.getBoundingClientRect();
+  var mx = (e.clientX - r.left - r.width / 2) / K, my = (e.clientY - r.top - r.height / 2) / K;
   setCam();
-  if (Math.abs(zoom - targetZoom) > 0.001) {
-    zoom += (targetZoom - zoom) * 0.15;
-    updateRender();
+  var sf = scaleFactor(), end = Math.min(sliceStart + MAX_SCAN, vev.length);
+  var lim = (14 / K) * (14 / K), best = lim, bi = -1, bw = 1;
+  for (var i = sliceStart; i < end; i++) {
+    var ev = vev[i];
+    for (var w = 1; w <= 2; w++) {
+      var v = w === 1 ? ev.p1 : ev.p2; if (!v) continue;
+      proj(v[0] * sf, v[1] * sf, v[2] * sf);
+      var dx = mx - PXo, dy = my - PYo, d = dx * dx + dy * dy;
+      if (d < best) { best = d; bi = i; bw = w; }
+    }
   }
+  selEv = bi; selWhich = bw; selDirty = true;
+  updateInfo();
+}
+function renderSel(sf) {
+  if (selEv < 0 || !scanMode) { hl1.setAttribute('display', 'none'); hl2.setAttribute('display', 'none'); return; }
+  var ev = vev[selEv];
+  var cl = selWhich === 1 ? ev.p1 : ev.p2, pa = selWhich === 1 ? ev.p2 : ev.p1;
+  proj(0, 0, 0); var ox = PXo, oy = PYo;
+  proj(cl[0] * sf, cl[1] * sf, cl[2] * sf);
+  hl1.setAttribute('x1', ox); hl1.setAttribute('y1', oy); hl1.setAttribute('x2', PXo); hl1.setAttribute('y2', PYo);
+  hl1.setAttribute('display', 'inline');
+  if (pa) {
+    proj(pa[0] * sf, pa[1] * sf, pa[2] * sf);
+    hl2.setAttribute('x1', ox); hl2.setAttribute('y1', oy); hl2.setAttribute('x2', PXo); hl2.setAttribute('y2', PYo);
+    hl2.setAttribute('display', 'inline');
+  } else hl2.setAttribute('display', 'none');
+}
+
+/* ---------- hull / 3D object control ---------- */
+/* the envelope always describes the current selection; any selection change marks it stale and
+   (if it is on screen) schedules one debounced rebuild, so dragging a slider stays smooth */
+function invalidateHull() {
+  hullStale = true;
+  if (loading) return;
+  if (showHull || objOn) {
+    clearTimeout(hullTimer);
+    hullTimer = setTimeout(function () { withHull(function () { objDirty = true; }); }, 150);
+  }
+}
+function withHull(cb) {
+  if (HULL && !hullStale) { cb(HULL); return; }
+  if (loading) { setStatus('STATUS: DATA STILL LOADING', 'TRY AGAIN WHEN LOADING FINISHES'); return; }
+  if (!px.length) {
+    HULL = null; objDirty = true;
+    setStatus(events.length ? 'STATUS: NO EVENTS IN THE SELECTION' : 'STATUS: NO DATA',
+              events.length ? 'RELAX THE SIGN, CUTS OR BIN' : 'LOAD A FILE OR PRESS DEMO DATA');
+    return;
+  }
+  hullWaiters.push(cb);
+  if (hullBusy) return;
+  hullBusy = true;
+  setStatus('STATUS: COMPUTING ENVELOPE...', px.length + ' VECTORS  PERCENTILE ' + (envPct >= 100 ? 'MAX' : envPct));
+  setTimeout(function () {
+    var ws = hullWaiters; hullWaiters = []; hullBusy = false;
+    if (loading) return;
+    var t0 = performance.now();
+    HULL = computeEnvelope(px, py, pz, envPct);
+    hullMs = performance.now() - t0;
+    hullStale = false; objDirty = true;
+    if (!HULL) setStatus('STATUS: ENVELOPE FAILED', 'NEED MORE EVENTS IN THE SELECTION');
+    else setStatus('STATUS: ENVELOPE BUILT', HULL.nV + ' VERTICES / ' + HULL.nF + ' FACES');
+    updateStats();
+    ws.forEach(function (f) { f(HULL); });
+  }, 30);
+}
+function toggleObject() {
+  if (objOn) { objOn = false; syncButtons(); objDirty = true; return; }
+  withHull(function (h) {
+    if (!h) { syncButtons(); return; }
+    objOn = true; objStart = performance.now(); objT = 0; objDirty = true; syncButtons();
+    // zoom out just enough that the whole object fits on screen (never zooms in)
+    targetZoom = Math.max(ZOOM_MIN, Math.min(targetZoom, 380 / Math.max(1, h.rmax * scaleFactor())));
+  });
+}
+
+/* ---------- export ---------- */
+function download(name, data, type) {
+  var url = URL.createObjectURL(new Blob([data], { type: type }));
+  var a = document.createElementNS(XHTML, 'a');
+  a.href = url; a.download = name; a.style.display = 'none';
+  document.documentElement.appendChild(a); a.click();
+  setTimeout(function () { a.remove(); URL.revokeObjectURL(url); }, 1000);
+}
+function exportOBJ() {
+  withHull(function (h) {
+    if (!h) return;
+    var s = '# OSCILLO-DETECTOR momentum-space percentile envelope, P' + h.pct + ' of the current selection (GeV for CMS open data)\n', k;
+    for (k = 0; k < h.nV; k++) s += 'v ' + h.vx[k] + ' ' + h.vy[k] + ' ' + h.vz[k] + '\n';
+    for (k = 0; k < h.nF; k++) s += 'f ' + (h.T[3*k] + 1) + ' ' + (h.T[3*k+1] + 1) + ' ' + (h.T[3*k+2] + 1) + '\n';
+    download('momentum_envelope.obj', s, 'text/plain');
+  });
+}
+function snapSVG() {
+  // a static picture of the scene only: no script, so the saved vectors are not wiped when it is opened
+  var c = svg.cloneNode(true), q;
+  ['#ui', '#legend', '#histogram', 'script', 'foreignObject'].forEach(function (sel) { q = c.querySelector(sel); if (q) q.remove(); });
+  c.setAttribute('width', Math.round(W)); c.setAttribute('height', Math.round(H_));
+  download('oscillo_snapshot.svg', new XMLSerializer().serializeToString(c), 'image/svg+xml');
+}
+
+/* ---------- environment ---------- */
+var HEX_R = 35, GRID_R = 12, Y_PLANE = 350, hexCenters = [], HEX_A = [];
+(function () {
+  for (var q = -GRID_R; q <= GRID_R; q++) for (var r = -GRID_R; r <= GRID_R; r++) {
+    if (Math.abs(q) + Math.abs(r) > GRID_R * 1.15) continue;
+    hexCenters.push({ x: HEX_R * Math.sqrt(3) * (q + r / 2), z: HEX_R * 1.5 * r });
+  }
+  for (var i = 0; i < 6; i++) { var a = Math.PI / 3 * i; HEX_A.push({ c: Math.cos(a) * HEX_R, s: Math.sin(a) * HEX_R }); }
+})();
+function buildFloor() {
   var d = '';
-  var yPlane = 350, HEX_R = 35;
-  for (var q = -12; q <= 12; q++) for (var r = -12; r <= 12; r++) {
-    if (Math.abs(q) + Math.abs(r) > 14) continue;
-    var hx = HEX_R * Math.sqrt(3) * (q + r / 2), hz = HEX_R * 1.5 * r;
+  for (var h = 0; h < hexCenters.length; h++) {
+    var hx = hexCenters[h].x, hz = hexCenters[h].z;
     for (var i = 0; i < 6; i++) {
-      var a = Math.PI / 3 * i;
-      proj(hx + Math.cos(a)*HEX_R, yPlane, hz + Math.sin(a)*HEX_R);
+      proj(hx + HEX_A[i].c, Y_PLANE, hz + HEX_A[i].s);
       d += (i ? 'L' : 'M') + PXo.toFixed(1) + ',' + PYo.toFixed(1);
     }
     d += 'Z';
   }
   hexFloor.setAttribute('d', d);
-
-  if (eventCount > 0) {
-    var sf = 300 / Math.max(20, Math.min(maxNorm, 120));
-    var start = 0, end = eventCount;
-    if (scanMode) {
-        start = sliceStart;
-        end = Math.min(sliceStart + MAX_DRAW, eventCount);
-    }
-    var origin = proj(0, 0, 0);
-    var html = '';
-    for (var j = start; j < end; j++) {
-        var ev = events[j];
-        var pathData = '';
-        var p1 = proj(ev.p1.x * sf, ev.p1.y * sf, ev.p1.z * sf);
-        pathData += 'M' + origin.x + ',' + origin.y + 'L' + p1.x + ',' + p1.y;
-        if (ev.p2) {
-            var p2 = proj(ev.p2.x * sf, ev.p2.y * sf, ev.p2.z * sf);
-            pathData += 'M' + origin.x + ',' + origin.y + 'L' + p2.x + ',' + p2.y;
-        }
-
-        var strokeColor = colorByMass ? getMassColor(ev.mass) : ev.color;
-        html += '<path class="event-line" d="' + pathData + '" stroke="' + strokeColor + '"/>';
-    }
-    vectorContainer.innerHTML = html;
-  } else {
-    vectorContainer.innerHTML = '';
-  }
-
-  if (autoRotate) {
-    rotY += 0.005;
-    updateRender();
-  }
+}
+function buildRadar() {
+  sweepAngle += 0.02;
+  proj(0, Y_PLANE, 0); var x1 = PXo, y1 = PYo;
+  proj(Math.cos(sweepAngle) * 800, Y_PLANE, Math.sin(sweepAngle) * 800);
+  radarSweep.setAttribute('d', 'M' + x1.toFixed(1) + ',' + y1.toFixed(1) + 'L' + PXo.toFixed(1) + ',' + PYo.toFixed(1));
 }
 
-function snapSVG() {
-  var c = svg.cloneNode(true);
-  var ui = c.getElementById('ui');
-  if (ui) ui.remove();
-  var legend = c.getElementById('legend');
-  if (legend) legend.remove();
-  var hist = c.getElementById('histogram');
-  if (hist) hist.remove();
-  var style = c.querySelector('style');
-  if (style) style.textContent = style.textContent.replace(/cursor:pointer;/g, '');
-  c.setAttribute('width', Math.round(W)); c.setAttribute('height', Math.round(H_));
-  var s = new XMLSerializer().serializeToString(c);
-  var blob = new Blob([s], {type: 'image/svg+xml'});
-  var a = document.createElementNS(XHTML, 'a');
-  a.href = URL.createObjectURL(blob); a.download = 'cern_oscillo_snapshot.svg';
-  document.documentElement.appendChild(a); a.click();
-  setTimeout(function() { a.remove(); URL.revokeObjectURL(a.href); }, 1000);
+/* ---------- vector data (one path per colour bucket, never one element per event) ---------- */
+function renderData(sf, stride, v0, v1) {
+  var nb = colorMode === 0 ? 0 : (colorMode === 1 ? 5 : 24), bs = [], v = '', d = '', i;
+  for (i = 0; i < nb; i++) bs.push('');
+  if (v1 > v0) {
+    proj(0, 0, 0);
+    var head = 'M' + PXo.toFixed(1) + ',' + PYo.toFixed(1) + 'L';
+    var which = colorMode === 1 ? bMass : bPair;
+    for (i = v0; i < v1; i += stride) {
+      proj(px[i] * sf, py[i] * sf, pz[i] * sf);
+      if (PDo <= 10) continue;
+      var X = PXo.toFixed(1), Y = PYo.toFixed(1), seg = head + X + ',' + Y;
+      if (nb === 0) v += seg; else bs[which[i]] += seg;
+      d += 'M' + X + ',' + Y + 'h2v2h-2Z';
+    }
+  }
+  if (nb === 0) { vectorPath.setAttribute('d', v); vectorBloom.setAttribute('d', heavyData ? '' : v); }
+  else for (i = 0; i < 24; i++) BP[i].setAttribute('d', i < nb ? bs[i] : '');
+  pointPath.setAttribute('d', d);
 }
 
+/* ---------- 2D silhouette hull ---------- */
+function renderHull2D(sf) {
+  if (!showHull || !HULL) { hullGroup.setAttribute('display', 'none'); return; }
+  var pts = [], k;
+  for (k = 0; k < HULL.nV; k++) { proj(HULL.vx[k] * sf, HULL.vy[k] * sf, HULL.vz[k] * sf); if (PDo > 10) pts.push({ x: PXo, y: PYo }); }
+  var hp = hull2D(pts);
+  if (hp.length < 3) { hullGroup.setAttribute('display', 'none'); return; }
+  hullFill.setAttribute('d', 'M' + hp.map(function (p) { return p.x.toFixed(1) + ',' + p.y.toFixed(1); }).join('L') + 'Z');
+  proj(0, 0, 0);
+  var o = 'M' + PXo.toFixed(1) + ',' + PYo.toFixed(1) + 'L', e = '';
+  for (k = 0; k < hp.length; k++) e += o + hp[k].x.toFixed(1) + ',' + hp[k].y.toFixed(1);
+  hullEdges.setAttribute('d', e);
+  hullGroup.setAttribute('display', 'inline');
+}
+
+/* ---------- 3D object ---------- */
+var FACE_PATHS = [], LX = -0.35, LY = -0.55, LZ = -0.76;
+(function () {
+  for (var k = 0; k < 8; k++) {
+    var t = k / 7, p = document.createElementNS(SVGNS, 'path');
+    p.setAttribute('fill', 'rgb(' + Math.round(120 * t) + ',' + Math.round(50 + 205 * t) + ',' + Math.round(60 + 175 * t) + ')');
+    p.setAttribute('fill-opacity', '0.32');
+    objFaces.appendChild(p); FACE_PATHS.push(p);
+  }
+})();
+function renderObject(sf) {
+  if (!objOn || !HULL) {
+    objBack.setAttribute('display', 'none'); objFront.setAttribute('display', 'none'); return;
+  }
+  var h = HULL, m = h.nV, k;
+  var tE = Math.min(1, objT / 0.65); tE = tE * tE * (3 - 2 * tE);
+  var fOp = Math.max(0, Math.min(1, (objT - 0.45) / 0.55));
+
+  for (k = 0; k < m; k++) {
+    var x = h.vx[k] * sf, y = h.vy[k] * sf, z = h.vz[k] * sf;
+    var y1 = y * cX - z * sX, z1 = y * sX + z * cX, x1 = x * cY - z1 * sY, z2 = x * sY + z1 * cY;
+    var s = 600 / Math.max(10, z2 + camD);
+    h.RX[k] = x1; h.RY[k] = y1; h.RZ[k] = z2; h.SX[k] = x1 * s; h.SY[k] = y1 * s;
+    h.BAD[k] = (z2 + camD <= 10) ? 1 : 0;
+  }
+
+  var buckets = ['', '', '', '', '', '', '', ''], F = h.nF, T = h.T;
+  for (k = 0; k < F; k++) {
+    var a = T[3*k], b = T[3*k+1], c = T[3*k+2];
+    var ux = h.RX[b]-h.RX[a], uy = h.RY[b]-h.RY[a], uz = h.RZ[b]-h.RZ[a];
+    var wx = h.RX[c]-h.RX[a], wy = h.RY[c]-h.RY[a], wz = h.RZ[c]-h.RZ[a];
+    var nx = uy*wz - uz*wy, ny = uz*wx - ux*wz, nz = ux*wy - uy*wx;
+    var dot = -h.RX[a]*nx - h.RY[a]*ny + (-camD - h.RZ[a])*nz;
+    var vis = dot > 0;
+    h.fvis[k] = vis ? 1 : 0;
+    if (vis && fOp > 0 && !h.BAD[a] && !h.BAD[b] && !h.BAD[c]) {
+      var len = Math.sqrt(nx*nx + ny*ny + nz*nz) || 1;
+      var sh = Math.max(0, (nx*LX + ny*LY + nz*LZ) / len);
+      var bk = Math.min(7, Math.floor((0.15 + 0.85 * sh) * 8));
+      buckets[bk] += 'M' + h.SX[a].toFixed(1) + ',' + h.SY[a].toFixed(1) + 'L' + h.SX[b].toFixed(1) + ',' + h.SY[b].toFixed(1) + 'L' + h.SX[c].toFixed(1) + ',' + h.SY[c].toFixed(1) + 'Z';
+    }
+  }
+  for (k = 0; k < 8; k++) FACE_PATHS[k].setAttribute('d', buckets[k]);
+  objFaces.setAttribute('opacity', fOp);
+
+  var eN = Math.ceil(h.nE * tE), front = '', back = '';
+  for (k = 0; k < eN; k++) {
+    var ea = h.EA[k], eb = h.EB[k], f2 = h.F2[k];
+    if (h.BAD[ea] || h.BAD[eb]) continue;
+    var seg = 'M' + h.SX[ea].toFixed(1) + ',' + h.SY[ea].toFixed(1) + 'L' + h.SX[eb].toFixed(1) + ',' + h.SY[eb].toFixed(1);
+    if (h.fvis[h.F1[k]] || (f2 >= 0 && h.fvis[f2])) front += seg; else back += seg;
+  }
+  objEdges.setAttribute('d', front); objBackEdges.setAttribute('d', back);
+
+  var vN = Math.ceil(m * tE), dots = '';
+  for (k = 0; k < vN; k++) {
+    var vi = h.VO[k], X = h.SX[vi], Y = h.SY[vi];
+    if (h.BAD[vi]) continue;
+    dots += 'M' + (X - 2.5).toFixed(1) + ',' + Y.toFixed(1) + 'a2.5,2.5 0 1,0 5,0a2.5,2.5 0 1,0 -5,0';
+  }
+  objVerts.setAttribute('d', dots);
+  objBack.setAttribute('display', 'inline'); objFront.setAttribute('display', 'inline');
+}
+
+/* ---------- single render loop ---------- */
+function render(now) {
+  var dragging = ptrs.size > 0;
+  if (autoRotate && !dragging) rotY += 0.002;
+
+  var zooming = false;
+  if (Math.abs(zoom - targetZoom) > 0.0005 * zoom) { zoom += (targetZoom - zoom) * 0.2; zooming = true; }
+  else zoom = targetZoom;
+
+  if (objOn && objT < 1) {
+    objT = Math.max(0, Math.min(1, (now - objStart) / 1600));
+    objAnimating = true;
+    if (objT >= 1) { objAnimating = false; objDirty = true; }
+  } else objAnimating = false;
+
+  var v0 = 0, v1 = px.length, stride = 1;
+  if (scanMode && vev.length) {
+    v0 = vs(sliceStart); v1 = vs(Math.min(sliceStart + MAX_SCAN, vev.length));
+  } else if ((autoRotate || dragging || zooming || objAnimating) && px.length > MAX_DRAW) {
+    stride = Math.ceil(px.length / MAX_DRAW);
+  }
+  if (stride !== lodStride) { lodStride = stride; updateStats(); }
+
+  var key = rotX + '|' + rotY + '|' + zoom + '|' + stride + '|' + scanMode + '|' + sliceStart;
+  var camChanged = key !== lastKey; lastKey = key;
+  setCam();
+  var sf = scaleFactor();
+
+  if (camChanged) { buildFloor(); renderData(sf, stride, v0, v1); }
+  if (!heavyData || scanMode || stride > 1 || camChanged) buildRadar();
+  if (camChanged || selDirty) { renderSel(sf); selDirty = false; }
+  if (camChanged || objAnimating || objDirty) {
+    renderHull2D(sf); renderObject(sf); objDirty = false;
+  }
+  requestAnimationFrame(render);
+}
+
+buildCuts();
 layout();
-setStatus('STATUS: AWAITING DATA', 'LOAD A CSV/TXT OR PRESS DEMO');
-updateStats();
+showLegend = (W >= 900 && H_ >= 720);
+updateVisibility();
+applyColorMode();
 syncButtons();
-
-// --- AUTO-LOAD FUNCTIONALITY ---
-setStatus('STATUS: FETCHING REMOTE DATA...', '');
-fetch('https://svgfpsaiagents.github.io/svgfpsgameAI/MuRun2010B_0.txt')
-  .then(function(response) {
-    if (!response.ok) throw new Error('Network response was not ok');
-    return response.text();
-  })
-  .then(function(text) {
-    parseCERNData(text, 'REMOTE');
-  })
-  .catch(function(error) {
-    console.error('Auto-load failed:', error);
-    setStatus('STATUS: AUTOLOAD FAILED', 'PRESS DEMO OR LOAD CSV');
-    syncButtons();
-  });
-// -------------------------------
-
+updateStats();
+requestAnimationFrame(render);
+if (/[?&]noauto\b/.test(location.search)) setStatus('STATUS: AWAITING DATA', 'AUTO LOAD OFF: LOAD A CSV/TXT, DROP A FILE, OR PRESS DEMO DATA');
+else autoLoad();
 })();
 ]]></script>
 </svg>
