@@ -130,6 +130,36 @@
   <line id="hist-marker" display="none" stroke="#ffffff" stroke-width="2" x1="0" y1="46" x2="0" y2="150"/>
 </g>
 
+<!-- ============ PCA ANALYSIS VIEW ============ -->
+<g id="pca-panel" pointer-events="none" display="none">
+  <rect class="panel-bg" x="0" y="0" width="290" height="226" rx="4"/>
+  <text id="pca-title"  class="ui-text" x="10" y="18">PCA OF CURRENT SELECTION</text>
+  <text id="pca-n"       class="ui-dim"  x="10" y="34"></text>
+  <text id="pca-ev1"     class="info-text" x="10" y="54"></text>
+  <text id="pca-ev2"     class="info-text" x="10" y="68"></text>
+  <text id="pca-ev3"     class="info-text" x="10" y="82"></text>
+  <text id="pca-aniso"   class="info-text" x="10" y="104"></text>
+  <text id="pca-sph"     class="info-text" x="10" y="118"></text>
+  <text id="pca-apl"     class="info-text" x="10" y="132"></text>
+  <text id="pca-lin"     class="info-text" x="10" y="146"></text>
+  <text id="pca-axis-l"  class="ui-text"  x="10" y="168">DOMINANT AXIS:</text>
+  <text id="pca-axis"    class="info-text" x="10" y="184"></text>
+  <text id="pca-axis2"   class="info-text" x="10" y="198"></text>
+  <text id="pca-axis3"   class="info-text" x="10" y="212"></text>
+</g>
+<g id="pca-arrows" pointer-events="none" display="none">
+  <line id="pca-arrow-1" display="none" stroke="#ff3030" stroke-width="3" filter="url(#lineGlow)" vector-effect="non-scaling-stroke"/>
+  <line id="pca-arrow-2" display="none" stroke="#30ff60" stroke-width="2.5" filter="url(#lineGlow)" vector-effect="non-scaling-stroke"/>
+  <line id="pca-arrow-3" display="none" stroke="#3060ff" stroke-width="2" filter="url(#lineGlow)" vector-effect="non-scaling-stroke"/>
+  <!-- arrow heads (triangles drawn dynamically by renderPCA) -->
+  <path id="pca-head-1" display="none" fill="#ff3030" stroke="#ff3030" stroke-width="1"/>
+  <path id="pca-head-2" display="none" fill="#30ff60" stroke="#30ff60" stroke-width="1"/>
+  <path id="pca-head-3" display="none" fill="#3060ff" stroke="#3060ff" stroke-width="1"/>
+  <text id="pca-label-1" class="ui-text" display="none" fill="#ff8080" style="font-size:14px;font-weight:bold">PC1</text>
+  <text id="pca-label-2" class="ui-text" display="none" fill="#80ff90" style="font-size:12px;font-weight:bold">PC2</text>
+  <text id="pca-label-3" class="ui-text" display="none" fill="#80a0ff" style="font-size:11px;font-weight:bold">PC3</text>
+</g>
+
 <!-- ============ UI (native SVG, pixel units) ============ -->
 <g id="ui">
   <g id="cross" opacity="0.8" pointer-events="none">
@@ -190,6 +220,13 @@ for (i_ = 0; i_ < 12; i_++) infEl.push($('inf' + i_));
 var titleEl = $('title'), helpEl = $('help');
 var legendGroup = $('legend'), histGroup = $('histogram'), histBody = $('hist-body'), histMarker = $('hist-marker');
 var cutsG = $('cuts'), cutsTitle = $('cuts-title');
+var pcaPanel = $('pca-panel'), pcaArrows = $('pca-arrows');
+var pcaN = $('pca-n'), pcaEV1 = $('pca-ev1'), pcaEV2 = $('pca-ev2'), pcaEV3 = $('pca-ev3');
+var pcaAniso = $('pca-aniso'), pcaSph = $('pca-sph'), pcaApl = $('pca-apl'), pcaLin = $('pca-lin');
+var pcaAxis = $('pca-axis'), pcaAxis2 = $('pca-axis2'), pcaAxis3 = $('pca-axis3');
+var pcaArrow1 = $('pca-arrow-1'), pcaArrow2 = $('pca-arrow-2'), pcaArrow3 = $('pca-arrow-3');
+var pcaHead1 = $('pca-head-1'), pcaHead2 = $('pca-head-2'), pcaHead3 = $('pca-head-3');
+var pcaLabel1 = $('pca-label-1'), pcaLabel2 = $('pca-label-2'), pcaLabel3 = $('pca-label-3');
 
 /* ---------- state ---------- */
 var W = 1280, H_ = 800, K = 1;
@@ -208,6 +245,7 @@ var hullBusy = false, hullWaiters = [];
 var vev = [], dataMax = 0, signMode = 0, cutPt = 0, cutEta = Infinity, binSel = null;
 var histMode = 0, fitHalf = 0.30, histData = null, histSub = null;
 var envPct = 99, hullStale = true, hullTimer = 0, zoomBeforeBin = null;
+var pcaMode = false, pcaStale = true, pcaTimer = 0, PCA = null;
 var SIGN_NAMES = ['OS', 'SS', 'ALL'], ENV_PCTS = [90, 95, 98, 99, 99.9, 100];
 var CUTS_H = 70, SL_X0 = 124, SL_X1 = 274;
 var HP = { L: 44, R: 308, T: 46, B: 150 };
@@ -565,6 +603,229 @@ function computeEnvelope(X, Y, Z, pct) {
   return env;
 }
 
+/* ---------- PCA: 3x3 covariance + Jacobi eigen-decomposition ----------
+   Computes the principal axes of the current selection's momentum vectors.
+   Eigenvectors are returned sorted by descending eigenvalue. From the
+   eigenvalues we derive the standard HEP event-shape observables:
+     Sphericity  S = 3/2 * (l2 + l3) / (l1 + l2 + l3)
+     Aplanarity  A = 3/2 *  l3       / (l1 + l2 + l3)
+     Linearity   L = (l1 - l2)      / (l1 + l2 + l3)
+   S = 1 (isotropic) ... 0 (linear).  A = 0 (planar) ... 0.5 (spherical).
+   L = 1 (one dominant axis) ... 0 (degenerate). */
+function computePCA(X, Y, Z) {
+  var n = X.length, i;
+  if (n < 4) return null;
+  var mx = 0, my = 0, mz = 0;
+  for (i = 0; i < n; i++) { mx += X[i]; my += Y[i]; mz += Z[i]; }
+  mx /= n; my /= n; mz /= n;
+  var cxx = 0, cyy = 0, czz = 0, cxy = 0, cxz = 0, cyz = 0;
+  for (i = 0; i < n; i++) {
+    var dx = X[i] - mx, dy = Y[i] - my, dz = Z[i] - mz;
+    cxx += dx * dx; cyy += dy * dy; czz += dz * dz;
+    cxy += dx * dy; cxz += dx * dz; cyz += dy * dz;
+  }
+  cxx /= n; cyy /= n; czz /= n; cxy /= n; cxz /= n; cyz /= n;
+  /* Jacobi eigen-decomposition of a 3x3 real symmetric matrix.
+     Returns { lambda: [l1,l2,l3] descending, V: [[v1x,v1y,v1z],...] }. */
+  var a = [[cxx, cxy, cxz], [cxy, cyy, cyz], [cxz, cyz, czz]];
+  var v = [[1,0,0],[0,1,0],[0,0,1]];
+  var it, p, q;
+  for (it = 0; it < 60; it++) {
+    /* find largest off-diagonal */
+    var off = 0, pi = -1, pj = -1;
+    for (p = 0; p < 3; p++) for (q = p + 1; q < 3; q++) {
+      if (Math.abs(a[p][q]) > off) { off = Math.abs(a[p][q]); pi = p; pj = q; }
+    }
+    if (off < 1e-14) break;
+    var app = a[pi][pi], aqq = a[pj][pj], apq = a[pi][pj];
+    var phi = 0.5 * Math.atan2(2 * apq, app - aqq);
+    var c = Math.cos(phi), sn = Math.sin(phi);
+    /* Standard 2x2 Jacobi rotation on the (pi,pj) plane. The diagonal
+       elements a[pi][pi] and a[pj][pj] use the explicit 2x2 formula (not
+       the symmetric row update), the off-diagonal a[pi][pj] is zeroed,
+       and other rows/cols r != pi,pj are rotated by [c -sn; sn c]. */
+    a[pi][pi] = c * c * app + 2 * c * sn * apq + sn * sn * aqq;
+    a[pj][pj] = sn * sn * app - 2 * c * sn * apq + c * c * aqq;
+    a[pi][pj] = 0; a[pj][pi] = 0;
+    for (var r = 0; r < 3; r++) {
+      if (r === pi || r === pj) continue;
+      var arp = a[r][pi], arq = a[r][pj];
+      a[r][pi] = c * arp + sn * arq;
+      a[r][pj] = -sn * arp + c * arq;
+      a[pi][r] = a[r][pi]; a[pj][r] = a[r][pj];
+    }
+    /* rotate V */
+    for (r = 0; r < 3; r++) {
+      var vrp = v[r][pi], vrq = v[r][pj];
+      v[r][pi] = c * vrp + sn * vrq;
+      v[r][pj] = -sn * vrp + c * vrq;
+    }
+  }
+  var lambda = [a[0][0], a[1][1], a[2][2]];
+  var idx = [0, 1, 2].sort(function (x, y) { return lambda[y] - lambda[x]; });
+  var L = [lambda[idx[0]], lambda[idx[1]], lambda[idx[2]]];
+  var V = [[v[0][idx[0]], v[1][idx[0]], v[2][idx[0]]],
+           [v[0][idx[1]], v[1][idx[1]], v[2][idx[1]]],
+           [v[0][idx[2]], v[1][idx[2]], v[2][idx[2]]]];
+  /* normalize eigenvectors (Jacobi already orthonormal, but float safety) */
+  for (var k = 0; k < 3; k++) {
+    var nl = Math.sqrt(V[k][0]*V[k][0] + V[k][1]*V[k][1] + V[k][2]*V[k][2]);
+    if (nl > 1e-12) { V[k][0] /= nl; V[k][1] /= nl; V[k][2] /= nl; }
+  }
+  var sum = L[0] + L[1] + L[2];
+  if (!(sum > 0)) return null;
+  return {
+    n: n, mean: [mx, my, mz],
+    lambda: L, V: V,
+    sphericity:  1.5 * (L[1] + L[2]) / sum,
+    aplanarity:  1.5 * L[2] / sum,
+    linearity:   (L[0] - L[1]) / sum,
+    anisotropy:  L[0] / Math.max(1e-30, L[2]),
+    varFrac: [L[0] / sum, L[1] / sum, L[2] / sum]
+  };
+}
+
+function invalidatePCA() {
+  pcaStale = true;
+  if (loading || !pcaMode) return;
+  clearTimeout(pcaTimer);
+  pcaTimer = setTimeout(function () { computePCAAsync(); }, 80);
+}
+function computePCAAsync() {
+  if (!pcaMode) return;
+  if (!px.length) { PCA = null; renderPCA(scaleFactor()); updatePCAPanel(); return; }
+  /* heavy compute -> defer so UI doesn't freeze during slider drag */
+  setTimeout(function () {
+    var t0 = performance.now();
+    PCA = computePCA(px, py, pz);
+    pcaStale = false;
+    if (PCA) PCA.ms = performance.now() - t0;
+    renderPCA(scaleFactor());
+    updatePCAPanel();
+  }, 0);
+}
+function fmtVec(v, w) {
+  w = w || 3;
+  return '(' + v[0].toFixed(w) + ', ' + v[1].toFixed(w) + ', ' + v[2].toFixed(w) + ')';
+}
+function updatePCAPanel() {
+  if (!pcaMode) return;
+  if (!PCA) {
+    pcaN.textContent = 'N VECTORS: ' + px.length;
+    pcaEV1.textContent = 'EIGENVALUE 1: N/A';
+    pcaEV2.textContent = 'EIGENVALUE 2: N/A';
+    pcaEV3.textContent = 'EIGENVALUE 3: N/A';
+    pcaAniso.textContent = 'ANISOTROPY: N/A';
+    pcaSph.textContent = 'SPHERICITY: N/A';
+    pcaApl.textContent = 'APLANARITY: N/A';
+    pcaLin.textContent = 'LINEARITY: N/A';
+    pcaAxis.textContent = 'NEED MORE EVENTS';
+    pcaAxis2.textContent = ''; pcaAxis3.textContent = '';
+    return;
+  }
+  pcaN.textContent = 'N VECTORS: ' + PCA.n + (PCA.ms ? '  (' + PCA.ms.toFixed(0) + ' MS)' : '');
+  pcaEV1.textContent = 'EIGENVALUE 1: ' + (PCA.varFrac[0] * 100).toFixed(1) + '%  (l=' + fmt(PCA.lambda[0]) + ')';
+  pcaEV2.textContent = 'EIGENVALUE 2: ' + (PCA.varFrac[1] * 100).toFixed(1) + '%  (l=' + fmt(PCA.lambda[1]) + ')';
+  pcaEV3.textContent = 'EIGENVALUE 3: ' + (PCA.varFrac[2] * 100).toFixed(1) + '%  (l=' + fmt(PCA.lambda[2]) + ')';
+  pcaAniso.textContent = 'ANISOTROPY l1/l3: ' + PCA.anisotropy.toFixed(2);
+  pcaSph.textContent  = 'SPHERICITY  S = ' + PCA.sphericity.toFixed(3);
+  pcaApl.textContent = 'APLANARITY  A = ' + PCA.aplanarity.toFixed(3);
+  pcaLin.textContent = 'LINEARITY   L = ' + PCA.linearity.toFixed(3);
+  pcaAxis.textContent  = 'PC1 ' + fmtVec(PCA.V[0], 3);
+  pcaAxis2.textContent = 'PC2 ' + fmtVec(PCA.V[1], 3);
+  pcaAxis3.textContent = 'PC3 ' + fmtVec(PCA.V[2], 3);
+}
+/* Draw the three eigenvectors as scaled arrows from the origin in momentum space. */
+function renderPCA(sf) {
+  if (!pcaMode || !PCA) {
+    pcaArrow1.setAttribute('display', 'none');
+    pcaArrow2.setAttribute('display', 'none');
+    pcaArrow3.setAttribute('display', 'none');
+    pcaHead1.setAttribute('display', 'none');
+    pcaHead2.setAttribute('display', 'none');
+    pcaHead3.setAttribute('display', 'none');
+    pcaLabel1.setAttribute('display', 'none');
+    pcaLabel2.setAttribute('display', 'none');
+    pcaLabel3.setAttribute('display', 'none');
+    return;
+  }
+  /* scale eigenvector length by sqrt(lambda) so the visible arrow length is
+     the 1-sigma spread along that principal axis. Cap so it never dominates. */
+  var lmax = Math.max(PCA.lambda[0], 1e-12);
+  var targetPx = 280;   /* longest arrow = 280 px in scene space */
+  function arrowEnd(vecIdx) {
+    var s = Math.sqrt(PCA.lambda[vecIdx] / lmax) * targetPx;
+    var v = PCA.V[vecIdx];
+    proj(v[0] * s, v[1] * s, v[2] * s);
+    return [PXo, PYo];
+  }
+  proj(0, 0, 0);
+  var ox = PXo, oy = PYo;
+  var ends = [arrowEnd(0), arrowEnd(1), arrowEnd(2)];
+  var arrows = [pcaArrow1, pcaArrow2, pcaArrow3];
+  var heads  = [pcaHead1,  pcaHead2,  pcaHead3];
+  var labels = [pcaLabel1, pcaLabel2, pcaLabel3];
+  var i, e, dx, dy, len, ux, uy, hx0, hy0, h1x, h1y, h2x, h2y;
+  for (i = 0; i < 3; i++) {
+    e = ends[i];
+    arrows[i].setAttribute('x1', ox.toFixed(1));
+    arrows[i].setAttribute('y1', oy.toFixed(1));
+    arrows[i].setAttribute('x2', e[0].toFixed(1));
+    arrows[i].setAttribute('y2', e[1].toFixed(1));
+    arrows[i].setAttribute('display', 'inline');
+    /* arrow head triangle at the tip, oriented along the arrow */
+    dx = e[0] - ox; dy = e[1] - oy; len = Math.hypot(dx, dy);
+    if (len > 8) {
+      ux = dx / len; uy = dy / len;
+      var headBack = 14;          /* head base sits 14 px back from tip */
+      var headSide = 6;          /* head half-width */
+      hx0 = e[0] - ux * headBack; hy0 = e[1] - uy * headBack;
+      h1x = hx0 - uy * headSide;  h1y = hy0 + ux * headSide;
+      h2x = hx0 + uy * headSide;  h2y = hy0 - ux * headSide;
+      heads[i].setAttribute('d', 'M' + e[0].toFixed(1) + ',' + e[1].toFixed(1) +
+                                   'L' + h1x.toFixed(1) + ',' + h1y.toFixed(1) +
+                                   'L' + h2x.toFixed(1) + ',' + h2y.toFixed(1) + 'Z');
+      heads[i].setAttribute('display', 'inline');
+    } else {
+      heads[i].setAttribute('display', 'none');
+    }
+    /* label past the tip */
+    if (len > 20) {
+      labels[i].setAttribute('x', (e[0] + ux * 12 + 2).toFixed(1));
+      labels[i].setAttribute('y', (e[1] + uy * 12 + 5).toFixed(1));
+      labels[i].setAttribute('display', 'inline');
+    } else labels[i].setAttribute('display', 'none');
+  }
+}
+function togglePCA() {
+  pcaMode = !pcaMode;
+  if (pcaMode) {
+    autoRotate = false;
+    /* hide everything that competes for screen space + attention */
+    if (scanMode) toggleScanMode();
+    if (showHull) toggleHull2D();
+    if (objOn) toggleObject();
+    showLegend = false;
+    histGroup.setAttribute('display', 'none');
+    pcaPanel.setAttribute('display', 'inline');
+    pcaArrows.setAttribute('display', 'inline');
+    /* color mode: force HEAT (white vectors) so the R/G/B eigenvector
+       arrows are the visual focal point */
+    colorMode = 0; applyColorMode();
+    setStatus('STATUS: PCA ANALYSIS', 'RED=PC1 GREEN=PC2 BLUE=PC3 (LENGTH ~ SQRT(EIGENVALUE)',
+      events.length ? 'EIGENVECTORS OF THE MOMENTUM-SPACE COVARIANCE MATRIX' : 'LOAD DATA OR PRESS DEMO DATA');
+    if (!PCA || pcaStale) computePCAAsync();
+    else { renderPCA(scaleFactor()); updatePCAPanel(); }
+  } else {
+    pcaPanel.setAttribute('display', 'none');
+    pcaArrows.setAttribute('display', 'none');
+    renderPCA(scaleFactor());
+    updateVisibility();
+    setStatus('STATUS: FREE ROAM', '');
+  }
+  lastKey = ''; syncButtons();
+}
+
 /* ---------- buttons ---------- */
 var BTNS = [
   { id: 'auto',   label: 'AUTO LOAD',            fn: autoLoad },
@@ -573,6 +834,7 @@ var BTNS = [
   { id: 'scan',   label: 'SCAN MODE',            fn: toggleScanMode },
   { id: 'next',   label: 'NEXT SLICE',           fn: nextSlice, hidden: true },
   { id: 'sign',   label: 'SIGN: OS',             fn: cycleSign },
+  { id: 'pca',    label: 'PCA ANALYSIS',         fn: togglePCA },
   { id: 'hmode',  label: 'HIST: LOG',            fn: cycleHistMode },
   { id: 'fitm',   label: 'FIT WIN -',            fn: function () { stepFit(-1); }, hidden: true },
   { id: 'fitp',   label: 'FIT WIN +',            fn: function () { stepFit(1); },  hidden: true },
@@ -609,6 +871,7 @@ function histLinear() { return !HMODES[histMode].log; }
 function syncButtons() {
   setActive('hull', showHull); setActive('obj', objOn); setActive('spin', autoRotate);
   setActive('scan', scanMode); setActive('key', showLegend); setActive('col', colorMode !== 0);
+  setActive('pca', pcaMode);
   setHidden('next', !scanMode);
   setHidden('fitm', !histLinear()); setHidden('fitp', !histLinear());
   setHidden('clrbin', !binSel);
@@ -664,8 +927,13 @@ function layoutButtons() {
 }
 function updateVisibility() {
   var big = W >= 760 && H_ >= 560;
-  legendGroup.setAttribute('display', (showLegend && W >= 700 && H_ >= (histReady ? 720 : 700)) ? 'inline' : 'none');
-  histGroup.setAttribute('display', (histReady && big) ? 'inline' : 'none');
+  if (pcaMode) {
+    legendGroup.setAttribute('display', 'none');
+    histGroup.setAttribute('display', 'none');
+  } else {
+    legendGroup.setAttribute('display', (showLegend && W >= 700 && H_ >= (histReady ? 720 : 700)) ? 'inline' : 'none');
+    histGroup.setAttribute('display', (histReady && big) ? 'inline' : 'none');
+  }
   helpEl.setAttribute('display', W < 760 ? 'none' : 'inline');
 }
 var histReady = false;
@@ -687,6 +955,9 @@ function layout() {
   helpEl.setAttribute('x', W / 2 - 20); helpEl.setAttribute('y', H_ / 2 - 20);
   legendGroup.setAttribute('transform', 'translate(' + (W / 2 - 216) + ',' + (-H_ / 2 + 140) + ')');
   histGroup.setAttribute('transform', 'translate(' + (W / 2 - 340) + ',' + (H_ / 2 - 258) + ')');
+  /* PCA panel: left side, below the cuts/info area */
+  var pcaTopY = -H_ / 2 + 200;
+  pcaPanel.setAttribute('transform', 'translate(' + (-W / 2 + 12) + ',' + pcaTopY + ')');
   updateVisibility();
   lastKey = '';
 }
@@ -834,6 +1105,7 @@ function resetData() {
   maxMomentum = 0; maxNorm = 0; dataMax = 0; sliceStart = 0;
   HULL = null; hullStale = true; selEv = -1; selDirty = true; lastKey = ''; objDirty = true;
   binSel = null; histData = null; zoomBeforeBin = null;
+  PCA = null; pcaStale = true;
   drawHistogram(); syncButtons();
 }
 function vs(i) { return i < vecStart.length ? vecStart[i] : px.length; }
@@ -889,6 +1161,7 @@ function rebuildView() {
   if (!px.length) HULL = null;
   applyQuality();
   invalidateHull();
+  invalidatePCA();
   updateStats();
 }
 function finishLoad(label) {
@@ -1479,7 +1752,7 @@ function exportOBJ() {
 function snapSVG() {
   // a static picture of the scene only: no script, so the saved vectors are not wiped when it is opened
   var c = svg.cloneNode(true), q;
-  ['#ui', '#legend', '#histogram', 'script', 'foreignObject'].forEach(function (sel) { q = c.querySelector(sel); if (q) q.remove(); });
+  ['#ui', '#legend', '#histogram', '#pca-panel', '#pca-arrows', 'script', 'foreignObject'].forEach(function (sel) { q = c.querySelector(sel); if (q) q.remove(); });
   c.setAttribute('width', Math.round(W)); c.setAttribute('height', Math.round(H_));
   download('oscillo_snapshot.svg', new XMLSerializer().serializeToString(c), 'image/svg+xml');
 }
@@ -1646,6 +1919,7 @@ function render(now) {
   if (camChanged || objAnimating || objDirty) {
     renderHull2D(sf); renderObject(sf); objDirty = false;
   }
+  if (pcaMode && (camChanged || pcaStale)) renderPCA(sf);
   requestAnimationFrame(render);
 }
 
