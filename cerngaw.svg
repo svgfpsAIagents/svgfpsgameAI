@@ -28,7 +28,12 @@
   .hist-win { fill:#ffcc00; fill-opacity:.07; pointer-events:none; }
   .hit { fill:#ffffff; fill-opacity:0; cursor:pointer; pointer-events:all; }
   .hit:hover { fill-opacity:.14; }
-  .slider-hit { fill:#ffffff; fill-opacity:0; cursor:ew-resize; pointer-events:all; }
+  .slider-hit { fill:#ffffff; fill-opacity:0; cursor:ew-resize; pointer-events:all; touch-action:none; }
+  /* touch-action is not inherited from <svg>; explicit none on slider/hit rects
+     prevents the browser from intercepting horizontal drags as page-scroll on
+     touch devices. Histogram bin rects inherit pan behaviour from <svg>'s
+     touch-action:none, but adding it here is harmless and explicit. */
+  .hit { touch-action:none; }
 ]]></style>
 
 <defs>
@@ -237,7 +242,16 @@ var events = [], px = [], py = [], pz = [], vecStart = [], bMass = [], bPair = [
 var maxMomentum = 0, maxNorm = 0, dataLabel = '';
 var sliceStart = 0, selEv = -1, selWhich = 1, selDirty = true;
 var HULL = null, hullMs = 0, lastKey = '', lodStride = 1;
-var AUTO_URL = 'https://svgfpsaiagents.github.io/svgfpsgameAI/MuRun2010B_0.txt';
+/* BUG FIX (auto-load URL fallback #5): the original single hardcoded URL was
+   a single point of failure -- if the GitHub Pages repo was renamed, deleted,
+   or rate-limited, AUTO LOAD silently broke. Now we keep a list of mirrors and
+   try them in order; an optional ?url=... query parameter can prepend a custom
+   source. The first URL that returns valid text wins. */
+var AUTO_URLS = [
+  'https://svgfpsaiagents.github.io/svgfpsgameAI/MuRun2010B_0.txt',
+  'https://raw.githubusercontent.com/svgfpsaiagents/svgfpsgameAI/main/MuRun2010B_0.txt',
+  'https://cdn.jsdelivr.net/gh/svgfpsaiagents/svgfpsgameAI@main/MuRun2010B_0.txt'
+];
 var AUTO_LABEL = 'MURUN2010B_0';
 var loadToken = 0, loading = false, autoAbort = null, heavyData = false;
 var hullBusy = false, hullWaiters = [];
@@ -431,7 +445,11 @@ function computeHull(X, Y, Z, opts) {
     area += 0.5 * Math.sqrt(ax*ax + ay*ay + az*az);
   }
   for (k = 0; k < m; k++) rmax = Math.max(rmax, Math.sqrt(vx[k]*vx[k] + vy[k]*vy[k] + vz[k]*vz[k]));
-  if (m - nEall + F !== 2) console.warn('[hull] Euler characteristic check failed: V-E+F =', m - nEall + F);
+  /* Euler characteristic V-E+F must equal 2 for a closed orientable polyhedron.
+     Use the post-filter edge count nE (which excludes coplanar-facet diagonals
+     that the noFlatEdges option strips) rather than the raw nEall, otherwise
+     every envelope mesh with noFlatEdges:true emits a spurious warning. */
+  if (m - nE + F !== 2) console.warn('[hull] Euler characteristic check failed: V-E+F =', m - nE + F);
 
   return {
     nV: m, nE: nE, nF: F, vol: Math.abs(vol), area: area, rmax: rmax,
@@ -541,6 +559,38 @@ function fitGaussBkg(xs, ys, x0, binW) {
   };
 }
 
+/* Pre-filter to candidate hull vertices (used by computeEnvelope when pct >= 100
+   on large inputs to keep the O(N*F) incremental hull from freezing the UI).
+   Hull vertices are exactly the points that maximize the projection along some
+   direction. Sampling many directions and keeping the top-2 max-projection
+   indices per direction captures every true hull vertex for typical data with
+   high probability. Adversarial inputs (two hull vertices sharing almost the
+   same outward normal) may yield a tight outer approximation. */
+function reduceToExtremes(X, Y, Z) {
+  var n = X.length, i, k, s;
+  var M2 = 256, keep = new Set();
+  for (k = 0; k < M2; k++) {
+    var zz = 1 - (k + 0.5) / M2, rr = Math.sqrt(1 - zz * zz), th = k * 2.399963229728653;
+    var dx = rr * Math.cos(th), dy = rr * Math.sin(th);
+    /* evaluate both the +ve and -ve of each Fibonacci direction */
+    for (s = 0; s < 2; s++) {
+      var sx = s ? -dx : dx, sy = s ? -dy : dy, sz = s ? -zz : zz;
+      var b1 = -Infinity, i1 = -1, b2 = -Infinity, i2 = -1;
+      for (i = 0; i < n; i++) {
+        var p = sx * X[i] + sy * Y[i] + sz * Z[i];
+        if (p > b1) { b2 = b1; i2 = i1; b1 = p; i1 = i; }
+        else if (p > b2) { b2 = p; i2 = i; }
+      }
+      if (i1 >= 0) keep.add(i1);
+      if (i2 >= 0) keep.add(i2);
+    }
+  }
+  var m = keep.size, j = 0;
+  var rx = new Float64Array(m), ry = new Float64Array(m), rz = new Float64Array(m);
+  keep.forEach(function (idx) { rx[j] = X[idx]; ry[j] = Y[idx]; rz[j] = Z[idx]; j++; });
+  return { x: rx, y: ry, z: rz, n: m, nDir: M2 * 2 };
+}
+
 /* Percentile envelope.
    The convex hull is the intersection of half-spaces  d.x <= max(d.P)  over every direction d.
    Here each half-space is placed at the pct-th percentile of the projections d.(P-c) instead of the max,
@@ -552,6 +602,20 @@ function computeEnvelope(X, Y, Z, pct) {
   var n = X.length, i, k;
   if (n < 8) return null;
   if (pct >= 100) {                                         // MAX = the exact convex hull of every vector, as before
+    /* BUG FIX (computeHull performance #14): for very large inputs the O(N*F)
+       incremental hull can freeze the UI for seconds. Hull vertices are always
+       extreme in some direction, so we pre-filter to the top-2 max-projection
+       points along 256 Fibonacci directions (both hemispheres, =512 effective).
+       This captures every true hull vertex for typical data with high
+       probability; for adversarial inputs it returns a tight outer
+       approximation. For small inputs (n <= 30000) we skip the pre-filter and
+       use the exact hull directly to avoid any loss of precision. */
+    if (n > 30000) {
+      var red = reduceToExtremes(X, Y, Z);
+      var exactR = computeHull(red.x, red.y, red.z);
+      if (exactR) { exactR.pct = 100; exactR.nDir = red.nDir; exactR.nSample = n; }
+      return exactR;
+    }
     var exact = computeHull(X, Y, Z);
     if (exact) { exact.pct = 100; exact.nDir = 0; exact.nSample = n; }
     return exact;
@@ -750,9 +814,18 @@ function renderPCA(sf) {
     return;
   }
   /* scale eigenvector length by sqrt(lambda) so the visible arrow length is
-     the 1-sigma spread along that principal axis. Cap so it never dominates. */
+     the 1-sigma spread along that principal axis. */
   var lmax = Math.max(PCA.lambda[0], 1e-12);
-  var targetPx = 280;   /* longest arrow = 280 px in scene space */
+  /* BUG FIX (PCA arrow scaling): the original code used a fixed targetPx=280 in
+     world units, but data points are rendered at px[i] * sf world units
+     (sf = 300 / min(dataMax, 120)). When dataMax < 120 the data extent is
+     ~300 world units, so a 280-unit arrow almost filled the view; when
+     dataMax >= 120 the data extent could be 1000+ world units and the same
+     280-unit arrow became a tiny dot in the middle. Fix: scale targetPx with
+     the data extent so the arrows stay proportional to the cloud. Bounded
+     [150, 450] so they never vanish nor dominate. */
+  var dataExtent = Math.max(50, dataMax * sf);                  /* world units of the data cloud */
+  var targetPx = Math.max(150, Math.min(450, dataExtent * 0.55));
   function arrowEnd(vecIdx) {
     var s = Math.sqrt(PCA.lambda[vecIdx] / lmax) * targetPx;
     var v = PCA.V[vecIdx];
@@ -1269,35 +1342,56 @@ function autoLoad() {
       'USE LOAD CSV, DROP A FILE, OR PRESS DEMO DATA');
   };
   if (typeof fetch !== 'function') { fail(new Error('FETCH NOT SUPPORTED')); return; }
-  setStatus('STATUS: AUTO LOAD', 'CONNECTING: ' + AUTO_URL.replace(/^https?:\/\//, ''), '');
-  var opts = { mode: 'cors', credentials: 'omit' };
-  if (typeof AbortController === 'function') { autoAbort = new AbortController(); opts.signal = autoAbort.signal; }
-  fetch(AUTO_URL, opts).then(function (resp) {
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    var total = parseInt(resp.headers.get('content-length'), 10) || 0;
-    if (!resp.body || !resp.body.getReader || typeof TextDecoder !== 'function') return resp.text();
-    var reader = resp.body.getReader(), dec = new TextDecoder('utf-8'), parts = [], got = 0;
-    function pump() {
-      return reader.read().then(function (r) {
-        if (stale()) { try { reader.cancel(); } catch (_) {} return ''; }
-        if (r.done) { parts.push(dec.decode()); return parts.join(''); }
-        got += r.value.length; parts.push(dec.decode(r.value, { stream: true }));
-        setStatus('STATUS: AUTO LOAD',
-          'DOWNLOADING ' + (got / 1048576).toFixed(1) + ' MB' +
-          (total ? ' / ' + (total / 1048576).toFixed(1) + ' MB (' + Math.min(100, Math.round(got / total * 100)) + '%)' : ''), '');
-        return pump();
-      });
-    }
-    return pump();
-  }).then(function (text) {
+
+  /* Build the URL list: an optional ?url=... override first, then the mirrors. */
+  var urls = [];
+  var m = /[?&]url=([^&]+)/.exec(location.search);
+  if (m) { try { urls.push(decodeURIComponent(m[1])); } catch (_) {} }
+  for (var i = 0; i < AUTO_URLS.length; i++) urls.push(AUTO_URLS[i]);
+
+  /* tryUrl(idx): attempt to fetch urls[idx]; on transient failure, fall through
+     to the next mirror. An AbortError (user-initiated cancel) stops the chain. */
+  function tryUrl(idx) {
     if (stale()) return;
-    autoAbort = null;
-    if (!text || !text.trim()) throw new Error('SERVER RETURNED NO DATA');
-    parseCERNData(text, AUTO_LABEL, token);
-  }).catch(function (err) {
-    if (err && err.name === 'AbortError') return;
-    fail(err);
-  });
+    if (idx >= urls.length) {
+      fail(new Error('ALL ' + urls.length + ' AUTO URLS FAILED'));
+      return;
+    }
+    var url = urls[idx];
+    setStatus('STATUS: AUTO LOAD (' + (idx + 1) + '/' + urls.length + ')',
+      'CONNECTING: ' + url.replace(/^https?:\/\//, ''), '');
+    var opts = { mode: 'cors', credentials: 'omit' };
+    if (typeof AbortController === 'function') { autoAbort = new AbortController(); opts.signal = autoAbort.signal; }
+    fetch(url, opts).then(function (resp) {
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      var total = parseInt(resp.headers.get('content-length'), 10) || 0;
+      if (!resp.body || !resp.body.getReader || typeof TextDecoder !== 'function') return resp.text();
+      var reader = resp.body.getReader(), dec = new TextDecoder('utf-8'), parts = [], got = 0;
+      function pump() {
+        return reader.read().then(function (r) {
+          if (stale()) { try { reader.cancel(); } catch (_) {} return ''; }
+          if (r.done) { parts.push(dec.decode()); return parts.join(''); }
+          got += r.value.length; parts.push(dec.decode(r.value, { stream: true }));
+          setStatus('STATUS: AUTO LOAD (' + (idx + 1) + '/' + urls.length + ')',
+            'DOWNLOADING ' + (got / 1048576).toFixed(1) + ' MB' +
+            (total ? ' / ' + (total / 1048576).toFixed(1) + ' MB (' + Math.min(100, Math.round(got / total * 100)) + '%)' : ''), '');
+          return pump();
+        });
+      }
+      return pump();
+    }).then(function (text) {
+      if (stale()) return;
+      autoAbort = null;
+      if (!text || !text.trim()) throw new Error('SERVER RETURNED NO DATA');
+      parseCERNData(text, AUTO_LABEL, token);
+    }).catch(function (err) {
+      if (err && err.name === 'AbortError') return;          /* user cancelled: stop the chain */
+      if (stale()) return;
+      console.warn('AUTO URL ' + (idx + 1) + '/' + urls.length + ' failed: ' + (err && err.message || err));
+      tryUrl(idx + 1);                                        /* try next mirror */
+    });
+  }
+  tryUrl(0);
 }
 
 /* Synthetic dimuon-like events (J/psi, Upsilon, Z + continuum). Muons come from a real two-body decay,
