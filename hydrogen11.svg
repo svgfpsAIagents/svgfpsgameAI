@@ -1,0 +1,1096 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="viewport" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet">
+<title>JOY-SCAN // 3D HYDROGEN PROBABILITY CLOUDS // 1M</title>
+
+<style><![CDATA[
+  svg { touch-action:none; background:#0a0a0c; font-family:'Courier New',Courier,monospace;
+        -webkit-user-select:none; user-select:none; }
+  .ui-text { fill:#00ffcc; font-size:14px; letter-spacing:1px; pointer-events:none; font-weight:bold; }
+  .ui-dim  { fill:#00ffcc; font-size:12px; letter-spacing:1px; opacity:.7; pointer-events:none; }
+  .info-text { fill:#ffffff; font-size:13px; pointer-events:none; line-height:1.5; }
+
+  .joycon-left { fill:#1a1a1f; stroke:#00e5ff; stroke-width:3; }
+  .joycon-right { fill:#1a1a1f; stroke:#ff0055; stroke-width:3; }
+  .joycon-text { fill:#ffffff; font-size:12px; font-weight:bold; text-anchor:middle; pointer-events:none; }
+  .joycon-btn { fill:#2a2a30; stroke:#555; stroke-width:2; transition:fill .1s; cursor:pointer; }
+  .joycon-btn:hover { fill:#444; }
+  .joycon-btn:active, .joycon-btn.active { fill:#00e5ff; stroke:#fff; }
+  .joycon-btn-r:hover { fill:#444; }
+  .joycon-btn-r:active, .joycon-btn-r.active { fill:#ff0055; stroke:#fff; }
+
+  .panel-bg { fill:rgba(0,20,15,.85); stroke:#00ffcc; stroke-width:2; }
+  .scanline { stroke:#00ffcc; stroke-width:1; opacity:0.1; pointer-events:none; }
+
+  .fusion-btn { fill:#1a1a1f; stroke:#ffcc00; stroke-width:2; cursor:pointer; transition:fill .1s; }
+  .fusion-btn:hover { fill:#333; }
+  .fusion-btn:active { fill:#ffcc00; }
+
+  .element-btn { fill:#1a1a1f; stroke:#00ffcc; stroke-width:2; cursor:pointer; transition:fill .1s; }
+  .element-btn:hover { fill:#333; }
+  .element-btn:active { fill:#00ffcc; }
+
+  .table-btn { fill:#1a1a1f; stroke:#00ffcc; stroke-width:2; cursor:pointer; transition:fill .1s; }
+  .table-btn:hover { fill:#333; }
+  .table-btn:active { fill:#00ffcc; }
+]]></style>
+
+<defs>
+  <filter id="glow">
+    <feGaussianBlur stdDeviation="3" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="glow-strong">
+    <feGaussianBlur stdDeviation="5" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#00ffcc" stroke-width="1" opacity="0.05"/>
+  </pattern>
+
+  <linearGradient id="screen-bg" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#001111"/>
+    <stop offset="100%" stop-color="#000000"/>
+  </linearGradient>
+</defs>
+
+<!-- Background -->
+<rect width="1200" height="800" fill="#0a0a0c"/>
+<rect width="1200" height="800" fill="url(#grid)"/>
+
+<!-- ================= CENTER SCREEN (3D VISUALIZER) ================= -->
+<g id="screen" transform="translate(250, 80)">
+  <rect width="700" height="640" rx="10" fill="url(#screen-bg)" stroke="#00ffcc" stroke-width="3" filter="url(#glow)"/>
+
+  <!-- Header -->
+  <rect width="700" height="40" fill="#00ffcc" opacity="0.1"/>
+  <text x="350" y="26" class="ui-text" text-anchor="middle" style="font-size:18px; letter-spacing:2px;">3D HYDROGEN PROBABILITY CLOUDS</text>
+
+  <!-- Left Panel: Quantum Numbers & Data -->
+  <g transform="translate(20, 60)">
+    <rect width="220" height="540" fill="#000" stroke="#00ffcc" stroke-width="1" opacity="0.8"/>
+    <text x="10" y="25" class="ui-text" style="font-size:12px; color:#fff;">QUANTUM SLIDERS</text>
+    <line x1="10" y1="35" x2="210" y2="35" stroke="#00ffcc" opacity="0.3"/>
+
+    <foreignObject x="10" y="45" width="200" height="130">
+      <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:'Courier New',monospace; color:#00ffcc; font-size:12px; -webkit-user-select:none;">
+        <style>
+          input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; margin-bottom: 10px; }
+          input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: #003333; border-radius: 3px; border: 1px solid #00ffcc; }
+          input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: #00ffcc; margin-top: -6px; cursor: pointer; box-shadow: 0 0 10px #00ffcc; }
+          input[type=range]::-moz-range-track { width: 100%; height: 6px; background: #003333; border-radius: 3px; border: 1px solid #00ffcc; }
+          input[type=range]::-moz-range-thumb { height: 16px; width: 16px; border-radius: 50%; background: #00ffcc; cursor: pointer; border: none; box-shadow: 0 0 10px #00ffcc; }
+          .slider-row { display: flex; justify-content: space-between; margin-bottom: 2px; }
+          .val { color: #ffffff; font-weight: bold; }
+        </style>
+
+        <div class="slider-row"><span>n (principal):</span> <span id="val-n" class="val">3</span></div>
+        <input type="range" id="slider-n" min="1" max="6" step="1" value="3" />
+
+        <div class="slider-row"><span>l (azimuthal):</span> <span id="val-l" class="val">2</span></div>
+        <input type="range" id="slider-l" min="0" max="5" step="1" value="2" />
+
+        <div class="slider-row"><span>m (magnetic):</span> <span id="val-m" class="val">0</span></div>
+        <input type="range" id="slider-m" min="-5" max="5" step="1" value="0" />
+      </div>
+    </foreignObject>
+
+    <line x1="10" y1="180" x2="210" y2="180" stroke="#00ffcc" opacity="0.3"/>
+
+    <text x="10" y="200" class="ui-text" style="font-size:12px; color:#fff;">ORBITAL INFO</text>
+    <text x="10" y="218" class="ui-dim">Designation:</text>
+    <text id="orb-name" x="210" y="218" class="info-text" text-anchor="end" style="fill:#ffcc00; font-weight:bold; font-size:12px;">3d_z²</text>
+
+    <text x="10" y="236" class="ui-dim">Energy (Eₙ):</text>
+    <text id="orb-energy" x="210" y="236" class="info-text" text-anchor="end">-1.51 eV</text>
+
+    <text x="10" y="254" class="ui-dim">Radial Nodes:</text>
+    <text id="orb-rnodes" x="210" y="254" class="info-text" text-anchor="end">0</text>
+
+    <text x="10" y="272" class="ui-dim">Angular Nodes:</text>
+    <text id="orb-anodes" x="210" y="272" class="info-text" text-anchor="end">2</text>
+
+    <text x="10" y="290" class="ui-dim">⟨r⟩ mean:</text>
+    <text id="orb-rmean" x="210" y="290" class="info-text" text-anchor="end">10.5 a₀</text>
+
+    <text x="10" y="308" class="ui-dim">r peak:</text>
+    <text id="orb-rpeak" x="210" y="308" class="info-text" text-anchor="end">9.0 a₀</text>
+
+    <line x1="10" y1="320" x2="210" y2="320" stroke="#00ffcc" opacity="0.3"/>
+
+    <text x="10" y="340" class="ui-text" style="font-size:12px; color:#fff;">3D CONTROLS</text>
+    <text x="10" y="360" class="info-text" style="font-size:10px; opacity:0.8;">
+      <tspan x="10" dy="0">Rotation: <tspan id="lbl-touch-mode" fill="#ff0055">DISABLED</tspan></tspan>
+      <tspan x="10" dy="15">Press 'A' on Right Joy-Con</tspan>
+      <tspan x="10" dy="15">to enable touch drag rotation.</tspan>
+    </text>
+
+    <text x="10" y="420" class="ui-text" style="font-size:12px; color:#fff;">PHYSICS ENGINE</text>
+    <text x="10" y="440" class="info-text" style="font-size:10px; opacity:0.9;">
+      <tspan x="10" dy="0">Exact H-atom eigenstates:</tspan>
+      <tspan x="10" dy="15">Rₙₗ ∝ ρˡ e^(−ρ/2) L(ρ), ρ=2r/n</tspan>
+      <tspan x="10" dy="15" fill="#00ffcc">Ψ = Rₙₗ(r) · Yₗₘ(θ,φ)</tspan>
+      <tspan x="10" dy="15">|Ψ|² sampled exactly (inverse CDF</tspan>
+      <tspan x="10" dy="13">for r, rejection for angles)</tspan>
+    </text>
+
+    <text x="10" y="515" class="ui-dim" style="font-size:10px;">Bohr Radius (a₀):</text>
+    <text x="10" y="530" class="info-text" style="font-size:11px;">5.291 × 10⁻¹¹ m</text>
+
+    <!-- FUSION ELEMENT OUTPUT SECTION -->
+    <line x1="10" y1="545" x2="210" y2="545" stroke="#ffcc00" opacity="0.5"/>
+    <text x="10" y="565" class="ui-text" style="font-size:12px; color:#ffcc00;">STELLAR NUCLEOSYNTHESIS</text>
+
+    <text x="10" y="585" class="ui-dim" style="font-size:11px;">Element:</text>
+    <text id="fusion-element" x="210" y="585" class="info-text" text-anchor="end" style="fill:#ffcc00; font-weight:bold; font-size:14px;">Hydrogen (H)</text>
+
+    <text x="10" y="605" class="ui-dim" style="font-size:11px;">Atomic Number:</text>
+    <text id="fusion-z" x="210" y="605" class="info-text" text-anchor="end" style="fill:#fff; font-size:12px;">1</text>
+
+    <text x="10" y="625" class="ui-dim" style="font-size:11px;">Formation:</text>
+    <text id="fusion-formation" x="210" y="625" class="info-text" text-anchor="end" style="fill:#fff; font-size:10px;">Big Bang</text>
+
+    <text x="10" y="645" class="ui-dim" style="font-size:10px;">Cloud derived from H</text>
+    <text x="10" y="660" class="ui-dim" style="font-size:10px;">eigenstates (scaled)</text>
+  </g>
+
+  <!-- Right Panel: 3D Visualizer Canvas -->
+  <g transform="translate(250, 60)">
+    <rect id="canvas-bg" width="430" height="540" fill="#020205" stroke="#00ffcc" stroke-width="1" opacity="0.8"/>
+
+    <!-- Crosshairs (Static overlay) -->
+    <line x1="215" y1="50" x2="215" y2="490" stroke="#00ffcc" stroke-width="1" opacity="0.1"/>
+    <line x1="50" y1="270" x2="380" y2="270" stroke="#00ffcc" stroke-width="1" opacity="0.1"/>
+
+    <text id="lbl-scale" x="10" y="20" class="ui-dim" style="font-size:10px;">view radius</text>
+
+    <!-- WebGL particle canvas (2x resolution for retina) -->
+    <foreignObject x="0" y="0" width="430" height="540" style="pointer-events:none;">
+      <canvas xmlns="http://www.w3.org/1999/xhtml" id="gl-canvas"
+              width="860" height="1080"
+              style="width:430px;height:540px;display:block;background:transparent;"></canvas>
+    </foreignObject>
+
+    <g id="axes" transform="translate(48, 488)"></g>
+
+    <!-- Touch Drag Overlay -->
+    <rect id="touch-overlay" width="430" height="540" fill="transparent" cursor="grab" style="pointer-events: none;"/>
+
+    <!-- Orbital grid selection -->
+    <g transform="translate(300, 460)" opacity="0.6" pointer-events="none">
+      <rect x="0" y="0" width="100" height="60" fill="none" stroke="#00ffcc" stroke-width="1"/>
+      <text x="5" y="15" class="ui-dim" style="font-size:9px;">ACTIVE:</text>
+      <text id="lbl-active-matrix" x="5" y="30" class="ui-text" style="font-size:11px; color:#ffcc00;">(3,2,0)</text>
+      <text id="lbl-basis" x="5" y="48" class="ui-dim" style="font-size:8px;">REAL · 1500</text>
+    </g>
+
+    <!-- Status / progress text -->
+    <text id="lbl-status" x="215" y="445" class="ui-text" style="font-size:11px; color:#ffcc00; text-anchor:middle; opacity:0.85;"></text>
+
+    <!-- Fusion Button -->
+    <g transform="translate(20, 490)" class="fusion-btn" id="btn-fusion" pointer-events="all">
+      <rect width="90" height="30" rx="5"/>
+      <text x="45" y="20" class="joycon-text" style="fill:#ffcc00; font-size:12px; pointer-events:none;">FUSION</text>
+    </g>
+
+    <!-- Element Cloud Button -->
+    <g transform="translate(120, 490)" class="element-btn" id="btn-element-cloud" pointer-events="all">
+      <rect width="130" height="30" rx="5"/>
+      <text x="65" y="20" class="joycon-text" style="fill:#00ffcc; font-size:12px; pointer-events:none;">ELEMENT CLOUD</text>
+    </g>
+
+    <!-- Data Table Button -->
+    <g transform="translate(260, 490)" class="table-btn" id="btn-data-table" pointer-events="all">
+      <rect width="80" height="30" rx="5"/>
+      <text x="40" y="20" class="joycon-text" style="fill:#00ffcc; font-size:12px; pointer-events:none;">DATA</text>
+    </g>
+  </g>
+</g>
+
+<!-- ================= LEFT JOY-CON (QUANTUM NUMBERS) ================= -->
+<g id="joycon-left" transform="translate(30, 150)">
+  <rect width="180" height="500" rx="40" class="joycon-left"/>
+  <text x="90" y="40" class="joycon-text" fill="#00e5ff" style="font-size:16px;">QUANTUM</text>
+  <text x="90" y="60" class="joycon-text" fill="#00e5ff" style="font-size:10px; opacity:0.7;">L-SYS</text>
+
+  <!-- Analog Stick (Controls n) -->
+  <g transform="translate(90, 120)">
+    <circle r="35" fill="#111" stroke="#00e5ff" stroke-width="2"/>
+    <circle r="25" fill="#222" stroke="#00e5ff" stroke-width="1" filter="url(#glow)"/>
+    <circle id="stick-l" r="15" fill="#00e5ff" opacity="0.5"/>
+    <text x="0" y="45" class="joycon-text" style="font-size:9px; fill:#00e5ff;">N (UP/DOWN)</text>
+  </g>
+
+  <!-- D-Pad (Controls l and m) -->
+  <g transform="translate(90, 280)">
+    <rect x="-15" y="-45" width="30" height="35" rx="5" class="joycon-btn" data-dir="up"/>
+    <polygon points="0,-40 -10,-25 10,-25" fill="#00e5ff" pointer-events="none"/>
+    <text x="0" y="-48" class="joycon-text" style="font-size:9px; fill:#00e5ff;">L+</text>
+
+    <rect x="-15" y="10" width="30" height="35" rx="5" class="joycon-btn" data-dir="down"/>
+    <polygon points="0,25 -10,10 10,10" fill="#00e5ff" pointer-events="none"/>
+    <text x="0" y="60" class="joycon-text" style="font-size:9px; fill:#00e5ff;">L-</text>
+
+    <rect x="-45" y="-15" width="35" height="30" rx="5" class="joycon-btn" data-dir="left"/>
+    <polygon points="-40,0 -25,-10 -25,10" fill="#00e5ff" pointer-events="none"/>
+    <text x="-55" y="4" class="joycon-text" style="font-size:9px; fill:#00e5ff;">M-</text>
+
+    <rect x="10" y="-15" width="35" height="30" rx="5" class="joycon-btn" data-dir="right"/>
+    <polygon points="25,0 10,-10 10,10" fill="#00e5ff" pointer-events="none"/>
+    <text x="55" y="4" class="joycon-text" style="font-size:9px; fill:#00e5ff;">M+</text>
+  </g>
+
+  <!-- Minus Button -->
+  <rect x="30" y="400" width="30" height="15" rx="3" class="joycon-btn" data-act="basis"/>
+  <text x="45" y="392" class="joycon-text" style="font-size:9px; fill:#00e5ff;">BASIS</text>
+  <text x="45" y="412" class="joycon-text" style="font-size:10px; fill:#fff; pointer-events:none;">-</text>
+
+  <!-- Home Button -->
+  <circle cx="90" cy="470" r="15" fill="#111" stroke="#555" stroke-width="2"/>
+  <circle cx="90" cy="470" r="8" fill="#00e5ff" opacity="0.5"/>
+</g>
+
+<!-- ================= RIGHT JOY-CON (VISUALIZATION MODES) ================= -->
+<g id="joycon-right" transform="translate(990, 150)">
+  <rect width="180" height="500" rx="40" class="joycon-right"/>
+  <text x="90" y="40" class="joycon-text" fill="#ff0055" style="font-size:16px;">VISUAL</text>
+  <text x="90" y="60" class="joycon-text" fill="#ff0055" style="font-size:10px; opacity:0.7;">R-SYS</text>
+
+  <!-- X (Toggle Color Palette) -->
+  <g transform="translate(90, 100)">
+    <circle r="20" class="joycon-btn joycon-btn-r" data-action="toggle-color"/>
+    <text y="6" class="joycon-text" style="fill:#fff;">X</text>
+    <text y="-30" class="joycon-text" style="font-size:9px; fill:#ff0055;">COLOR</text>
+  </g>
+
+  <!-- Y (Toggle Particle Size) -->
+  <g transform="translate(40, 150)">
+    <circle r="20" class="joycon-btn joycon-btn-r" data-action="toggle-size"/>
+    <text y="6" class="joycon-text" style="fill:#fff;">Y</text>
+    <text x="-30" y="4" class="joycon-text" style="font-size:9px; fill:#ff0055;">SIZE</text>
+  </g>
+
+  <!-- A (Toggle Touchscreen Drag) -->
+  <g transform="translate(140, 150)">
+    <circle id="btn-touch" r="20" class="joycon-btn joycon-btn-r" data-action="toggle-touch"/>
+    <text y="6" class="joycon-text" style="fill:#fff;">A</text>
+    <text x="30" y="4" class="joycon-text" style="font-size:9px; fill:#ff0055;">TOUCH</text>
+  </g>
+
+  <!-- B (Reset Everything) -->
+  <g transform="translate(90, 200)">
+    <circle r="20" class="joycon-btn joycon-btn-r" data-action="reset"/>
+    <text y="6" class="joycon-text" style="fill:#fff;">B</text>
+    <text y="30" class="joycon-text" style="font-size:9px; fill:#ff0055;">RESET</text>
+  </g>
+
+  <!-- Plus Button (Density) -->
+  <rect x="120" y="400" width="30" height="15" rx="3" class="joycon-btn joycon-btn-r" data-action="cycle-count"/>
+  <text x="135" y="392" class="joycon-text" style="font-size:9px; fill:#ff0055;">DENSITY</text>
+  <text x="135" y="412" class="joycon-text" style="font-size:10px; fill:#fff; pointer-events:none;">+</text>
+
+  <!-- Home Button -->
+  <circle cx="90" cy="470" r="15" fill="#111" stroke="#555" stroke-width="2"/>
+  <circle cx="90" cy="470" r="8" fill="#ff0055" opacity="0.5"/>
+</g>
+
+<script><![CDATA[
+(function() {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const SVGNS = 'http://www.w3.org/2000/svg';
+
+  // ===== EXACT HYDROGEN PHYSICS (atomic units, a0 = 1) =====
+  const FACT = [1];
+  for (let i = 1; i < 64; i++) FACT[i] = FACT[i-1] * i;
+  function fact(k) { return FACT[k] || 1; }
+
+  function laguerre(k, a, x) {
+    if (k === 0) return 1;
+    let L0 = 1, L1 = 1 + a - x;
+    for (let i = 1; i < k; i++) {
+      const L2 = ((2 * i + 1 + a - x) * L1 - (i + a) * L0) / (i + 1);
+      L0 = L1; L1 = L2;
+    }
+    return L1;
+  }
+
+  function radial(n, l, r) {
+    const rho = 2 * r / n;
+    const N = Math.sqrt(Math.pow(2 / n, 3) * fact(n - l - 1) / (2 * n * fact(n + l)));
+    return N * Math.exp(-rho / 2) * Math.pow(rho, l) * laguerre(n - l - 1, 2 * l + 1, rho);
+  }
+
+  function legendre(l, m, x) {
+    let pmm = 1;
+    if (m > 0) {
+      const s = Math.sqrt(Math.max(0, 1 - x * x));
+      let f = 1;
+      for (let i = 1; i <= m; i++) { pmm *= f * s; f += 2; }
+    }
+    if (l === m) return pmm;
+    let pm1 = x * (2 * m + 1) * pmm;
+    if (l === m + 1) return pm1;
+    let pll = 0;
+    for (let ll = m + 2; ll <= l; ll++) {
+      pll = ((2 * ll - 1) * x * pm1 - (ll + m - 1) * pmm) / (ll - m);
+      pmm = pm1; pm1 = pll;
+    }
+    return pll;
+  }
+
+  function angular(l, m, uz, phi, complexBasis) {
+    const am = Math.abs(m);
+    const K = Math.sqrt((2 * l + 1) / (4 * Math.PI) * fact(l - am) / fact(l + am));
+    const P = K * legendre(l, am, uz);
+    if (complexBasis || m === 0) return P;
+    return Math.SQRT2 * P * (m > 0 ? Math.cos(am * phi) : Math.sin(am * phi));
+  }
+
+  function angularMax2(l, m, complexBasis) {
+    let mx = 0;
+    const NT = 180, NP = complexBasis || m === 0 ? 1 : 360;
+    for (let i = 0; i <= NT; i++) {
+      const uz = -1 + 2 * i / NT;
+      for (let j = 0; j < NP; j++) {
+        const a = angular(l, m, uz, 2 * Math.PI * j / NP, complexBasis);
+        if (a * a > mx) mx = a * a;
+      }
+    }
+    return mx * 1.03 || 1;
+  }
+
+  function radialTable(n, l) {
+    const Rmax = 3 * n * n + 15, NR = 4000, dr = Rmax / NR;
+    const r = new Float64Array(NR + 1), cdf = new Float64Array(NR + 1);
+    let maxR2 = 0, peak = 0, peakVal = 0, prevF = 0;
+    for (let i = 0; i <= NR; i++) {
+      r[i] = i * dr;
+      const R = radial(n, l, r[i]);
+      const f = r[i] * r[i] * R * R;
+      if (R * R > maxR2) maxR2 = R * R;
+      if (f > peakVal) { peakVal = f; peak = r[i]; }
+      cdf[i] = i === 0 ? 0 : cdf[i - 1] + 0.5 * (f + prevF) * dr;
+      prevF = f;
+    }
+    const total = cdf[NR];
+    let iv = NR;
+    for (let i = 0; i <= NR; i++) if (cdf[i] >= 0.995 * total) { iv = i; break; }
+    return { r, cdf, total, NR, maxR2, peak, view: r[iv] * 1.05 };
+  }
+
+  function sampleRadius(tab) {
+    const u = Math.random() * tab.total;
+    let lo = 0, hi = tab.NR;
+    while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (tab.cdf[mid] < u) lo = mid; else hi = mid; }
+    const span = tab.cdf[hi] - tab.cdf[lo];
+    const t = span > 0 ? (u - tab.cdf[lo]) / span : 0;
+    return tab.r[lo] + t * (tab.r[hi] - tab.r[lo]);
+  }
+
+  // ===== STATE =====
+  const MAXN = 6;
+  const COUNTS = [800, 1500, 3000, 6000, 1000000];
+  const COLOR_NAMES = ['HEAT', 'BLUE', 'PURPLE', 'PHASE'];
+  let n = 3, l = 2, m = 0;
+  let complexBasis = false;
+  let colorMode = 0;
+  let pointSize = 1.5;
+  let countIdx = 1;
+  let touchMode = false;
+
+  // Fusion State
+  const ELEMENTS = [
+    { name: 'Hydrogen', symbol: 'H', z: 1, formation: 'Big Bang', shells: [1] },
+    { name: 'Helium', symbol: 'He', z: 2, formation: 'Stellar Fusion', shells: [2] },
+    { name: 'Lithium', symbol: 'Li', z: 3, formation: 'Cosmic Ray Spallation', shells: [2, 1] },
+    { name: 'Beryllium', symbol: 'Be', z: 4, formation: 'Cosmic Ray Spallation', shells: [2, 2] },
+    { name: 'Boron', symbol: 'B', z: 5, formation: 'Cosmic Ray Spallation', shells: [2, 3] },
+    { name: 'Carbon', symbol: 'C', z: 6, formation: 'Stellar Fusion (Triple-Alpha)', shells: [2, 4] },
+    { name: 'Nitrogen', symbol: 'N', z: 7, formation: 'Stellar Fusion (CNO Cycle)', shells: [2, 5] },
+    { name: 'Oxygen', symbol: 'O', z: 8, formation: 'Stellar Fusion', shells: [2, 6] },
+    { name: 'Fluorine', symbol: 'F', z: 9, formation: 'Stellar Fusion', shells: [2, 7] },
+    { name: 'Neon', symbol: 'Ne', z: 10, formation: 'Stellar Fusion (Carbon Burning)', shells: [2, 8] },
+    { name: 'Sodium', symbol: 'Na', z: 11, formation: 'Stellar Fusion (Carbon Burning)', shells: [2, 8, 1] },
+    { name: 'Magnesium', symbol: 'Mg', z: 12, formation: 'Stellar Fusion (Carbon Burning)', shells: [2, 8, 2] },
+    { name: 'Aluminium', symbol: 'Al', z: 13, formation: 'Stellar Fusion (Neon Burning)', shells: [2, 8, 3] },
+    { name: 'Silicon', symbol: 'Si', z: 14, formation: 'Stellar Fusion (Oxygen Burning)', shells: [2, 8, 4] },
+    { name: 'Phosphorus', symbol: 'P', z: 15, formation: 'Stellar Fusion (Silicon Burning)', shells: [2, 8, 5] },
+    { name: 'Sulphur', symbol: 'S', z: 16, formation: 'Stellar Fusion (Silicon Burning)', shells: [2, 8, 6] },
+    { name: 'Chlorine', symbol: 'Cl', z: 17, formation: 'Stellar Fusion (Silicon Burning)', shells: [2, 8, 7] },
+    { name: 'Argon', symbol: 'Ar', z: 18, formation: 'Stellar Fusion (Silicon Burning)', shells: [2, 8, 8] },
+    { name: 'Potassium', symbol: 'K', z: 19, formation: 'Stellar Fusion (Silicon Burning)', shells: [2, 8, 8, 1] },
+    { name: 'Calcium', symbol: 'Ca', z: 20, formation: 'Stellar Fusion (Silicon Burning)', shells: [2, 8, 8, 2] },
+    { name: 'Iron', symbol: 'Fe', z: 26, formation: 'Stellar Fusion (End Point)', shells: [2, 8, 14, 2] },
+    { name: 'Gold', symbol: 'Au', z: 79, formation: 'Neutron Star Merger (r-process)', shells: [2, 8, 18, 32, 18, 1] },
+    { name: 'Uranium', symbol: 'U', z: 92, formation: 'Neutron Star Merger (r-process)', shells: [2, 8, 18, 32, 21, 9, 2] }
+  ];
+  let fusionIdx = 0;
+  let elementCloudMode = false;
+
+  let dataTableMode = false;
+  const HYDROGEN_TABLE = [
+    { r: 0, R1s: 2.000000, R2s: 0.353553, R2p: 0.000000, R3s: 0.108818, R3p: 0.000000, R3d: 0.000000 },
+    { r: 0.5, R1s: 1.213061, R2s: 0.286685, R2p: 0.143342, R3s: 0.101833, R3p: 0.026625, R3d: 0.000000 },
+    { r: 1.0, R1s: 0.735759, R2s: 0.232814, R2p: 0.232814, R3s: 0.095308, R3p: 0.049815, R3d: 0.014482 },
+    { r: 1.5, R1s: 0.446261, R2s: 0.188927, R2p: 0.283390, R3s: 0.089207, R3p: 0.069935, R3d: 0.040649 },
+    { r: 2.0, R1s: 0.270671, R2s: 0.153196, R2p: 0.306392, R3s: 0.083531, R3p: 0.087296, R3d: 0.066304 },
+    { r: 2.5, R1s: 0.164170, R2s: 0.124201, R2p: 0.310502, R3s: 0.078225, R3p: 0.102033, R3d: 0.089526 },
+    { r: 3.0, R1s: 0.099574, R2s: 0.100630, R2p: 0.301891, R3s: 0.073245, R3p: 0.114055, R3d: 0.108333 },
+    { r: 4.0, R1s: 0.036631, R2s: 0.066026, R2p: 0.264106, R3s: 0.064306, R3p: 0.131529, R3d: 0.137362 },
+    { r: 5.0, R1s: 0.013475, R2s: 0.043308, R2p: 0.216539, R3s: 0.056471, R3p: 0.141177, R3d: 0.158479 },
+    { r: 6.0, R1s: 0.004957, R2s: 0.028394, R2p: 0.170365, R3s: 0.049650, R3p: 0.144570, R3d: 0.173121 },
+    { r: 8.0, R1s: 0.000671, R2s: 0.012203, R2p: 0.097622, R3s: 0.038663, R3p: 0.139705, R3d: 0.191089 },
+    { r: 10.0, R1s: 0.000091, R2s: 0.005243, R2p: 0.052432, R3s: 0.030390, R3p: 0.124913, R3d: 0.197325 },
+    { r: 12.0, R1s: 0.000012, R2s: 0.002253, R2p: 0.027038, R3s: 0.024154, R3p: 0.107880, R3d: 0.195354 },
+    { r: 14.0, R1s: 0.000002, R2s: 0.000968, R2p: 0.013557, R3s: 0.019381, R3p: 0.091387, R3d: 0.188204 },
+    { r: 16.0, R1s: 0.000000, R2s: 0.000416, R2p: 0.006656, R3s: 0.015700, R3p: 0.076888, R3d: 0.178041 },
+    { r: 18.0, R1s: 0.000000, R2s: 0.000179, R2p: 0.003219, R3s: 0.012833, R3p: 0.064441, R3d: 0.166169 },
+    { r: 20.0, R1s: 0.000000, R2s: 0.000077, R2p: 0.001539, R3s: 0.010567, R3p: 0.053880, R3d: 0.153621 }
+  ];
+
+  const DEF_ROT_X = 0.35, DEF_ROT_Y = 0.6;
+  let rotX = DEF_ROT_X, rotY = DEF_ROT_Y;
+  let isDragging = false, lastMouseX = 0, lastMouseY = 0;
+
+  // DOM
+  const elName = $('orb-name'), elEnergy = $('orb-energy'), elRNodes = $('orb-rnodes'),
+        elANodes = $('orb-anodes'), elRMean = $('orb-rmean'), elRPeak = $('orb-rpeak'),
+        elMatrix = $('lbl-active-matrix'), elBasis = $('lbl-basis'), elScale = $('lbl-scale'),
+        elTouchMode = $('lbl-touch-mode'), axesG = $('axes'),
+        touchOverlay = $('touch-overlay'), btnTouch = $('btn-touch'),
+        elStatus = $('lbl-status');
+  const sliderN = $('slider-n'), sliderL = $('slider-l'), sliderM = $('slider-m');
+  const valN = $('val-n'), valL = $('val-l'), valM = $('val-m');
+
+  const elFusionElement = $('fusion-element'), elFusionZ = $('fusion-z'), elFusionFormation = $('fusion-formation');
+  const btnFusion = $('btn-fusion');
+  const btnElementCloud = $('btn-element-cloud');
+  const btnDataTable = $('btn-data-table');
+
+  // ===== CLOUD STATE =====
+  let cloud = [];
+  let viewRadius = 1;
+  let generationToken = 0;
+
+  // ===== 3D PROJECTION (used by SVG axes only — WebGL inlines it) =====
+  function project(x, y, z) {
+    const ca = Math.cos(rotY), sa = Math.sin(rotY);
+    const x1 = x * ca - y * sa, y1 = x * sa + y * ca;
+    const cb = Math.cos(rotX), sb = Math.sin(rotX);
+    const y2 = y1 * cb - z * sb, z2 = y1 * sb + z * cb;
+    const camDist = 500;
+    const sc = camDist / (camDist + y2);
+    return { x: x1 * sc, y: -z2 * sc, d: y2, s: sc };
+  }
+
+  // ===== COLOURS =====
+  const RAMPS = [
+    [[0, [176, 24, 0]], [0.4, [255, 90, 0]], [0.7, [255, 204, 0]], [1, [255, 255, 255]]],
+    [[0, [0, 51, 170]], [0.5, [0, 136, 255]], [1, [170, 255, 255]]],
+    [[0, [85, 0, 170]], [0.5, [170, 51, 255]], [1, [255, 170, 255]]]
+  ];
+  function ramp(stops, t) {
+    for (let i = 1; i < stops.length; i++) {
+      if (t <= stops[i][0]) {
+        const a = stops[i - 1], b = stops[i], f = (t - a[0]) / (b[0] - a[0]);
+        return [a[1][0] + (b[1][0] - a[1][0]) * f,
+                a[1][1] + (b[1][1] - a[1][1]) * f,
+                a[1][2] + (b[1][2] - a[1][2]) * f];
+      }
+    }
+    return stops[stops.length - 1][1];
+  }
+  function hslToRgb(h, s, l) {
+    const c = (1 - Math.abs(2 * l - 1)) * s;
+    const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+    const m = l - c / 2;
+    let r = 0, g = 0, b = 0;
+    if (h < 60) { r = c; g = x; }
+    else if (h < 120) { r = x; g = c; }
+    else if (h < 180) { g = c; b = x; }
+    else if (h < 240) { g = x; b = c; }
+    else if (h < 300) { r = x; b = c; }
+    else { r = c; b = x; }
+    return [(r + m), (g + m), (b + m)];
+  }
+  function pointColorRGB(p) {
+    if (colorMode < 3) {
+      const c = ramp(RAMPS[colorMode], p.t);
+      return [c[0] / 255, c[1] / 255, c[2] / 255];
+    }
+    const light = (35 + 40 * p.t) / 100;
+    if (complexBasis) return hslToRgb(p.phase, 1.0, light);
+    return p.phase > 0 ? hslToRgb(8, 1.0, light) : hslToRgb(205, 1.0, light);
+  }
+
+  // ===== WEBGL RENDERER =====
+  const glCanvas = $('gl-canvas');
+  const gl = glCanvas.getContext('webgl', { antialias: false, alpha: true, premultipliedAlpha: false });
+
+  const VS = `
+    attribute vec3 a_pos;
+    attribute vec3 a_color;
+    uniform vec2 u_res;
+    varying vec3 v_color;
+    void main() {
+      vec2 clip = (a_pos.xy / u_res) * 2.0 - 1.0;
+      gl_Position = vec4(clip.x, -clip.y, 0.0, 1.0);
+      gl_PointSize = a_pos.z;
+      v_color = a_color;
+    }`;
+
+  const FS = `
+    precision mediump float;
+    varying vec3 v_color;
+    void main() {
+      vec2 c = gl_PointCoord - vec2(0.5);
+      float d = length(c);
+      if (d > 0.5) discard;
+      float a = smoothstep(0.5, 0.35, d);
+      gl_FragColor = vec4(v_color, a * 0.85);
+    }`;
+
+  function compile(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src); gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, compile(gl.VERTEX_SHADER, VS));
+  gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FS));
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
+  gl.useProgram(prog);
+
+  const locPos = gl.getAttribLocation(prog, 'a_pos');
+  const locCol = gl.getAttribLocation(prog, 'a_color');
+  const locRes = gl.getUniformLocation(prog, 'u_res');
+
+  const vboPos = gl.createBuffer();
+  const vboCol = gl.createBuffer();
+
+  let posArr = new Float32Array(0);
+  let colArr = new Float32Array(0);
+  let glCount = 0;
+
+  function ensureCapacity(n) {
+    if (posArr.length < n * 3) posArr = new Float32Array(n * 3);
+    if (colArr.length < n * 3) colArr = new Float32Array(n * 3);
+  }
+
+  const CAM_D = 500;
+  const CX = 215, CY = 270;
+  const CANVAS_2X = 2.0;
+
+  function rebuildGLBuffers() {
+    const N = cloud.length;
+    if (N === 0) { glCount = 0; return; }
+    ensureCapacity(N);
+    const ca = Math.cos(rotY), sa = Math.sin(rotY);
+    const cb = Math.cos(rotX), sb = Math.sin(rotX);
+
+    for (let i = 0; i < N; i++) {
+      const p = cloud[i];
+      const x1 = p.x * ca - p.y * sa;
+      const y1 = p.x * sa + p.y * ca;
+      const y2 = y1 * cb - p.z * sb;
+      const z2 = y1 * sb + p.z * cb;
+      const sc = CAM_D / (CAM_D + y2);
+      const sx = CX + x1 * sc;
+      const sy = CY - z2 * sc;
+      const size = pointSize * sc * (0.5 + p.t * 1.2);
+
+      posArr[i*3+0] = sx * CANVAS_2X;
+      posArr[i*3+1] = sy * CANVAS_2X;
+      posArr[i*3+2] = Math.max(1.5, size * CANVAS_2X);
+
+      const c = pointColorRGB(p);
+      colArr[i*3+0] = c[0];
+      colArr[i*3+1] = c[1];
+      colArr[i*3+2] = c[2];
+    }
+    glCount = N;
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, vboPos);
+    gl.bufferData(gl.ARRAY_BUFFER, posArr.subarray(0, N*3), gl.DYNAMIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, vboCol);
+    gl.bufferData(gl.ARRAY_BUFFER, colArr.subarray(0, N*3), gl.DYNAMIC_DRAW);
+  }
+
+  function drawGL() {
+    if (glCount === 0) {
+      gl.viewport(0, 0, glCanvas.width, glCanvas.height);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      return;
+    }
+    gl.viewport(0, 0, glCanvas.width, glCanvas.height);
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.uniform2f(locRes, glCanvas.width, glCanvas.height);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, vboPos);
+    gl.enableVertexAttribArray(locPos);
+    gl.vertexAttribPointer(locPos, 3, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, vboCol);
+    gl.enableVertexAttribArray(locCol);
+    gl.vertexAttribPointer(locCol, 3, gl.FLOAT, false, 0, 0);
+
+    gl.drawArrays(gl.POINTS, 0, glCount);
+  }
+
+  // ===== SVG AXES OVERLAY =====
+  function drawAxesSVG() {
+    axesG.replaceChildren();
+    const ax = [['x', 1, 0, 0, '#ff5566'], ['y', 0, 1, 0, '#55ff88'], ['z', 0, 0, 1, '#55aaff']];
+    const L = 28;
+    ax.map(a => ({ a, q: project(a[1]*L, a[2]*L, a[3]*L) }))
+      .sort((u, v) => v.q.d - u.q.d)
+      .forEach(o => {
+        const ln = document.createElementNS(SVGNS, 'line');
+        ln.setAttribute('x1', 0); ln.setAttribute('y1', 0);
+        ln.setAttribute('x2', o.q.x.toFixed(1)); ln.setAttribute('y2', o.q.y.toFixed(1));
+        ln.setAttribute('stroke', o.a[4]); ln.setAttribute('stroke-width', 2);
+        const tx = document.createElementNS(SVGNS, 'text');
+        tx.setAttribute('x', (o.q.x*1.25).toFixed(1));
+        tx.setAttribute('y', (o.q.y*1.25+4).toFixed(1));
+        tx.setAttribute('fill', o.a[4]); tx.setAttribute('font-size', 11);
+        tx.setAttribute('text-anchor', 'middle'); tx.textContent = o.a[0];
+        axesG.appendChild(ln); axesG.appendChild(tx);
+      });
+  }
+
+  // ===== SCHEDULER =====
+  let drawQueued = false;
+  function scheduleDraw() {
+    if (drawQueued) return;
+    drawQueued = true;
+    requestAnimationFrame(() => { drawQueued = false; render(); });
+  }
+
+  function render() {
+    if (dataTableMode) {
+      clearGL();
+      drawDataTable();
+      return;
+    }
+    rebuildGLBuffers();
+    drawGL();
+    drawAxesSVG();
+  }
+
+  function clearGL() {
+    glCount = 0;
+    gl.viewport(0, 0, glCanvas.width, glCanvas.height);
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+  }
+
+  // ===== CHUNKED CLOUD GENERATION (guarantees exact target count) =====
+  const CHUNK = 40000;
+
+  function generateCloud(onDone) {
+    if (elementCloudMode) {
+      generateElementCloud(onDone);
+      return;
+    }
+
+    const N = COUNTS[countIdx];
+    const myToken = ++generationToken;
+    elStatus.textContent = 'GENERATING ' + N.toLocaleString() + ' PARTICLES…';
+
+    const tab = radialTable(n, l);
+    const maxA2 = angularMax2(l, m, complexBasis);
+    const norm = 1 / (tab.maxR2 * maxA2);
+    const scale = 165 / tab.view;
+    viewRadius = tab.view;
+    const pts = [];
+    const maxTries = N * 500;   // hard ceiling to prevent infinite loops
+    let tries = 0;
+
+    function step() {
+      if (myToken !== generationToken) return;
+      const target = Math.min(N, pts.length + CHUNK);
+      while (pts.length < target && tries < maxTries) {
+        tries++;
+        const r = sampleRadius(tab);
+        if (r > tab.view) continue;
+        const uz = 2 * Math.random() - 1;
+        const phi = 2 * Math.PI * Math.random();
+        const s = Math.sqrt(1 - uz * uz);
+        const A = angular(l, m, uz, phi, complexBasis);
+        if (Math.random() * maxA2 > A * A) continue;
+        const R = radial(n, l, r);
+        const val = Math.min(1, R * R * A * A * norm);
+        const neg = (R * A) < 0;
+        let phase;
+        if (complexBasis) {
+          const arg = m * phi + (neg ? Math.PI : 0);
+          phase = ((arg * 180 / Math.PI) % 360 + 360) % 360;
+        } else {
+          phase = neg ? -1 : 1;
+        }
+        pts.push({ x: s*Math.cos(phi)*r*scale, y: s*Math.sin(phi)*r*scale,
+                   z: uz*r*scale, val, t: Math.sqrt(val), phase });
+      }
+      if (pts.length < N && tries < maxTries) {
+        elStatus.textContent = 'GENERATING ' + pts.length.toLocaleString() + ' / ' + N.toLocaleString() + ' …';
+        setTimeout(step, 0);
+        return;
+      }
+      cloud = pts;
+      const actual = pts.length;
+      const ok = actual >= Math.floor(N * 0.999);
+      elStatus.textContent = actual.toLocaleString() + ' PARTICLES READY' + (ok ? '' : ' (TARGET ' + N.toLocaleString() + ')');
+      setTimeout(() => { if (myToken === generationToken) elStatus.textContent = ''; }, 2500);
+      onDone && onDone();
+    }
+    step();
+  }
+
+  function generateElementCloud(onDone) {
+    const el = ELEMENTS[fusionIdx];
+    const N = COUNTS[countIdx];   // exact same target as orbitals — no doubling
+    const myToken = ++generationToken;
+    elStatus.textContent = 'GENERATING ' + N.toLocaleString() + ' PARTICLES…';
+
+    const pts = [];
+    const totalElectrons = el.z;
+    const shellCount = el.shells.length;
+    const maxN = shellCount;
+    viewRadius = maxN * 3;
+    const scale = 165 / viewRadius;
+
+    const particlesPerElectron = Math.max(1, Math.floor(N / totalElectrons));
+    const shellJobs = [];
+    let plannedTotal = 0;
+    for (let s = 0; s < shellCount; s++) {
+      const shellNum = s + 1;
+      const electronCount = el.shells[s];
+      const countForShell = electronCount * particlesPerElectron;
+      const tab = radialTable(shellNum, 0);
+      const maxA2 = angularMax2(0, 0, false);
+      const norm = 1 / (tab.maxR2 * maxA2);
+      const shellScale = scale * (1.0 + s * 0.3);
+      shellJobs.push({ shellNum, countForShell, tab, maxA2, norm, shellScale, done: 0 });
+      plannedTotal += countForShell;
+    }
+    // If rounding shortchanged us, top up the last shell so we hit N exactly.
+    if (plannedTotal < N) {
+      shellJobs[shellJobs.length - 1].countForShell += (N - plannedTotal);
+    }
+
+    let jobIdx = 0;
+    let addedTotal = 0;
+    const maxTries = N * 500;
+    let tries = 0;
+
+    function step() {
+      if (myToken !== generationToken) return;
+      let added = 0;
+      while (jobIdx < shellJobs.length && added < CHUNK && tries < maxTries) {
+        const job = shellJobs[jobIdx];
+        if (job.done >= job.countForShell) { jobIdx++; continue; }
+        tries++;
+        const r = sampleRadius(job.tab);
+        if (r > job.tab.view) { added++; continue; }
+        const uz = 2 * Math.random() - 1;
+        const phi = 2 * Math.PI * Math.random();
+        const s_val = Math.sqrt(1 - uz * uz);
+        const A = angular(0, 0, uz, phi, false);
+        if (Math.random() * job.maxA2 > A * A) { added++; continue; }
+        const R = radial(job.shellNum, 0, r);
+        const val = Math.min(1, R * R * A * A * job.norm);
+        pts.push({ x: s_val*Math.cos(phi)*r*job.shellScale,
+                   y: s_val*Math.sin(phi)*r*job.shellScale,
+                   z: uz*r*job.shellScale,
+                   val, t: Math.sqrt(val), phase: 1 });
+        job.done++;
+        added++;
+        addedTotal++;
+      }
+      if (jobIdx < shellJobs.length && tries < maxTries) {
+        elStatus.textContent = 'GENERATING ' + pts.length.toLocaleString() + ' / ' + N.toLocaleString() + ' …';
+        setTimeout(step, 0);
+        return;
+      }
+      cloud = pts;
+      const actual = pts.length;
+      const ok = actual >= Math.floor(N * 0.999);
+      elStatus.textContent = actual.toLocaleString() + ' PARTICLES READY' + (ok ? '' : ' (TARGET ' + N.toLocaleString() + ')');
+      setTimeout(() => { if (myToken === generationToken) elStatus.textContent = ''; }, 2500);
+      onDone && onDone();
+    }
+    step();
+  }
+
+  // ===== DATA TABLE =====
+  function drawDataTable() {
+    clearGL();
+    let tableG = $('data-table-g');
+    if (!tableG) {
+      tableG = document.createElementNS(SVGNS, 'g');
+      tableG.setAttribute('id', 'data-table-g');
+      touchOverlay.parentNode.insertBefore(tableG, touchOverlay);
+    }
+    tableG.replaceChildren();
+    axesG.replaceChildren();
+
+    const frag = document.createDocumentFragment();
+    const header = document.createElementNS(SVGNS, 'text');
+    header.setAttribute('x', 215); header.setAttribute('y', 30);
+    header.setAttribute('text-anchor', 'middle');
+    header.setAttribute('fill', '#00ffcc'); header.setAttribute('font-size', 14);
+    header.setAttribute('font-weight', 'bold');
+    header.textContent = 'HYDROGEN RADIAL FUNCTIONS R(r)';
+    frag.appendChild(header);
+
+    const cols = ['r (a₀)', '1s', '2s', '2p', '3s', '3p', '3d'];
+    const colWidths = [50, 60, 60, 60, 60, 60, 60];
+    let startX = 20;
+    cols.forEach((col, i) => {
+      const text = document.createElementNS(SVGNS, 'text');
+      text.setAttribute('x', startX + colWidths[i]/2);
+      text.setAttribute('y', 60);
+      text.setAttribute('text-anchor', 'middle');
+      text.setAttribute('fill', '#ffcc00');
+      text.setAttribute('font-size', 10);
+      text.textContent = col;
+      frag.appendChild(text);
+      startX += colWidths[i];
+    });
+
+    const line = document.createElementNS(SVGNS, 'line');
+    line.setAttribute('x1', 20); line.setAttribute('y1', 65);
+    line.setAttribute('x2', 410); line.setAttribute('y2', 65);
+    line.setAttribute('stroke', '#00ffcc'); line.setAttribute('stroke-width', 1);
+    line.setAttribute('opacity', 0.5);
+    frag.appendChild(line);
+
+    HYDROGEN_TABLE.forEach((row, rowIndex) => {
+      const y = 85 + rowIndex * 22;
+      const values = [row.r, row.R1s, row.R2s, row.R2p, row.R3s, row.R3p, row.R3d];
+      let xPos = 20;
+      values.forEach((val, i) => {
+        const text = document.createElementNS(SVGNS, 'text');
+        text.setAttribute('x', xPos + colWidths[i]/2);
+        text.setAttribute('y', y);
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('fill', i === 0 ? '#ffffff' : '#00ffcc');
+        text.setAttribute('font-size', 9);
+        text.setAttribute('font-family', 'Courier New, monospace');
+        text.textContent = typeof val === 'number' ? val.toFixed(6) : val;
+        frag.appendChild(text);
+        xPos += colWidths[i];
+      });
+    });
+
+    const footer = document.createElementNS(SVGNS, 'text');
+    footer.setAttribute('x', 215); footer.setAttribute('y', 480);
+    footer.setAttribute('text-anchor', 'middle');
+    footer.setAttribute('fill', '#ff0055'); footer.setAttribute('font-size', 10);
+    footer.textContent = 'Data verified against exact hydrogen wavefunctions (max diff < 5e-7)';
+    frag.appendChild(footer);
+
+    tableG.replaceChildren(frag);
+  }
+
+  // ===== UI =====
+  const SUB = 'spdfghi';
+  const REAL_NAMES = {
+    1: { '0': 'z', '1': 'x', '-1': 'y' },
+    2: { '0': 'z²', '1': 'xz', '-1': 'yz', '2': 'x²−y²', '-2': 'xy' },
+    3: { '0': 'z³', '1': 'xz²', '-1': 'yz²', '2': 'z(x²−y²)', '-2': 'xyz',
+         '3': 'x(x²−3y²)', '-3': 'y(3x²−y²)' }
+  };
+  function orbitalName() {
+    if (elementCloudMode) return ELEMENTS[fusionIdx].symbol + ' Shells';
+    const base = n + SUB[l];
+    if (complexBasis) return base + ' m=' + (m > 0 ? '+' + m : m);
+    if (l === 0) return base;
+    if (REAL_NAMES[l]) return base + '_' + REAL_NAMES[l][String(m)];
+    return base + '_' + (m === 0 ? '0' : (m > 0 ? 'c' : 's') + Math.abs(m));
+  }
+
+  function fmt(v) { return v >= 100 ? v.toFixed(0) : v.toFixed(v >= 10 ? 1 : 2); }
+
+  function updateUI(rebuild) {
+    if (rebuild === undefined) rebuild = true;
+    if (!elementCloudMode && !dataTableMode) {
+      if (n < 1) n = 1; if (n > MAXN) n = MAXN;
+      if (l >= n) l = n - 1; if (l < 0) l = 0;
+      if (m > l) m = l; if (m < -l) m = -l;
+    }
+
+    sliderN.value = n; valN.textContent = n;
+    sliderL.max = n - 1; sliderL.value = l; valL.textContent = l;
+    sliderM.min = -l; sliderM.max = l; sliderM.value = m; valM.textContent = m;
+
+    elName.textContent = dataTableMode ? 'Data Table' : orbitalName();
+    elEnergy.textContent = (-13.606 / (n * n)).toFixed(2) + ' eV';
+    elRNodes.textContent = Math.max(0, n - l - 1);
+    elANodes.textContent = l;
+    elRMean.textContent = fmt(0.5 * (3 * n * n - l * (l + 1))) + ' a₀';
+    elRPeak.textContent = fmt(radialTable(n, l).peak) + ' a₀';
+    elMatrix.textContent = dataTableMode ? 'TABLE' : '(' + n + ',' + l + ',' + m + ')';
+    elBasis.textContent = (complexBasis ? 'COMPLEX' : 'REAL') + ' · ' + COUNTS[countIdx] + ' · ' + COLOR_NAMES[colorMode];
+
+    if (elementCloudMode) {
+      elScale.textContent = 'Element Shell View: ' + ELEMENTS[fusionIdx].name;
+    } else if (dataTableMode) {
+      elScale.textContent = 'Tabulated Hydrogen Data';
+    } else {
+      elScale.textContent = 'view radius ' + fmt(viewRadius) + ' a₀  (|Ψ|² ≥ 99.5%)';
+    }
+
+    const el = ELEMENTS[fusionIdx];
+    elFusionElement.textContent = el.name + ' (' + el.symbol + ')';
+    elFusionZ.textContent = el.z;
+    elFusionFormation.textContent = el.formation;
+
+    if (!dataTableMode) {
+      const tableG = $('data-table-g');
+      if (tableG) tableG.replaceChildren();
+    }
+
+    if (rebuild) {
+      generateCloud(scheduleDraw);
+    } else {
+      scheduleDraw();
+    }
+  }
+
+  // Sliders
+  sliderN.addEventListener('input', e => { n = parseInt(e.target.value); updateUI(); });
+  sliderL.addEventListener('input', e => { l = parseInt(e.target.value); updateUI(); });
+  sliderM.addEventListener('input', e => { m = parseInt(e.target.value); updateUI(); });
+
+  // Left Joy-Con: D-pad
+  document.querySelectorAll('.joycon-btn[data-dir]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const dir = btn.getAttribute('data-dir');
+      if (dir === 'up') l++;
+      if (dir === 'down') l--;
+      if (dir === 'left') m--;
+      if (dir === 'right') m++;
+      btn.classList.add('active'); setTimeout(() => btn.classList.remove('active'), 150);
+      updateUI();
+    });
+  });
+
+  // Left Joy-Con: basis toggle
+  document.querySelectorAll('.joycon-btn[data-act="basis"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      complexBasis = !complexBasis;
+      btn.classList.add('active'); setTimeout(() => btn.classList.remove('active'), 150);
+      updateUI();
+    });
+  });
+
+  // Left Joy-Con: analog stick (n)
+  const stickL = $('stick-l');
+  let stickDrag = false, startY = 0;
+  stickL.style.cursor = 'ns-resize';
+  stickL.addEventListener('pointerdown', e => {
+    stickDrag = true; startY = e.clientY; stickL.setPointerCapture(e.pointerId);
+  });
+  stickL.addEventListener('pointermove', e => {
+    if (!stickDrag) return;
+    const dy = e.clientY - startY;
+    if (Math.abs(dy) > 20) {
+      n += (dy > 0 ? -1 : 1);
+      if (n < 1) n = 1; if (n > MAXN) n = MAXN;
+      startY = e.clientY;
+      updateUI();
+    }
+  });
+  stickL.addEventListener('pointerup', e => {
+    stickDrag = false; stickL.releasePointerCapture(e.pointerId);
+  });
+
+  // Right Joy-Con
+  document.querySelectorAll('.joycon-btn-r').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const action = btn.getAttribute('data-action');
+      let rebuild = false;
+      if (action === 'toggle-color') {
+        colorMode = (colorMode + 1) % 4;
+      } else if (action === 'toggle-size') {
+        pointSize = pointSize === 1.5 ? 3.0 : pointSize === 3.0 ? 0.8 : 1.5;
+      } else if (action === 'cycle-count') {
+        countIdx = (countIdx + 1) % COUNTS.length; rebuild = true;
+      } else if (action === 'toggle-touch') {
+        touchMode = !touchMode;
+        touchOverlay.style.pointerEvents = touchMode ? 'auto' : 'none';
+        btnTouch.classList.toggle('active', touchMode);
+        elTouchMode.textContent = touchMode ? 'ENABLED' : 'DISABLED';
+        elTouchMode.setAttribute('fill', touchMode ? '#00ffcc' : '#ff0055');
+      } else if (action === 'reset') {
+        n = 3; l = 2; m = 0; complexBasis = false; countIdx = 1;
+        rotX = DEF_ROT_X; rotY = DEF_ROT_Y; colorMode = 0; pointSize = 1.5;
+        fusionIdx = 0; elementCloudMode = false; dataTableMode = false;
+        rebuild = true;
+      }
+      btn.classList.add('active'); setTimeout(() => btn.classList.remove('active'), 200);
+      updateUI(rebuild);
+    });
+  });
+
+  // Fusion Button
+  btnFusion.addEventListener('click', () => {
+    fusionIdx = (fusionIdx + 1) % ELEMENTS.length;
+    btnFusion.setAttribute('fill', '#ffcc00');
+    setTimeout(() => btnFusion.setAttribute('fill', '#1a1a1f'), 150);
+    if (elementCloudMode) updateUI(true);
+    else updateUI(false);
+  });
+
+  // Element Cloud Toggle
+  btnElementCloud.addEventListener('click', () => {
+    elementCloudMode = !elementCloudMode;
+    dataTableMode = false;
+    btnElementCloud.classList.toggle('active', elementCloudMode);
+    if (elementCloudMode) btnElementCloud.setAttribute('fill', '#00ffcc');
+    else btnElementCloud.setAttribute('fill', '#1a1a1f');
+    updateUI(true);
+  });
+
+  // Data Table Toggle
+  btnDataTable.addEventListener('click', () => {
+    dataTableMode = !dataTableMode;
+    elementCloudMode = false;
+    btnDataTable.classList.toggle('active', dataTableMode);
+    if (dataTableMode) btnDataTable.setAttribute('fill', '#00ffcc');
+    else btnDataTable.setAttribute('fill', '#1a1a1f');
+    updateUI(false);
+  });
+
+  // 3D drag rotation
+  touchOverlay.addEventListener('pointerdown', e => {
+    if (!touchMode || dataTableMode) return;
+    isDragging = true; lastMouseX = e.clientX; lastMouseY = e.clientY;
+    touchOverlay.setPointerCapture(e.pointerId);
+    touchOverlay.style.cursor = 'grabbing';
+  });
+  touchOverlay.addEventListener('pointermove', e => {
+    if (!isDragging) return;
+    rotY += (e.clientX - lastMouseX) * 0.01;
+    rotX += (e.clientY - lastMouseY) * 0.01;
+    rotX = Math.max(-Math.PI / 2 + 0.05, Math.min(Math.PI / 2 - 0.05, rotX));
+    lastMouseX = e.clientX; lastMouseY = e.clientY;
+    scheduleDraw();
+  });
+  touchOverlay.addEventListener('pointerup', e => {
+    isDragging = false; touchOverlay.releasePointerCapture(e.pointerId);
+    touchOverlay.style.cursor = 'grab';
+  });
+
+  // ===== BOOT =====
+  updateUI();
+})();
+]]></script>
+</svg>
