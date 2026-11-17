@@ -446,7 +446,7 @@
   </g>
 
   <g id="dropdown-panel" style="display:none;" transform="translate(-80, 28)">
-    <rect width="200" height="320" rx="6" class="menu-bg"/>
+    <rect width="200" height="352" rx="6" class="menu-bg"/>
 
     <rect width="200" height="22" rx="6" fill="#ffaa00" opacity="0.15"/>
     <text x="100" y="15" class="menu-text" text-anchor="middle" style="fill:#ffaa00; font-size:10px; font-weight:bold;">ADDITIONAL FUNCTIONS</text>
@@ -506,7 +506,12 @@
       <text id="super-status" x="180" y="297" text-anchor="end" class="menu-text-sm" style="fill:#ff0055; font-weight:bold;">OFF</text>
     </g>
 
-    <text x="100" y="316" text-anchor="middle" style="fill:#666; font-size:8px; pointer-events:none;">Click outside to close</text>
+    <g class="dropdown-item" id="menu-export-csv" pointer-events="all">
+      <rect x="10" y="311" width="180" height="26" rx="4"/>
+      <text x="20" y="328" class="menu-text-sm" style="fill:#00ffcc;">⬇ Export Particle Data (CSV)</text>
+    </g>
+
+    <text x="100" y="348" text-anchor="middle" style="fill:#666; font-size:8px; pointer-events:none;">Click outside to close</text>
   </g>
 </g>
 
@@ -693,6 +698,8 @@
   let superStateB = { n: 2, l: 1, m: 0 };
   let superMixTheta = Math.PI / 4;
   let superOmega = 0;
+  let superDeltaE = 0;   // signed E_B - E_A (Hartree)
+  let superSame = false; // A and B are the same eigenstate
   let superPhase = 0;
   let superCloudA = [];
   let superCloudB = [];
@@ -809,6 +816,7 @@
   const menuQuickOrbit = $('menu-quick-orbit');
   const quickOrbitLabel = $('quick-orbit-label');
   const menuExport = $('menu-export');
+  const menuExportCSV = $('menu-export-csv');
   const menuAutorotate = $('menu-autorotate');
   const autorotateStatus = $('autorotate-status');
   const menuToggleGrid = $('menu-toggle-grid');
@@ -909,11 +917,12 @@
     if (p.isGraphene) {
       return [0.0, 1.0, 0.6];
     }
-    if (p.isSuperA) {
-      return [1.0, 0.2, 1.0];
-    }
-    if (p.isSuperB) {
-      return [0.2, 0.8, 1.0];
+    if (p.isSuperA || p.isSuperB) {
+      // PHASE colour mode: hue = arg Psi(x,t) of the *total* wavefunction
+      if (colorMode === 3) return hslToRgb(p.phase, 1.0, (35 + 40 * p.t) / 100);
+      const base = p.isSuperA ? [1.0, 0.2, 1.0] : [0.2, 0.8, 1.0];
+      const g = 0.25 + 0.75 * p.t;
+      return [base[0] * g, base[1] * g, base[2] * g];
     }
     if (colorMode < 3) {
       const c = ramp(RAMPS[colorMode], p.t);
@@ -1371,17 +1380,50 @@
   }
 
   // ===== SUPERPOSITION CLOUD GENERATOR =====
+  // Time evolution of the two-state superposition (exact, complex-basis Y_lm):
+  //   Psi(x,t) = cos(th) psi_A(x) e^{-i E_A t} + sin(th) psi_B(x) e^{-i E_B t}
+  // Particles were drawn from the fixed proposal q0 = (|psi_A|^2 + |psi_B|^2)/2 and carry
+  // the importance weight w = |Psi|^2 / q0, so (particle density) x w = |Psi(x,t)|^2 exactly
+  // (in expectation). By Cauchy-Schwarz |Psi|^2 <= |psi_A|^2 + |psi_B|^2, hence w/2 is in [0,1].
+  function superApplyTime() {
+    const a = Math.cos(superMixTheta), b = Math.sin(superMixTheta);
+    const c = Math.cos(superPhase), s = Math.sin(superPhase);
+    const nrm = superSame ? 1 / ((a + b) * (a + b)) : 1;
+    const apply = (arr) => {
+      for (let i = 0; i < arr.length; i++) {
+        const p = arr[i];
+        // psi_B * e^{-i*dE*t}
+        const Br = p.Br * c + p.Bi * s;
+        const Bi = p.Bi * c - p.Br * s;
+        const re = a * p.Ar + b * Br;
+        const im = a * p.Ai + b * Bi;
+        const dens = (re * re + im * im) * nrm;
+        const s2 = p.rhoSum > 0 ? Math.min(1, dens / p.rhoSum) : 0;
+        p.re = re; p.im = im; p.dens = dens;
+        p.w = 2 * s2;
+        p.val = s2;
+        p.t = Math.sqrt(s2);
+        p.phase = ((Math.atan2(im, re) * 180 / Math.PI) % 360 + 360) % 360;
+      }
+    };
+    apply(superCloudA);
+    apply(superCloudB);
+  }
+
   function generateSuperpositionCloud(onDone) {
     const myToken = ++generationToken;
     elStatus.textContent = 'BUILDING SUPERPOSITION…';
 
-    const N = Math.min(COUNTS[countIdx], 2000);
+    const N = Math.min(COUNTS[countIdx], 3000);   // per state (<= 6000 total)
     const { n: n1, l: l1, m: m1 } = superStateA;
     const { n: n2, l: l2, m: m2 } = superStateB;
 
     const E1 = -0.5 / (n1 * n1);
     const E2 = -0.5 / (n2 * n2);
-    superOmega = Math.abs(E1 - E2);
+    superDeltaE = E2 - E1;
+    superOmega = Math.abs(superDeltaE);
+    superSame = (n1 === n2 && l1 === l2 && m1 === m2);
+    if (superDeltaE === 0) superPhase = 0;   // degenerate pair: no beat, no stale phase
 
     const tab1 = radialTable(n1, l1);
     const tab2 = radialTable(n2, l2);
@@ -1389,27 +1431,35 @@
     const scale = 165 / maxView;
     viewRadius = maxView;
 
-    function sampleState(nn, ll, mm, tab, maxA2, isA) {
+    // complex hydrogenic eigenfunction psi = R_nl(r) * K P_l^|m|(cos th) * e^{i m phi}
+    function psiAt(nn, ll, mm, r, uz, phi) {
+      const RA = radial(nn, ll, r) * angular(ll, mm, uz, phi, true);
+      return [RA * Math.cos(mm * phi), RA * Math.sin(mm * phi)];
+    }
+
+    function sampleState(ll, mm, nn, tab, maxA2, isA) {
       const pts = [];
-      const norm = 1 / (tab.maxR2 * maxA2);
       const maxTries = N * 500;
       let tries = 0;
       while (pts.length < N && tries < maxTries) {
         tries++;
-        const r = sampleRadius(tab);
+        const r = sampleRadius(tab);                 // inverse-CDF on r^2 R^2
         if (r > tab.view) continue;
         const uz = 2 * Math.random() - 1;
         const phi = 2 * Math.PI * Math.random();
+        const Y = angular(ll, mm, uz, phi, true);    // |Y_lm| (phi-independent)
+        if (Math.random() * maxA2 > Y * Y) continue; // rejection on |Y|^2
         const s = Math.sqrt(1 - uz * uz);
-        const A = angular(ll, mm, uz, phi, false);
-        if (Math.random() * maxA2 > A * A) continue;
-        const R = radial(nn, ll, r);
-        const val = Math.min(1, R * R * A * A * norm);
+        const pa = psiAt(n1, l1, m1, r, uz, phi);
+        const pb = psiAt(n2, l2, m2, r, uz, phi);
         pts.push({
           x: s * Math.cos(phi) * r * scale,
           y: s * Math.sin(phi) * r * scale,
           z: uz * r * scale,
-          val, t: Math.sqrt(val), phase: 1,
+          Ar: pa[0], Ai: pa[1], Br: pb[0], Bi: pb[1],
+          rhoSum: pa[0] * pa[0] + pa[1] * pa[1] + pb[0] * pb[0] + pb[1] * pb[1],
+          re: 0, im: 0, dens: 0, w: 0,
+          val: 0, t: 0, phase: 0,
           isSuperA: isA,
           isSuperB: !isA
         });
@@ -1417,16 +1467,21 @@
       return pts;
     }
 
-    const maxA2_1 = angularMax2(l1, m1, false);
-    const maxA2_2 = angularMax2(l2, m2, false);
+    const maxA2_1 = angularMax2(l1, m1, true);
+    const maxA2_2 = angularMax2(l2, m2, true);
 
     setTimeout(() => {
       if (myToken !== generationToken) return;
-      superCloudA = sampleState(n1, l1, m1, tab1, maxA2_1, true);
-      superCloudB = sampleState(n2, l2, m2, tab2, maxA2_2, false);
+      superCloudA = sampleState(l1, m1, n1, tab1, maxA2_1, true);
+      superCloudB = sampleState(l2, m2, n2, tab2, maxA2_2, false);
+      superApplyTime();
       cloud = superCloudA.concat(superCloudB);
 
-      elStatus.textContent = 'SUPERPOSITION READY';
+      // normalisation sanity check: E_q0[w] = integral |Psi|^2 = 1
+      let sw = 0;
+      for (let i = 0; i < cloud.length; i++) sw += cloud[i].w;
+      const meanW = cloud.length ? sw / cloud.length : 0;
+      elStatus.textContent = 'SUPERPOSITION READY  <w>=' + meanW.toFixed(3);
       setTimeout(() => { if (myToken === generationToken) elStatus.textContent = ''; }, 2500);
 
       superALabel.textContent = '(' + n1 + ',' + l1 + ',' + m1 + ')';
@@ -1455,19 +1510,9 @@
       }
       const dt = Math.min(0.05, (now - superLastTime) / 1000);
       superLastTime = now;
-      superPhase += superOmega * dt * 2 * Math.PI;
-      if (superPhase > 2 * Math.PI) superPhase -= 2 * Math.PI;
-
-      const mixA = Math.cos(superMixTheta);
-      const mixB = Math.sin(superMixTheta);
-      const crossFactor = Math.cos(superPhase);
-
-      for (let i = 0; i < superCloudA.length; i++) {
-        superCloudA[i].t = Math.sqrt(Math.max(0, mixA * mixA + 0.5 * crossFactor));
-      }
-      for (let i = 0; i < superCloudB.length; i++) {
-        superCloudB[i].t = Math.sqrt(Math.max(0, mixB * mixB - 0.5 * crossFactor));
-      }
+      superPhase += superDeltaE * dt * 2 * Math.PI;          // delta = (E_B - E_A) t
+      superPhase = ((superPhase % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+      superApplyTime();
 
       scheduleDraw();
       superAnimId = requestAnimationFrame(tick);
@@ -1742,15 +1787,75 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
       a.href = url;
-      a.download = 'joy-scan-snapshot-' + n + l + m + '.svg';
-      document.body.appendChild(a);
+      a.download = 'joy-scan-snapshot-n' + n + 'l' + l + 'm' + m + '.svg';
+      (document.body || document.documentElement).appendChild(a);
       a.click();
-      document.body.removeChild(a);
+      a.parentNode && a.parentNode.removeChild(a);
       setTimeout(() => URL.revokeObjectURL(url), 2000);
       elStatus.textContent = 'SNAPSHOT EXPORTED';
       setTimeout(() => { elStatus.textContent = ''; }, 2000);
     } catch (err) {
       elStatus.textContent = 'EXPORT FAILED';
+      setTimeout(() => { elStatus.textContent = ''; }, 2000);
+    }
+  });
+
+
+  // ===== RAW PARTICLE DATA EXPORT (CSV) =====
+  menuExportCSV.addEventListener('click', (e) => {
+    e.stopPropagation();
+    try {
+      const pts = cloud.filter(p => !p.isHydrogen);
+      if (!pts.length) { elStatus.textContent = 'NO PARTICLES TO EXPORT'; setTimeout(() => { elStatus.textContent = ''; }, 2000); return; }
+      const au = viewRadius / 165;   // scene units -> Bohr radii (hydrogenic modes only)
+      const fx = (v) => (typeof v === 'number' ? (isFinite(v) ? String(+v.toPrecision(7)) : '') : v);
+      const meta = ['# JOY-SCAN particle export', '# generated: ' + new Date().toISOString()];
+      let cols, rowFn, tag;
+      if (superMode) {
+        tag = 'super';
+        meta.push('# mode: two-state superposition, complex basis Y_lm (eigenstates of Lz), atomic units');
+        meta.push('# A=(' + superStateA.n + ',' + superStateA.l + ',' + superStateA.m + ') B=(' + superStateB.n + ',' + superStateB.l + ',' + superStateB.m + ')');
+        meta.push('# mixing theta_deg=' + fx(superMixTheta * 180 / Math.PI) + '  dE_au=' + fx(superDeltaE) + '  phase_rad(dE*t)=' + fx(superPhase));
+        meta.push('# Psi = cos(theta)*psiA + sin(theta)*psiB*exp(-i*dE*t), global phase dropped');
+        meta.push('# positions in Bohr radii; density_au = |Psi|^2 in a0^-3');
+        meta.push('# particles drawn from q0=(|psiA|^2+|psiB|^2)/2; importance_w=|Psi|^2/q0 so sum(w*f)/N estimates the integral of |Psi|^2 f');
+        cols = 'x_a0,y_a0,z_a0,source,psiA_re,psiA_im,psiB_re,psiB_im,psi_re,psi_im,density_au,importance_w';
+        rowFn = (p) => [p.x * au, p.y * au, p.z * au, p.isSuperA ? 'A' : 'B', p.Ar, p.Ai, p.Br, p.Bi, p.re, p.im, p.dens, p.w];
+      } else if (!grapheneMode && !elementCloudMode) {
+        tag = 'n' + n + 'l' + l + 'm' + m;
+        meta.push('# mode: hydrogen eigenstate (n,l,m)=(' + n + ',' + l + ',' + m + '), ' + (complexBasis ? 'complex basis' : 'real basis') + ', atomic units');
+        meta.push('# particles are Monte Carlo samples of |psi|^2 (inverse-CDF radial, rejection angular); positions in Bohr radii');
+        meta.push('# rel_density = |psi|^2 / max (radial max x angular max); phase = degrees (complex basis) or sign of R*Y (real basis)');
+        cols = 'x_a0,y_a0,z_a0,r_a0,rel_density,phase';
+        rowFn = (p) => [p.x * au, p.y * au, p.z * au, Math.sqrt(p.x * p.x + p.y * p.y + p.z * p.z) * au, p.val, p.phase];
+      } else {
+        tag = grapheneMode ? 'graphene' : 'element';
+        meta.push('# mode: ' + tag + ' visual model (NOT a quantum calculation); coordinates are scene units, not atomic units');
+        cols = 'x_scene,y_scene,z_scene,brightness,phase';
+        rowFn = (p) => [p.x, p.y, p.z, p.t, p.phase];
+      }
+      const parts = [meta.join('\n') + '\n' + cols + '\n'];
+      const CH = 20000;
+      for (let i = 0; i < pts.length; i += CH) {
+        const end = Math.min(pts.length, i + CH);
+        const lines = new Array(end - i);
+        for (let k = i; k < end; k++) lines[k - i] = rowFn(pts[k]).map(fx).join(',');
+        parts.push(lines.join('\n') + '\n');
+      }
+      const blob = new Blob(parts, { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+      a.href = url;
+      a.download = 'joy-scan-particles-' + tag + '.csv';
+      (document.body || document.documentElement).appendChild(a);
+      a.click();
+      a.parentNode && a.parentNode.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      elStatus.textContent = pts.length.toLocaleString() + ' ROWS EXPORTED (CSV)';
+      setTimeout(() => { elStatus.textContent = ''; }, 2500);
+    } catch (err) {
+      console.error(err);
+      elStatus.textContent = 'CSV EXPORT FAILED: ' + (err && err.message ? err.message.slice(0, 40) : '');
       setTimeout(() => { elStatus.textContent = ''; }, 2000);
     }
   });
@@ -2103,14 +2208,7 @@
     if (superMode && !superPaused) {
       // Will be picked up by animation loop
     } else if (superMode) {
-      const mixA = Math.cos(superMixTheta);
-      const mixB = Math.sin(superMixTheta);
-      for (let i = 0; i < superCloudA.length; i++) {
-        superCloudA[i].t = Math.sqrt(Math.max(0, mixA * mixA));
-      }
-      for (let i = 0; i < superCloudB.length; i++) {
-        superCloudB[i].t = Math.sqrt(Math.max(0, mixB * mixB));
-      }
+      superApplyTime();
       scheduleDraw();
     }
   }
