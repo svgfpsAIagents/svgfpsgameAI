@@ -266,15 +266,25 @@
       <rect width="70" height="30" rx="5"/>
       <text x="35" y="20" class="joycon-text" style="fill:#00ffaa; font-size:10px; pointer-events:none;">GRAPHENE</text>
     </g>
-
-    <!-- GRAPHENE SLIDER (Only appears when Graphene is active) -->
-    <g transform="translate(20, 525)" id="graphene-slider" style="display:none;" pointer-events="all">
-      <rect width="320" height="22" rx="4" fill="#1a1a1f" stroke="#00ffaa" stroke-width="1"/>
-      <text x="8" y="15" class="menu-text-sm" style="fill:#00ffaa; font-size:9px;">RINGS:</text>
-      <input type="range" id="graphene-ring-slider" min="1" max="10" step="1" value="3" style="position:absolute; top:2px; left:70px; width:200px;"/>
-      <text id="graphene-ring-label" x="310" y="15" text-anchor="end" class="menu-text-sm" style="fill:#fff; font-size:10px; font-weight:bold;">3</text>
-    </g>
   </g>
+</g>
+
+<!-- ===== NEW GRAPHENE SLIDER (Top Layer, Proment) ===== -->
+<g id="graphene-slider-panel" style="display:none;" transform="translate(250, 560)">
+  <!-- Background Panel -->
+  <rect width="430" height="50" rx="8" fill="#0a0a0c" stroke="#00ffaa" stroke-width="2" filter="url(#glow-strong)"/>
+  
+  <!-- Label -->
+  <text x="20" y="20" class="ui-text" style="font-size:12px; fill:#00ffaa;">GRAPHENE RINGS:</text>
+  
+  <!-- The Slider Track -->
+  <rect x="20" y="30" width="390" height="8" rx="4" fill="#003333" stroke="#00ffaa" stroke-width="1"/>
+  
+  <!-- The Slider Thumb (Draggable) -->
+  <circle id="graphene-slider-thumb" cx="131" cy="34" r="10" fill="#00ffaa" style="cursor:pointer; box-shadow:0 0 10px #00ffaa;"/>
+  
+  <!-- The Value Text -->
+  <text id="graphene-slider-value" x="360" y="22" class="ui-text" style="font-size:14px; fill:#fff;">3</text>
 </g>
 
 <!-- ================= LEFT JOY-CON (QUANTUM NUMBERS) ================= -->
@@ -741,9 +751,9 @@
 
   // Graphene DOM
   const btnGraphene = $('btn-graphene');
-  const grapheneSlider = $('graphene-slider');
-  const grapheneRingSlider = $('graphene-ring-slider');
-  const grapheneRingLabel = $('graphene-ring-label');
+  const grapheneSliderPanel = $('graphene-slider-panel');
+  const grapheneSliderThumb = $('graphene-slider-thumb');
+  const grapheneSliderValue = $('graphene-slider-value');
   const lblGrapheneScale = $('lbl-graphene-scale');
 
   // ===== CLOUD STATE =====
@@ -1464,7 +1474,7 @@
       grapheneMode = false;
       btnGraphene.classList.remove('active');
       btnGraphene.setAttribute('fill', '#1a1a1f');
-      grapheneSlider.style.display = 'none';
+      grapheneSliderPanel.style.display = 'none';
       lblGrapheneScale.style.display = 'none';
     }
     updateUI(true);
@@ -1671,7 +1681,7 @@
         hScaleRing.style.display = 'none';
         lblHScale.style.display = 'none';
         btnGraphene.classList.remove('active'); btnGraphene.setAttribute('fill', '#1a1a1f');
-        grapheneSlider.style.display = 'none';
+        grapheneSliderPanel.style.display = 'none';
         lblGrapheneScale.style.display = 'none';
         const gridRect = $('bg-grid-rect');
         if (gridRect) gridRect.style.display = '';
@@ -1697,7 +1707,7 @@
         grapheneMode = false;
         btnGraphene.classList.remove('active');
         btnGraphene.setAttribute('fill', '#1a1a1f');
-        grapheneSlider.style.display = 'none';
+        grapheneSliderPanel.style.display = 'none';
         lblGrapheneScale.style.display = 'none';
         updateUI(true);
       }
@@ -1714,7 +1724,7 @@
       grapheneMode = false;
       btnGraphene.classList.remove('active');
       btnGraphene.setAttribute('fill', '#1a1a1f');
-      grapheneSlider.style.display = 'none';
+      grapheneSliderPanel.style.display = 'none';
       lblGrapheneScale.style.display = 'none';
     }
     btnElementCloud.classList.toggle('active', elementCloudMode);
@@ -1731,7 +1741,7 @@
       grapheneMode = false;
       btnGraphene.classList.remove('active');
       btnGraphene.setAttribute('fill', '#1a1a1f');
-      grapheneSlider.style.display = 'none';
+      grapheneSliderPanel.style.display = 'none';
       lblGrapheneScale.style.display = 'none';
     }
     btnDataTable.classList.toggle('active', dataTableMode);
@@ -1768,24 +1778,79 @@
       
       btnGraphene.classList.add('active');
       btnGraphene.setAttribute('fill', '#00ffaa');
-      grapheneSlider.style.display = '';
+      grapheneSliderPanel.style.display = '';
       lblGrapheneScale.style.display = '';
     } else {
       btnGraphene.classList.remove('active');
       btnGraphene.setAttribute('fill', '#1a1a1f');
-      grapheneSlider.style.display = 'none';
+      grapheneSliderPanel.style.display = 'none';
       lblGrapheneScale.style.display = 'none';
     }
     updateUI(true);
   });
 
-  // GRAPHENE Slider
-  grapheneRingSlider.addEventListener('input', (e) => {
-    grapheneRings = parseInt(e.target.value);
-    grapheneRingLabel.textContent = grapheneRings;
-    lblGrapheneScale.textContent = 'Graphene: Rings = ' + grapheneRings;
-    if (grapheneMode) {
-      generateCloud(scheduleDraw);
+  // ===== GRAPHENE SLIDER DRAG LOGIC =====
+  let isSliderDragging = false;
+  const SLIDER_MIN_X = 20;
+  const SLIDER_MAX_X = 410;
+  const SLIDER_Y = 34;
+
+  function updateGrapheneSlider(clientX) {
+    // Convert clientX to SVG viewBox coordinates
+    const svgEl = document.getElementById('viewport');
+    const pt = svgEl.createSVGPoint();
+    pt.x = clientX;
+    pt.y = 0;
+    const svgP = pt.matrixTransform(svgEl.getScreenCTM().inverse());
+    
+    // The slider panel is at x=250, so we offset by 250
+    let localX = svgP.x - 250;
+    localX = Math.max(SLIDER_MIN_X, Math.min(SLIDER_MAX_X, localX));
+    
+    // Map to 1..10
+    const percent = (localX - SLIDER_MIN_X) / (SLIDER_MAX_X - SLIDER_MIN_X);
+    const newRings = Math.round(1 + percent * 9);
+    
+    if (newRings !== grapheneRings) {
+      grapheneRings = newRings;
+      grapheneSliderValue.textContent = grapheneRings;
+      grapheneSliderThumb.setAttribute('cx', localX);
+      lblGrapheneScale.textContent = 'Graphene: Rings = ' + grapheneRings;
+      if (grapheneMode) generateCloud(scheduleDraw);
+    }
+  }
+
+  grapheneSliderThumb.addEventListener('pointerdown', (e) => {
+    e.stopPropagation();
+    isSliderDragging = true;
+    grapheneSliderThumb.setPointerCapture(e.pointerId);
+  });
+
+  grapheneSliderThumb.addEventListener('pointermove', (e) => {
+    if (!isSliderDragging) return;
+    e.stopPropagation();
+    updateGrapheneSlider(e.clientX);
+  });
+
+  grapheneSliderThumb.addEventListener('pointerup', (e) => {
+    if (!isSliderDragging) return;
+    e.stopPropagation();
+    isSliderDragging = false;
+    grapheneSliderThumb.releasePointerCapture(e.pointerId);
+  });
+
+  // Click on the track to jump
+  document.getElementById('graphene-slider-panel').addEventListener('pointerdown', (e) => {
+    if (e.target === grapheneSliderThumb) return;
+    const svgEl = document.getElementById('viewport');
+    const pt = svgEl.createSVGPoint();
+    pt.x = e.clientX;
+    pt.y = 0;
+    const svgP = pt.matrixTransform(svgEl.getScreenCTM().inverse());
+    let localX = svgP.x - 250;
+    if (localX >= SLIDER_MIN_X && localX <= SLIDER_MAX_X) {
+      // Clicked on track
+      updateGrapheneSlider(e.clientX);
     }
   });
 
