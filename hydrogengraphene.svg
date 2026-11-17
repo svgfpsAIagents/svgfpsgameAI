@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg id="viewport" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet">
-<title>JOY-SCAN // 3D HYDROGEN PROBABILITY CLOUDS // GRAPHENE MODE</title>
+<title>JOY-SCAN // 3D HYDROGEN PROBABILITY CLOUDS // STELLAR NUCLEOSYNTHESIS // SUPERPOSITION MODE</title>
 
 <style><![CDATA[
   svg { touch-action:none; background:#0a0a0c; font-family:'Courier New',Courier,monospace;
@@ -8,6 +8,8 @@
   .ui-text { fill:#00ffcc; font-size:14px; letter-spacing:1px; pointer-events:none; font-weight:bold; }
   .ui-dim  { fill:#00ffcc; font-size:12px; letter-spacing:1px; opacity:.7; pointer-events:none; }
   .info-text { fill:#ffffff; font-size:13px; pointer-events:none; line-height:1.5; }
+  .sci-note { fill:#ffcc00; font-size:9px; pointer-events:none; letter-spacing:0.3px; line-height:1.4; }
+  .super-text { fill:#ff00ff; font-size:10px; pointer-events:none; font-weight:bold; }
 
   .joycon-left { fill:#1a1a1f; stroke:#00e5ff; stroke-width:3; }
   .joycon-right { fill:#1a1a1f; stroke:#ff0055; stroke-width:3; }
@@ -32,6 +34,11 @@
   .table-btn { fill:#1a1a1f; stroke:#00ffcc; stroke-width:2; cursor:pointer; transition:fill .1s; }
   .table-btn:hover { fill:#333; }
   .table-btn:active { fill:#00ffcc; }
+
+  .super-btn { fill:#1a1a1f; stroke:#ff00ff; stroke-width:2; cursor:pointer; transition:fill .1s; }
+  .super-btn:hover { fill:#333; }
+  .super-btn:active { fill:#ff00ff; }
+  .super-btn.active { fill:#ff00ff; stroke:#fff; }
 
   .graphene-btn { fill:#1a1a1f; stroke:#00ffaa; stroke-width:2; cursor:pointer; transition:fill .1s; display:none; }
   .graphene-btn:hover { fill:#333; }
@@ -60,6 +67,12 @@
   .menu-text-sm { fill:#fff; font-size:9px; pointer-events:none; }
   .data-card-text { fill:#ffffff; font-size:11px; pointer-events:none; }
   .data-card-label { fill:#00ffcc; font-size:10px; pointer-events:none; }
+
+  .super-slider-track { fill:#330033; stroke:#ff00ff; stroke-width:1; }
+  .super-slider-thumb { fill:#ff00ff; cursor:pointer; filter:drop-shadow(0 0 6px #ff00ff); }
+  .super-cycle-btn { fill:#1a1a1f; stroke:#ff00ff; stroke-width:1.5; cursor:pointer; }
+  .super-cycle-btn:hover { fill:#333; }
+  .super-cycle-btn:active { fill:#ff00ff; }
 ]]></style>
 
 <defs>
@@ -69,6 +82,10 @@
   </filter>
   <filter id="glow-strong">
     <feGaussianBlur stdDeviation="5" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="glow-magenta">
+    <feGaussianBlur stdDeviation="4" result="blur"/>
     <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
   </filter>
 
@@ -185,6 +202,32 @@
 
     <text x="10" y="645" class="ui-dim" style="font-size:10px;">Cloud derived from H</text>
     <text x="10" y="660" class="ui-dim" style="font-size:10px;">eigenstates (scaled)</text>
+
+    <!-- SCIENTIFIC RIGOR NOTE -->
+    <line x1="10" y1="672" x2="210" y2="672" stroke="#ffcc00" opacity="0.3"/>
+    <text x="10" y="685" class="sci-note">
+      <tspan x="10" dy="0">⚠ This chain spans multiple</tspan>
+      <tspan x="10" dy="11">stellar generations and burning</tspan>
+      <tspan x="10" dy="11">stages (H → He → C → O → Ne →</tspan>
+      <tspan x="10" dy="11">Si → Fe). Nitrogen is a CNO-</tspan>
+      <tspan x="10" dy="11">cycle product requiring pre-</tspan>
+      <tspan x="10" dy="11">existing carbon. Not a single-</tspan>
+      <tspan x="10" dy="11">star sequence.</tspan>
+    </text>
+
+    <!-- SUPERPOSITION PANEL -->
+    <g id="super-panel" style="display:none;">
+      <line x1="10" y1="672" x2="210" y2="672" stroke="#ff00ff" opacity="0.5"/>
+      <text x="10" y="685" class="super-text">SUPERPOSITION MODE</text>
+      <text x="10" y="700" class="ui-dim" style="font-size:9px;">State A:</text>
+      <text id="super-a-label" x="210" y="700" class="super-text" text-anchor="end">(1,0,0)</text>
+      <text x="10" y="714" class="ui-dim" style="font-size:9px;">State B:</text>
+      <text id="super-b-label" x="210" y="714" class="super-text" text-anchor="end">(2,1,0)</text>
+      <text x="10" y="728" class="ui-dim" style="font-size:9px;">Beat ω:</text>
+      <text id="super-omega" x="210" y="728" class="super-text" text-anchor="end">0.00</text>
+      <text x="10" y="742" class="ui-dim" style="font-size:9px;">Mix θ:</text>
+      <text id="super-theta" x="210" y="742" class="super-text" text-anchor="end">45°</text>
+    </g>
   </g>
 
   <!-- Right Panel: 3D Visualizer Canvas -->
@@ -200,6 +243,7 @@
     <text id="lbl-scale" x="10" y="20" class="ui-dim" style="font-size:10px;">view radius</text>
     <text id="lbl-h-scale" x="10" y="36" class="ui-dim" style="font-size:9px; fill:#ffcc00; display:none;">H-block: 1s @ 1.0× element scale</text>
     <text id="lbl-graphene-scale" x="10" y="52" class="ui-dim" style="font-size:9px; fill:#00ffaa; display:none;">Graphene: Rings = 3</text>
+    <text id="lbl-super-scale" x="10" y="66" class="ui-dim" style="font-size:9px; fill:#ff00ff; display:none;">Superposition Active</text>
 
     <!-- WebGL particle canvas (2x resolution for retina) -->
     <foreignObject x="0" y="0" width="430" height="540" style="pointer-events:none;">
@@ -254,6 +298,12 @@
       <text x="35" y="20" class="joycon-text" style="fill:#ffcc00; font-size:10px; pointer-events:none;">H-BLOCK</text>
     </g>
 
+    <!-- SUPERPOSITION Button (NEW) -->
+    <g transform="translate(20, 525)" class="super-btn" id="btn-super" pointer-events="all">
+      <rect width="160" height="30" rx="5"/>
+      <text x="80" y="20" class="joycon-text" style="fill:#ff00ff; font-size:11px; pointer-events:none;">SUPERPOSITION</text>
+    </g>
+
     <!-- H shape selector (visible when H-BLOCK is on) -->
     <g transform="translate(20, 525)" id="h-selector" style="display:none;" pointer-events="all">
       <rect width="400" height="22" rx="4" fill="#1a1a1f" stroke="#ffcc00" stroke-width="1"/>
@@ -269,22 +319,40 @@
   </g>
 </g>
 
-<!-- ===== NEW GRAPHENE SLIDER (Top Layer, Proment) ===== -->
+<!-- ===== GRAPHENE SLIDER (Top Layer) ===== -->
 <g id="graphene-slider-panel" style="display:none;" transform="translate(250, 560)">
-  <!-- Background Panel -->
   <rect width="430" height="50" rx="8" fill="#0a0a0c" stroke="#00ffaa" stroke-width="2" filter="url(#glow-strong)"/>
-  
-  <!-- Label -->
   <text x="20" y="20" class="ui-text" style="font-size:12px; fill:#00ffaa;">GRAPHENE RINGS:</text>
-  
-  <!-- The Slider Track -->
   <rect x="20" y="30" width="390" height="8" rx="4" fill="#003333" stroke="#00ffaa" stroke-width="1"/>
-  
-  <!-- The Slider Thumb (Draggable) -->
   <circle id="graphene-slider-thumb" cx="131" cy="34" r="10" fill="#00ffaa" style="cursor:pointer; box-shadow:0 0 10px #00ffaa;"/>
-  
-  <!-- The Value Text -->
   <text id="graphene-slider-value" x="360" y="22" class="ui-text" style="font-size:14px; fill:#fff;">3</text>
+</g>
+
+<!-- ===== SUPERPOSITION CONTROL PANEL (UPGRADED) ===== -->
+<g id="super-control-panel" style="display:none;" transform="translate(250, 560)">
+  <rect width="430" height="110" rx="8" fill="#0a0a0c" stroke="#ff00ff" stroke-width="2" filter="url(#glow-magenta)"/>
+  
+  <text x="20" y="18" class="super-text" style="font-size:11px;">SUPERPOSITION MODE</text>
+  <text x="20" y="34" class="super-text" style="font-size:10px;" id="super-state-a">A: (1,0,0)</text>
+  <text x="20" y="50" class="super-text" style="font-size:10px;" id="super-state-b">B: (2,1,0)</text>
+  
+  <g id="super-pause-btn" pointer-events="all" cursor="pointer">
+    <rect x="350" y="8" width="60" height="16" rx="3" fill="#ff00ff" opacity="0.5"/>
+    <text x="380" y="20" text-anchor="middle" fill="#fff" font-size="8" font-weight="bold">PAUSE</text>
+  </g>
+  
+  <text x="20" y="70" class="super-text" style="font-size:9px;">MIXING ANGLE θ:</text>
+  <text id="super-theta-value" x="410" y="70" class="super-text" style="font-size:10px;" text-anchor="end">45°</text>
+  <rect x="20" y="76" width="390" height="6" rx="3" class="super-slider-track"/>
+  <circle id="super-theta-thumb" cx="215" cy="79" r="8" class="super-slider-thumb"/>
+  
+  <g id="super-cycle-b" class="super-cycle-btn" pointer-events="all" cursor="pointer">
+    <rect x="20" y="88" width="120" height="16" rx="3"/>
+    <text x="80" y="99" text-anchor="middle" class="super-text" style="font-size:8px;">CYCLE STATE B ▶</text>
+  </g>
+  
+  <text x="200" y="99" class="super-text" style="font-size:9px;">ω (a.u.):</text>
+  <text id="super-omega-info" x="410" y="99" class="super-text" style="font-size:10px;" text-anchor="end">0.00</text>
 </g>
 
 <!-- ================= LEFT JOY-CON (QUANTUM NUMBERS) ================= -->
@@ -293,7 +361,6 @@
   <text x="90" y="40" class="joycon-text" fill="#00e5ff" style="font-size:16px;">QUANTUM</text>
   <text x="90" y="60" class="joycon-text" fill="#00e5ff" style="font-size:10px; opacity:0.7;">L-SYS</text>
 
-  <!-- Analog Stick (Controls n) -->
   <g transform="translate(90, 120)">
     <circle r="35" fill="#111" stroke="#00e5ff" stroke-width="2"/>
     <circle r="25" fill="#222" stroke="#00e5ff" stroke-width="1" filter="url(#glow)"/>
@@ -301,7 +368,6 @@
     <text x="0" y="45" class="joycon-text" style="font-size:9px; fill:#00e5ff;">N (UP/DOWN)</text>
   </g>
 
-  <!-- D-Pad (Controls l and m) -->
   <g transform="translate(90, 280)">
     <rect x="-15" y="-45" width="30" height="35" rx="5" class="joycon-btn" data-dir="up"/>
     <polygon points="0,-40 -10,-25 10,-25" fill="#00e5ff" pointer-events="none"/>
@@ -320,12 +386,10 @@
     <text x="55" y="4" class="joycon-text" style="font-size:9px; fill:#00e5ff;">M+</text>
   </g>
 
-  <!-- Minus Button -->
   <rect x="30" y="400" width="30" height="15" rx="3" class="joycon-btn" data-act="basis"/>
   <text x="45" y="392" class="joycon-text" style="font-size:9px; fill:#00e5ff;">BASIS</text>
   <text x="45" y="412" class="joycon-text" style="font-size:10px; fill:#fff; pointer-events:none;">-</text>
 
-  <!-- Home Button -->
   <circle cx="90" cy="470" r="15" fill="#111" stroke="#555" stroke-width="2"/>
   <circle cx="90" cy="470" r="8" fill="#00e5ff" opacity="0.5"/>
 </g>
@@ -336,140 +400,129 @@
   <text x="90" y="40" class="joycon-text" fill="#ff0055" style="font-size:16px;">VISUAL</text>
   <text x="90" y="60" class="joycon-text" fill="#ff0055" style="font-size:10px; opacity:0.7;">R-SYS</text>
 
-  <!-- X (Toggle Color Palette) -->
   <g transform="translate(90, 100)">
     <circle r="20" class="joycon-btn joycon-btn-r" data-action="toggle-color"/>
     <text y="6" class="joycon-text" style="fill:#fff;">X</text>
     <text y="-30" class="joycon-text" style="font-size:9px; fill:#ff0055;">COLOR</text>
   </g>
 
-  <!-- Y (Toggle Particle Size) -->
   <g transform="translate(40, 150)">
     <circle r="20" class="joycon-btn joycon-btn-r" data-action="toggle-size"/>
     <text y="6" class="joycon-text" style="fill:#fff;">Y</text>
     <text x="-30" y="4" class="joycon-text" style="font-size:9px; fill:#ff0055;">SIZE</text>
   </g>
 
-  <!-- A (Toggle Touchscreen Drag) -->
   <g transform="translate(140, 150)">
     <circle id="btn-touch" r="20" class="joycon-btn joycon-btn-r" data-action="toggle-touch"/>
     <text y="6" class="joycon-text" style="fill:#fff;">A</text>
     <text x="30" y="4" class="joycon-text" style="font-size:9px; fill:#ff0055;">TOUCH</text>
   </g>
 
-  <!-- B (Reset Everything) -->
   <g transform="translate(90, 200)">
     <circle r="20" class="joycon-btn joycon-btn-r" data-action="reset"/>
     <text y="6" class="joycon-text" style="fill:#fff;">B</text>
     <text y="30" class="joycon-text" style="font-size:9px; fill:#ff0055;">RESET</text>
   </g>
 
-  <!-- Plus Button (Density) -->
+  <g transform="translate(90, 260)">
+    <circle r="20" class="joycon-btn joycon-btn-r" data-action="toggle-super" style="stroke:#ff00ff;"/>
+    <text y="6" class="joycon-text" style="fill:#ff00ff;">S</text>
+    <text y="-30" class="joycon-text" style="font-size:9px; fill:#ff00ff;">SUPER</text>
+  </g>
+
   <rect x="120" y="400" width="30" height="15" rx="3" class="joycon-btn joycon-btn-r" data-action="cycle-count"/>
   <text x="135" y="392" class="joycon-text" style="font-size:9px; fill:#ff0055;">DENSITY</text>
   <text x="135" y="412" class="joycon-text" style="font-size:10px; fill:#fff; pointer-events:none;">+</text>
 
-  <!-- Home Button -->
   <circle cx="90" cy="470" r="15" fill="#111" stroke="#555" stroke-width="2"/>
   <circle cx="90" cy="470" r="8" fill="#ff0055" opacity="0.5"/>
 </g>
 
-<!-- ===== DROPDOWN MENU (Moved to top layer for visibility) ===== -->
+<!-- ===== DROPDOWN MENU ===== -->
 <g id="dropdown-system" transform="translate(870, 95)">
-  <!-- Dropdown toggle button -->
   <g id="btn-dropdown" class="dropdown-btn" pointer-events="all">
     <rect width="120" height="24" rx="4"/>
     <text x="60" y="16" class="joycon-text" style="fill:#ffaa00; font-size:10px;">▼ TOOLS / FX</text>
   </g>
 
-  <!-- Dropdown panel (hidden by default) -->
   <g id="dropdown-panel" style="display:none;" transform="translate(-80, 28)">
-    <rect width="200" height="290" rx="6" class="menu-bg"/>
+    <rect width="200" height="320" rx="6" class="menu-bg"/>
 
-    <!-- Menu header -->
     <rect width="200" height="22" rx="6" fill="#ffaa00" opacity="0.15"/>
     <text x="100" y="15" class="menu-text" text-anchor="middle" style="fill:#ffaa00; font-size:10px; font-weight:bold;">ADDITIONAL FUNCTIONS</text>
 
-    <!-- Divider -->
     <line x1="10" y1="26" x2="190" y2="26" stroke="#ffaa00" opacity="0.3"/>
 
-    <!-- Item 1: Visibility toggle -->
     <g class="dropdown-item" id="menu-toggle-vis" pointer-events="all">
       <rect x="10" y="32" width="180" height="26" rx="4"/>
       <text x="20" y="49" class="menu-text-sm" style="fill:#00ffcc;">◉ Visual Data Overlay</text>
       <text id="vis-status" x="180" y="49" text-anchor="end" class="menu-text-sm" style="fill:#00ffcc; font-weight:bold;">ON</text>
     </g>
 
-    <!-- Item 2: Orbital type quick-select -->
     <g class="dropdown-item" id="menu-quick-orbit" pointer-events="all">
       <rect x="10" y="63" width="180" height="26" rx="4"/>
       <text x="20" y="80" class="menu-text-sm">⚛ Quick Orbital</text>
       <text id="quick-orbit-label" x="180" y="80" text-anchor="end" class="menu-text-sm" style="fill:#ffcc00;">3d_z²</text>
     </g>
 
-    <!-- Item 3: Screenshot / Export -->
     <g class="dropdown-item" id="menu-export" pointer-events="all">
       <rect x="10" y="94" width="180" height="26" rx="4"/>
       <text x="20" y="111" class="menu-text-sm">⬇ Export Snapshot</text>
     </g>
 
-    <!-- Item 4: Auto-rotate -->
     <g class="dropdown-item" id="menu-autorotate" pointer-events="all">
       <rect x="10" y="125" width="180" height="26" rx="4"/>
       <text x="20" y="142" class="menu-text-sm">↻ Auto-Rotate</text>
       <text id="autorotate-status" x="180" y="142" text-anchor="end" class="menu-text-sm" style="fill:#ff0055; font-weight:bold;">OFF</text>
     </g>
 
-    <!-- Item 5: Grid visibility -->
     <g class="dropdown-item" id="menu-toggle-grid" pointer-events="all">
       <rect x="10" y="156" width="180" height="26" rx="4"/>
       <text x="20" y="173" class="menu-text-sm">▦ Background Grid</text>
       <text id="grid-status" x="180" y="173" text-anchor="end" class="menu-text-sm" style="fill:#00ffcc; font-weight:bold;">ON</text>
     </g>
 
-    <!-- Item 6: Particle trail mode -->
     <g class="dropdown-item" id="menu-trail" pointer-events="all">
       <rect x="10" y="187" width="180" height="26" rx="4"/>
       <text x="20" y="204" class="menu-text-sm">✦ Particle Trails</text>
       <text id="trail-status" x="180" y="204" text-anchor="end" class="menu-text-sm" style="fill:#ff0055; font-weight:bold;">OFF</text>
     </g>
 
-    <!-- Item 7: Crosshair toggle -->
     <g class="dropdown-item" id="menu-crosshair" pointer-events="all">
       <rect x="10" y="218" width="180" height="26" rx="4"/>
       <text x="20" y="235" class="menu-text-sm">✛ Crosshair Guide</text>
       <text id="crosshair-status" x="180" y="235" text-anchor="end" class="menu-text-sm" style="fill:#00ffcc; font-weight:bold;">ON</text>
     </g>
 
-    <!-- Item 8: Hydrogen Block Overlay toggle -->
     <g class="dropdown-item" id="menu-h-overlay" pointer-events="all">
       <rect x="10" y="249" width="180" height="26" rx="4"/>
       <text x="20" y="266" class="menu-text-sm" style="fill:#ffcc00;">⚛ H-Block Overlay</text>
       <text id="h-overlay-status" x="180" y="266" text-anchor="end" class="menu-text-sm" style="fill:#ff0055; font-weight:bold;">OFF</text>
     </g>
 
-    <!-- Info footer -->
-    <text x="100" y="284" text-anchor="middle" style="fill:#666; font-size:8px; pointer-events:none;">Click outside to close</text>
+    <g class="dropdown-item" id="menu-super" pointer-events="all">
+      <rect x="10" y="280" width="180" height="26" rx="4"/>
+      <text x="20" y="297" class="menu-text-sm" style="fill:#ff00ff;">⬥ Superposition Mode</text>
+      <text id="super-status" x="180" y="297" text-anchor="end" class="menu-text-sm" style="fill:#ff0055; font-weight:bold;">OFF</text>
+    </g>
+
+    <text x="100" y="316" text-anchor="middle" style="fill:#666; font-size:8px; pointer-events:none;">Click outside to close</text>
   </g>
 </g>
 
 <!-- ================= ELEMENT DATA CARD MENU ================= -->
 <g id="data-card-system" transform="translate(15, 640)">
-  <!-- Data Card Toggle Button -->
   <g id="btn-data-card" class="dropdown-btn" pointer-events="all">
     <rect width="160" height="24" rx="4"/>
     <text x="80" y="16" class="joycon-text" style="fill:#ffaa00; font-size:10px;">▲ ELEMENT DATA CARD</text>
   </g>
 
-  <!-- Data Card Panel (Visible by default) -->
   <g id="data-card-panel" transform="translate(0, -220)">
     <rect width="220" height="210" rx="6" class="menu-bg" style="stroke:#00ffcc; filter:drop-shadow(0 0 10px rgba(0,255,204,0.4));"/>
     
-    <!-- Header -->
     <rect width="220" height="24" rx="6" fill="#00ffcc" opacity="0.15"/>
     <text x="110" y="16" class="menu-text" text-anchor="middle" style="fill:#00ffcc; font-size:11px; font-weight:bold;" id="dc-header">HYDROGEN (H)</text>
 
-    <!-- Data Fields -->
     <g transform="translate(10, 30)">
       <text x="0" y="12" class="data-card-label">Mass:</text>
       <text x="200" y="12" class="data-card-text" text-anchor="end" id="dc-mass">1.008 u</text>
@@ -502,7 +555,6 @@
       <text x="200" y="156" class="data-card-text" text-anchor="end" id="dc-radius">53 pm</text>
     </g>
     
-    <!-- Close Button -->
     <g id="btn-close-data-card" pointer-events="all" cursor="pointer">
       <rect x="190" y="4" width="24" height="16" rx="3" fill="#ff0055" opacity="0.8"/>
       <text x="202" y="16" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">X</text>
@@ -635,31 +687,58 @@
   let grapheneRings = 3;
   let grapheneCloud = [];
 
-  // Fusion State
+  // ===== SUPERPOSITION STATE =====
+  let superMode = false;
+  let superStateA = { n: 1, l: 0, m: 0 };
+  let superStateB = { n: 2, l: 1, m: 0 };
+  let superMixTheta = Math.PI / 4;
+  let superOmega = 0;
+  let superPhase = 0;
+  let superCloudA = [];
+  let superCloudB = [];
+  let superPaused = false;
+  let superAnimId = null;
+  let superLastTime = 0;
+
+  const SUPER_B_PRESETS = [
+    { n: 2, l: 0, m: 0 },
+    { n: 2, l: 1, m: 0 },
+    { n: 2, l: 1, m: 1 },
+    { n: 3, l: 0, m: 0 },
+    { n: 3, l: 1, m: 0 },
+    { n: 3, l: 2, m: 0 },
+    { n: 3, l: 2, m: -1 },
+    { n: 4, l: 0, m: 0 },
+    { n: 4, l: 1, m: 0 },
+    { n: 4, l: 2, m: 0 },
+  ];
+  let superBIdx = 1;
+
+  // ===== CORRECTED STELLAR NUCLEOSYNTHESIS DATA =====
   const ELEMENTS = [
-    { name: 'Hydrogen', symbol: 'H', z: 1, formation: 'Big Bang', shells: [1], mass: '1.008', phase: 'Gas', electronegativity: '2.20', melting: '-259', boiling: '-253', discovery: '1766', group: '1', period: '1', oxidation: '+1, −1', category: 'Reactive nonmetal', radius: '53' },
-    { name: 'Helium', symbol: 'He', z: 2, formation: 'Stellar Fusion', shells: [2], mass: '4.0026', phase: 'Gas', electronegativity: '—', melting: '-272', boiling: '-269', discovery: '1868', group: '18', period: '1', oxidation: '0', category: 'Noble gas', radius: '31' },
-    { name: 'Lithium', symbol: 'Li', z: 3, formation: 'Cosmic Ray Spallation', shells: [2, 1], mass: '6.94', phase: 'Solid', electronegativity: '0.98', melting: '180', boiling: '1342', discovery: '1817', group: '1', period: '2', oxidation: '+1', category: 'Alkali metal', radius: '167' },
-    { name: 'Beryllium', symbol: 'Be', z: 4, formation: 'Cosmic Ray Spallation', shells: [2, 2], mass: '9.0122', phase: 'Solid', electronegativity: '1.57', melting: '1287', boiling: '2469', discovery: '1798', group: '2', period: '2', oxidation: '+2', category: 'Alkaline earth metal', radius: '112' },
-    { name: 'Boron', symbol: 'B', z: 5, formation: 'Cosmic Ray Spallation', shells: [2, 3], mass: '10.81', phase: 'Solid', electronegativity: '2.04', melting: '2076', boiling: '3927', discovery: '1808', group: '13', period: '2', oxidation: '+3', category: 'Metalloid', radius: '87' },
-    { name: 'Carbon', symbol: 'C', z: 6, formation: 'Stellar Fusion (Triple-Alpha)', shells: [2, 4], mass: '12.011', phase: 'Solid', electronegativity: '2.55', melting: '3550', boiling: '4027', discovery: 'Ancient', group: '14', period: '2', oxidation: '+4, +2, −4', category: 'Reactive nonmetal', radius: '67' },
-    { name: 'Nitrogen', symbol: 'N', z: 7, formation: 'Stellar Fusion (CNO Cycle)', shells: [2, 5], mass: '14.007', phase: 'Gas', electronegativity: '3.04', melting: '-210', boiling: '-196', discovery: '1772', group: '15', period: '2', oxidation: '+5, +3, −3', category: 'Reactive nonmetal', radius: '56' },
-    { name: 'Oxygen', symbol: 'O', z: 8, formation: 'Stellar Fusion', shells: [2, 6], mass: '15.999', phase: 'Gas', electronegativity: '3.44', melting: '-218', boiling: '-183', discovery: '1774', group: '16', period: '2', oxidation: '−2', category: 'Reactive nonmetal', radius: '48' },
-    { name: 'Fluorine', symbol: 'F', z: 9, formation: 'Stellar Fusion', shells: [2, 7], mass: '18.998', phase: 'Gas', electronegativity: '3.98', melting: '-220', boiling: '-188', discovery: '1886', group: '17', period: '2', oxidation: '−1', category: 'Reactive nonmetal', radius: '42' },
-    { name: 'Neon', symbol: 'Ne', z: 10, formation: 'Stellar Fusion (Carbon Burning)', shells: [2, 8], mass: '20.180', phase: 'Gas', electronegativity: '—', melting: '-249', boiling: '-246', discovery: '1898', group: '18', period: '2', oxidation: '0', category: 'Noble gas', radius: '38' },
-    { name: 'Sodium', symbol: 'Na', z: 11, formation: 'Stellar Fusion (Carbon Burning)', shells: [2, 8, 1], mass: '22.990', phase: 'Solid', electronegativity: '0.93', melting: '98', boiling: '883', discovery: '1807', group: '1', period: '3', oxidation: '+1', category: 'Alkali metal', radius: '190' },
-    { name: 'Magnesium', symbol: 'Mg', z: 12, formation: 'Stellar Fusion (Carbon Burning)', shells: [2, 8, 2], mass: '24.305', phase: 'Solid', electronegativity: '1.31', melting: '650', boiling: '1090', discovery: '1755', group: '2', period: '3', oxidation: '+2', category: 'Alkaline earth metal', radius: '145' },
-    { name: 'Aluminium', symbol: 'Al', z: 13, formation: 'Stellar Fusion (Neon Burning)', shells: [2, 8, 3], mass: '26.982', phase: 'Solid', electronegativity: '1.61', melting: '660', boiling: '2519', discovery: '1825', group: '13', period: '3', oxidation: '+3', category: 'Post-transition metal', radius: '118' },
-    { name: 'Silicon', symbol: 'Si', z: 14, formation: 'Stellar Fusion (Oxygen Burning)', shells: [2, 8, 4], mass: '28.085', phase: 'Solid', electronegativity: '1.90', melting: '1414', boiling: '3265', discovery: '1824', group: '14', period: '3', oxidation: '+4, −4', category: 'Metalloid', radius: '111' },
-    { name: 'Phosphorus', symbol: 'P', z: 15, formation: 'Stellar Fusion (Silicon Burning)', shells: [2, 8, 5], mass: '30.974', phase: 'Solid', electronegativity: '2.19', melting: '44', boiling: '280', discovery: '1669', group: '15', period: '3', oxidation: '+5, +3, −3', category: 'Reactive nonmetal', radius: '98' },
-    { name: 'Sulphur', symbol: 'S', z: 16, formation: 'Stellar Fusion (Silicon Burning)', shells: [2, 8, 6], mass: '32.06', phase: 'Solid', electronegativity: '2.58', melting: '115', boiling: '444', discovery: 'Ancient', group: '16', period: '3', oxidation: '+6, +4, −2', category: 'Reactive nonmetal', radius: '88' },
-    { name: 'Chlorine', symbol: 'Cl', z: 17, formation: 'Stellar Fusion (Silicon Burning)', shells: [2, 8, 7], mass: '35.45', phase: 'Gas', electronegativity: '3.16', melting: '-101', boiling: '-34', discovery: '1774', group: '17', period: '3', oxidation: '+7, +5, +1, −1', category: 'Reactive nonmetal', radius: '79' },
-    { name: 'Argon', symbol: 'Ar', z: 18, formation: 'Stellar Fusion (Silicon Burning)', shells: [2, 8, 8], mass: '39.948', phase: 'Gas', electronegativity: '—', melting: '-189', boiling: '-186', discovery: '1894', group: '18', period: '3', oxidation: '0', category: 'Noble gas', radius: '71' },
-    { name: 'Potassium', symbol: 'K', z: 19, formation: 'Stellar Fusion (Silicon Burning)', shells: [2, 8, 8, 1], mass: '39.098', phase: 'Solid', electronegativity: '0.82', melting: '63', boiling: '759', discovery: '1807', group: '1', period: '4', oxidation: '+1', category: 'Alkali metal', radius: '243' },
-    { name: 'Calcium', symbol: 'Ca', z: 20, formation: 'Stellar Fusion (Silicon Burning)', shells: [2, 8, 8, 2], mass: '40.078', phase: 'Solid', electronegativity: '1.00', melting: '842', boiling: '1484', discovery: '1808', group: '2', period: '4', oxidation: '+2', category: 'Alkaline earth metal', radius: '194' },
-    { name: 'Iron', symbol: 'Fe', z: 26, formation: 'Stellar Fusion (End Point)', shells: [2, 8, 14, 2], mass: '55.845', phase: 'Solid', electronegativity: '1.83', melting: '1538', boiling: '2862', discovery: 'Ancient', group: '8', period: '4', oxidation: '+3, +2', category: 'Transition metal', radius: '126' },
-    { name: 'Gold', symbol: 'Au', z: 79, formation: 'Neutron Star Merger (r-process)', shells: [2, 8, 18, 32, 18, 1], mass: '196.97', phase: 'Solid', electronegativity: '2.54', melting: '1064', boiling: '2856', discovery: 'Ancient', group: '11', period: '6', oxidation: '+3, +1', category: 'Transition metal', radius: '144' },
-    { name: 'Uranium', symbol: 'U', z: 92, formation: 'Neutron Star Merger (r-process)', shells: [2, 8, 18, 32, 21, 9, 2], mass: '238.03', phase: 'Solid', electronegativity: '1.38', melting: '1132', boiling: '4131', discovery: '1789', group: 'Actinides', period: '7', oxidation: '+6, +4, +3', category: 'Actinide', radius: '156' }
+    { name: 'Hydrogen', symbol: 'H', z: 1, formation: 'Big Bang nucleosynthesis', shells: [1], mass: '1.008', phase: 'Gas', electronegativity: '2.20', melting: '-259', boiling: '-253', discovery: '1766', group: '1', period: '1', oxidation: '+1, −1', category: 'Reactive nonmetal', radius: '53' },
+    { name: 'Helium', symbol: 'He', z: 2, formation: 'Big Bang + stellar H fusion (p-p chain)', shells: [2], mass: '4.0026', phase: 'Gas', electronegativity: '—', melting: '-272', boiling: '-269', discovery: '1868', group: '18', period: '1', oxidation: '0', category: 'Noble gas', radius: '31' },
+    { name: 'Lithium', symbol: 'Li', z: 3, formation: 'Cosmic ray spallation (Big Bang Li-7 destroyed in stars)', shells: [2, 1], mass: '6.94', phase: 'Solid', electronegativity: '0.98', melting: '180', boiling: '1342', discovery: '1817', group: '1', period: '2', oxidation: '+1', category: 'Alkali metal', radius: '167' },
+    { name: 'Beryllium', symbol: 'Be', z: 4, formation: 'Cosmic ray spallation', shells: [2, 2], mass: '9.0122', phase: 'Solid', electronegativity: '1.57', melting: '1287', boiling: '2469', discovery: '1798', group: '2', period: '2', oxidation: '+2', category: 'Alkaline earth metal', radius: '112' },
+    { name: 'Boron', symbol: 'B', z: 5, formation: 'Cosmic ray spallation', shells: [2, 3], mass: '10.81', phase: 'Solid', electronegativity: '2.04', melting: '2076', boiling: '3927', discovery: '1808', group: '13', period: '2', oxidation: '+3', category: 'Metalloid', radius: '87' },
+    { name: 'Carbon', symbol: 'C', z: 6, formation: 'Triple-alpha process (3 He-4 → C-12)', shells: [2, 4], mass: '12.011', phase: 'Solid', electronegativity: '2.55', melting: '3550', boiling: '4027', discovery: 'Ancient', group: '14', period: '2', oxidation: '+4, +2, −4', category: 'Reactive nonmetal', radius: '67' },
+    { name: 'Nitrogen', symbol: 'N', z: 7, formation: 'CNO cycle (requires pre-existing C)', shells: [2, 5], mass: '14.007', phase: 'Gas', electronegativity: '3.04', melting: '-210', boiling: '-196', discovery: '1772', group: '15', period: '2', oxidation: '+5, +3, −3', category: 'Reactive nonmetal', radius: '56' },
+    { name: 'Oxygen', symbol: 'O', z: 8, formation: 'He burning (alpha capture on C-12)', shells: [2, 6], mass: '15.999', phase: 'Gas', electronegativity: '3.44', melting: '-218', boiling: '-183', discovery: '1774', group: '16', period: '2', oxidation: '−2', category: 'Reactive nonmetal', radius: '48' },
+    { name: 'Fluorine', symbol: 'F', z: 9, formation: 'Ne burning / CNO cycle', shells: [2, 7], mass: '18.998', phase: 'Gas', electronegativity: '3.98', melting: '-220', boiling: '-188', discovery: '1886', group: '17', period: '2', oxidation: '−1', category: 'Reactive nonmetal', radius: '42' },
+    { name: 'Neon', symbol: 'Ne', z: 10, formation: 'Carbon burning (requires pre-existing C)', shells: [2, 8], mass: '20.180', phase: 'Gas', electronegativity: '—', melting: '-249', boiling: '-246', discovery: '1898', group: '18', period: '2', oxidation: '0', category: 'Noble gas', radius: '38' },
+    { name: 'Sodium', symbol: 'Na', z: 11, formation: 'Carbon burning', shells: [2, 8, 1], mass: '22.990', phase: 'Solid', electronegativity: '0.93', melting: '98', boiling: '883', discovery: '1807', group: '1', period: '3', oxidation: '+1', category: 'Alkali metal', radius: '190' },
+    { name: 'Magnesium', symbol: 'Mg', z: 12, formation: 'Carbon burning', shells: [2, 8, 2], mass: '24.305', phase: 'Solid', electronegativity: '1.31', melting: '650', boiling: '1090', discovery: '1755', group: '2', period: '3', oxidation: '+2', category: 'Alkaline earth metal', radius: '145' },
+    { name: 'Aluminium', symbol: 'Al', z: 13, formation: 'Neon burning', shells: [2, 8, 3], mass: '26.982', phase: 'Solid', electronegativity: '1.61', melting: '660', boiling: '2519', discovery: '1825', group: '13', period: '3', oxidation: '+3', category: 'Post-transition metal', radius: '118' },
+    { name: 'Silicon', symbol: 'Si', z: 14, formation: 'Oxygen burning', shells: [2, 8, 4], mass: '28.085', phase: 'Solid', electronegativity: '1.90', melting: '1414', boiling: '3265', discovery: '1824', group: '14', period: '3', oxidation: '+4, −4', category: 'Metalloid', radius: '111' },
+    { name: 'Phosphorus', symbol: 'P', z: 15, formation: 'Silicon burning', shells: [2, 8, 5], mass: '30.974', phase: 'Solid', electronegativity: '2.19', melting: '44', boiling: '280', discovery: '1669', group: '15', period: '3', oxidation: '+5, +3, −3', category: 'Reactive nonmetal', radius: '98' },
+    { name: 'Sulphur', symbol: 'S', z: 16, formation: 'Silicon burning', shells: [2, 8, 6], mass: '32.06', phase: 'Solid', electronegativity: '2.58', melting: '115', boiling: '444', discovery: 'Ancient', group: '16', period: '3', oxidation: '+6, +4, −2', category: 'Reactive nonmetal', radius: '88' },
+    { name: 'Chlorine', symbol: 'Cl', z: 17, formation: 'Silicon burning', shells: [2, 8, 7], mass: '35.45', phase: 'Gas', electronegativity: '3.16', melting: '-101', boiling: '-34', discovery: '1774', group: '17', period: '3', oxidation: '+7, +5, +1, −1', category: 'Reactive nonmetal', radius: '79' },
+    { name: 'Argon', symbol: 'Ar', z: 18, formation: 'Silicon burning', shells: [2, 8, 8], mass: '39.948', phase: 'Gas', electronegativity: '—', melting: '-189', boiling: '-186', discovery: '1894', group: '18', period: '3', oxidation: '0', category: 'Noble gas', radius: '71' },
+    { name: 'Potassium', symbol: 'K', z: 19, formation: 'Silicon burning', shells: [2, 8, 8, 1], mass: '39.098', phase: 'Solid', electronegativity: '0.82', melting: '63', boiling: '759', discovery: '1807', group: '1', period: '4', oxidation: '+1', category: 'Alkali metal', radius: '243' },
+    { name: 'Calcium', symbol: 'Ca', z: 20, formation: 'Silicon burning', shells: [2, 8, 8, 2], mass: '40.078', phase: 'Solid', electronegativity: '1.00', melting: '842', boiling: '1484', discovery: '1808', group: '2', period: '4', oxidation: '+2', category: 'Alkaline earth metal', radius: '194' },
+    { name: 'Iron', symbol: 'Fe', z: 26, formation: 'Silicon burning (end point — max binding energy)', shells: [2, 8, 14, 2], mass: '55.845', phase: 'Solid', electronegativity: '1.83', melting: '1538', boiling: '2862', discovery: 'Ancient', group: '8', period: '4', oxidation: '+3, +2', category: 'Transition metal', radius: '126' },
+    { name: 'Gold', symbol: 'Au', z: 79, formation: 'r-process (neutron star merger)', shells: [2, 8, 18, 32, 18, 1], mass: '196.97', phase: 'Solid', electronegativity: '2.54', melting: '1064', boiling: '2856', discovery: 'Ancient', group: '11', period: '6', oxidation: '+3, +1', category: 'Transition metal', radius: '144' },
+    { name: 'Uranium', symbol: 'U', z: 92, formation: 'r-process (neutron star merger)', shells: [2, 8, 18, 32, 21, 9, 2], mass: '238.03', phase: 'Solid', electronegativity: '1.38', melting: '1132', boiling: '4131', discovery: '1789', group: 'Actinides', period: '7', oxidation: '+6, +4, +3', category: 'Actinide', radius: '156' }
   ];
   let fusionIdx = 0;
   let elementCloudMode = false;
@@ -704,6 +783,24 @@
   const btnElementCloud = $('btn-element-cloud');
   const btnDataTable = $('btn-data-table');
 
+  // Superposition DOM
+  const btnSuper = $('btn-super');
+  const superPanel = $('super-panel');
+  const superControlPanel = $('super-control-panel');
+  const superPauseBtn = $('super-pause-btn');
+  const superStateAEl = $('super-state-a');
+  const superStateBEl = $('super-state-b');
+  const superMixInfo = $('super-mix-info');
+  const superOmegaInfo = $('super-omega-info');
+  const superALabel = $('super-a-label');
+  const superBLabel = $('super-b-label');
+  const superOmegaEl = $('super-omega');
+  const superThetaEl = $('super-theta');
+  const lblSuperScale = $('lbl-super-scale');
+  const superThetaValue = $('super-theta-value');
+  const superThetaThumb = $('super-theta-thumb');
+  const superCycleB = $('super-cycle-b');
+
   // Dropdown DOM
   const btnDropdown = $('btn-dropdown');
   const dropdownPanel = $('dropdown-panel');
@@ -723,6 +820,8 @@
   const crosshairG = $('crosshair-g');
   const menuHOverlay = $('menu-h-overlay');
   const hOverlayStatus = $('h-overlay-status');
+  const menuSuper = $('menu-super');
+  const superStatus = $('super-status');
 
   // Data Card DOM
   const btnDataCard = $('btn-data-card');
@@ -808,7 +907,13 @@
       return [H_OVERLAY_COLOR[0] * glow, H_OVERLAY_COLOR[1] * glow, H_OVERLAY_COLOR[2] * glow];
     }
     if (p.isGraphene) {
-      return [0.0, 1.0, 0.6]; // Bright cyan/green for graphene
+      return [0.0, 1.0, 0.6];
+    }
+    if (p.isSuperA) {
+      return [1.0, 0.2, 1.0];
+    }
+    if (p.isSuperB) {
+      return [0.2, 0.8, 1.0];
     }
     if (colorMode < 3) {
       const c = ramp(RAMPS[colorMode], p.t);
@@ -895,7 +1000,7 @@
       const sc = CAM_D / (CAM_D + y2);
       const sx = CX + x1 * sc;
       const sy = CY - z2 * sc;
-      const size = (p.isHydrogen || p.isGraphene ? pointSize * 1.6 : pointSize) * sc * (0.5 + p.t * 1.2);
+      const size = (p.isHydrogen || p.isGraphene || p.isSuperA || p.isSuperB ? pointSize * 1.6 : pointSize) * sc * (0.5 + p.t * 1.2);
 
       posArr[i*3+0] = sx * CANVAS_2X;
       posArr[i*3+1] = sy * CANVAS_2X;
@@ -1003,51 +1108,39 @@
 
   // ===== GRAPHENE GENERATOR =====
   function generateGrapheneCloud(rings) {
-    // Generate a 2D honeycomb lattice mathematically
     const pts = [];
-    const a = 2.46; // Carbon-Carbon bond length in Angstroms (scaled)
-    const scale = 165 / (rings * 3); // Scale to fit window
-    
-    // We want a cluster of hexagons
-    // The lattice vectors for graphene are a1 = (3/2 a, sqrt(3)/2 a), a2 = (3/2 a, -sqrt(3)/2 a)
+    const a = 2.46;
+    const scale = 165 / (rings * 3);
     const a1 = { x: 1.5 * a, y: Math.sqrt(3) / 2 * a };
     const a2 = { x: 1.5 * a, y: -Math.sqrt(3) / 2 * a };
-    
-    // Basis vectors for the two atoms in the unit cell
     const b1 = { x: 0, y: 0 };
     const b2 = { x: a, y: 0 };
-    
     const seen = new Set();
-    const numAtoms = 1000; // Particles per atom
+    const numAtoms = 1000;
     
     for (let i = -rings; i <= rings; i++) {
       for (let j = -rings; j <= rings; j++) {
-        // Check if we are within a rough hexagon shape
         if (Math.abs(i + j) > rings) continue;
-        
         const originX = i * a1.x + j * a2.x;
         const originY = i * a1.y + j * a2.y;
         
-        // Atom 1
         const x1 = originX + b1.x;
         const y1 = originY + b1.y;
         const key1 = `${x1.toFixed(2)},${y1.toFixed(2)}`;
         if (!seen.has(key1)) {
           seen.add(key1);
           for (let k = 0; k < numAtoms; k++) {
-            // Add a bit of quantum fuzz (Gaussian spread)
             const r = Math.sqrt(-2 * Math.log(Math.random())) * 0.2;
             const theta = Math.random() * 2 * Math.PI;
             pts.push({
               x: (x1 + r * Math.cos(theta)) * scale,
               y: (y1 + r * Math.sin(theta)) * scale,
-              z: (Math.random() - 0.5) * 0.1 * scale, // slight Z thickness
+              z: (Math.random() - 0.5) * 0.1 * scale,
               val: 1, t: 1, phase: 1, isGraphene: true
             });
           }
         }
         
-        // Atom 2
         const x2 = originX + b2.x;
         const y2 = originY + b2.y;
         const key2 = `${x2.toFixed(2)},${y2.toFixed(2)}`;
@@ -1073,6 +1166,10 @@
   const CHUNK = 40000;
 
   function generateCloud(onDone) {
+    if (superMode) {
+      generateSuperpositionCloud(onDone);
+      return;
+    }
     if (grapheneMode) {
       generateGraphene(onDone);
       return;
@@ -1135,57 +1232,7 @@
     step();
   }
 
-  function generateGraphene(onDone) {
-    const myToken = ++generationToken;
-    elStatus.textContent = 'GENERATING GRAPHENE LATTICE…';
-    setTimeout(() => {
-      if (myToken !== generationToken) return;
-      grapheneCloud = generateGrapheneCloud(grapheneRings);
-      cloud = grapheneCloud;
-      elStatus.textContent = cloud.length.toLocaleString() + ' CARBON ATOMS READY';
-      setTimeout(() => { if (myToken === generationToken) elStatus.textContent = ''; }, 2500);
-      onDone && onDone();
-    }, 50);
-  }
-
-  function generateHydrogenOverlay(elementView, elementScale) {
-    const N = Math.min(COUNTS[countIdx], 2500);
-    const tab = radialTable(hOverlayN, hOverlayL);
-    const maxA2 = angularMax2(hOverlayL, 0, false);
-    const norm = 1 / (tab.maxR2 * maxA2);
-
-    const hTarget = elementView * 0.35 * hOverlayScaleFactor;
-    const hScale = (hTarget / tab.view) * elementScale;
-
-    const pts = [];
-    const maxTries = N * 500;
-    let tries = 0;
-
-    while (pts.length < N && tries < maxTries) {
-      tries++;
-      const r = sampleRadius(tab);
-      if (r > tab.view) continue;
-      const uz = 2 * Math.random() - 1;
-      const phi = 2 * Math.PI * Math.random();
-      const s = Math.sqrt(1 - uz * uz);
-      const A = angular(hOverlayL, 0, uz, phi, false);
-      if (Math.random() * maxA2 > A * A) continue;
-      const R = radial(hOverlayN, hOverlayL, r);
-      const val = Math.min(1, R * R * A * A * norm);
-      pts.push({
-        x: s * Math.cos(phi) * r * hScale,
-        y: s * Math.sin(phi) * r * hScale,
-        z: uz * r * hScale,
-        val,
-        t: Math.sqrt(val),
-        phase: 1,
-        isHydrogen: true
-      });
-    }
-    hOverlayCloud = pts;
-    return hTarget;
-  }
-
+  // ===== ELEMENT CLOUD GENERATOR (RESTORED) =====
   function generateElementCloud(onDone) {
     const el = ELEMENTS[fusionIdx];
     const N = COUNTS[countIdx];
@@ -1270,6 +1317,205 @@
     step();
   }
 
+  // ===== HYDROGEN OVERLAY GENERATOR (RESTORED) =====
+  function generateHydrogenOverlay(elementView, elementScale) {
+    const N = Math.min(COUNTS[countIdx], 2500);
+    const tab = radialTable(hOverlayN, hOverlayL);
+    const maxA2 = angularMax2(hOverlayL, 0, false);
+    const norm = 1 / (tab.maxR2 * maxA2);
+
+    const hTarget = elementView * 0.35 * hOverlayScaleFactor;
+    const hScale = (hTarget / tab.view) * elementScale;
+
+    const pts = [];
+    const maxTries = N * 500;
+    let tries = 0;
+
+    while (pts.length < N && tries < maxTries) {
+      tries++;
+      const r = sampleRadius(tab);
+      if (r > tab.view) continue;
+      const uz = 2 * Math.random() - 1;
+      const phi = 2 * Math.PI * Math.random();
+      const s = Math.sqrt(1 - uz * uz);
+      const A = angular(hOverlayL, 0, uz, phi, false);
+      if (Math.random() * maxA2 > A * A) continue;
+      const R = radial(hOverlayN, hOverlayL, r);
+      const val = Math.min(1, R * R * A * A * norm);
+      pts.push({
+        x: s * Math.cos(phi) * r * hScale,
+        y: s * Math.sin(phi) * r * hScale,
+        z: uz * r * hScale,
+        val,
+        t: Math.sqrt(val),
+        phase: 1,
+        isHydrogen: true
+      });
+    }
+    hOverlayCloud = pts;
+    return hTarget;
+  }
+
+  // ===== GRAPHENE GENERATOR (RESTORED) =====
+  function generateGraphene(onDone) {
+    const myToken = ++generationToken;
+    elStatus.textContent = 'GENERATING GRAPHENE LATTICE…';
+    setTimeout(() => {
+      if (myToken !== generationToken) return;
+      grapheneCloud = generateGrapheneCloud(grapheneRings);
+      cloud = grapheneCloud;
+      elStatus.textContent = cloud.length.toLocaleString() + ' CARBON ATOMS READY';
+      setTimeout(() => { if (myToken === generationToken) elStatus.textContent = ''; }, 2500);
+      onDone && onDone();
+    }, 50);
+  }
+
+  // ===== SUPERPOSITION CLOUD GENERATOR =====
+  function generateSuperpositionCloud(onDone) {
+    const myToken = ++generationToken;
+    elStatus.textContent = 'BUILDING SUPERPOSITION…';
+
+    const N = Math.min(COUNTS[countIdx], 2000);
+    const { n: n1, l: l1, m: m1 } = superStateA;
+    const { n: n2, l: l2, m: m2 } = superStateB;
+
+    const E1 = -0.5 / (n1 * n1);
+    const E2 = -0.5 / (n2 * n2);
+    superOmega = Math.abs(E1 - E2);
+
+    const tab1 = radialTable(n1, l1);
+    const tab2 = radialTable(n2, l2);
+    const maxView = Math.max(tab1.view, tab2.view);
+    const scale = 165 / maxView;
+    viewRadius = maxView;
+
+    function sampleState(nn, ll, mm, tab, maxA2, isA) {
+      const pts = [];
+      const norm = 1 / (tab.maxR2 * maxA2);
+      const maxTries = N * 500;
+      let tries = 0;
+      while (pts.length < N && tries < maxTries) {
+        tries++;
+        const r = sampleRadius(tab);
+        if (r > tab.view) continue;
+        const uz = 2 * Math.random() - 1;
+        const phi = 2 * Math.PI * Math.random();
+        const s = Math.sqrt(1 - uz * uz);
+        const A = angular(ll, mm, uz, phi, false);
+        if (Math.random() * maxA2 > A * A) continue;
+        const R = radial(nn, ll, r);
+        const val = Math.min(1, R * R * A * A * norm);
+        pts.push({
+          x: s * Math.cos(phi) * r * scale,
+          y: s * Math.sin(phi) * r * scale,
+          z: uz * r * scale,
+          val, t: Math.sqrt(val), phase: 1,
+          isSuperA: isA,
+          isSuperB: !isA
+        });
+      }
+      return pts;
+    }
+
+    const maxA2_1 = angularMax2(l1, m1, false);
+    const maxA2_2 = angularMax2(l2, m2, false);
+
+    setTimeout(() => {
+      if (myToken !== generationToken) return;
+      superCloudA = sampleState(n1, l1, m1, tab1, maxA2_1, true);
+      superCloudB = sampleState(n2, l2, m2, tab2, maxA2_2, false);
+      cloud = superCloudA.concat(superCloudB);
+
+      elStatus.textContent = 'SUPERPOSITION READY';
+      setTimeout(() => { if (myToken === generationToken) elStatus.textContent = ''; }, 2500);
+
+      superALabel.textContent = '(' + n1 + ',' + l1 + ',' + m1 + ')';
+      superBLabel.textContent = '(' + n2 + ',' + l2 + ',' + m2 + ')';
+      superOmegaEl.textContent = superOmega.toFixed(4);
+      superThetaEl.textContent = (superMixTheta * 180 / Math.PI).toFixed(0) + '°';
+      superStateAEl.textContent = 'A: (' + n1 + ',' + l1 + ',' + m1 + ')';
+      superStateBEl.textContent = 'B: (' + n2 + ',' + l2 + ',' + m2 + ')';
+      if (superThetaValue) superThetaValue.textContent = (superMixTheta * 180 / Math.PI).toFixed(0) + '°';
+      if (superOmegaInfo) superOmegaInfo.textContent = superOmega.toFixed(4);
+
+      if (superMode && !superPaused) startSuperAnimation();
+
+      onDone && onDone();
+    }, 50);
+  }
+
+  // ===== SUPERPOSITION ANIMATION =====
+  function startSuperAnimation() {
+    if (superAnimId) cancelAnimationFrame(superAnimId);
+    superLastTime = performance.now();
+    const tick = (now) => {
+      if (!superMode || superPaused) {
+        superAnimId = null;
+        return;
+      }
+      const dt = Math.min(0.05, (now - superLastTime) / 1000);
+      superLastTime = now;
+      superPhase += superOmega * dt * 2 * Math.PI;
+      if (superPhase > 2 * Math.PI) superPhase -= 2 * Math.PI;
+
+      const mixA = Math.cos(superMixTheta);
+      const mixB = Math.sin(superMixTheta);
+      const crossFactor = Math.cos(superPhase);
+
+      for (let i = 0; i < superCloudA.length; i++) {
+        superCloudA[i].t = Math.sqrt(Math.max(0, mixA * mixA + 0.5 * crossFactor));
+      }
+      for (let i = 0; i < superCloudB.length; i++) {
+        superCloudB[i].t = Math.sqrt(Math.max(0, mixB * mixB - 0.5 * crossFactor));
+      }
+
+      scheduleDraw();
+      superAnimId = requestAnimationFrame(tick);
+    };
+    superAnimId = requestAnimationFrame(tick);
+  }
+
+  function stopSuperAnimation() {
+    if (superAnimId) {
+      cancelAnimationFrame(superAnimId);
+      superAnimId = null;
+    }
+  }
+
+  // ===== SUPERPANEL TOGGLE =====
+  function toggleSuperMode(force) {
+    superMode = force !== undefined ? force : !superMode;
+
+    if (superMode) {
+      if (elementCloudMode) { elementCloudMode = false; btnElementCloud.classList.remove('active'); btnElementCloud.setAttribute('fill', '#1a1a1f'); }
+      if (grapheneMode) { grapheneMode = false; btnGraphene.classList.remove('active'); btnGraphene.setAttribute('fill', '#1a1a1f'); grapheneSliderPanel.style.display = 'none'; lblGrapheneScale.style.display = 'none'; }
+      if (dataTableMode) { dataTableMode = false; btnDataTable.classList.remove('active'); btnDataTable.setAttribute('fill', '#1a1a1f'); }
+      if (hBlockOverlay) { hBlockOverlay = false; btnHBlock.classList.remove('active'); btnHBlock.setAttribute('fill', '#1a1a1f'); hSelector.style.display = 'none'; hScaleRing.style.display = 'none'; lblHScale.style.display = 'none'; }
+
+      superPanel.style.display = '';
+      superControlPanel.style.display = '';
+      lblSuperScale.style.display = '';
+      btnSuper.classList.add('active');
+      btnSuper.setAttribute('fill', '#ff00ff');
+      superStatus.textContent = 'ON';
+      superStatus.setAttribute('fill', '#ff00ff');
+      menuSuper.querySelector('text').textContent = '⬥ Superposition Mode';
+      generateSuperpositionCloud(scheduleDraw);
+    } else {
+      stopSuperAnimation();
+      superPanel.style.display = 'none';
+      superControlPanel.style.display = 'none';
+      lblSuperScale.style.display = 'none';
+      btnSuper.classList.remove('active');
+      btnSuper.setAttribute('fill', '#1a1a1f');
+      superStatus.textContent = 'OFF';
+      superStatus.setAttribute('fill', '#ff0055');
+      cloud = [];
+      scheduleDraw();
+      updateUI(true);
+    }
+  }
+
   // ===== DATA TABLE =====
   function drawDataTable() {
     clearGL();
@@ -1350,6 +1596,7 @@
          '3': 'x(x²−3y²)', '-3': 'y(3x²−y²)' }
   };
   function orbitalName() {
+    if (superMode) return 'Superposition';
     if (grapheneMode) return 'Graphene (sp²)';
     if (elementCloudMode) return ELEMENTS[fusionIdx].symbol + ' Shells';
     const base = n + SUB[l];
@@ -1363,7 +1610,7 @@
 
   function updateUI(rebuild) {
     if (rebuild === undefined) rebuild = true;
-    if (!elementCloudMode && !dataTableMode && !grapheneMode) {
+    if (!elementCloudMode && !dataTableMode && !grapheneMode && !superMode) {
       if (n < 1) n = 1; if (n > MAXN) n = MAXN;
       if (l >= n) l = n - 1; if (l < 0) l = 0;
       if (m > l) m = l; if (m < -l) m = -l;
@@ -1374,15 +1621,17 @@
     sliderM.min = -l; sliderM.max = l; sliderM.value = m; valM.textContent = m;
 
     elName.textContent = dataTableMode ? 'Data Table' : orbitalName();
-    elEnergy.textContent = grapheneMode ? 'N/A (Lattice)' : (-13.606 / (n * n)).toFixed(2) + ' eV';
-    elRNodes.textContent = grapheneMode ? 'N/A' : Math.max(0, n - l - 1);
-    elANodes.textContent = grapheneMode ? 'N/A' : l;
-    elRMean.textContent = grapheneMode ? 'N/A' : fmt(0.5 * (3 * n * n - l * (l + 1))) + ' a₀';
-    elRPeak.textContent = grapheneMode ? 'N/A' : fmt(radialTable(n, l).peak) + ' a₀';
-    elMatrix.textContent = dataTableMode ? 'TABLE' : (grapheneMode ? 'SP²' : '(' + n + ',' + l + ',' + m + ')');
-    elBasis.textContent = (complexBasis ? 'COMPLEX' : 'REAL') + ' · ' + (grapheneMode ? 'LATTICE' : COUNTS[countIdx]) + ' · ' + COLOR_NAMES[colorMode];
+    elEnergy.textContent = superMode ? 'Superposition' : (grapheneMode ? 'N/A (Lattice)' : (-13.606 / (n * n)).toFixed(2) + ' eV');
+    elRNodes.textContent = superMode ? '—' : (grapheneMode ? 'N/A' : Math.max(0, n - l - 1));
+    elANodes.textContent = superMode ? '—' : (grapheneMode ? 'N/A' : l);
+    elRMean.textContent = superMode ? '—' : (grapheneMode ? 'N/A' : fmt(0.5 * (3 * n * n - l * (l + 1))) + ' a₀');
+    elRPeak.textContent = superMode ? '—' : (grapheneMode ? 'N/A' : fmt(radialTable(n, l).peak) + ' a₀');
+    elMatrix.textContent = dataTableMode ? 'TABLE' : (superMode ? 'SUPER' : (grapheneMode ? 'SP²' : '(' + n + ',' + l + ',' + m + ')'));
+    elBasis.textContent = (complexBasis ? 'COMPLEX' : 'REAL') + ' · ' + (superMode ? 'SUPER' : (grapheneMode ? 'LATTICE' : COUNTS[countIdx])) + ' · ' + COLOR_NAMES[colorMode];
 
-    if (grapheneMode) {
+    if (superMode) {
+      elScale.textContent = 'Superposition: ' + superStateA.n + SUB[superStateA.l] + ' + ' + superStateB.n + SUB[superStateB.l];
+    } else if (grapheneMode) {
       elScale.textContent = 'Graphene Sheet: ' + grapheneRings + ' Rings';
     } else if (elementCloudMode) {
       elScale.textContent = 'Element Shell View: ' + ELEMENTS[fusionIdx].name;
@@ -1397,7 +1646,7 @@
     elFusionZ.textContent = el.z;
     elFusionFormation.textContent = el.formation;
 
-    quickOrbitLabel.textContent = dataTableMode ? 'TABLE' : (grapheneMode ? 'GRAPHENE' : (elementCloudMode ? ELEMENTS[fusionIdx].symbol + ' Shells' : orbitalName()));
+    quickOrbitLabel.textContent = dataTableMode ? 'TABLE' : (superMode ? 'SUPER' : (grapheneMode ? 'GRAPHENE' : (elementCloudMode ? ELEMENTS[fusionIdx].symbol + ' Shells' : orbitalName())));
 
     dcHeader.textContent = el.name.toUpperCase() + ' (' + el.symbol + ')';
     dcMass.textContent = el.mass + ' u';
@@ -1416,8 +1665,10 @@
       if (tableG) tableG.replaceChildren();
     }
 
-    if (rebuild) {
+    if (rebuild && !superMode) {
       generateCloud(scheduleDraw);
+    } else if (rebuild && superMode) {
+      generateSuperpositionCloud(scheduleDraw);
     } else {
       scheduleDraw();
     }
@@ -1457,7 +1708,7 @@
 
   menuQuickOrbit.addEventListener('click', (e) => {
     e.stopPropagation();
-    if (dataTableMode) return;
+    if (dataTableMode || superMode) return;
     const presets = [
       [1,0,0], [2,0,0], [2,1,0], [2,1,1], [3,0,0], [3,1,0], [3,2,0], [3,2,-1], [3,2,1], [4,3,0], [5,4,0], [6,5,0]
     ];
@@ -1555,10 +1806,14 @@
     if (crosshairG) crosshairG.style.display = crosshairVisible ? '' : 'none';
   });
 
-  // Menu item: H-Block overlay toggle (syncs with button)
   menuHOverlay.addEventListener('click', (e) => {
     e.stopPropagation();
     toggleHBlock();
+  });
+
+  menuSuper.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleSuperMode();
   });
 
   function toggleHBlock() {
@@ -1573,6 +1828,7 @@
       btnElementCloud.classList.add('active');
       btnElementCloud.setAttribute('fill', '#00ffcc');
     }
+    if (hBlockOverlay && superMode) toggleSuperMode(false);
     updateUI(true);
   }
 
@@ -1660,6 +1916,8 @@
         btnTouch.classList.toggle('active', touchMode);
         elTouchMode.textContent = touchMode ? 'ENABLED' : 'DISABLED';
         elTouchMode.setAttribute('fill', touchMode ? '#00ffcc' : '#ff0055');
+      } else if (action === 'toggle-super') {
+        toggleSuperMode();
       } else if (action === 'reset') {
         n = 3; l = 2; m = 0; complexBasis = false; countIdx = 1;
         rotX = DEF_ROT_X; rotY = DEF_ROT_Y; colorMode = 0; pointSize = 1.5;
@@ -1668,6 +1926,13 @@
         trailMode = false; crosshairVisible = true;
         hBlockOverlay = false; hOverlayN = 1; hOverlayL = 0; hOverlayScaleFactor = 1.0;
         grapheneMode = false; grapheneRings = 3;
+        superMode = false;
+        stopSuperAnimation();
+        superStateA = { n: 1, l: 0, m: 0 };
+        superStateB = { n: 2, l: 1, m: 0 };
+        superBIdx = 1;
+        superMixTheta = Math.PI / 4;
+        superPaused = false;
         if (autoRotateId) { cancelAnimationFrame(autoRotateId); autoRotateId = null; }
         visStatus.textContent = 'ON'; visStatus.setAttribute('fill', '#00ffcc');
         menuToggleVis.querySelector('text').textContent = '◉ Visual Data Overlay';
@@ -1676,6 +1941,7 @@
         trailStatus.textContent = 'OFF'; trailStatus.setAttribute('fill', '#ff0055');
         crosshairStatus.textContent = 'ON'; crosshairStatus.setAttribute('fill', '#00ffcc');
         hOverlayStatus.textContent = 'OFF'; hOverlayStatus.setAttribute('fill', '#ff0055');
+        superStatus.textContent = 'OFF'; superStatus.setAttribute('fill', '#ff0055');
         btnHBlock.classList.remove('active'); btnHBlock.setAttribute('fill', '#1a1a1f');
         hSelector.style.display = 'none';
         hScaleRing.style.display = 'none';
@@ -1683,6 +1949,12 @@
         btnGraphene.classList.remove('active'); btnGraphene.setAttribute('fill', '#1a1a1f');
         grapheneSliderPanel.style.display = 'none';
         lblGrapheneScale.style.display = 'none';
+        btnSuper.classList.remove('active'); btnSuper.setAttribute('fill', '#1a1a1f');
+        superPanel.style.display = 'none';
+        superControlPanel.style.display = 'none';
+        lblSuperScale.style.display = 'none';
+        if (superThetaThumb) superThetaThumb.setAttribute('cx', 215);
+        if (superThetaValue) superThetaValue.textContent = '45°';
         const gridRect = $('bg-grid-rect');
         if (gridRect) gridRect.style.display = '';
         if (crosshairG) crosshairG.style.display = '';
@@ -1699,7 +1971,7 @@
     fusionIdx = (fusionIdx + 1) % ELEMENTS.length;
     btnFusion.setAttribute('fill', '#ffcc00');
     setTimeout(() => btnFusion.setAttribute('fill', '#1a1a1f'), 150);
-    if (fusionIdx === 5) { // Carbon
+    if (fusionIdx === 5) {
       btnGraphene.style.display = 'block';
     } else {
       btnGraphene.style.display = 'none';
@@ -1726,6 +1998,7 @@
       btnGraphene.setAttribute('fill', '#1a1a1f');
       grapheneSliderPanel.style.display = 'none';
       lblGrapheneScale.style.display = 'none';
+      if (superMode) toggleSuperMode(false);
     }
     btnElementCloud.classList.toggle('active', elementCloudMode);
     if (elementCloudMode) btnElementCloud.setAttribute('fill', '#00ffcc');
@@ -1743,6 +2016,7 @@
       btnGraphene.setAttribute('fill', '#1a1a1f');
       grapheneSliderPanel.style.display = 'none';
       lblGrapheneScale.style.display = 'none';
+      if (superMode) toggleSuperMode(false);
     }
     btnDataTable.classList.toggle('active', dataTableMode);
     if (dataTableMode) btnDataTable.setAttribute('fill', '#00ffcc');
@@ -1771,6 +2045,7 @@
     if (grapheneMode) {
       elementCloudMode = false;
       dataTableMode = false;
+      if (superMode) toggleSuperMode(false);
       btnElementCloud.classList.remove('active');
       btnElementCloud.setAttribute('fill', '#1a1a1f');
       btnDataTable.classList.remove('active');
@@ -1789,25 +2064,113 @@
     updateUI(true);
   });
 
+  // SUPERPOSITION Button
+  btnSuper.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleSuperMode();
+  });
+
+  // Super pause button
+  superPauseBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    superPaused = !superPaused;
+    if (superPaused) {
+      stopSuperAnimation();
+    } else {
+      startSuperAnimation();
+    }
+  });
+
+  // ===== THETA SLIDER =====
+  const THETA_MIN_X = 20;
+  const THETA_MAX_X = 410;
+  const THETA_TRACK_Y = 76;
+  let isThetaDragging = false;
+
+  function updateThetaFromClientX(clientX) {
+    const svgEl = document.getElementById('viewport');
+    const pt = svgEl.createSVGPoint();
+    pt.x = clientX;
+    pt.y = 0;
+    const svgP = pt.matrixTransform(svgEl.getScreenCTM().inverse());
+    let localX = svgP.x - 250;
+    localX = Math.max(THETA_MIN_X, Math.min(THETA_MAX_X, localX));
+    const percent = (localX - THETA_MIN_X) / (THETA_MAX_X - THETA_MIN_X);
+    superMixTheta = percent * (Math.PI / 2);
+    superThetaThumb.setAttribute('cx', localX);
+    superThetaValue.textContent = (superMixTheta * 180 / Math.PI).toFixed(0) + '°';
+    superThetaEl.textContent = (superMixTheta * 180 / Math.PI).toFixed(0) + '°';
+    if (superMode && !superPaused) {
+      // Will be picked up by animation loop
+    } else if (superMode) {
+      const mixA = Math.cos(superMixTheta);
+      const mixB = Math.sin(superMixTheta);
+      for (let i = 0; i < superCloudA.length; i++) {
+        superCloudA[i].t = Math.sqrt(Math.max(0, mixA * mixA));
+      }
+      for (let i = 0; i < superCloudB.length; i++) {
+        superCloudB[i].t = Math.sqrt(Math.max(0, mixB * mixB));
+      }
+      scheduleDraw();
+    }
+  }
+
+  superThetaThumb.addEventListener('pointerdown', (e) => {
+    e.stopPropagation();
+    isThetaDragging = true;
+    superThetaThumb.setPointerCapture(e.pointerId);
+  });
+  superThetaThumb.addEventListener('pointermove', (e) => {
+    if (!isThetaDragging) return;
+    e.stopPropagation();
+    updateThetaFromClientX(e.clientX);
+  });
+  superThetaThumb.addEventListener('pointerup', (e) => {
+    if (!isThetaDragging) return;
+    e.stopPropagation();
+    isThetaDragging = false;
+    superThetaThumb.releasePointerCapture(e.pointerId);
+  });
+
+  superControlPanel.addEventListener('pointerdown', (e) => {
+    if (e.target === superThetaThumb) return;
+    if (e.target === superPauseBtn || superPauseBtn.contains(e.target)) return;
+    if (e.target === superCycleB || superCycleB.contains(e.target)) return;
+    const svgEl = document.getElementById('viewport');
+    const pt = svgEl.createSVGPoint();
+    pt.x = e.clientX;
+    pt.y = e.clientY;
+    const svgP = pt.matrixTransform(svgEl.getScreenCTM().inverse());
+    const localX = svgP.x - 250;
+    const localY = svgP.y - 560;
+    if (localY >= THETA_TRACK_Y - 8 && localY <= THETA_TRACK_Y + 16 && localX >= THETA_MIN_X && localX <= THETA_MAX_X) {
+      updateThetaFromClientX(e.clientX);
+    }
+  });
+
+  // ===== CYCLE STATE B =====
+  superCycleB.addEventListener('click', (e) => {
+    e.stopPropagation();
+    superBIdx = (superBIdx + 1) % SUPER_B_PRESETS.length;
+    superStateB = Object.assign({}, SUPER_B_PRESETS[superBIdx]);
+    if (superMode) generateSuperpositionCloud(scheduleDraw);
+  });
+
   // ===== GRAPHENE SLIDER DRAG LOGIC =====
   let isSliderDragging = false;
   const SLIDER_MIN_X = 20;
   const SLIDER_MAX_X = 410;
-  const SLIDER_Y = 34;
 
   function updateGrapheneSlider(clientX) {
-    // Convert clientX to SVG viewBox coordinates
     const svgEl = document.getElementById('viewport');
     const pt = svgEl.createSVGPoint();
     pt.x = clientX;
     pt.y = 0;
     const svgP = pt.matrixTransform(svgEl.getScreenCTM().inverse());
     
-    // The slider panel is at x=250, so we offset by 250
     let localX = svgP.x - 250;
     localX = Math.max(SLIDER_MIN_X, Math.min(SLIDER_MAX_X, localX));
     
-    // Map to 1..10
     const percent = (localX - SLIDER_MIN_X) / (SLIDER_MAX_X - SLIDER_MIN_X);
     const newRings = Math.round(1 + percent * 9);
     
@@ -1839,7 +2202,6 @@
     grapheneSliderThumb.releasePointerCapture(e.pointerId);
   });
 
-  // Click on the track to jump
   document.getElementById('graphene-slider-panel').addEventListener('pointerdown', (e) => {
     if (e.target === grapheneSliderThumb) return;
     const svgEl = document.getElementById('viewport');
@@ -1849,7 +2211,6 @@
     const svgP = pt.matrixTransform(svgEl.getScreenCTM().inverse());
     let localX = svgP.x - 250;
     if (localX >= SLIDER_MIN_X && localX <= SLIDER_MAX_X) {
-      // Clicked on track
       updateGrapheneSlider(e.clientX);
     }
   });
