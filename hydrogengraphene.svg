@@ -446,7 +446,7 @@
   </g>
 
   <g id="dropdown-panel" style="display:none;" transform="translate(-80, 28)">
-    <rect width="200" height="352" rx="6" class="menu-bg"/>
+    <rect width="200" height="384" rx="6" class="menu-bg"/>
 
     <rect width="200" height="22" rx="6" fill="#ffaa00" opacity="0.15"/>
     <text x="100" y="15" class="menu-text" text-anchor="middle" style="fill:#ffaa00; font-size:10px; font-weight:bold;">ADDITIONAL FUNCTIONS</text>
@@ -511,7 +511,12 @@
       <text x="20" y="328" class="menu-text-sm" style="fill:#00ffcc;">⬇ Export Particle Data (CSV)</text>
     </g>
 
-    <text x="100" y="348" text-anchor="middle" style="fill:#666; font-size:8px; pointer-events:none;">Click outside to close</text>
+    <g class="dropdown-item" id="menu-load-csv" pointer-events="all">
+      <rect x="10" y="342" width="180" height="26" rx="4"/>
+      <text x="20" y="359" class="menu-text-sm" style="fill:#00ffcc;">⬆ Load Particle Data (CSV)</text>
+    </g>
+
+    <text x="100" y="380" text-anchor="middle" style="fill:#666; font-size:8px; pointer-events:none;">Click outside to close</text>
   </g>
 </g>
 
@@ -817,6 +822,7 @@
   const quickOrbitLabel = $('quick-orbit-label');
   const menuExport = $('menu-export');
   const menuExportCSV = $('menu-export-csv');
+  const menuLoadCSV = $('menu-load-csv');
   const menuAutorotate = $('menu-autorotate');
   const autorotateStatus = $('autorotate-status');
   const menuToggleGrid = $('menu-toggle-grid');
@@ -1814,6 +1820,7 @@
       if (superMode) {
         tag = 'super';
         meta.push('# mode: two-state superposition, complex basis Y_lm (eigenstates of Lz), atomic units');
+        meta.push('# params: mode=super nA=' + superStateA.n + ' lA=' + superStateA.l + ' mA=' + superStateA.m + ' nB=' + superStateB.n + ' lB=' + superStateB.l + ' mB=' + superStateB.m + ' theta_deg=' + fx(superMixTheta * 180 / Math.PI) + ' phase_rad=' + fx(superPhase));
         meta.push('# A=(' + superStateA.n + ',' + superStateA.l + ',' + superStateA.m + ') B=(' + superStateB.n + ',' + superStateB.l + ',' + superStateB.m + ')');
         meta.push('# mixing theta_deg=' + fx(superMixTheta * 180 / Math.PI) + '  dE_au=' + fx(superDeltaE) + '  phase_rad(dE*t)=' + fx(superPhase));
         meta.push('# Psi = cos(theta)*psiA + sin(theta)*psiB*exp(-i*dE*t), global phase dropped');
@@ -1823,6 +1830,7 @@
         rowFn = (p) => [p.x * au, p.y * au, p.z * au, p.isSuperA ? 'A' : 'B', p.Ar, p.Ai, p.Br, p.Bi, p.re, p.im, p.dens, p.w];
       } else if (!grapheneMode && !elementCloudMode) {
         tag = 'n' + n + 'l' + l + 'm' + m;
+        meta.push('# params: mode=eigen n=' + n + ' l=' + l + ' m=' + m + ' basis=' + (complexBasis ? 'complex' : 'real'));
         meta.push('# mode: hydrogen eigenstate (n,l,m)=(' + n + ',' + l + ',' + m + '), ' + (complexBasis ? 'complex basis' : 'real basis') + ', atomic units');
         meta.push('# particles are Monte Carlo samples of |psi|^2 (inverse-CDF radial, rejection angular); positions in Bohr radii');
         meta.push('# rel_density = |psi|^2 / max (radial max x angular max); phase = degrees (complex basis) or sign of R*Y (real basis)');
@@ -1859,6 +1867,184 @@
       setTimeout(() => { elStatus.textContent = ''; }, 2000);
     }
   });
+
+  // ===== PARTICLE DATA LOADER (CSV) =====
+  // Reads a file written by "Export Particle Data (CSV)", restores the shape parameters
+  // (n,l,m, basis / both states, mixing angle, phase) and the exact particle cloud.
+  function parseParticleCSV(text) {
+    const lines = text.split(/\r?\n/);
+    let i = 0;
+    const meta = [];
+    for (; i < lines.length; i++) {
+      const ln = lines[i];
+      if (ln.charAt(0) === '#') meta.push(ln);
+      else if (ln.trim()) break;
+    }
+    if (i >= lines.length) throw new Error('no header row');
+    const cols = lines[i].trim().split(',');
+    i++;
+    const ci = {};
+    cols.forEach((c, k) => { ci[c] = k; });
+    const metaStr = meta.join('\n');
+    const P = {};
+    const pl = metaStr.match(/^# params: (.*)$/m);
+    if (pl) { const re = /(\w+)=(\S+)/g; let q; while ((q = re.exec(pl[1]))) P[q[1]] = q[2]; }
+    let mode;
+    if (('psi_re' in ci) && ('psiA_re' in ci)) mode = 'super';
+    else if ('rel_density' in ci) mode = 'eigen';
+    else throw new Error('unsupported CSV (graphene/element)');
+    if (mode === 'eigen' && P.n === undefined) {
+      const q = metaStr.match(/\(n,l,m\)=\((\d+),(\d+),(-?\d+)\),\s*(complex|real) basis/);
+      if (!q) throw new Error('n,l,m not found in header');
+      P.n = q[1]; P.l = q[2]; P.m = q[3]; P.basis = q[4];
+    }
+    if (mode === 'super' && P.nA === undefined) {
+      const q = metaStr.match(/A=\((\d+),(\d+),(-?\d+)\)\s+B=\((\d+),(\d+),(-?\d+)\)/);
+      if (!q) throw new Error('states A,B not found in header');
+      P.nA = q[1]; P.lA = q[2]; P.mA = q[3]; P.nB = q[4]; P.lB = q[5]; P.mB = q[6];
+      const th = metaStr.match(/theta_deg=(\S+)/);
+      const ph = metaStr.match(/phase_rad\(dE\*t\)=(\S+)/);
+      P.theta_deg = th ? th[1] : '45';
+      P.phase_rad = ph ? ph[1] : '0';
+    }
+    const rows = [];
+    for (; i < lines.length; i++) { const ln = lines[i]; if (ln) rows.push(ln.split(',')); }
+    return { mode, P, ci, rows };
+  }
+
+  function validQN(a, b, c) {
+    return Number.isInteger(a) && Number.isInteger(b) && Number.isInteger(c) &&
+           a >= 1 && a <= MAXN && b >= 0 && b < a && Math.abs(c) <= b;
+  }
+
+  function applyLoadedCSV(text) {
+    const d = parseParticleCSV(text);
+    const ci = d.ci, rows = d.rows, P = d.P, N = rows.length;
+    if (!N) throw new Error('no data rows');
+    if (grapheneMode || elementCloudMode || dataTableMode) throw new Error('leave graphene/element/data mode first');
+    const num = (r, name) => parseFloat(r[ci[name]]);
+
+    if (d.mode === 'eigen') {
+      const nn = parseInt(P.n, 10), ll = parseInt(P.l, 10), mm = parseInt(P.m, 10);
+      if (!validQN(nn, ll, mm)) throw new Error('invalid n,l,m');
+      if (superMode) toggleSuperMode(false);
+      stopSuperAnimation();
+      n = nn; l = ll; m = mm;
+      complexBasis = (P.basis === 'complex');
+      viewRadius = radialTable(n, l).view;
+      const sc = 165 / viewRadius;
+      const pts = new Array(N);
+      for (let k = 0; k < N; k++) {
+        const r = rows[k];
+        const val = Math.min(1, Math.max(0, num(r, 'rel_density')));
+        pts[k] = { x: num(r, 'x_a0') * sc, y: num(r, 'y_a0') * sc, z: num(r, 'z_a0') * sc,
+                   val, t: Math.sqrt(val), phase: num(r, 'phase') };
+      }
+      if (!isFinite(pts[0].x + pts[0].y + pts[0].z)) throw new Error('bad coordinates');
+      ++generationToken;           // cancel any pending regeneration
+      updateUI(false);             // refresh labels / sliders, keep the loaded cloud
+      cloud = pts;
+      scheduleDraw();
+      return 'LOADED ' + N.toLocaleString() + ' PTS  (n,l,m)=(' + n + ',' + l + ',' + m + ') ' + (complexBasis ? 'COMPLEX' : 'REAL');
+    }
+
+    // ----- superposition -----
+    const A = { n: parseInt(P.nA, 10), l: parseInt(P.lA, 10), m: parseInt(P.mA, 10) };
+    const B = { n: parseInt(P.nB, 10), l: parseInt(P.lB, 10), m: parseInt(P.mB, 10) };
+    if (!validQN(A.n, A.l, A.m) || !validQN(B.n, B.l, B.m)) throw new Error('invalid state A/B');
+    superStateA = A; superStateB = B;
+    if (!superMode) toggleSuperMode(true);
+    stopSuperAnimation();
+    ++generationToken;             // cancel the regeneration toggleSuperMode started
+    superMixTheta = Math.max(0, Math.min(Math.PI / 2, (parseFloat(P.theta_deg) || 0) * Math.PI / 180));
+    superPhase = parseFloat(P.phase_rad) || 0;
+    const E1 = -0.5 / (A.n * A.n), E2 = -0.5 / (B.n * B.n);
+    superDeltaE = E2 - E1;
+    superOmega = Math.abs(superDeltaE);
+    superSame = (A.n === B.n && A.l === B.l && A.m === B.m);
+    viewRadius = Math.max(radialTable(A.n, A.l).view, radialTable(B.n, B.l).view);
+    const sc = 165 / viewRadius;
+    const cA = [], cB = [];
+    for (let k = 0; k < N; k++) {
+      const r = rows[k];
+      const isA = r[ci.source] === 'A';
+      const Ar = num(r, 'psiA_re'), Ai = num(r, 'psiA_im'), Br = num(r, 'psiB_re'), Bi = num(r, 'psiB_im');
+      const pt = {
+        x: num(r, 'x_a0') * sc, y: num(r, 'y_a0') * sc, z: num(r, 'z_a0') * sc,
+        Ar, Ai, Br, Bi, rhoSum: Ar * Ar + Ai * Ai + Br * Br + Bi * Bi,
+        re: 0, im: 0, dens: 0, w: 0, val: 0, t: 0, phase: 0,
+        isSuperA: isA, isSuperB: !isA
+      };
+      (isA ? cA : cB).push(pt);
+    }
+    if (!isFinite(N ? (cA[0] || cB[0]).x : 0)) throw new Error('bad coordinates');
+    superCloudA = cA; superCloudB = cB;
+    superApplyTime();
+    cloud = cA.concat(cB);
+
+    const deg = (superMixTheta * 180 / Math.PI).toFixed(0) + '°';
+    superALabel.textContent = '(' + A.n + ',' + A.l + ',' + A.m + ')';
+    superBLabel.textContent = '(' + B.n + ',' + B.l + ',' + B.m + ')';
+    superOmegaEl.textContent = superOmega.toFixed(4);
+    superThetaEl.textContent = deg;
+    superStateAEl.textContent = 'A: (' + A.n + ',' + A.l + ',' + A.m + ')';
+    superStateBEl.textContent = 'B: (' + B.n + ',' + B.l + ',' + B.m + ')';
+    if (superThetaValue) superThetaValue.textContent = deg;
+    if (superOmegaInfo) superOmegaInfo.textContent = superOmega.toFixed(4);
+    superThetaThumb.setAttribute('cx', THETA_MIN_X + (superMixTheta / (Math.PI / 2)) * (THETA_MAX_X - THETA_MIN_X));
+    updateUI(false);
+    if (!superPaused) startSuperAnimation();
+    scheduleDraw();
+    return 'LOADED ' + N.toLocaleString() + ' PTS  A=(' + A.n + ',' + A.l + ',' + A.m + ') B=(' + B.n + ',' + B.l + ',' + B.m + ') θ=' + deg;
+  }
+
+  function handleLoadFile(file) {
+    if (!file) return;
+    elStatus.textContent = 'LOADING ' + file.name + '…';
+    const rd = new FileReader();
+    const fail = (err) => {
+      console.error(err);
+      elStatus.textContent = 'LOAD FAILED: ' + (err && err.message ? err.message.slice(0, 40) : '');
+      setTimeout(() => { elStatus.textContent = ''; }, 3500);
+    };
+    rd.onerror = () => fail(rd.error);
+    rd.onload = () => {
+      setTimeout(() => {
+        try {
+          elStatus.textContent = applyLoadedCSV(String(rd.result));
+          setTimeout(() => { elStatus.textContent = ''; }, 4000);
+        } catch (err) { fail(err); }
+      }, 20);
+    };
+    rd.readAsText(file);
+  }
+
+  menuLoadCSV.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const inp = document.createElementNS('http://www.w3.org/1999/xhtml', 'input');
+    inp.setAttribute('type', 'file');
+    inp.setAttribute('accept', '.csv,text/csv,text/plain');
+    inp.style.display = 'none';
+    inp.addEventListener('change', () => {
+      const f = inp.files && inp.files[0];
+      if (inp.parentNode) inp.parentNode.removeChild(inp);
+      handleLoadFile(f);
+    });
+    inp.addEventListener('cancel', () => { if (inp.parentNode) inp.parentNode.removeChild(inp); });
+    (document.body || document.documentElement).appendChild(inp);
+    inp.click();
+  });
+
+  // drag & drop a CSV anywhere on the viewport
+  (function () {
+    const vp = document.getElementById('viewport');
+    vp.addEventListener('dragover', (e) => { e.preventDefault(); });
+    vp.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      handleLoadFile(f);
+    });
+  })();
 
   menuAutorotate.addEventListener('click', (e) => {
     e.stopPropagation();
