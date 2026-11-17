@@ -1,0 +1,2526 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="viewport" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet">
+<title>JOY-SCAN // 3D HYDROGEN PROBABILITY CLOUDS // STELLAR NUCLEOSYNTHESIS // SUPERPOSITION MODE</title>
+
+<style><![CDATA[
+  svg { touch-action:none; background:#0a0a0c; font-family:'Courier New',Courier,monospace;
+        -webkit-user-select:none; user-select:none; }
+  .ui-text { fill:#00ffcc; font-size:14px; letter-spacing:1px; pointer-events:none; font-weight:bold; }
+  .ui-dim  { fill:#00ffcc; font-size:12px; letter-spacing:1px; opacity:.7; pointer-events:none; }
+  .info-text { fill:#ffffff; font-size:13px; pointer-events:none; line-height:1.5; }
+  .sci-note { fill:#ffcc00; font-size:9px; pointer-events:none; letter-spacing:0.3px; line-height:1.4; }
+  .super-text { fill:#ff00ff; font-size:10px; pointer-events:none; font-weight:bold; }
+
+  .joycon-left { fill:#1a1a1f; stroke:#00e5ff; stroke-width:3; }
+  .joycon-right { fill:#1a1a1f; stroke:#ff0055; stroke-width:3; }
+  .joycon-text { fill:#ffffff; font-size:12px; font-weight:bold; text-anchor:middle; pointer-events:none; }
+  .joycon-btn { fill:#2a2a30; stroke:#555; stroke-width:2; transition:fill .1s; cursor:pointer; }
+  .joycon-btn:hover { fill:#444; }
+  .joycon-btn:active, .joycon-btn.active { fill:#00e5ff; stroke:#fff; }
+  .joycon-btn-r:hover { fill:#444; }
+  .joycon-btn-r:active, .joycon-btn-r.active { fill:#ff0055; stroke:#fff; }
+
+  .panel-bg { fill:rgba(0,20,15,.85); stroke:#00ffcc; stroke-width:2; }
+  .scanline { stroke:#00ffcc; stroke-width:1; opacity:0.1; pointer-events:none; }
+
+  .fusion-btn { fill:#1a1a1f; stroke:#ffcc00; stroke-width:2; cursor:pointer; transition:fill .1s; }
+  .fusion-btn:hover { fill:#333; }
+  .fusion-btn:active { fill:#ffcc00; }
+
+  .element-btn { fill:#1a1a1f; stroke:#00ffcc; stroke-width:2; cursor:pointer; transition:fill .1s; }
+  .element-btn:hover { fill:#333; }
+  .element-btn:active { fill:#00ffcc; }
+
+  .table-btn { fill:#1a1a1f; stroke:#00ffcc; stroke-width:2; cursor:pointer; transition:fill .1s; }
+  .table-btn:hover { fill:#333; }
+  .table-btn:active { fill:#00ffcc; }
+
+  .super-btn { fill:#1a1a1f; stroke:#ff00ff; stroke-width:2; cursor:pointer; transition:fill .1s; }
+  .super-btn:hover { fill:#333; }
+  .super-btn:active { fill:#ff00ff; }
+  .super-btn.active { fill:#ff00ff; stroke:#fff; }
+
+  .graphene-btn { fill:#1a1a1f; stroke:#00ffaa; stroke-width:2; cursor:pointer; transition:fill .1s; display:none; }
+  .graphene-btn:hover { fill:#333; }
+  .graphene-btn.active { fill:#00ffaa; stroke:#fff; }
+
+  .dropdown-btn { fill:#1a1a1f; stroke:#ffaa00; stroke-width:2; cursor:pointer; transition:fill .1s; }
+  .dropdown-btn:hover { fill:#333; }
+  .dropdown-btn:active { fill:#ffaa00; }
+
+  .dropdown-item { fill:#1a1a1f; stroke:#ffaa00; stroke-width:1; cursor:pointer; transition:fill .1s; }
+  .dropdown-item:hover { fill:#333; }
+  .dropdown-item:active { fill:#ffaa00; }
+
+  .toggle-btn { fill:#1a1a1f; stroke:#00ffcc; stroke-width:2; cursor:pointer; transition:fill .1s; }
+  .toggle-btn:hover { fill:#333; }
+  .toggle-btn.active { fill:#00ffcc; stroke:#fff; }
+
+  .hblock-btn { fill:#1a1a1f; stroke:#ffcc00; stroke-width:2; cursor:pointer; transition:fill .1s; }
+  .hblock-btn:hover { fill:#333; }
+  .hblock-btn.active { fill:#ffcc00; stroke:#fff; }
+
+  .menu-bg { fill:rgba(10,10,15,.95); stroke:#ffaa00; stroke-width:2; filter:drop-shadow(0 0 8px rgba(255,170,0,0.3)); }
+
+  .badge { fill:#ffaa00; font-size:8px; font-weight:bold; pointer-events:none; text-anchor:middle; }
+  .menu-text { fill:#ffaa00; font-size:11px; pointer-events:none; letter-spacing:0.5px; }
+  .menu-text-sm { fill:#fff; font-size:9px; pointer-events:none; }
+  .data-card-text { fill:#ffffff; font-size:11px; pointer-events:none; }
+  .data-card-label { fill:#00ffcc; font-size:10px; pointer-events:none; }
+
+  .super-slider-track { fill:#330033; stroke:#ff00ff; stroke-width:1; }
+  .super-slider-thumb { fill:#ff00ff; cursor:pointer; filter:drop-shadow(0 0 6px #ff00ff); }
+  .super-cycle-btn { fill:#1a1a1f; stroke:#ff00ff; stroke-width:1.5; cursor:pointer; }
+  .super-cycle-btn:hover { fill:#333; }
+  .super-cycle-btn:active { fill:#ff00ff; }
+]]></style>
+
+<defs>
+  <filter id="glow">
+    <feGaussianBlur stdDeviation="3" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="glow-strong">
+    <feGaussianBlur stdDeviation="5" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="glow-magenta">
+    <feGaussianBlur stdDeviation="4" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#00ffcc" stroke-width="1" opacity="0.05"/>
+  </pattern>
+
+  <linearGradient id="screen-bg" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#001111"/>
+    <stop offset="100%" stop-color="#000000"/>
+  </linearGradient>
+
+  <linearGradient id="menu-grad" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#1a1a1f"/>
+    <stop offset="100%" stop-color="#0a0a0f"/>
+  </linearGradient>
+</defs>
+
+<!-- Background -->
+<rect width="1200" height="800" fill="#0a0a0c"/>
+<rect id="bg-grid-rect" width="1200" height="800" fill="url(#grid)"/>
+
+<!-- ================= CENTER SCREEN (3D VISUALIZER) ================= -->
+<g id="screen" transform="translate(250, 80)">
+  <rect width="700" height="640" rx="10" fill="url(#screen-bg)" stroke="#00ffcc" stroke-width="3" filter="url(#glow)"/>
+
+  <!-- Header -->
+  <rect width="700" height="40" fill="#00ffcc" opacity="0.1"/>
+  <text x="350" y="26" class="ui-text" text-anchor="middle" style="font-size:18px; letter-spacing:2px;">3D HYDROGEN PROBABILITY CLOUDS</text>
+
+  <!-- Left Panel: Quantum Numbers & Data -->
+  <g transform="translate(20, 60)">
+    <rect width="220" height="540" fill="#000" stroke="#00ffcc" stroke-width="1" opacity="0.8"/>
+    <text x="10" y="25" class="ui-text" style="font-size:12px; color:#fff;">QUANTUM SLIDERS</text>
+    <line x1="10" y1="35" x2="210" y2="35" stroke="#00ffcc" opacity="0.3"/>
+
+    <foreignObject x="10" y="45" width="200" height="130">
+      <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:'Courier New',monospace; color:#00ffcc; font-size:12px; -webkit-user-select:none;">
+        <style>
+          input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; margin-bottom: 10px; }
+          input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: #003333; border-radius: 3px; border: 1px solid #00ffcc; }
+          input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: #00ffcc; margin-top: -6px; cursor: pointer; box-shadow: 0 0 10px #00ffcc; }
+          input[type=range]::-moz-range-track { width: 100%; height: 6px; background: #003333; border-radius: 3px; border: 1px solid #00ffcc; }
+          input[type=range]::-moz-range-thumb { height: 16px; width: 16px; border-radius: 50%; background: #00ffcc; cursor: pointer; border: none; box-shadow: 0 0 10px #00ffcc; }
+          .slider-row { display: flex; justify-content: space-between; margin-bottom: 2px; }
+          .val { color: #ffffff; font-weight: bold; }
+        </style>
+
+        <div class="slider-row"><span>n (principal):</span> <span id="val-n" class="val">3</span></div>
+        <input type="range" id="slider-n" min="1" max="6" step="1" value="3" />
+
+        <div class="slider-row"><span>l (azimuthal):</span> <span id="val-l" class="val">2</span></div>
+        <input type="range" id="slider-l" min="0" max="5" step="1" value="2" />
+
+        <div class="slider-row"><span>m (magnetic):</span> <span id="val-m" class="val">0</span></div>
+        <input type="range" id="slider-m" min="-5" max="5" step="1" value="0" />
+      </div>
+    </foreignObject>
+
+    <line x1="10" y1="180" x2="210" y2="180" stroke="#00ffcc" opacity="0.3"/>
+
+    <text x="10" y="200" class="ui-text" style="font-size:12px; color:#fff;">ORBITAL INFO</text>
+    <text x="10" y="218" class="ui-dim">Designation:</text>
+    <text id="orb-name" x="210" y="218" class="info-text" text-anchor="end" style="fill:#ffcc00; font-weight:bold; font-size:12px;">3d_z²</text>
+
+    <text x="10" y="236" class="ui-dim">Energy (Eₙ):</text>
+    <text id="orb-energy" x="210" y="236" class="info-text" text-anchor="end">-1.51 eV</text>
+
+    <text x="10" y="254" class="ui-dim">Radial Nodes:</text>
+    <text id="orb-rnodes" x="210" y="254" class="info-text" text-anchor="end">0</text>
+
+    <text x="10" y="272" class="ui-dim">Angular Nodes:</text>
+    <text id="orb-anodes" x="210" y="272" class="info-text" text-anchor="end">2</text>
+
+    <text x="10" y="290" class="ui-dim">⟨r⟩ mean:</text>
+    <text id="orb-rmean" x="210" y="290" class="info-text" text-anchor="end">10.5 a₀</text>
+
+    <text x="10" y="308" class="ui-dim">r peak:</text>
+    <text id="orb-rpeak" x="210" y="308" class="info-text" text-anchor="end">9.0 a₀</text>
+
+    <line x1="10" y1="320" x2="210" y2="320" stroke="#00ffcc" opacity="0.3"/>
+
+    <text x="10" y="340" class="ui-text" style="font-size:12px; color:#fff;">3D CONTROLS</text>
+    <text x="10" y="360" class="info-text" style="font-size:10px; opacity:0.8;">
+      <tspan x="10" dy="0">Rotation: <tspan id="lbl-touch-mode" fill="#ff0055">DISABLED</tspan></tspan>
+      <tspan x="10" dy="15">Press 'A' on Right Joy-Con</tspan>
+      <tspan x="10" dy="15">to enable touch drag rotation.</tspan>
+    </text>
+
+    <text x="10" y="420" class="ui-text" style="font-size:12px; color:#fff;">PHYSICS ENGINE</text>
+    <text x="10" y="440" class="info-text" style="font-size:10px; opacity:0.9;">
+      <tspan x="10" dy="0">Exact H-atom eigenstates:</tspan>
+      <tspan x="10" dy="15">Rₙₗ ∝ ρˡ e^(−ρ/2) L(ρ), ρ=2r/n</tspan>
+      <tspan x="10" dy="15" fill="#00ffcc">Ψ = Rₙₗ(r) · Yₗₘ(θ,φ)</tspan>
+      <tspan x="10" dy="15">|Ψ|² sampled exactly (inverse CDF</tspan>
+      <tspan x="10" dy="13">for r, rejection for angles)</tspan>
+    </text>
+
+    <text x="10" y="515" class="ui-dim" style="font-size:10px;">Bohr Radius (a₀):</text>
+    <text x="10" y="530" class="info-text" style="font-size:11px;">5.291 × 10⁻¹¹ m</text>
+
+    <!-- FUSION ELEMENT OUTPUT SECTION -->
+    <line x1="10" y1="545" x2="210" y2="545" stroke="#ffcc00" opacity="0.5"/>
+    <text x="10" y="565" class="ui-text" style="font-size:12px; color:#ffcc00;">STELLAR NUCLEOSYNTHESIS</text>
+
+    <text x="10" y="585" class="ui-dim" style="font-size:11px;">Element:</text>
+    <text id="fusion-element" x="210" y="585" class="info-text" text-anchor="end" style="fill:#ffcc00; font-weight:bold; font-size:14px;">Hydrogen (H)</text>
+
+    <text x="10" y="605" class="ui-dim" style="font-size:11px;">Atomic Number:</text>
+    <text id="fusion-z" x="210" y="605" class="info-text" text-anchor="end" style="fill:#fff; font-size:12px;">1</text>
+
+    <text x="10" y="625" class="ui-dim" style="font-size:11px;">Formation:</text>
+    <text id="fusion-formation" x="210" y="625" class="info-text" text-anchor="end" style="fill:#fff; font-size:10px;">Big Bang</text>
+
+    <text x="10" y="645" class="ui-dim" style="font-size:10px;">Cloud derived from H</text>
+    <text x="10" y="660" class="ui-dim" style="font-size:10px;">eigenstates (scaled)</text>
+
+    <!-- SCIENTIFIC RIGOR NOTE -->
+    <line x1="10" y1="672" x2="210" y2="672" stroke="#ffcc00" opacity="0.3"/>
+    <text x="10" y="685" class="sci-note">
+      <tspan x="10" dy="0">⚠ This chain spans multiple</tspan>
+      <tspan x="10" dy="11">stellar generations and burning</tspan>
+      <tspan x="10" dy="11">stages (H → He → C → O → Ne →</tspan>
+      <tspan x="10" dy="11">Si → Fe). Nitrogen is a CNO-</tspan>
+      <tspan x="10" dy="11">cycle product requiring pre-</tspan>
+      <tspan x="10" dy="11">existing carbon. Not a single-</tspan>
+      <tspan x="10" dy="11">star sequence.</tspan>
+    </text>
+
+    <!-- SUPERPOSITION PANEL -->
+    <g id="super-panel" style="display:none;">
+      <line x1="10" y1="672" x2="210" y2="672" stroke="#ff00ff" opacity="0.5"/>
+      <text x="10" y="685" class="super-text">SUPERPOSITION MODE</text>
+      <text x="10" y="700" class="ui-dim" style="font-size:9px;">State A:</text>
+      <text id="super-a-label" x="210" y="700" class="super-text" text-anchor="end">(1,0,0)</text>
+      <text x="10" y="714" class="ui-dim" style="font-size:9px;">State B:</text>
+      <text id="super-b-label" x="210" y="714" class="super-text" text-anchor="end">(2,1,0)</text>
+      <text x="10" y="728" class="ui-dim" style="font-size:9px;">Beat ω:</text>
+      <text id="super-omega" x="210" y="728" class="super-text" text-anchor="end">0.00</text>
+      <text x="10" y="742" class="ui-dim" style="font-size:9px;">Mix θ:</text>
+      <text id="super-theta" x="210" y="742" class="super-text" text-anchor="end">45°</text>
+    </g>
+  </g>
+
+  <!-- Right Panel: 3D Visualizer Canvas -->
+  <g transform="translate(250, 60)">
+    <rect id="canvas-bg" width="430" height="540" fill="#020205" stroke="#00ffcc" stroke-width="1" opacity="0.8"/>
+
+    <!-- Crosshairs (Static overlay) -->
+    <g id="crosshair-g">
+      <line x1="215" y1="50" x2="215" y2="490" stroke="#00ffcc" stroke-width="1" opacity="0.1"/>
+      <line x1="50" y1="270" x2="380" y2="270" stroke="#00ffcc" stroke-width="1" opacity="0.1"/>
+    </g>
+
+    <text id="lbl-scale" x="10" y="20" class="ui-dim" style="font-size:10px;">view radius</text>
+    <text id="lbl-h-scale" x="10" y="36" class="ui-dim" style="font-size:9px; fill:#ffcc00; display:none;">H-block: 1s @ 1.0× element scale</text>
+    <text id="lbl-graphene-scale" x="10" y="52" class="ui-dim" style="font-size:9px; fill:#00ffaa; display:none;">Graphene: Rings = 3</text>
+    <text id="lbl-super-scale" x="10" y="66" class="ui-dim" style="font-size:9px; fill:#ff00ff; display:none;">Superposition Active</text>
+
+    <!-- WebGL particle canvas (2x resolution for retina) -->
+    <foreignObject x="0" y="0" width="430" height="540" style="pointer-events:none;">
+      <canvas xmlns="http://www.w3.org/1999/xhtml" id="gl-canvas"
+              width="860" height="1080"
+              style="width:430px;height:540px;display:block;background:transparent;"></canvas>
+    </foreignObject>
+
+    <!-- Hydrogen scale reference ring -->
+    <g id="h-scale-ring" style="display:none;" pointer-events="none">
+      <circle id="h-ring" cx="215" cy="270" r="0" fill="none" stroke="#ffcc00" stroke-width="1" stroke-dasharray="4,4" opacity="0.6"/>
+      <text id="h-ring-label" x="215" y="0" text-anchor="middle" fill="#ffcc00" font-size="9" opacity="0.8">H block</text>
+    </g>
+
+    <g id="axes" transform="translate(48, 488)"></g>
+
+    <!-- Touch Drag Overlay -->
+    <rect id="touch-overlay" width="430" height="540" fill="transparent" cursor="grab" style="pointer-events: none;"/>
+
+    <!-- Orbital grid selection -->
+    <g transform="translate(300, 460)" opacity="0.6" pointer-events="none">
+      <rect x="0" y="0" width="100" height="60" fill="none" stroke="#00ffcc" stroke-width="1"/>
+      <text x="5" y="15" class="ui-dim" style="font-size:9px;">ACTIVE:</text>
+      <text id="lbl-active-matrix" x="5" y="30" class="ui-text" style="font-size:11px; color:#ffcc00;">(3,2,0)</text>
+      <text id="lbl-basis" x="5" y="48" class="ui-dim" style="font-size:8px;">REAL · 1500</text>
+    </g>
+
+    <!-- Status / progress text -->
+    <text id="lbl-status" x="215" y="445" class="ui-text" style="font-size:11px; color:#ffcc00; text-anchor:middle; opacity:0.85;"></text>
+
+    <!-- Fusion Button -->
+    <g transform="translate(20, 490)" class="fusion-btn" id="btn-fusion" pointer-events="all">
+      <rect width="90" height="30" rx="5"/>
+      <text x="45" y="20" class="joycon-text" style="fill:#ffcc00; font-size:12px; pointer-events:none;">FUSION</text>
+    </g>
+
+    <!-- Element Cloud Button -->
+    <g transform="translate(120, 490)" class="element-btn" id="btn-element-cloud" pointer-events="all">
+      <rect width="130" height="30" rx="5"/>
+      <text x="65" y="20" class="joycon-text" style="fill:#00ffcc; font-size:12px; pointer-events:none;">ELEMENT CLOUD</text>
+    </g>
+
+    <!-- Data Table Button -->
+    <g transform="translate(260, 490)" class="table-btn" id="btn-data-table" pointer-events="all">
+      <rect width="80" height="30" rx="5"/>
+      <text x="40" y="20" class="joycon-text" style="fill:#00ffcc; font-size:12px; pointer-events:none;">DATA</text>
+    </g>
+
+    <!-- H-BLOCK Button -->
+    <g transform="translate(350, 490)" class="hblock-btn" id="btn-h-block" pointer-events="all">
+      <rect width="70" height="30" rx="5"/>
+      <text x="35" y="20" class="joycon-text" style="fill:#ffcc00; font-size:10px; pointer-events:none;">H-BLOCK</text>
+    </g>
+
+    <!-- SUPERPOSITION Button (NEW) -->
+    <g transform="translate(20, 525)" class="super-btn" id="btn-super" pointer-events="all">
+      <rect width="160" height="30" rx="5"/>
+      <text x="80" y="20" class="joycon-text" style="fill:#ff00ff; font-size:11px; pointer-events:none;">SUPERPOSITION</text>
+    </g>
+
+    <!-- H shape selector (visible when H-BLOCK is on) -->
+    <g transform="translate(20, 525)" id="h-selector" style="display:none;" pointer-events="all">
+      <rect width="400" height="22" rx="4" fill="#1a1a1f" stroke="#ffcc00" stroke-width="1"/>
+      <text x="8" y="15" class="menu-text-sm" style="fill:#ffcc00; font-size:9px;">H SHAPE:</text>
+      <text id="h-shape-label" x="390" y="15" text-anchor="end" class="menu-text-sm" style="fill:#fff; font-size:10px; font-weight:bold;">1s</text>
+    </g>
+
+    <!-- GRAPHENE BUTTON (Only appears for Carbon) -->
+    <g transform="translate(350, 525)" class="graphene-btn" id="btn-graphene" pointer-events="all">
+      <rect width="70" height="30" rx="5"/>
+      <text x="35" y="20" class="joycon-text" style="fill:#00ffaa; font-size:10px; pointer-events:none;">GRAPHENE</text>
+    </g>
+  </g>
+</g>
+
+<!-- ===== GRAPHENE SLIDER (Top Layer) ===== -->
+<g id="graphene-slider-panel" style="display:none;" transform="translate(250, 560)">
+  <rect width="430" height="50" rx="8" fill="#0a0a0c" stroke="#00ffaa" stroke-width="2" filter="url(#glow-strong)"/>
+  <text x="20" y="20" class="ui-text" style="font-size:12px; fill:#00ffaa;">GRAPHENE RINGS:</text>
+  <rect x="20" y="30" width="390" height="8" rx="4" fill="#003333" stroke="#00ffaa" stroke-width="1"/>
+  <circle id="graphene-slider-thumb" cx="131" cy="34" r="10" fill="#00ffaa" style="cursor:pointer; box-shadow:0 0 10px #00ffaa;"/>
+  <text id="graphene-slider-value" x="360" y="22" class="ui-text" style="font-size:14px; fill:#fff;">3</text>
+</g>
+
+<!-- ===== SUPERPOSITION CONTROL PANEL (UPGRADED) ===== -->
+<g id="super-control-panel" style="display:none;" transform="translate(250, 560)">
+  <rect width="430" height="110" rx="8" fill="#0a0a0c" stroke="#ff00ff" stroke-width="2" filter="url(#glow-magenta)"/>
+  
+  <text x="20" y="18" class="super-text" style="font-size:11px;">SUPERPOSITION MODE</text>
+  <text x="20" y="34" class="super-text" style="font-size:10px;" id="super-state-a">A: (1,0,0)</text>
+  <text x="20" y="50" class="super-text" style="font-size:10px;" id="super-state-b">B: (2,1,0)</text>
+  
+  <g id="super-pause-btn" pointer-events="all" cursor="pointer">
+    <rect x="350" y="8" width="60" height="16" rx="3" fill="#ff00ff" opacity="0.5"/>
+    <text x="380" y="20" text-anchor="middle" fill="#fff" font-size="8" font-weight="bold">PAUSE</text>
+  </g>
+  
+  <text x="20" y="70" class="super-text" style="font-size:9px;">MIXING ANGLE θ:</text>
+  <text id="super-theta-value" x="410" y="70" class="super-text" style="font-size:10px;" text-anchor="end">45°</text>
+  <rect x="20" y="76" width="390" height="6" rx="3" class="super-slider-track"/>
+  <circle id="super-theta-thumb" cx="215" cy="79" r="8" class="super-slider-thumb"/>
+  
+  <g id="super-cycle-b" class="super-cycle-btn" pointer-events="all" cursor="pointer">
+    <rect x="20" y="88" width="120" height="16" rx="3"/>
+    <text x="80" y="99" text-anchor="middle" class="super-text" style="font-size:8px;">CYCLE STATE B ▶</text>
+  </g>
+  
+  <text x="200" y="99" class="super-text" style="font-size:9px;">ω (a.u.):</text>
+  <text id="super-omega-info" x="410" y="99" class="super-text" style="font-size:10px;" text-anchor="end">0.00</text>
+</g>
+
+<!-- ================= LEFT JOY-CON (QUANTUM NUMBERS) ================= -->
+<g id="joycon-left" transform="translate(30, 150)">
+  <rect width="180" height="500" rx="40" class="joycon-left"/>
+  <text x="90" y="40" class="joycon-text" fill="#00e5ff" style="font-size:16px;">QUANTUM</text>
+  <text x="90" y="60" class="joycon-text" fill="#00e5ff" style="font-size:10px; opacity:0.7;">L-SYS</text>
+
+  <g transform="translate(90, 120)">
+    <circle r="35" fill="#111" stroke="#00e5ff" stroke-width="2"/>
+    <circle r="25" fill="#222" stroke="#00e5ff" stroke-width="1" filter="url(#glow)"/>
+    <circle id="stick-l" r="15" fill="#00e5ff" opacity="0.5"/>
+    <text x="0" y="45" class="joycon-text" style="font-size:9px; fill:#00e5ff;">N (UP/DOWN)</text>
+  </g>
+
+  <g transform="translate(90, 280)">
+    <rect x="-15" y="-45" width="30" height="35" rx="5" class="joycon-btn" data-dir="up"/>
+    <polygon points="0,-40 -10,-25 10,-25" fill="#00e5ff" pointer-events="none"/>
+    <text x="0" y="-48" class="joycon-text" style="font-size:9px; fill:#00e5ff;">L+</text>
+
+    <rect x="-15" y="10" width="30" height="35" rx="5" class="joycon-btn" data-dir="down"/>
+    <polygon points="0,25 -10,10 10,10" fill="#00e5ff" pointer-events="none"/>
+    <text x="0" y="60" class="joycon-text" style="font-size:9px; fill:#00e5ff;">L-</text>
+
+    <rect x="-45" y="-15" width="35" height="30" rx="5" class="joycon-btn" data-dir="left"/>
+    <polygon points="-40,0 -25,-10 -25,10" fill="#00e5ff" pointer-events="none"/>
+    <text x="-55" y="4" class="joycon-text" style="font-size:9px; fill:#00e5ff;">M-</text>
+
+    <rect x="10" y="-15" width="35" height="30" rx="5" class="joycon-btn" data-dir="right"/>
+    <polygon points="25,0 10,-10 10,10" fill="#00e5ff" pointer-events="none"/>
+    <text x="55" y="4" class="joycon-text" style="font-size:9px; fill:#00e5ff;">M+</text>
+  </g>
+
+  <rect x="30" y="400" width="30" height="15" rx="3" class="joycon-btn" data-act="basis"/>
+  <text x="45" y="392" class="joycon-text" style="font-size:9px; fill:#00e5ff;">BASIS</text>
+  <text x="45" y="412" class="joycon-text" style="font-size:10px; fill:#fff; pointer-events:none;">-</text>
+
+  <circle cx="90" cy="470" r="15" fill="#111" stroke="#555" stroke-width="2"/>
+  <circle cx="90" cy="470" r="8" fill="#00e5ff" opacity="0.5"/>
+</g>
+
+<!-- ================= RIGHT JOY-CON (VISUALIZATION MODES) ================= -->
+<g id="joycon-right" transform="translate(990, 150)">
+  <rect width="180" height="500" rx="40" class="joycon-right"/>
+  <text x="90" y="40" class="joycon-text" fill="#ff0055" style="font-size:16px;">VISUAL</text>
+  <text x="90" y="60" class="joycon-text" fill="#ff0055" style="font-size:10px; opacity:0.7;">R-SYS</text>
+
+  <g transform="translate(90, 100)">
+    <circle r="20" class="joycon-btn joycon-btn-r" data-action="toggle-color"/>
+    <text y="6" class="joycon-text" style="fill:#fff;">X</text>
+    <text y="-30" class="joycon-text" style="font-size:9px; fill:#ff0055;">COLOR</text>
+  </g>
+
+  <g transform="translate(40, 150)">
+    <circle r="20" class="joycon-btn joycon-btn-r" data-action="toggle-size"/>
+    <text y="6" class="joycon-text" style="fill:#fff;">Y</text>
+    <text x="-30" y="4" class="joycon-text" style="font-size:9px; fill:#ff0055;">SIZE</text>
+  </g>
+
+  <g transform="translate(140, 150)">
+    <circle id="btn-touch" r="20" class="joycon-btn joycon-btn-r" data-action="toggle-touch"/>
+    <text y="6" class="joycon-text" style="fill:#fff;">A</text>
+    <text x="30" y="4" class="joycon-text" style="font-size:9px; fill:#ff0055;">TOUCH</text>
+  </g>
+
+  <g transform="translate(90, 200)">
+    <circle r="20" class="joycon-btn joycon-btn-r" data-action="reset"/>
+    <text y="6" class="joycon-text" style="fill:#fff;">B</text>
+    <text y="30" class="joycon-text" style="font-size:9px; fill:#ff0055;">RESET</text>
+  </g>
+
+  <g transform="translate(90, 260)">
+    <circle r="20" class="joycon-btn joycon-btn-r" data-action="toggle-super" style="stroke:#ff00ff;"/>
+    <text y="6" class="joycon-text" style="fill:#ff00ff;">S</text>
+    <text y="-30" class="joycon-text" style="font-size:9px; fill:#ff00ff;">SUPER</text>
+  </g>
+
+  <rect x="120" y="400" width="30" height="15" rx="3" class="joycon-btn joycon-btn-r" data-action="cycle-count"/>
+  <text x="135" y="392" class="joycon-text" style="font-size:9px; fill:#ff0055;">DENSITY</text>
+  <text x="135" y="412" class="joycon-text" style="font-size:10px; fill:#fff; pointer-events:none;">+</text>
+
+  <circle cx="90" cy="470" r="15" fill="#111" stroke="#555" stroke-width="2"/>
+  <circle cx="90" cy="470" r="8" fill="#ff0055" opacity="0.5"/>
+</g>
+
+<!-- ===== DROPDOWN MENU ===== -->
+<g id="dropdown-system" transform="translate(870, 95)">
+  <g id="btn-dropdown" class="dropdown-btn" pointer-events="all">
+    <rect width="120" height="24" rx="4"/>
+    <text x="60" y="16" class="joycon-text" style="fill:#ffaa00; font-size:10px;">▼ TOOLS / FX</text>
+  </g>
+
+  <g id="dropdown-panel" style="display:none;" transform="translate(-80, 28)">
+    <rect width="200" height="384" rx="6" class="menu-bg"/>
+
+    <rect width="200" height="22" rx="6" fill="#ffaa00" opacity="0.15"/>
+    <text x="100" y="15" class="menu-text" text-anchor="middle" style="fill:#ffaa00; font-size:10px; font-weight:bold;">ADDITIONAL FUNCTIONS</text>
+
+    <line x1="10" y1="26" x2="190" y2="26" stroke="#ffaa00" opacity="0.3"/>
+
+    <g class="dropdown-item" id="menu-toggle-vis" pointer-events="all">
+      <rect x="10" y="32" width="180" height="26" rx="4"/>
+      <text x="20" y="49" class="menu-text-sm" style="fill:#00ffcc;">◉ Visual Data Overlay</text>
+      <text id="vis-status" x="180" y="49" text-anchor="end" class="menu-text-sm" style="fill:#00ffcc; font-weight:bold;">ON</text>
+    </g>
+
+    <g class="dropdown-item" id="menu-quick-orbit" pointer-events="all">
+      <rect x="10" y="63" width="180" height="26" rx="4"/>
+      <text x="20" y="80" class="menu-text-sm">⚛ Quick Orbital</text>
+      <text id="quick-orbit-label" x="180" y="80" text-anchor="end" class="menu-text-sm" style="fill:#ffcc00;">3d_z²</text>
+    </g>
+
+    <g class="dropdown-item" id="menu-export" pointer-events="all">
+      <rect x="10" y="94" width="180" height="26" rx="4"/>
+      <text x="20" y="111" class="menu-text-sm">⬇ Export Snapshot</text>
+    </g>
+
+    <g class="dropdown-item" id="menu-autorotate" pointer-events="all">
+      <rect x="10" y="125" width="180" height="26" rx="4"/>
+      <text x="20" y="142" class="menu-text-sm">↻ Auto-Rotate</text>
+      <text id="autorotate-status" x="180" y="142" text-anchor="end" class="menu-text-sm" style="fill:#ff0055; font-weight:bold;">OFF</text>
+    </g>
+
+    <g class="dropdown-item" id="menu-toggle-grid" pointer-events="all">
+      <rect x="10" y="156" width="180" height="26" rx="4"/>
+      <text x="20" y="173" class="menu-text-sm">▦ Background Grid</text>
+      <text id="grid-status" x="180" y="173" text-anchor="end" class="menu-text-sm" style="fill:#00ffcc; font-weight:bold;">ON</text>
+    </g>
+
+    <g class="dropdown-item" id="menu-trail" pointer-events="all">
+      <rect x="10" y="187" width="180" height="26" rx="4"/>
+      <text x="20" y="204" class="menu-text-sm">✦ Particle Trails</text>
+      <text id="trail-status" x="180" y="204" text-anchor="end" class="menu-text-sm" style="fill:#ff0055; font-weight:bold;">OFF</text>
+    </g>
+
+    <g class="dropdown-item" id="menu-crosshair" pointer-events="all">
+      <rect x="10" y="218" width="180" height="26" rx="4"/>
+      <text x="20" y="235" class="menu-text-sm">✛ Crosshair Guide</text>
+      <text id="crosshair-status" x="180" y="235" text-anchor="end" class="menu-text-sm" style="fill:#00ffcc; font-weight:bold;">ON</text>
+    </g>
+
+    <g class="dropdown-item" id="menu-h-overlay" pointer-events="all">
+      <rect x="10" y="249" width="180" height="26" rx="4"/>
+      <text x="20" y="266" class="menu-text-sm" style="fill:#ffcc00;">⚛ H-Block Overlay</text>
+      <text id="h-overlay-status" x="180" y="266" text-anchor="end" class="menu-text-sm" style="fill:#ff0055; font-weight:bold;">OFF</text>
+    </g>
+
+    <g class="dropdown-item" id="menu-super" pointer-events="all">
+      <rect x="10" y="280" width="180" height="26" rx="4"/>
+      <text x="20" y="297" class="menu-text-sm" style="fill:#ff00ff;">⬥ Superposition Mode</text>
+      <text id="super-status" x="180" y="297" text-anchor="end" class="menu-text-sm" style="fill:#ff0055; font-weight:bold;">OFF</text>
+    </g>
+
+    <g class="dropdown-item" id="menu-export-csv" pointer-events="all">
+      <rect x="10" y="311" width="180" height="26" rx="4"/>
+      <text x="20" y="328" class="menu-text-sm" style="fill:#00ffcc;">⬇ Export Particle Data (CSV)</text>
+    </g>
+
+    <g class="dropdown-item" id="menu-load-csv" pointer-events="all">
+      <rect x="10" y="342" width="180" height="26" rx="4"/>
+      <text x="20" y="359" class="menu-text-sm" style="fill:#00ffcc;">⬆ Load Particle Data (CSV)</text>
+    </g>
+
+    <text x="100" y="380" text-anchor="middle" style="fill:#666; font-size:8px; pointer-events:none;">Click outside to close</text>
+  </g>
+</g>
+
+<!-- ================= ELEMENT DATA CARD MENU ================= -->
+<g id="data-card-system" transform="translate(15, 640)">
+  <g id="btn-data-card" class="dropdown-btn" pointer-events="all">
+    <rect width="160" height="24" rx="4"/>
+    <text x="80" y="16" class="joycon-text" style="fill:#ffaa00; font-size:10px;">▲ ELEMENT DATA CARD</text>
+  </g>
+
+  <g id="data-card-panel" transform="translate(0, -220)">
+    <rect width="220" height="210" rx="6" class="menu-bg" style="stroke:#00ffcc; filter:drop-shadow(0 0 10px rgba(0,255,204,0.4));"/>
+    
+    <rect width="220" height="24" rx="6" fill="#00ffcc" opacity="0.15"/>
+    <text x="110" y="16" class="menu-text" text-anchor="middle" style="fill:#00ffcc; font-size:11px; font-weight:bold;" id="dc-header">HYDROGEN (H)</text>
+
+    <g transform="translate(10, 30)">
+      <text x="0" y="12" class="data-card-label">Mass:</text>
+      <text x="200" y="12" class="data-card-text" text-anchor="end" id="dc-mass">1.008 u</text>
+
+      <text x="0" y="28" class="data-card-label">Phase (STP):</text>
+      <text x="200" y="28" class="data-card-text" text-anchor="end" id="dc-phase">Gas</text>
+
+      <text x="0" y="44" class="data-card-label">Electronegativity:</text>
+      <text x="200" y="44" class="data-card-text" text-anchor="end" id="dc-electronegativity">2.20</text>
+
+      <text x="0" y="60" class="data-card-label">Melting Point:</text>
+      <text x="200" y="60" class="data-card-text" text-anchor="end" id="dc-melting">-259 °C</text>
+
+      <text x="0" y="76" class="data-card-label">Boiling Point:</text>
+      <text x="200" y="76" class="data-card-text" text-anchor="end" id="dc-boiling">-253 °C</text>
+
+      <text x="0" y="92" class="data-card-label">Discovery Year:</text>
+      <text x="200" y="92" class="data-card-text" text-anchor="end" id="dc-discovery">1766</text>
+
+      <text x="0" y="108" class="data-card-label">Group / Period:</text>
+      <text x="200" y="108" class="data-card-text" text-anchor="end" id="dc-group-period">1 / 1</text>
+
+      <text x="0" y="124" class="data-card-label">Oxidation States:</text>
+      <text x="200" y="124" class="data-card-text" text-anchor="end" id="dc-oxidation">+1, −1</text>
+
+      <text x="0" y="140" class="data-card-label">Category:</text>
+      <text x="200" y="140" class="data-card-text" text-anchor="end" id="dc-category">Reactive nonmetal</text>
+
+      <text x="0" y="156" class="data-card-label">Atomic Radius:</text>
+      <text x="200" y="156" class="data-card-text" text-anchor="end" id="dc-radius">53 pm</text>
+    </g>
+    
+    <g id="btn-close-data-card" pointer-events="all" cursor="pointer">
+      <rect x="190" y="4" width="24" height="16" rx="3" fill="#ff0055" opacity="0.8"/>
+      <text x="202" y="16" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">X</text>
+    </g>
+  </g>
+</g>
+
+<script><![CDATA[
+(function() {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const SVGNS = 'http://www.w3.org/2000/svg';
+
+  // ===== EXACT HYDROGEN PHYSICS (atomic units, a0 = 1) =====
+  const FACT = [1];
+  for (let i = 1; i < 64; i++) FACT[i] = FACT[i-1] * i;
+  function fact(k) { return FACT[k] || 1; }
+
+  function laguerre(k, a, x) {
+    if (k === 0) return 1;
+    let L0 = 1, L1 = 1 + a - x;
+    for (let i = 1; i < k; i++) {
+      const L2 = ((2 * i + 1 + a - x) * L1 - (i + a) * L0) / (i + 1);
+      L0 = L1; L1 = L2;
+    }
+    return L1;
+  }
+
+  function radial(n, l, r) {
+    const rho = 2 * r / n;
+    const N = Math.sqrt(Math.pow(2 / n, 3) * fact(n - l - 1) / (2 * n * fact(n + l)));
+    return N * Math.exp(-rho / 2) * Math.pow(rho, l) * laguerre(n - l - 1, 2 * l + 1, rho);
+  }
+
+  function legendre(l, m, x) {
+    let pmm = 1;
+    if (m > 0) {
+      const s = Math.sqrt(Math.max(0, 1 - x * x));
+      let f = 1;
+      for (let i = 1; i <= m; i++) { pmm *= f * s; f += 2; }
+    }
+    if (l === m) return pmm;
+    let pm1 = x * (2 * m + 1) * pmm;
+    if (l === m + 1) return pm1;
+    let pll = 0;
+    for (let ll = m + 2; ll <= l; ll++) {
+      pll = ((2 * ll - 1) * x * pm1 - (ll + m - 1) * pmm) / (ll - m);
+      pmm = pm1; pm1 = pll;
+    }
+    return pll;
+  }
+
+  function angular(l, m, uz, phi, complexBasis) {
+    const am = Math.abs(m);
+    const K = Math.sqrt((2 * l + 1) / (4 * Math.PI) * fact(l - am) / fact(l + am));
+    const P = K * legendre(l, am, uz);
+    if (complexBasis || m === 0) return P;
+    return Math.SQRT2 * P * (m > 0 ? Math.cos(am * phi) : Math.sin(am * phi));
+  }
+
+  function angularMax2(l, m, complexBasis) {
+    let mx = 0;
+    const NT = 180, NP = complexBasis || m === 0 ? 1 : 360;
+    for (let i = 0; i <= NT; i++) {
+      const uz = -1 + 2 * i / NT;
+      for (let j = 0; j < NP; j++) {
+        const a = angular(l, m, uz, 2 * Math.PI * j / NP, complexBasis);
+        if (a * a > mx) mx = a * a;
+      }
+    }
+    return mx * 1.03 || 1;
+  }
+
+  function radialTable(n, l) {
+    const Rmax = 3 * n * n + 15, NR = 4000, dr = Rmax / NR;
+    const r = new Float64Array(NR + 1), cdf = new Float64Array(NR + 1);
+    let maxR2 = 0, peak = 0, peakVal = 0, prevF = 0;
+    for (let i = 0; i <= NR; i++) {
+      r[i] = i * dr;
+      const R = radial(n, l, r[i]);
+      const f = r[i] * r[i] * R * R;
+      if (R * R > maxR2) maxR2 = R * R;
+      if (f > peakVal) { peakVal = f; peak = r[i]; }
+      cdf[i] = i === 0 ? 0 : cdf[i - 1] + 0.5 * (f + prevF) * dr;
+      prevF = f;
+    }
+    const total = cdf[NR];
+    let iv = NR;
+    for (let i = 0; i <= NR; i++) if (cdf[i] >= 0.995 * total) { iv = i; break; }
+    return { r, cdf, total, NR, maxR2, peak, view: r[iv] * 1.05 };
+  }
+
+  function sampleRadius(tab) {
+    const u = Math.random() * tab.total;
+    let lo = 0, hi = tab.NR;
+    while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (tab.cdf[mid] < u) lo = mid; else hi = mid; }
+    const span = tab.cdf[hi] - tab.cdf[lo];
+    const t = span > 0 ? (u - tab.cdf[lo]) / span : 0;
+    return tab.r[lo] + t * (tab.r[hi] - tab.r[lo]);
+  }
+
+  // ===== STATE =====
+  const MAXN = 6;
+  const COUNTS = [800, 1500, 3000, 6000, 1000000];
+  const COLOR_NAMES = ['HEAT', 'BLUE', 'PURPLE', 'PHASE'];
+  let n = 3, l = 2, m = 0;
+  let complexBasis = false;
+  let colorMode = 0;
+  let pointSize = 1.5;
+  let countIdx = 1;
+  let touchMode = false;
+
+  let visualDataVisible = true;
+  let autoRotate = false;
+  let autoRotateId = null;
+  let bgGridVisible = true;
+  let trailMode = false;
+  let crosshairVisible = true;
+
+  // Hydrogen building-block overlay
+  let hBlockOverlay = false;
+  let hOverlayN = 1, hOverlayL = 0;
+  let hOverlayCloud = [];
+  let hOverlayScaleFactor = 1.0;
+  let hTargetRadius = 0;
+  const H_OVERLAY_COLOR = [1.0, 0.85, 0.0];
+
+  // Graphene State
+  let grapheneMode = false;
+  let grapheneRings = 3;
+  let grapheneCloud = [];
+
+  // ===== SUPERPOSITION STATE =====
+  let superMode = false;
+  let superStateA = { n: 1, l: 0, m: 0 };
+  let superStateB = { n: 2, l: 1, m: 0 };
+  let superMixTheta = Math.PI / 4;
+  let superOmega = 0;
+  let superDeltaE = 0;   // signed E_B - E_A (Hartree)
+  let superSame = false; // A and B are the same eigenstate
+  let superPhase = 0;
+  let superCloudA = [];
+  let superCloudB = [];
+  let superPaused = false;
+  let superAnimId = null;
+  let superLastTime = 0;
+
+  const SUPER_B_PRESETS = [
+    { n: 2, l: 0, m: 0 },
+    { n: 2, l: 1, m: 0 },
+    { n: 2, l: 1, m: 1 },
+    { n: 3, l: 0, m: 0 },
+    { n: 3, l: 1, m: 0 },
+    { n: 3, l: 2, m: 0 },
+    { n: 3, l: 2, m: -1 },
+    { n: 4, l: 0, m: 0 },
+    { n: 4, l: 1, m: 0 },
+    { n: 4, l: 2, m: 0 },
+  ];
+  let superBIdx = 1;
+
+  // ===== CORRECTED STELLAR NUCLEOSYNTHESIS DATA =====
+  const ELEMENTS = [
+    { name: 'Hydrogen', symbol: 'H', z: 1, formation: 'Big Bang nucleosynthesis', shells: [1], mass: '1.008', phase: 'Gas', electronegativity: '2.20', melting: '-259', boiling: '-253', discovery: '1766', group: '1', period: '1', oxidation: '+1, −1', category: 'Reactive nonmetal', radius: '53' },
+    { name: 'Helium', symbol: 'He', z: 2, formation: 'Big Bang + stellar H fusion (p-p chain)', shells: [2], mass: '4.0026', phase: 'Gas', electronegativity: '—', melting: '-272', boiling: '-269', discovery: '1868', group: '18', period: '1', oxidation: '0', category: 'Noble gas', radius: '31' },
+    { name: 'Lithium', symbol: 'Li', z: 3, formation: 'Cosmic ray spallation (Big Bang Li-7 destroyed in stars)', shells: [2, 1], mass: '6.94', phase: 'Solid', electronegativity: '0.98', melting: '180', boiling: '1342', discovery: '1817', group: '1', period: '2', oxidation: '+1', category: 'Alkali metal', radius: '167' },
+    { name: 'Beryllium', symbol: 'Be', z: 4, formation: 'Cosmic ray spallation', shells: [2, 2], mass: '9.0122', phase: 'Solid', electronegativity: '1.57', melting: '1287', boiling: '2469', discovery: '1798', group: '2', period: '2', oxidation: '+2', category: 'Alkaline earth metal', radius: '112' },
+    { name: 'Boron', symbol: 'B', z: 5, formation: 'Cosmic ray spallation', shells: [2, 3], mass: '10.81', phase: 'Solid', electronegativity: '2.04', melting: '2076', boiling: '3927', discovery: '1808', group: '13', period: '2', oxidation: '+3', category: 'Metalloid', radius: '87' },
+    { name: 'Carbon', symbol: 'C', z: 6, formation: 'Triple-alpha process (3 He-4 → C-12)', shells: [2, 4], mass: '12.011', phase: 'Solid', electronegativity: '2.55', melting: '3550', boiling: '4027', discovery: 'Ancient', group: '14', period: '2', oxidation: '+4, +2, −4', category: 'Reactive nonmetal', radius: '67' },
+    { name: 'Nitrogen', symbol: 'N', z: 7, formation: 'CNO cycle (requires pre-existing C)', shells: [2, 5], mass: '14.007', phase: 'Gas', electronegativity: '3.04', melting: '-210', boiling: '-196', discovery: '1772', group: '15', period: '2', oxidation: '+5, +3, −3', category: 'Reactive nonmetal', radius: '56' },
+    { name: 'Oxygen', symbol: 'O', z: 8, formation: 'He burning (alpha capture on C-12)', shells: [2, 6], mass: '15.999', phase: 'Gas', electronegativity: '3.44', melting: '-218', boiling: '-183', discovery: '1774', group: '16', period: '2', oxidation: '−2', category: 'Reactive nonmetal', radius: '48' },
+    { name: 'Fluorine', symbol: 'F', z: 9, formation: 'Ne burning / CNO cycle', shells: [2, 7], mass: '18.998', phase: 'Gas', electronegativity: '3.98', melting: '-220', boiling: '-188', discovery: '1886', group: '17', period: '2', oxidation: '−1', category: 'Reactive nonmetal', radius: '42' },
+    { name: 'Neon', symbol: 'Ne', z: 10, formation: 'Carbon burning (requires pre-existing C)', shells: [2, 8], mass: '20.180', phase: 'Gas', electronegativity: '—', melting: '-249', boiling: '-246', discovery: '1898', group: '18', period: '2', oxidation: '0', category: 'Noble gas', radius: '38' },
+    { name: 'Sodium', symbol: 'Na', z: 11, formation: 'Carbon burning', shells: [2, 8, 1], mass: '22.990', phase: 'Solid', electronegativity: '0.93', melting: '98', boiling: '883', discovery: '1807', group: '1', period: '3', oxidation: '+1', category: 'Alkali metal', radius: '190' },
+    { name: 'Magnesium', symbol: 'Mg', z: 12, formation: 'Carbon burning', shells: [2, 8, 2], mass: '24.305', phase: 'Solid', electronegativity: '1.31', melting: '650', boiling: '1090', discovery: '1755', group: '2', period: '3', oxidation: '+2', category: 'Alkaline earth metal', radius: '145' },
+    { name: 'Aluminium', symbol: 'Al', z: 13, formation: 'Neon burning', shells: [2, 8, 3], mass: '26.982', phase: 'Solid', electronegativity: '1.61', melting: '660', boiling: '2519', discovery: '1825', group: '13', period: '3', oxidation: '+3', category: 'Post-transition metal', radius: '118' },
+    { name: 'Silicon', symbol: 'Si', z: 14, formation: 'Oxygen burning', shells: [2, 8, 4], mass: '28.085', phase: 'Solid', electronegativity: '1.90', melting: '1414', boiling: '3265', discovery: '1824', group: '14', period: '3', oxidation: '+4, −4', category: 'Metalloid', radius: '111' },
+    { name: 'Phosphorus', symbol: 'P', z: 15, formation: 'Silicon burning', shells: [2, 8, 5], mass: '30.974', phase: 'Solid', electronegativity: '2.19', melting: '44', boiling: '280', discovery: '1669', group: '15', period: '3', oxidation: '+5, +3, −3', category: 'Reactive nonmetal', radius: '98' },
+    { name: 'Sulphur', symbol: 'S', z: 16, formation: 'Silicon burning', shells: [2, 8, 6], mass: '32.06', phase: 'Solid', electronegativity: '2.58', melting: '115', boiling: '444', discovery: 'Ancient', group: '16', period: '3', oxidation: '+6, +4, −2', category: 'Reactive nonmetal', radius: '88' },
+    { name: 'Chlorine', symbol: 'Cl', z: 17, formation: 'Silicon burning', shells: [2, 8, 7], mass: '35.45', phase: 'Gas', electronegativity: '3.16', melting: '-101', boiling: '-34', discovery: '1774', group: '17', period: '3', oxidation: '+7, +5, +1, −1', category: 'Reactive nonmetal', radius: '79' },
+    { name: 'Argon', symbol: 'Ar', z: 18, formation: 'Silicon burning', shells: [2, 8, 8], mass: '39.948', phase: 'Gas', electronegativity: '—', melting: '-189', boiling: '-186', discovery: '1894', group: '18', period: '3', oxidation: '0', category: 'Noble gas', radius: '71' },
+    { name: 'Potassium', symbol: 'K', z: 19, formation: 'Silicon burning', shells: [2, 8, 8, 1], mass: '39.098', phase: 'Solid', electronegativity: '0.82', melting: '63', boiling: '759', discovery: '1807', group: '1', period: '4', oxidation: '+1', category: 'Alkali metal', radius: '243' },
+    { name: 'Calcium', symbol: 'Ca', z: 20, formation: 'Silicon burning', shells: [2, 8, 8, 2], mass: '40.078', phase: 'Solid', electronegativity: '1.00', melting: '842', boiling: '1484', discovery: '1808', group: '2', period: '4', oxidation: '+2', category: 'Alkaline earth metal', radius: '194' },
+    { name: 'Iron', symbol: 'Fe', z: 26, formation: 'Silicon burning (end point — max binding energy)', shells: [2, 8, 14, 2], mass: '55.845', phase: 'Solid', electronegativity: '1.83', melting: '1538', boiling: '2862', discovery: 'Ancient', group: '8', period: '4', oxidation: '+3, +2', category: 'Transition metal', radius: '126' },
+    { name: 'Gold', symbol: 'Au', z: 79, formation: 'r-process (neutron star merger)', shells: [2, 8, 18, 32, 18, 1], mass: '196.97', phase: 'Solid', electronegativity: '2.54', melting: '1064', boiling: '2856', discovery: 'Ancient', group: '11', period: '6', oxidation: '+3, +1', category: 'Transition metal', radius: '144' },
+    { name: 'Uranium', symbol: 'U', z: 92, formation: 'r-process (neutron star merger)', shells: [2, 8, 18, 32, 21, 9, 2], mass: '238.03', phase: 'Solid', electronegativity: '1.38', melting: '1132', boiling: '4131', discovery: '1789', group: 'Actinides', period: '7', oxidation: '+6, +4, +3', category: 'Actinide', radius: '156' }
+  ];
+  let fusionIdx = 0;
+  let elementCloudMode = false;
+
+  let dataTableMode = false;
+  const HYDROGEN_TABLE = [
+    { r: 0, R1s: 2.000000, R2s: 0.353553, R2p: 0.000000, R3s: 0.108818, R3p: 0.000000, R3d: 0.000000 },
+    { r: 0.5, R1s: 1.213061, R2s: 0.286685, R2p: 0.143342, R3s: 0.101833, R3p: 0.026625, R3d: 0.000000 },
+    { r: 1.0, R1s: 0.735759, R2s: 0.232814, R2p: 0.232814, R3s: 0.095308, R3p: 0.049815, R3d: 0.014482 },
+    { r: 1.5, R1s: 0.446261, R2s: 0.188927, R2p: 0.283390, R3s: 0.089207, R3p: 0.069935, R3d: 0.040649 },
+    { r: 2.0, R1s: 0.270671, R2s: 0.153196, R2p: 0.306392, R3s: 0.083531, R3p: 0.087296, R3d: 0.066304 },
+    { r: 2.5, R1s: 0.164170, R2s: 0.124201, R2p: 0.310502, R3s: 0.078225, R3p: 0.102033, R3d: 0.089526 },
+    { r: 3.0, R1s: 0.099574, R2s: 0.100630, R2p: 0.301891, R3s: 0.073245, R3p: 0.114055, R3d: 0.108333 },
+    { r: 4.0, R1s: 0.036631, R2s: 0.066026, R2p: 0.264106, R3s: 0.064306, R3p: 0.131529, R3d: 0.137362 },
+    { r: 5.0, R1s: 0.013475, R2s: 0.043308, R2p: 0.216539, R3s: 0.056471, R3p: 0.141177, R3d: 0.158479 },
+    { r: 6.0, R1s: 0.004957, R2s: 0.028394, R2p: 0.170365, R3s: 0.049650, R3p: 0.144570, R3d: 0.173121 },
+    { r: 8.0, R1s: 0.000671, R2s: 0.012203, R2p: 0.097622, R3s: 0.038663, R3p: 0.139705, R3d: 0.191089 },
+    { r: 10.0, R1s: 0.000091, R2s: 0.005243, R2p: 0.052432, R3s: 0.030390, R3p: 0.124913, R3d: 0.197325 },
+    { r: 12.0, R1s: 0.000012, R2s: 0.002253, R2p: 0.027038, R3s: 0.024154, R3p: 0.107880, R3d: 0.195354 },
+    { r: 14.0, R1s: 0.000002, R2s: 0.000968, R2p: 0.013557, R3s: 0.019381, R3p: 0.091387, R3d: 0.188204 },
+    { r: 16.0, R1s: 0.000000, R2s: 0.000416, R2p: 0.006656, R3s: 0.015700, R3p: 0.076888, R3d: 0.178041 },
+    { r: 18.0, R1s: 0.000000, R2s: 0.000179, R2p: 0.003219, R3s: 0.012833, R3p: 0.064441, R3d: 0.166169 },
+    { r: 20.0, R1s: 0.000000, R2s: 0.000077, R2p: 0.001539, R3s: 0.010567, R3p: 0.053880, R3d: 0.153621 }
+  ];
+
+  const DEF_ROT_X = 0.35, DEF_ROT_Y = 0.6;
+  let rotX = DEF_ROT_X, rotY = DEF_ROT_Y;
+  let isDragging = false, lastMouseX = 0, lastMouseY = 0;
+
+  // DOM
+  const elName = $('orb-name'), elEnergy = $('orb-energy'), elRNodes = $('orb-rnodes'),
+        elANodes = $('orb-anodes'), elRMean = $('orb-rmean'), elRPeak = $('orb-rpeak'),
+        elMatrix = $('lbl-active-matrix'), elBasis = $('lbl-basis'), elScale = $('lbl-scale'),
+        elTouchMode = $('lbl-touch-mode'), axesG = $('axes'),
+        touchOverlay = $('touch-overlay'), btnTouch = $('btn-touch'),
+        elStatus = $('lbl-status');
+  const sliderN = $('slider-n'), sliderL = $('slider-l'), sliderM = $('slider-m');
+  const valN = $('val-n'), valL = $('val-l'), valM = $('val-m');
+
+  const elFusionElement = $('fusion-element'), elFusionZ = $('fusion-z'), elFusionFormation = $('fusion-formation');
+  const btnFusion = $('btn-fusion');
+  const btnElementCloud = $('btn-element-cloud');
+  const btnDataTable = $('btn-data-table');
+
+  // Superposition DOM
+  const btnSuper = $('btn-super');
+  const superPanel = $('super-panel');
+  const superControlPanel = $('super-control-panel');
+  const superPauseBtn = $('super-pause-btn');
+  const superStateAEl = $('super-state-a');
+  const superStateBEl = $('super-state-b');
+  const superMixInfo = $('super-mix-info');
+  const superOmegaInfo = $('super-omega-info');
+  const superALabel = $('super-a-label');
+  const superBLabel = $('super-b-label');
+  const superOmegaEl = $('super-omega');
+  const superThetaEl = $('super-theta');
+  const lblSuperScale = $('lbl-super-scale');
+  const superThetaValue = $('super-theta-value');
+  const superThetaThumb = $('super-theta-thumb');
+  const superCycleB = $('super-cycle-b');
+
+  // Dropdown DOM
+  const btnDropdown = $('btn-dropdown');
+  const dropdownPanel = $('dropdown-panel');
+  const menuToggleVis = $('menu-toggle-vis');
+  const visStatus = $('vis-status');
+  const menuQuickOrbit = $('menu-quick-orbit');
+  const quickOrbitLabel = $('quick-orbit-label');
+  const menuExport = $('menu-export');
+  const menuExportCSV = $('menu-export-csv');
+  const menuLoadCSV = $('menu-load-csv');
+  const menuAutorotate = $('menu-autorotate');
+  const autorotateStatus = $('autorotate-status');
+  const menuToggleGrid = $('menu-toggle-grid');
+  const gridStatus = $('grid-status');
+  const menuTrail = $('menu-trail');
+  const trailStatus = $('trail-status');
+  const menuCrosshair = $('menu-crosshair');
+  const crosshairStatus = $('crosshair-status');
+  const crosshairG = $('crosshair-g');
+  const menuHOverlay = $('menu-h-overlay');
+  const hOverlayStatus = $('h-overlay-status');
+  const menuSuper = $('menu-super');
+  const superStatus = $('super-status');
+
+  // Data Card DOM
+  const btnDataCard = $('btn-data-card');
+  const dataCardPanel = $('data-card-panel');
+  const btnCloseDataCard = $('btn-close-data-card');
+  const dcHeader = $('dc-header');
+  const dcMass = $('dc-mass');
+  const dcPhase = $('dc-phase');
+  const dcElectronegativity = $('dc-electronegativity');
+  const dcMelting = $('dc-melting');
+  const dcBoiling = $('dc-boiling');
+  const dcDiscovery = $('dc-discovery');
+  const dcGroupPeriod = $('dc-group-period');
+  const dcOxidation = $('dc-oxidation');
+  const dcCategory = $('dc-category');
+  const dcRadius = $('dc-radius');
+
+  // H-block DOM
+  const btnHBlock = $('btn-h-block');
+  const hSelector = $('h-selector');
+  const hShapeLabel = $('h-shape-label');
+  const lblHScale = $('lbl-h-scale');
+  const hScaleRing = $('h-scale-ring');
+  const hRing = $('h-ring');
+  const hRingLabel = $('h-ring-label');
+
+  // Graphene DOM
+  const btnGraphene = $('btn-graphene');
+  const grapheneSliderPanel = $('graphene-slider-panel');
+  const grapheneSliderThumb = $('graphene-slider-thumb');
+  const grapheneSliderValue = $('graphene-slider-value');
+  const lblGrapheneScale = $('lbl-graphene-scale');
+
+  // ===== CLOUD STATE =====
+  let cloud = [];
+  let viewRadius = 1;
+  let generationToken = 0;
+
+  // ===== 3D PROJECTION =====
+  function project(x, y, z) {
+    const ca = Math.cos(rotY), sa = Math.sin(rotY);
+    const x1 = x * ca - y * sa, y1 = x * sa + y * ca;
+    const cb = Math.cos(rotX), sb = Math.sin(rotX);
+    const y2 = y1 * cb - z * sb, z2 = y1 * sb + z * cb;
+    const camDist = 500;
+    const sc = camDist / (camDist + y2);
+    return { x: x1 * sc, y: -z2 * sc, d: y2, s: sc };
+  }
+
+  // ===== COLOURS =====
+  const RAMPS = [
+    [[0, [176, 24, 0]], [0.4, [255, 90, 0]], [0.7, [255, 204, 0]], [1, [255, 255, 255]]],
+    [[0, [0, 51, 170]], [0.5, [0, 136, 255]], [1, [170, 255, 255]]],
+    [[0, [85, 0, 170]], [0.5, [170, 51, 255]], [1, [255, 170, 255]]]
+  ];
+  function ramp(stops, t) {
+    for (let i = 1; i < stops.length; i++) {
+      if (t <= stops[i][0]) {
+        const a = stops[i - 1], b = stops[i], f = (t - a[0]) / (b[0] - a[0]);
+        return [a[1][0] + (b[1][0] - a[1][0]) * f,
+                a[1][1] + (b[1][1] - a[1][1]) * f,
+                a[1][2] + (b[1][2] - a[1][2]) * f];
+      }
+    }
+    return stops[stops.length - 1][1];
+  }
+  function hslToRgb(h, s, l) {
+    const c = (1 - Math.abs(2 * l - 1)) * s;
+    const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+    const m = l - c / 2;
+    let r = 0, g = 0, b = 0;
+    if (h < 60) { r = c; g = x; }
+    else if (h < 120) { r = x; g = c; }
+    else if (h < 180) { g = c; b = x; }
+    else if (h < 240) { g = x; b = c; }
+    else if (h < 300) { r = x; b = c; }
+    else { r = c; b = x; }
+    return [(r + m), (g + m), (b + m)];
+  }
+  function pointColorRGB(p) {
+    if (p.isHydrogen) {
+      const glow = 0.7 + 0.3 * p.t;
+      return [H_OVERLAY_COLOR[0] * glow, H_OVERLAY_COLOR[1] * glow, H_OVERLAY_COLOR[2] * glow];
+    }
+    if (p.isGraphene) {
+      return [0.0, 1.0, 0.6];
+    }
+    if (p.isSuperA || p.isSuperB) {
+      // PHASE colour mode: hue = arg Psi(x,t) of the *total* wavefunction
+      if (colorMode === 3) return hslToRgb(p.phase, 1.0, (35 + 40 * p.t) / 100);
+      const base = p.isSuperA ? [1.0, 0.2, 1.0] : [0.2, 0.8, 1.0];
+      const g = 0.25 + 0.75 * p.t;
+      return [base[0] * g, base[1] * g, base[2] * g];
+    }
+    if (colorMode < 3) {
+      const c = ramp(RAMPS[colorMode], p.t);
+      return [c[0] / 255, c[1] / 255, c[2] / 255];
+    }
+    const light = (35 + 40 * p.t) / 100;
+    if (complexBasis) return hslToRgb(p.phase, 1.0, light);
+    return p.phase > 0 ? hslToRgb(8, 1.0, light) : hslToRgb(205, 1.0, light);
+  }
+
+  // ===== WEBGL RENDERER =====
+  const glCanvas = $('gl-canvas');
+  const gl = glCanvas.getContext('webgl', { antialias: false, alpha: true, premultipliedAlpha: false });
+
+  const VS = `
+    attribute vec3 a_pos;
+    attribute vec3 a_color;
+    uniform vec2 u_res;
+    varying vec3 v_color;
+    void main() {
+      vec2 clip = (a_pos.xy / u_res) * 2.0 - 1.0;
+      gl_Position = vec4(clip.x, -clip.y, 0.0, 1.0);
+      gl_PointSize = a_pos.z;
+      v_color = a_color;
+    }`;
+
+  const FS = `
+    precision mediump float;
+    varying vec3 v_color;
+    void main() {
+      vec2 c = gl_PointCoord - vec2(0.5);
+      float d = length(c);
+      if (d > 0.5) discard;
+      float a = smoothstep(0.5, 0.35, d);
+      gl_FragColor = vec4(v_color, a * 0.85);
+    }`;
+
+  function compile(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src); gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, compile(gl.VERTEX_SHADER, VS));
+  gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FS));
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
+  gl.useProgram(prog);
+
+  const locPos = gl.getAttribLocation(prog, 'a_pos');
+  const locCol = gl.getAttribLocation(prog, 'a_color');
+  const locRes = gl.getUniformLocation(prog, 'u_res');
+
+  const vboPos = gl.createBuffer();
+  const vboCol = gl.createBuffer();
+
+  let posArr = new Float32Array(0);
+  let colArr = new Float32Array(0);
+  let glCount = 0;
+
+  function ensureCapacity(n) {
+    if (posArr.length < n * 3) posArr = new Float32Array(n * 3);
+    if (colArr.length < n * 3) colArr = new Float32Array(n * 3);
+  }
+
+  const CAM_D = 500;
+  const CX = 215, CY = 270;
+  const CANVAS_2X = 2.0;
+
+  function rebuildGLBuffers() {
+    const N = cloud.length;
+    if (N === 0) { glCount = 0; return; }
+    ensureCapacity(N);
+    const ca = Math.cos(rotY), sa = Math.sin(rotY);
+    const cb = Math.cos(rotX), sb = Math.sin(rotX);
+
+    for (let i = 0; i < N; i++) {
+      const p = cloud[i];
+      const x1 = p.x * ca - p.y * sa;
+      const y1 = p.x * sa + p.y * ca;
+      const y2 = y1 * cb - p.z * sb;
+      const z2 = y1 * sb + p.z * cb;
+      const sc = CAM_D / (CAM_D + y2);
+      const sx = CX + x1 * sc;
+      const sy = CY - z2 * sc;
+      const size = (p.isHydrogen || p.isGraphene || p.isSuperA || p.isSuperB ? pointSize * 1.6 : pointSize) * sc * (0.5 + p.t * 1.2);
+
+      posArr[i*3+0] = sx * CANVAS_2X;
+      posArr[i*3+1] = sy * CANVAS_2X;
+      posArr[i*3+2] = Math.max(1.5, size * CANVAS_2X);
+
+      const c = pointColorRGB(p);
+      colArr[i*3+0] = c[0];
+      colArr[i*3+1] = c[1];
+      colArr[i*3+2] = c[2];
+    }
+    glCount = N;
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, vboPos);
+    gl.bufferData(gl.ARRAY_BUFFER, posArr.subarray(0, N*3), gl.DYNAMIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, vboCol);
+    gl.bufferData(gl.ARRAY_BUFFER, colArr.subarray(0, N*3), gl.DYNAMIC_DRAW);
+  }
+
+  function drawGL() {
+    if (glCount === 0 || !visualDataVisible) {
+      gl.viewport(0, 0, glCanvas.width, glCanvas.height);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      return;
+    }
+    gl.viewport(0, 0, glCanvas.width, glCanvas.height);
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.uniform2f(locRes, glCanvas.width, glCanvas.height);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, vboPos);
+    gl.enableVertexAttribArray(locPos);
+    gl.vertexAttribPointer(locPos, 3, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, vboCol);
+    gl.enableVertexAttribArray(locCol);
+    gl.vertexAttribPointer(locCol, 3, gl.FLOAT, false, 0, 0);
+
+    gl.drawArrays(gl.POINTS, 0, glCount);
+  }
+
+  // ===== SVG AXES OVERLAY =====
+  function drawAxesSVG() {
+    axesG.replaceChildren();
+    if (!visualDataVisible) return;
+    const ax = [['x', 1, 0, 0, '#ff5566'], ['y', 0, 1, 0, '#55ff88'], ['z', 0, 0, 1, '#55aaff']];
+    const L = 28;
+    ax.map(a => ({ a, q: project(a[1]*L, a[2]*L, a[3]*L) }))
+      .sort((u, v) => v.q.d - u.q.d)
+      .forEach(o => {
+        const ln = document.createElementNS(SVGNS, 'line');
+        ln.setAttribute('x1', 0); ln.setAttribute('y1', 0);
+        ln.setAttribute('x2', o.q.x.toFixed(1)); ln.setAttribute('y2', o.q.y.toFixed(1));
+        ln.setAttribute('stroke', o.a[4]); ln.setAttribute('stroke-width', 2);
+        const tx = document.createElementNS(SVGNS, 'text');
+        tx.setAttribute('x', (o.q.x*1.25).toFixed(1));
+        tx.setAttribute('y', (o.q.y*1.25+4).toFixed(1));
+        tx.setAttribute('fill', o.a[4]); tx.setAttribute('font-size', 11);
+        tx.setAttribute('text-anchor', 'middle'); tx.textContent = o.a[0];
+        axesG.appendChild(ln); axesG.appendChild(tx);
+      });
+  }
+
+  // ===== SCHEDULER =====
+  let drawQueued = false;
+  function scheduleDraw() {
+    if (drawQueued) return;
+    drawQueued = true;
+    requestAnimationFrame(() => { drawQueued = false; render(); });
+  }
+
+  function render() {
+    if (dataTableMode) {
+      clearGL();
+      drawDataTable();
+      return;
+    }
+    rebuildGLBuffers();
+    drawGL();
+    drawAxesSVG();
+    updateScaleRing();
+  }
+
+  function clearGL() {
+    glCount = 0;
+    gl.viewport(0, 0, glCanvas.width, glCanvas.height);
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+  }
+
+  function updateScaleRing() {
+    if (hBlockOverlay && hTargetRadius > 0 && elementCloudMode) {
+      hScaleRing.style.display = '';
+      const px = hTargetRadius * 1.0;
+      hRing.setAttribute('r', px.toFixed(1));
+      hRing.setAttribute('cx', '215');
+      hRing.setAttribute('cy', '270');
+      hRingLabel.setAttribute('y', (270 - px - 6).toFixed(1));
+      hRingLabel.setAttribute('x', '215');
+    } else {
+      hScaleRing.style.display = 'none';
+    }
+  }
+
+  // ===== GRAPHENE GENERATOR =====
+  function generateGrapheneCloud(rings) {
+    const pts = [];
+    const a = 2.46;
+    const scale = 165 / (rings * 3);
+    const a1 = { x: 1.5 * a, y: Math.sqrt(3) / 2 * a };
+    const a2 = { x: 1.5 * a, y: -Math.sqrt(3) / 2 * a };
+    const b1 = { x: 0, y: 0 };
+    const b2 = { x: a, y: 0 };
+    const seen = new Set();
+    const numAtoms = 1000;
+    
+    for (let i = -rings; i <= rings; i++) {
+      for (let j = -rings; j <= rings; j++) {
+        if (Math.abs(i + j) > rings) continue;
+        const originX = i * a1.x + j * a2.x;
+        const originY = i * a1.y + j * a2.y;
+        
+        const x1 = originX + b1.x;
+        const y1 = originY + b1.y;
+        const key1 = `${x1.toFixed(2)},${y1.toFixed(2)}`;
+        if (!seen.has(key1)) {
+          seen.add(key1);
+          for (let k = 0; k < numAtoms; k++) {
+            const r = Math.sqrt(-2 * Math.log(Math.random())) * 0.2;
+            const theta = Math.random() * 2 * Math.PI;
+            pts.push({
+              x: (x1 + r * Math.cos(theta)) * scale,
+              y: (y1 + r * Math.sin(theta)) * scale,
+              z: (Math.random() - 0.5) * 0.1 * scale,
+              val: 1, t: 1, phase: 1, isGraphene: true
+            });
+          }
+        }
+        
+        const x2 = originX + b2.x;
+        const y2 = originY + b2.y;
+        const key2 = `${x2.toFixed(2)},${y2.toFixed(2)}`;
+        if (!seen.has(key2)) {
+          seen.add(key2);
+          for (let k = 0; k < numAtoms; k++) {
+            const r = Math.sqrt(-2 * Math.log(Math.random())) * 0.2;
+            const theta = Math.random() * 2 * Math.PI;
+            pts.push({
+              x: (x2 + r * Math.cos(theta)) * scale,
+              y: (y2 + r * Math.sin(theta)) * scale,
+              z: (Math.random() - 0.5) * 0.1 * scale,
+              val: 1, t: 1, phase: 1, isGraphene: true
+            });
+          }
+        }
+      }
+    }
+    return pts;
+  }
+
+  // ===== CHUNKED CLOUD GENERATION =====
+  const CHUNK = 40000;
+
+  function generateCloud(onDone) {
+    if (superMode) {
+      generateSuperpositionCloud(onDone);
+      return;
+    }
+    if (grapheneMode) {
+      generateGraphene(onDone);
+      return;
+    }
+    if (elementCloudMode) {
+      generateElementCloud(onDone);
+      return;
+    }
+
+    const N = COUNTS[countIdx];
+    const myToken = ++generationToken;
+    elStatus.textContent = 'GENERATING ' + N.toLocaleString() + ' PARTICLES…';
+
+    const tab = radialTable(n, l);
+    const maxA2 = angularMax2(l, m, complexBasis);
+    const norm = 1 / (tab.maxR2 * maxA2);
+    const scale = 165 / tab.view;
+    viewRadius = tab.view;
+    const pts = [];
+    const maxTries = N * 500;
+    let tries = 0;
+
+    function step() {
+      if (myToken !== generationToken) return;
+      const target = Math.min(N, pts.length + CHUNK);
+      while (pts.length < target && tries < maxTries) {
+        tries++;
+        const r = sampleRadius(tab);
+        if (r > tab.view) continue;
+        const uz = 2 * Math.random() - 1;
+        const phi = 2 * Math.PI * Math.random();
+        const s = Math.sqrt(1 - uz * uz);
+        const A = angular(l, m, uz, phi, complexBasis);
+        if (Math.random() * maxA2 > A * A) continue;
+        const R = radial(n, l, r);
+        const val = Math.min(1, R * R * A * A * norm);
+        const neg = (R * A) < 0;
+        let phase;
+        if (complexBasis) {
+          const arg = m * phi + (neg ? Math.PI : 0);
+          phase = ((arg * 180 / Math.PI) % 360 + 360) % 360;
+        } else {
+          phase = neg ? -1 : 1;
+        }
+        pts.push({ x: s*Math.cos(phi)*r*scale, y: s*Math.sin(phi)*r*scale,
+                   z: uz*r*scale, val, t: Math.sqrt(val), phase });
+      }
+      if (pts.length < N && tries < maxTries) {
+        elStatus.textContent = 'GENERATING ' + pts.length.toLocaleString() + ' / ' + N.toLocaleString() + ' …';
+        setTimeout(step, 0);
+        return;
+      }
+      cloud = pts;
+      const actual = pts.length;
+      const ok = actual >= Math.floor(N * 0.999);
+      elStatus.textContent = actual.toLocaleString() + ' PARTICLES READY' + (ok ? '' : ' (TARGET ' + N.toLocaleString() + ')');
+      setTimeout(() => { if (myToken === generationToken) elStatus.textContent = ''; }, 2500);
+      onDone && onDone();
+    }
+    step();
+  }
+
+  // ===== ELEMENT CLOUD GENERATOR (RESTORED) =====
+  function generateElementCloud(onDone) {
+    const el = ELEMENTS[fusionIdx];
+    const N = COUNTS[countIdx];
+    const myToken = ++generationToken;
+    elStatus.textContent = 'GENERATING ' + N.toLocaleString() + ' PARTICLES…';
+
+    const pts = [];
+    const totalElectrons = el.z;
+    const shellCount = el.shells.length;
+    const maxN = shellCount;
+    viewRadius = maxN * 3;
+    const scale = 165 / viewRadius;
+
+    const particlesPerElectron = Math.max(1, Math.floor(N / totalElectrons));
+    const shellJobs = [];
+    let plannedTotal = 0;
+    for (let s = 0; s < shellCount; s++) {
+      const shellNum = s + 1;
+      const electronCount = el.shells[s];
+      const countForShell = electronCount * particlesPerElectron;
+      const tab = radialTable(shellNum, 0);
+      const maxA2 = angularMax2(0, 0, false);
+      const norm = 1 / (tab.maxR2 * maxA2);
+      const shellScale = scale * (1.0 + s * 0.3);
+      shellJobs.push({ shellNum, countForShell, tab, maxA2, norm, shellScale, done: 0 });
+      plannedTotal += countForShell;
+    }
+    if (plannedTotal < N) {
+      shellJobs[shellJobs.length - 1].countForShell += (N - plannedTotal);
+    }
+
+    let jobIdx = 0;
+    const maxTries = N * 500;
+    let tries = 0;
+
+    function step() {
+      if (myToken !== generationToken) return;
+      let added = 0;
+      while (jobIdx < shellJobs.length && added < CHUNK && tries < maxTries) {
+        const job = shellJobs[jobIdx];
+        if (job.done >= job.countForShell) { jobIdx++; continue; }
+        tries++;
+        const r = sampleRadius(job.tab);
+        if (r > job.tab.view) { added++; continue; }
+        const uz = 2 * Math.random() - 1;
+        const phi = 2 * Math.PI * Math.random();
+        const s_val = Math.sqrt(1 - uz * uz);
+        const A = angular(0, 0, uz, phi, false);
+        if (Math.random() * job.maxA2 > A * A) { added++; continue; }
+        const R = radial(job.shellNum, 0, r);
+        const val = Math.min(1, R * R * A * A * job.norm);
+        pts.push({ x: s_val*Math.cos(phi)*r*job.shellScale,
+                   y: s_val*Math.sin(phi)*r*job.shellScale,
+                   z: uz*r*job.shellScale,
+                   val, t: Math.sqrt(val), phase: 1 });
+        job.done++;
+        added++;
+      }
+      if (jobIdx < shellJobs.length && tries < maxTries) {
+        elStatus.textContent = 'GENERATING ' + pts.length.toLocaleString() + ' / ' + N.toLocaleString() + ' …';
+        setTimeout(step, 0);
+        return;
+      }
+
+      let finalPts = pts;
+      if (hBlockOverlay) {
+        hTargetRadius = generateHydrogenOverlay(viewRadius, scale);
+        finalPts = pts.concat(hOverlayCloud);
+        lblHScale.style.display = '';
+        lblHScale.textContent = 'H-block: ' + hOverlayN + SUB[hOverlayL] + ' @ ' + (hOverlayScaleFactor * 100).toFixed(0) + '% of element view';
+      } else {
+        hTargetRadius = 0;
+        lblHScale.style.display = 'none';
+      }
+      cloud = finalPts;
+      const actual = cloud.length;
+      const ok = actual >= Math.floor(N * 0.999);
+      elStatus.textContent = actual.toLocaleString() + ' PARTICLES READY' + (hBlockOverlay ? ' (+H block)' : '') + (ok ? '' : ' (TARGET ' + N.toLocaleString() + ')');
+      setTimeout(() => { if (myToken === generationToken) elStatus.textContent = ''; }, 2500);
+      onDone && onDone();
+    }
+    step();
+  }
+
+  // ===== HYDROGEN OVERLAY GENERATOR (RESTORED) =====
+  function generateHydrogenOverlay(elementView, elementScale) {
+    const N = Math.min(COUNTS[countIdx], 2500);
+    const tab = radialTable(hOverlayN, hOverlayL);
+    const maxA2 = angularMax2(hOverlayL, 0, false);
+    const norm = 1 / (tab.maxR2 * maxA2);
+
+    const hTarget = elementView * 0.35 * hOverlayScaleFactor;
+    const hScale = (hTarget / tab.view) * elementScale;
+
+    const pts = [];
+    const maxTries = N * 500;
+    let tries = 0;
+
+    while (pts.length < N && tries < maxTries) {
+      tries++;
+      const r = sampleRadius(tab);
+      if (r > tab.view) continue;
+      const uz = 2 * Math.random() - 1;
+      const phi = 2 * Math.PI * Math.random();
+      const s = Math.sqrt(1 - uz * uz);
+      const A = angular(hOverlayL, 0, uz, phi, false);
+      if (Math.random() * maxA2 > A * A) continue;
+      const R = radial(hOverlayN, hOverlayL, r);
+      const val = Math.min(1, R * R * A * A * norm);
+      pts.push({
+        x: s * Math.cos(phi) * r * hScale,
+        y: s * Math.sin(phi) * r * hScale,
+        z: uz * r * hScale,
+        val,
+        t: Math.sqrt(val),
+        phase: 1,
+        isHydrogen: true
+      });
+    }
+    hOverlayCloud = pts;
+    return hTarget;
+  }
+
+  // ===== GRAPHENE GENERATOR (RESTORED) =====
+  function generateGraphene(onDone) {
+    const myToken = ++generationToken;
+    elStatus.textContent = 'GENERATING GRAPHENE LATTICE…';
+    setTimeout(() => {
+      if (myToken !== generationToken) return;
+      grapheneCloud = generateGrapheneCloud(grapheneRings);
+      cloud = grapheneCloud;
+      elStatus.textContent = cloud.length.toLocaleString() + ' CARBON ATOMS READY';
+      setTimeout(() => { if (myToken === generationToken) elStatus.textContent = ''; }, 2500);
+      onDone && onDone();
+    }, 50);
+  }
+
+  // ===== SUPERPOSITION CLOUD GENERATOR =====
+  // Time evolution of the two-state superposition (exact, complex-basis Y_lm):
+  //   Psi(x,t) = cos(th) psi_A(x) e^{-i E_A t} + sin(th) psi_B(x) e^{-i E_B t}
+  // Particles were drawn from the fixed proposal q0 = (|psi_A|^2 + |psi_B|^2)/2 and carry
+  // the importance weight w = |Psi|^2 / q0, so (particle density) x w = |Psi(x,t)|^2 exactly
+  // (in expectation). By Cauchy-Schwarz |Psi|^2 <= |psi_A|^2 + |psi_B|^2, hence w/2 is in [0,1].
+  function superApplyTime() {
+    const a = Math.cos(superMixTheta), b = Math.sin(superMixTheta);
+    const c = Math.cos(superPhase), s = Math.sin(superPhase);
+    const nrm = superSame ? 1 / ((a + b) * (a + b)) : 1;
+    const apply = (arr) => {
+      for (let i = 0; i < arr.length; i++) {
+        const p = arr[i];
+        // psi_B * e^{-i*dE*t}
+        const Br = p.Br * c + p.Bi * s;
+        const Bi = p.Bi * c - p.Br * s;
+        const re = a * p.Ar + b * Br;
+        const im = a * p.Ai + b * Bi;
+        const dens = (re * re + im * im) * nrm;
+        const s2 = p.rhoSum > 0 ? Math.min(1, dens / p.rhoSum) : 0;
+        p.re = re; p.im = im; p.dens = dens;
+        p.w = 2 * s2;
+        p.val = s2;
+        p.t = Math.sqrt(s2);
+        p.phase = ((Math.atan2(im, re) * 180 / Math.PI) % 360 + 360) % 360;
+      }
+    };
+    apply(superCloudA);
+    apply(superCloudB);
+  }
+
+  function generateSuperpositionCloud(onDone) {
+    const myToken = ++generationToken;
+    elStatus.textContent = 'BUILDING SUPERPOSITION…';
+
+    const N = Math.min(COUNTS[countIdx], 3000);   // per state (<= 6000 total)
+    const { n: n1, l: l1, m: m1 } = superStateA;
+    const { n: n2, l: l2, m: m2 } = superStateB;
+
+    const E1 = -0.5 / (n1 * n1);
+    const E2 = -0.5 / (n2 * n2);
+    superDeltaE = E2 - E1;
+    superOmega = Math.abs(superDeltaE);
+    superSame = (n1 === n2 && l1 === l2 && m1 === m2);
+    if (superDeltaE === 0) superPhase = 0;   // degenerate pair: no beat, no stale phase
+
+    const tab1 = radialTable(n1, l1);
+    const tab2 = radialTable(n2, l2);
+    const maxView = Math.max(tab1.view, tab2.view);
+    const scale = 165 / maxView;
+    viewRadius = maxView;
+
+    // complex hydrogenic eigenfunction psi = R_nl(r) * K P_l^|m|(cos th) * e^{i m phi}
+    function psiAt(nn, ll, mm, r, uz, phi) {
+      const RA = radial(nn, ll, r) * angular(ll, mm, uz, phi, true);
+      return [RA * Math.cos(mm * phi), RA * Math.sin(mm * phi)];
+    }
+
+    function sampleState(ll, mm, nn, tab, maxA2, isA) {
+      const pts = [];
+      const maxTries = N * 500;
+      let tries = 0;
+      while (pts.length < N && tries < maxTries) {
+        tries++;
+        const r = sampleRadius(tab);                 // inverse-CDF on r^2 R^2
+        if (r > tab.view) continue;
+        const uz = 2 * Math.random() - 1;
+        const phi = 2 * Math.PI * Math.random();
+        const Y = angular(ll, mm, uz, phi, true);    // |Y_lm| (phi-independent)
+        if (Math.random() * maxA2 > Y * Y) continue; // rejection on |Y|^2
+        const s = Math.sqrt(1 - uz * uz);
+        const pa = psiAt(n1, l1, m1, r, uz, phi);
+        const pb = psiAt(n2, l2, m2, r, uz, phi);
+        pts.push({
+          x: s * Math.cos(phi) * r * scale,
+          y: s * Math.sin(phi) * r * scale,
+          z: uz * r * scale,
+          Ar: pa[0], Ai: pa[1], Br: pb[0], Bi: pb[1],
+          rhoSum: pa[0] * pa[0] + pa[1] * pa[1] + pb[0] * pb[0] + pb[1] * pb[1],
+          re: 0, im: 0, dens: 0, w: 0,
+          val: 0, t: 0, phase: 0,
+          isSuperA: isA,
+          isSuperB: !isA
+        });
+      }
+      return pts;
+    }
+
+    const maxA2_1 = angularMax2(l1, m1, true);
+    const maxA2_2 = angularMax2(l2, m2, true);
+
+    setTimeout(() => {
+      if (myToken !== generationToken) return;
+      superCloudA = sampleState(l1, m1, n1, tab1, maxA2_1, true);
+      superCloudB = sampleState(l2, m2, n2, tab2, maxA2_2, false);
+      superApplyTime();
+      cloud = superCloudA.concat(superCloudB);
+
+      // normalisation sanity check: E_q0[w] = integral |Psi|^2 = 1
+      let sw = 0;
+      for (let i = 0; i < cloud.length; i++) sw += cloud[i].w;
+      const meanW = cloud.length ? sw / cloud.length : 0;
+      elStatus.textContent = 'SUPERPOSITION READY  <w>=' + meanW.toFixed(3);
+      setTimeout(() => { if (myToken === generationToken) elStatus.textContent = ''; }, 2500);
+
+      superALabel.textContent = '(' + n1 + ',' + l1 + ',' + m1 + ')';
+      superBLabel.textContent = '(' + n2 + ',' + l2 + ',' + m2 + ')';
+      superOmegaEl.textContent = superOmega.toFixed(4);
+      superThetaEl.textContent = (superMixTheta * 180 / Math.PI).toFixed(0) + '°';
+      superStateAEl.textContent = 'A: (' + n1 + ',' + l1 + ',' + m1 + ')';
+      superStateBEl.textContent = 'B: (' + n2 + ',' + l2 + ',' + m2 + ')';
+      if (superThetaValue) superThetaValue.textContent = (superMixTheta * 180 / Math.PI).toFixed(0) + '°';
+      if (superOmegaInfo) superOmegaInfo.textContent = superOmega.toFixed(4);
+
+      if (superMode && !superPaused) startSuperAnimation();
+
+      onDone && onDone();
+    }, 50);
+  }
+
+  // ===== SUPERPOSITION ANIMATION =====
+  function startSuperAnimation() {
+    if (superAnimId) cancelAnimationFrame(superAnimId);
+    superLastTime = performance.now();
+    const tick = (now) => {
+      if (!superMode || superPaused) {
+        superAnimId = null;
+        return;
+      }
+      const dt = Math.min(0.05, (now - superLastTime) / 1000);
+      superLastTime = now;
+      superPhase += superDeltaE * dt * 2 * Math.PI;          // delta = (E_B - E_A) t
+      superPhase = ((superPhase % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+      superApplyTime();
+
+      scheduleDraw();
+      superAnimId = requestAnimationFrame(tick);
+    };
+    superAnimId = requestAnimationFrame(tick);
+  }
+
+  function stopSuperAnimation() {
+    if (superAnimId) {
+      cancelAnimationFrame(superAnimId);
+      superAnimId = null;
+    }
+  }
+
+  // ===== SUPERPANEL TOGGLE =====
+  function toggleSuperMode(force) {
+    superMode = force !== undefined ? force : !superMode;
+
+    if (superMode) {
+      if (elementCloudMode) { elementCloudMode = false; btnElementCloud.classList.remove('active'); btnElementCloud.setAttribute('fill', '#1a1a1f'); }
+      if (grapheneMode) { grapheneMode = false; btnGraphene.classList.remove('active'); btnGraphene.setAttribute('fill', '#1a1a1f'); grapheneSliderPanel.style.display = 'none'; lblGrapheneScale.style.display = 'none'; }
+      if (dataTableMode) { dataTableMode = false; btnDataTable.classList.remove('active'); btnDataTable.setAttribute('fill', '#1a1a1f'); }
+      if (hBlockOverlay) { hBlockOverlay = false; btnHBlock.classList.remove('active'); btnHBlock.setAttribute('fill', '#1a1a1f'); hSelector.style.display = 'none'; hScaleRing.style.display = 'none'; lblHScale.style.display = 'none'; }
+
+      superPanel.style.display = '';
+      superControlPanel.style.display = '';
+      lblSuperScale.style.display = '';
+      btnSuper.classList.add('active');
+      btnSuper.setAttribute('fill', '#ff00ff');
+      superStatus.textContent = 'ON';
+      superStatus.setAttribute('fill', '#ff00ff');
+      menuSuper.querySelector('text').textContent = '⬥ Superposition Mode';
+      generateSuperpositionCloud(scheduleDraw);
+    } else {
+      stopSuperAnimation();
+      superPanel.style.display = 'none';
+      superControlPanel.style.display = 'none';
+      lblSuperScale.style.display = 'none';
+      btnSuper.classList.remove('active');
+      btnSuper.setAttribute('fill', '#1a1a1f');
+      superStatus.textContent = 'OFF';
+      superStatus.setAttribute('fill', '#ff0055');
+      cloud = [];
+      scheduleDraw();
+      updateUI(true);
+    }
+  }
+
+  // ===== DATA TABLE =====
+  function drawDataTable() {
+    clearGL();
+    let tableG = $('data-table-g');
+    if (!tableG) {
+      tableG = document.createElementNS(SVGNS, 'g');
+      tableG.setAttribute('id', 'data-table-g');
+      touchOverlay.parentNode.insertBefore(tableG, touchOverlay);
+    }
+    tableG.replaceChildren();
+    axesG.replaceChildren();
+
+    const frag = document.createDocumentFragment();
+    const header = document.createElementNS(SVGNS, 'text');
+    header.setAttribute('x', 215); header.setAttribute('y', 30);
+    header.setAttribute('text-anchor', 'middle');
+    header.setAttribute('fill', '#00ffcc'); header.setAttribute('font-size', 14);
+    header.setAttribute('font-weight', 'bold');
+    header.textContent = 'HYDROGEN RADIAL FUNCTIONS R(r)';
+    frag.appendChild(header);
+
+    const cols = ['r (a₀)', '1s', '2s', '2p', '3s', '3p', '3d'];
+    const colWidths = [50, 60, 60, 60, 60, 60, 60];
+    let startX = 20;
+    cols.forEach((col, i) => {
+      const text = document.createElementNS(SVGNS, 'text');
+      text.setAttribute('x', startX + colWidths[i]/2);
+      text.setAttribute('y', 60);
+      text.setAttribute('text-anchor', 'middle');
+      text.setAttribute('fill', '#ffcc00');
+      text.setAttribute('font-size', 10);
+      text.textContent = col;
+      frag.appendChild(text);
+      startX += colWidths[i];
+    });
+
+    const line = document.createElementNS(SVGNS, 'line');
+    line.setAttribute('x1', 20); line.setAttribute('y1', 65);
+    line.setAttribute('x2', 410); line.setAttribute('y2', 65);
+    line.setAttribute('stroke', '#00ffcc'); line.setAttribute('stroke-width', 1);
+    line.setAttribute('opacity', 0.5);
+    frag.appendChild(line);
+
+    HYDROGEN_TABLE.forEach((row, rowIndex) => {
+      const y = 85 + rowIndex * 22;
+      const values = [row.r, row.R1s, row.R2s, row.R2p, row.R3s, row.R3p, row.R3d];
+      let xPos = 20;
+      values.forEach((val, i) => {
+        const text = document.createElementNS(SVGNS, 'text');
+        text.setAttribute('x', xPos + colWidths[i]/2);
+        text.setAttribute('y', y);
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('fill', i === 0 ? '#ffffff' : '#00ffcc');
+        text.setAttribute('font-size', 9);
+        text.setAttribute('font-family', 'Courier New, monospace');
+        text.textContent = typeof val === 'number' ? val.toFixed(6) : val;
+        frag.appendChild(text);
+        xPos += colWidths[i];
+      });
+    });
+
+    const footer = document.createElementNS(SVGNS, 'text');
+    footer.setAttribute('x', 215); footer.setAttribute('y', 480);
+    footer.setAttribute('text-anchor', 'middle');
+    footer.setAttribute('fill', '#ff0055'); footer.setAttribute('font-size', 10);
+    footer.textContent = 'Data verified against exact hydrogen wavefunctions (max diff < 5e-7)';
+    frag.appendChild(footer);
+
+    tableG.replaceChildren(frag);
+  }
+
+  // ===== UI =====
+  const SUB = 'spdfghi';
+  const REAL_NAMES = {
+    1: { '0': 'z', '1': 'x', '-1': 'y' },
+    2: { '0': 'z²', '1': 'xz', '-1': 'yz', '2': 'x²−y²', '-2': 'xy' },
+    3: { '0': 'z³', '1': 'xz²', '-1': 'yz²', '2': 'z(x²−y²)', '-2': 'xyz',
+         '3': 'x(x²−3y²)', '-3': 'y(3x²−y²)' }
+  };
+  function orbitalName() {
+    if (superMode) return 'Superposition';
+    if (grapheneMode) return 'Graphene (sp²)';
+    if (elementCloudMode) return ELEMENTS[fusionIdx].symbol + ' Shells';
+    const base = n + SUB[l];
+    if (complexBasis) return base + ' m=' + (m > 0 ? '+' + m : m);
+    if (l === 0) return base;
+    if (REAL_NAMES[l]) return base + '_' + REAL_NAMES[l][String(m)];
+    return base + '_' + (m === 0 ? '0' : (m > 0 ? 'c' : 's') + Math.abs(m));
+  }
+
+  function fmt(v) { return v >= 100 ? v.toFixed(0) : v.toFixed(v >= 10 ? 1 : 2); }
+
+  function updateUI(rebuild) {
+    if (rebuild === undefined) rebuild = true;
+    if (!elementCloudMode && !dataTableMode && !grapheneMode && !superMode) {
+      if (n < 1) n = 1; if (n > MAXN) n = MAXN;
+      if (l >= n) l = n - 1; if (l < 0) l = 0;
+      if (m > l) m = l; if (m < -l) m = -l;
+    }
+
+    sliderN.value = n; valN.textContent = n;
+    sliderL.max = n - 1; sliderL.value = l; valL.textContent = l;
+    sliderM.min = -l; sliderM.max = l; sliderM.value = m; valM.textContent = m;
+
+    elName.textContent = dataTableMode ? 'Data Table' : orbitalName();
+    elEnergy.textContent = superMode ? 'Superposition' : (grapheneMode ? 'N/A (Lattice)' : (-13.606 / (n * n)).toFixed(2) + ' eV');
+    elRNodes.textContent = superMode ? '—' : (grapheneMode ? 'N/A' : Math.max(0, n - l - 1));
+    elANodes.textContent = superMode ? '—' : (grapheneMode ? 'N/A' : l);
+    elRMean.textContent = superMode ? '—' : (grapheneMode ? 'N/A' : fmt(0.5 * (3 * n * n - l * (l + 1))) + ' a₀');
+    elRPeak.textContent = superMode ? '—' : (grapheneMode ? 'N/A' : fmt(radialTable(n, l).peak) + ' a₀');
+    elMatrix.textContent = dataTableMode ? 'TABLE' : (superMode ? 'SUPER' : (grapheneMode ? 'SP²' : '(' + n + ',' + l + ',' + m + ')'));
+    elBasis.textContent = (complexBasis ? 'COMPLEX' : 'REAL') + ' · ' + (superMode ? 'SUPER' : (grapheneMode ? 'LATTICE' : COUNTS[countIdx])) + ' · ' + COLOR_NAMES[colorMode];
+
+    if (superMode) {
+      elScale.textContent = 'Superposition: ' + superStateA.n + SUB[superStateA.l] + ' + ' + superStateB.n + SUB[superStateB.l];
+    } else if (grapheneMode) {
+      elScale.textContent = 'Graphene Sheet: ' + grapheneRings + ' Rings';
+    } else if (elementCloudMode) {
+      elScale.textContent = 'Element Shell View: ' + ELEMENTS[fusionIdx].name;
+    } else if (dataTableMode) {
+      elScale.textContent = 'Tabulated Hydrogen Data';
+    } else {
+      elScale.textContent = 'view radius ' + fmt(viewRadius) + ' a₀  (|Ψ|² ≥ 99.5%)';
+    }
+
+    const el = ELEMENTS[fusionIdx];
+    elFusionElement.textContent = el.name + ' (' + el.symbol + ')';
+    elFusionZ.textContent = el.z;
+    elFusionFormation.textContent = el.formation;
+
+    quickOrbitLabel.textContent = dataTableMode ? 'TABLE' : (superMode ? 'SUPER' : (grapheneMode ? 'GRAPHENE' : (elementCloudMode ? ELEMENTS[fusionIdx].symbol + ' Shells' : orbitalName())));
+
+    dcHeader.textContent = el.name.toUpperCase() + ' (' + el.symbol + ')';
+    dcMass.textContent = el.mass + ' u';
+    dcPhase.textContent = el.phase;
+    dcElectronegativity.textContent = el.electronegativity;
+    dcMelting.textContent = el.melting + ' °C';
+    dcBoiling.textContent = el.boiling + ' °C';
+    dcDiscovery.textContent = el.discovery;
+    dcGroupPeriod.textContent = el.group + ' / ' + el.period;
+    dcOxidation.textContent = el.oxidation;
+    dcCategory.textContent = el.category;
+    dcRadius.textContent = el.radius + ' pm';
+
+    if (!dataTableMode) {
+      const tableG = $('data-table-g');
+      if (tableG) tableG.replaceChildren();
+    }
+
+    if (rebuild && !superMode) {
+      generateCloud(scheduleDraw);
+    } else if (rebuild && superMode) {
+      generateSuperpositionCloud(scheduleDraw);
+    } else {
+      scheduleDraw();
+    }
+  }
+
+  // ===== DROPDOWN LOGIC =====
+  let dropdownOpen = false;
+
+  function toggleDropdown(force) {
+    dropdownOpen = force !== undefined ? force : !dropdownOpen;
+    dropdownPanel.style.display = dropdownOpen ? 'block' : 'none';
+    btnDropdown.querySelector('text').textContent = dropdownOpen ? '▲ TOOLS / FX' : '▼ TOOLS / FX';
+  }
+
+  btnDropdown.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleDropdown();
+  });
+
+  document.getElementById('viewport').addEventListener('pointerdown', (e) => {
+    if (dropdownOpen) {
+      const target = e.target;
+      if (!dropdownPanel.contains(target) && !btnDropdown.contains(target)) {
+        toggleDropdown(false);
+      }
+    }
+  });
+
+  menuToggleVis.addEventListener('click', (e) => {
+    e.stopPropagation();
+    visualDataVisible = !visualDataVisible;
+    visStatus.textContent = visualDataVisible ? 'ON' : 'OFF';
+    visStatus.setAttribute('fill', visualDataVisible ? '#00ffcc' : '#ff0055');
+    menuToggleVis.querySelector('text').textContent = (visualDataVisible ? '◉' : '○') + ' Visual Data Overlay';
+    scheduleDraw();
+  });
+
+  menuQuickOrbit.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (dataTableMode || superMode) return;
+    const presets = [
+      [1,0,0], [2,0,0], [2,1,0], [2,1,1], [3,0,0], [3,1,0], [3,2,0], [3,2,-1], [3,2,1], [4,3,0], [5,4,0], [6,5,0]
+    ];
+    let curIdx = presets.findIndex(p => p[0] === n && p[1] === l && p[2] === m);
+    curIdx = (curIdx + 1) % presets.length;
+    const p = presets[curIdx];
+    n = p[0]; l = p[1]; m = p[2];
+    if (elementCloudMode) {
+      elementCloudMode = false;
+      btnElementCloud.classList.remove('active');
+      btnElementCloud.setAttribute('fill', '#1a1a1f');
+    }
+    if (grapheneMode) {
+      grapheneMode = false;
+      btnGraphene.classList.remove('active');
+      btnGraphene.setAttribute('fill', '#1a1a1f');
+      grapheneSliderPanel.style.display = 'none';
+      lblGrapheneScale.style.display = 'none';
+    }
+    updateUI(true);
+  });
+
+  menuExport.addEventListener('click', (e) => {
+    e.stopPropagation();
+    try {
+      const svgEl = document.getElementById('viewport');
+      const serializer = new XMLSerializer();
+      let svgStr = serializer.serializeToString(svgEl);
+      svgStr = svgStr.replace(/<script[\s\S]*?<\/script>/g, '');
+      const blob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+      a.href = url;
+      a.download = 'joy-scan-snapshot-n' + n + 'l' + l + 'm' + m + '.svg';
+      (document.body || document.documentElement).appendChild(a);
+      a.click();
+      a.parentNode && a.parentNode.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      elStatus.textContent = 'SNAPSHOT EXPORTED';
+      setTimeout(() => { elStatus.textContent = ''; }, 2000);
+    } catch (err) {
+      elStatus.textContent = 'EXPORT FAILED';
+      setTimeout(() => { elStatus.textContent = ''; }, 2000);
+    }
+  });
+
+
+  // ===== RAW PARTICLE DATA EXPORT (CSV) =====
+  menuExportCSV.addEventListener('click', (e) => {
+    e.stopPropagation();
+    try {
+      const pts = cloud.filter(p => !p.isHydrogen);
+      if (!pts.length) { elStatus.textContent = 'NO PARTICLES TO EXPORT'; setTimeout(() => { elStatus.textContent = ''; }, 2000); return; }
+      const au = viewRadius / 165;   // scene units -> Bohr radii (hydrogenic modes only)
+      const fx = (v) => (typeof v === 'number' ? (isFinite(v) ? String(+v.toPrecision(7)) : '') : v);
+      const meta = ['# JOY-SCAN particle export', '# generated: ' + new Date().toISOString()];
+      let cols, rowFn, tag;
+      if (superMode) {
+        tag = 'super';
+        meta.push('# mode: two-state superposition, complex basis Y_lm (eigenstates of Lz), atomic units');
+        meta.push('# params: mode=super nA=' + superStateA.n + ' lA=' + superStateA.l + ' mA=' + superStateA.m + ' nB=' + superStateB.n + ' lB=' + superStateB.l + ' mB=' + superStateB.m + ' theta_deg=' + fx(superMixTheta * 180 / Math.PI) + ' phase_rad=' + fx(superPhase));
+        meta.push('# A=(' + superStateA.n + ',' + superStateA.l + ',' + superStateA.m + ') B=(' + superStateB.n + ',' + superStateB.l + ',' + superStateB.m + ')');
+        meta.push('# mixing theta_deg=' + fx(superMixTheta * 180 / Math.PI) + '  dE_au=' + fx(superDeltaE) + '  phase_rad(dE*t)=' + fx(superPhase));
+        meta.push('# Psi = cos(theta)*psiA + sin(theta)*psiB*exp(-i*dE*t), global phase dropped');
+        meta.push('# positions in Bohr radii; density_au = |Psi|^2 in a0^-3');
+        meta.push('# particles drawn from q0=(|psiA|^2+|psiB|^2)/2; importance_w=|Psi|^2/q0 so sum(w*f)/N estimates the integral of |Psi|^2 f');
+        cols = 'x_a0,y_a0,z_a0,source,psiA_re,psiA_im,psiB_re,psiB_im,psi_re,psi_im,density_au,importance_w';
+        rowFn = (p) => [p.x * au, p.y * au, p.z * au, p.isSuperA ? 'A' : 'B', p.Ar, p.Ai, p.Br, p.Bi, p.re, p.im, p.dens, p.w];
+      } else if (!grapheneMode && !elementCloudMode) {
+        tag = 'n' + n + 'l' + l + 'm' + m;
+        meta.push('# params: mode=eigen n=' + n + ' l=' + l + ' m=' + m + ' basis=' + (complexBasis ? 'complex' : 'real'));
+        meta.push('# mode: hydrogen eigenstate (n,l,m)=(' + n + ',' + l + ',' + m + '), ' + (complexBasis ? 'complex basis' : 'real basis') + ', atomic units');
+        meta.push('# particles are Monte Carlo samples of |psi|^2 (inverse-CDF radial, rejection angular); positions in Bohr radii');
+        meta.push('# rel_density = |psi|^2 / max (radial max x angular max); phase = degrees (complex basis) or sign of R*Y (real basis)');
+        cols = 'x_a0,y_a0,z_a0,r_a0,rel_density,phase';
+        rowFn = (p) => [p.x * au, p.y * au, p.z * au, Math.sqrt(p.x * p.x + p.y * p.y + p.z * p.z) * au, p.val, p.phase];
+      } else {
+        tag = grapheneMode ? 'graphene' : 'element';
+        meta.push('# mode: ' + tag + ' visual model (NOT a quantum calculation); coordinates are scene units, not atomic units');
+        cols = 'x_scene,y_scene,z_scene,brightness,phase';
+        rowFn = (p) => [p.x, p.y, p.z, p.t, p.phase];
+      }
+      const parts = [meta.join('\n') + '\n' + cols + '\n'];
+      const CH = 20000;
+      for (let i = 0; i < pts.length; i += CH) {
+        const end = Math.min(pts.length, i + CH);
+        const lines = new Array(end - i);
+        for (let k = i; k < end; k++) lines[k - i] = rowFn(pts[k]).map(fx).join(',');
+        parts.push(lines.join('\n') + '\n');
+      }
+      const blob = new Blob(parts, { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+      a.href = url;
+      a.download = 'joy-scan-particles-' + tag + '.csv';
+      (document.body || document.documentElement).appendChild(a);
+      a.click();
+      a.parentNode && a.parentNode.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      elStatus.textContent = pts.length.toLocaleString() + ' ROWS EXPORTED (CSV)';
+      setTimeout(() => { elStatus.textContent = ''; }, 2500);
+    } catch (err) {
+      console.error(err);
+      elStatus.textContent = 'CSV EXPORT FAILED: ' + (err && err.message ? err.message.slice(0, 40) : '');
+      setTimeout(() => { elStatus.textContent = ''; }, 2000);
+    }
+  });
+
+  // ===== PARTICLE DATA LOADER (CSV) =====
+  // Reads a file written by "Export Particle Data (CSV)", restores the shape parameters
+  // (n,l,m, basis / both states, mixing angle, phase) and the exact particle cloud.
+  function parseParticleCSV(text) {
+    const lines = text.split(/\r?\n/);
+    let i = 0;
+    const meta = [];
+    for (; i < lines.length; i++) {
+      const ln = lines[i];
+      if (ln.charAt(0) === '#') meta.push(ln);
+      else if (ln.trim()) break;
+    }
+    if (i >= lines.length) throw new Error('no header row');
+    const cols = lines[i].trim().split(',');
+    i++;
+    const ci = {};
+    cols.forEach((c, k) => { ci[c] = k; });
+    const metaStr = meta.join('\n');
+    const P = {};
+    const pl = metaStr.match(/^# params: (.*)$/m);
+    if (pl) { const re = /(\w+)=(\S+)/g; let q; while ((q = re.exec(pl[1]))) P[q[1]] = q[2]; }
+    let mode;
+    if (('psi_re' in ci) && ('psiA_re' in ci)) mode = 'super';
+    else if ('rel_density' in ci) mode = 'eigen';
+    else throw new Error('unsupported CSV (graphene/element)');
+    if (mode === 'eigen' && P.n === undefined) {
+      const q = metaStr.match(/\(n,l,m\)=\((\d+),(\d+),(-?\d+)\),\s*(complex|real) basis/);
+      if (!q) throw new Error('n,l,m not found in header');
+      P.n = q[1]; P.l = q[2]; P.m = q[3]; P.basis = q[4];
+    }
+    if (mode === 'super' && P.nA === undefined) {
+      const q = metaStr.match(/A=\((\d+),(\d+),(-?\d+)\)\s+B=\((\d+),(\d+),(-?\d+)\)/);
+      if (!q) throw new Error('states A,B not found in header');
+      P.nA = q[1]; P.lA = q[2]; P.mA = q[3]; P.nB = q[4]; P.lB = q[5]; P.mB = q[6];
+      const th = metaStr.match(/theta_deg=(\S+)/);
+      const ph = metaStr.match(/phase_rad\(dE\*t\)=(\S+)/);
+      P.theta_deg = th ? th[1] : '45';
+      P.phase_rad = ph ? ph[1] : '0';
+    }
+    const rows = [];
+    for (; i < lines.length; i++) { const ln = lines[i]; if (ln) rows.push(ln.split(',')); }
+    return { mode, P, ci, rows };
+  }
+
+  function validQN(a, b, c) {
+    return Number.isInteger(a) && Number.isInteger(b) && Number.isInteger(c) &&
+           a >= 1 && a <= MAXN && b >= 0 && b < a && Math.abs(c) <= b;
+  }
+
+  function applyLoadedCSV(text) {
+    const d = parseParticleCSV(text);
+    const ci = d.ci, rows = d.rows, P = d.P, N = rows.length;
+    if (!N) throw new Error('no data rows');
+    if (grapheneMode || elementCloudMode || dataTableMode) throw new Error('leave graphene/element/data mode first');
+    const num = (r, name) => parseFloat(r[ci[name]]);
+
+    if (d.mode === 'eigen') {
+      const nn = parseInt(P.n, 10), ll = parseInt(P.l, 10), mm = parseInt(P.m, 10);
+      if (!validQN(nn, ll, mm)) throw new Error('invalid n,l,m');
+      if (superMode) toggleSuperMode(false);
+      stopSuperAnimation();
+      n = nn; l = ll; m = mm;
+      complexBasis = (P.basis === 'complex');
+      viewRadius = radialTable(n, l).view;
+      const sc = 165 / viewRadius;
+      const pts = new Array(N);
+      for (let k = 0; k < N; k++) {
+        const r = rows[k];
+        const val = Math.min(1, Math.max(0, num(r, 'rel_density')));
+        pts[k] = { x: num(r, 'x_a0') * sc, y: num(r, 'y_a0') * sc, z: num(r, 'z_a0') * sc,
+                   val, t: Math.sqrt(val), phase: num(r, 'phase') };
+      }
+      if (!isFinite(pts[0].x + pts[0].y + pts[0].z)) throw new Error('bad coordinates');
+      ++generationToken;           // cancel any pending regeneration
+      updateUI(false);             // refresh labels / sliders, keep the loaded cloud
+      cloud = pts;
+      scheduleDraw();
+      return 'LOADED ' + N.toLocaleString() + ' PTS  (n,l,m)=(' + n + ',' + l + ',' + m + ') ' + (complexBasis ? 'COMPLEX' : 'REAL');
+    }
+
+    // ----- superposition -----
+    const A = { n: parseInt(P.nA, 10), l: parseInt(P.lA, 10), m: parseInt(P.mA, 10) };
+    const B = { n: parseInt(P.nB, 10), l: parseInt(P.lB, 10), m: parseInt(P.mB, 10) };
+    if (!validQN(A.n, A.l, A.m) || !validQN(B.n, B.l, B.m)) throw new Error('invalid state A/B');
+    superStateA = A; superStateB = B;
+    if (!superMode) toggleSuperMode(true);
+    stopSuperAnimation();
+    ++generationToken;             // cancel the regeneration toggleSuperMode started
+    superMixTheta = Math.max(0, Math.min(Math.PI / 2, (parseFloat(P.theta_deg) || 0) * Math.PI / 180));
+    superPhase = parseFloat(P.phase_rad) || 0;
+    const E1 = -0.5 / (A.n * A.n), E2 = -0.5 / (B.n * B.n);
+    superDeltaE = E2 - E1;
+    superOmega = Math.abs(superDeltaE);
+    superSame = (A.n === B.n && A.l === B.l && A.m === B.m);
+    viewRadius = Math.max(radialTable(A.n, A.l).view, radialTable(B.n, B.l).view);
+    const sc = 165 / viewRadius;
+    const cA = [], cB = [];
+    for (let k = 0; k < N; k++) {
+      const r = rows[k];
+      const isA = r[ci.source] === 'A';
+      const Ar = num(r, 'psiA_re'), Ai = num(r, 'psiA_im'), Br = num(r, 'psiB_re'), Bi = num(r, 'psiB_im');
+      const pt = {
+        x: num(r, 'x_a0') * sc, y: num(r, 'y_a0') * sc, z: num(r, 'z_a0') * sc,
+        Ar, Ai, Br, Bi, rhoSum: Ar * Ar + Ai * Ai + Br * Br + Bi * Bi,
+        re: 0, im: 0, dens: 0, w: 0, val: 0, t: 0, phase: 0,
+        isSuperA: isA, isSuperB: !isA
+      };
+      (isA ? cA : cB).push(pt);
+    }
+    if (!isFinite(N ? (cA[0] || cB[0]).x : 0)) throw new Error('bad coordinates');
+    superCloudA = cA; superCloudB = cB;
+    superApplyTime();
+    cloud = cA.concat(cB);
+
+    const deg = (superMixTheta * 180 / Math.PI).toFixed(0) + '°';
+    superALabel.textContent = '(' + A.n + ',' + A.l + ',' + A.m + ')';
+    superBLabel.textContent = '(' + B.n + ',' + B.l + ',' + B.m + ')';
+    superOmegaEl.textContent = superOmega.toFixed(4);
+    superThetaEl.textContent = deg;
+    superStateAEl.textContent = 'A: (' + A.n + ',' + A.l + ',' + A.m + ')';
+    superStateBEl.textContent = 'B: (' + B.n + ',' + B.l + ',' + B.m + ')';
+    if (superThetaValue) superThetaValue.textContent = deg;
+    if (superOmegaInfo) superOmegaInfo.textContent = superOmega.toFixed(4);
+    superThetaThumb.setAttribute('cx', THETA_MIN_X + (superMixTheta / (Math.PI / 2)) * (THETA_MAX_X - THETA_MIN_X));
+    updateUI(false);
+    if (!superPaused) startSuperAnimation();
+    scheduleDraw();
+    return 'LOADED ' + N.toLocaleString() + ' PTS  A=(' + A.n + ',' + A.l + ',' + A.m + ') B=(' + B.n + ',' + B.l + ',' + B.m + ') θ=' + deg;
+  }
+
+  function handleLoadFile(file) {
+    if (!file) return;
+    elStatus.textContent = 'LOADING ' + file.name + '…';
+    const rd = new FileReader();
+    const fail = (err) => {
+      console.error(err);
+      elStatus.textContent = 'LOAD FAILED: ' + (err && err.message ? err.message.slice(0, 40) : '');
+      setTimeout(() => { elStatus.textContent = ''; }, 3500);
+    };
+    rd.onerror = () => fail(rd.error);
+    rd.onload = () => {
+      setTimeout(() => {
+        try {
+          elStatus.textContent = applyLoadedCSV(String(rd.result));
+          setTimeout(() => { elStatus.textContent = ''; }, 4000);
+        } catch (err) { fail(err); }
+      }, 20);
+    };
+    rd.readAsText(file);
+  }
+
+  menuLoadCSV.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const inp = document.createElementNS('http://www.w3.org/1999/xhtml', 'input');
+    inp.setAttribute('type', 'file');
+    inp.setAttribute('accept', '.csv,text/csv,text/plain');
+    inp.style.display = 'none';
+    inp.addEventListener('change', () => {
+      const f = inp.files && inp.files[0];
+      if (inp.parentNode) inp.parentNode.removeChild(inp);
+      handleLoadFile(f);
+    });
+    inp.addEventListener('cancel', () => { if (inp.parentNode) inp.parentNode.removeChild(inp); });
+    (document.body || document.documentElement).appendChild(inp);
+    inp.click();
+  });
+
+  // drag & drop a CSV anywhere on the viewport
+  (function () {
+    const vp = document.getElementById('viewport');
+    vp.addEventListener('dragover', (e) => { e.preventDefault(); });
+    vp.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      handleLoadFile(f);
+    });
+  })();
+
+  menuAutorotate.addEventListener('click', (e) => {
+    e.stopPropagation();
+    autoRotate = !autoRotate;
+    autorotateStatus.textContent = autoRotate ? 'ON' : 'OFF';
+    autorotateStatus.setAttribute('fill', autoRotate ? '#00ffcc' : '#ff0055');
+    if (autoRotate) {
+      if (autoRotateId) cancelAnimationFrame(autoRotateId);
+      const tick = () => {
+        if (!autoRotate) return;
+        rotY += 0.005;
+        scheduleDraw();
+        autoRotateId = requestAnimationFrame(tick);
+      };
+      autoRotateId = requestAnimationFrame(tick);
+    } else {
+      if (autoRotateId) { cancelAnimationFrame(autoRotateId); autoRotateId = null; }
+    }
+  });
+
+  menuToggleGrid.addEventListener('click', (e) => {
+    e.stopPropagation();
+    bgGridVisible = !bgGridVisible;
+    gridStatus.textContent = bgGridVisible ? 'ON' : 'OFF';
+    gridStatus.setAttribute('fill', bgGridVisible ? '#00ffcc' : '#ff0055');
+    const gridRect = $('bg-grid-rect');
+    if (gridRect) gridRect.style.display = bgGridVisible ? '' : 'none';
+  });
+
+  menuTrail.addEventListener('click', (e) => {
+    e.stopPropagation();
+    trailMode = !trailMode;
+    trailStatus.textContent = trailMode ? 'ON' : 'OFF';
+    trailStatus.setAttribute('fill', trailMode ? '#00ffcc' : '#ff0055');
+    if (trailMode) {
+      pointSize = 2.5;
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+    } else {
+      pointSize = 1.5;
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    }
+    scheduleDraw();
+  });
+
+  menuCrosshair.addEventListener('click', (e) => {
+    e.stopPropagation();
+    crosshairVisible = !crosshairVisible;
+    crosshairStatus.textContent = crosshairVisible ? 'ON' : 'OFF';
+    crosshairStatus.setAttribute('fill', crosshairVisible ? '#00ffcc' : '#ff0055');
+    if (crosshairG) crosshairG.style.display = crosshairVisible ? '' : 'none';
+  });
+
+  menuHOverlay.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleHBlock();
+  });
+
+  menuSuper.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleSuperMode();
+  });
+
+  function toggleHBlock() {
+    hBlockOverlay = !hBlockOverlay;
+    btnHBlock.classList.toggle('active', hBlockOverlay);
+    btnHBlock.setAttribute('fill', hBlockOverlay ? '#ffcc00' : '#1a1a1f');
+    hSelector.style.display = hBlockOverlay ? '' : 'none';
+    hOverlayStatus.textContent = hBlockOverlay ? 'ON' : 'OFF';
+    hOverlayStatus.setAttribute('fill', hBlockOverlay ? '#00ffcc' : '#ff0055');
+    if (hBlockOverlay && !elementCloudMode) {
+      elementCloudMode = true;
+      btnElementCloud.classList.add('active');
+      btnElementCloud.setAttribute('fill', '#00ffcc');
+    }
+    if (hBlockOverlay && superMode) toggleSuperMode(false);
+    updateUI(true);
+  }
+
+  // ===== DATA CARD LOGIC =====
+  let dataCardVisible = true;
+
+  function toggleDataCard(force) {
+    dataCardVisible = force !== undefined ? force : !dataCardVisible;
+    dataCardPanel.style.display = dataCardVisible ? 'block' : 'none';
+    btnDataCard.querySelector('text').textContent = dataCardVisible ? '▲ ELEMENT DATA CARD' : '▼ ELEMENT DATA CARD';
+  }
+
+  btnDataCard.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleDataCard();
+  });
+
+  btnCloseDataCard.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleDataCard(false);
+  });
+
+  // Sliders
+  sliderN.addEventListener('input', e => { n = parseInt(e.target.value); updateUI(); });
+  sliderL.addEventListener('input', e => { l = parseInt(e.target.value); updateUI(); });
+  sliderM.addEventListener('input', e => { m = parseInt(e.target.value); updateUI(); });
+
+  // Left Joy-Con: D-pad
+  document.querySelectorAll('.joycon-btn[data-dir]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const dir = btn.getAttribute('data-dir');
+      if (dir === 'up') l++;
+      if (dir === 'down') l--;
+      if (dir === 'left') m--;
+      if (dir === 'right') m++;
+      btn.classList.add('active'); setTimeout(() => btn.classList.remove('active'), 150);
+      updateUI();
+    });
+  });
+
+  // Left Joy-Con: basis toggle
+  document.querySelectorAll('.joycon-btn[data-act="basis"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      complexBasis = !complexBasis;
+      btn.classList.add('active'); setTimeout(() => btn.classList.remove('active'), 150);
+      updateUI();
+    });
+  });
+
+  // Left Joy-Con: analog stick (n)
+  const stickL = $('stick-l');
+  let stickDrag = false, startY = 0;
+  stickL.style.cursor = 'ns-resize';
+  stickL.addEventListener('pointerdown', e => {
+    stickDrag = true; startY = e.clientY; stickL.setPointerCapture(e.pointerId);
+  });
+  stickL.addEventListener('pointermove', e => {
+    if (!stickDrag) return;
+    const dy = e.clientY - startY;
+    if (Math.abs(dy) > 20) {
+      n += (dy > 0 ? -1 : 1);
+      if (n < 1) n = 1; if (n > MAXN) n = MAXN;
+      startY = e.clientY;
+      updateUI();
+    }
+  });
+  stickL.addEventListener('pointerup', e => {
+    stickDrag = false; stickL.releasePointerCapture(e.pointerId);
+  });
+
+  // Right Joy-Con
+  document.querySelectorAll('.joycon-btn-r').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const action = btn.getAttribute('data-action');
+      let rebuild = false;
+      if (action === 'toggle-color') {
+        colorMode = (colorMode + 1) % 4;
+      } else if (action === 'toggle-size') {
+        pointSize = pointSize === 1.5 ? 3.0 : pointSize === 3.0 ? 0.8 : 1.5;
+      } else if (action === 'cycle-count') {
+        countIdx = (countIdx + 1) % COUNTS.length; rebuild = true;
+      } else if (action === 'toggle-touch') {
+        touchMode = !touchMode;
+        touchOverlay.style.pointerEvents = touchMode ? 'auto' : 'none';
+        btnTouch.classList.toggle('active', touchMode);
+        elTouchMode.textContent = touchMode ? 'ENABLED' : 'DISABLED';
+        elTouchMode.setAttribute('fill', touchMode ? '#00ffcc' : '#ff0055');
+      } else if (action === 'toggle-super') {
+        toggleSuperMode();
+      } else if (action === 'reset') {
+        n = 3; l = 2; m = 0; complexBasis = false; countIdx = 1;
+        rotX = DEF_ROT_X; rotY = DEF_ROT_Y; colorMode = 0; pointSize = 1.5;
+        fusionIdx = 0; elementCloudMode = false; dataTableMode = false;
+        visualDataVisible = true; autoRotate = false; bgGridVisible = true;
+        trailMode = false; crosshairVisible = true;
+        hBlockOverlay = false; hOverlayN = 1; hOverlayL = 0; hOverlayScaleFactor = 1.0;
+        grapheneMode = false; grapheneRings = 3;
+        superMode = false;
+        stopSuperAnimation();
+        superStateA = { n: 1, l: 0, m: 0 };
+        superStateB = { n: 2, l: 1, m: 0 };
+        superBIdx = 1;
+        superMixTheta = Math.PI / 4;
+        superPaused = false;
+        if (autoRotateId) { cancelAnimationFrame(autoRotateId); autoRotateId = null; }
+        visStatus.textContent = 'ON'; visStatus.setAttribute('fill', '#00ffcc');
+        menuToggleVis.querySelector('text').textContent = '◉ Visual Data Overlay';
+        autorotateStatus.textContent = 'OFF'; autorotateStatus.setAttribute('fill', '#ff0055');
+        gridStatus.textContent = 'ON'; gridStatus.setAttribute('fill', '#00ffcc');
+        trailStatus.textContent = 'OFF'; trailStatus.setAttribute('fill', '#ff0055');
+        crosshairStatus.textContent = 'ON'; crosshairStatus.setAttribute('fill', '#00ffcc');
+        hOverlayStatus.textContent = 'OFF'; hOverlayStatus.setAttribute('fill', '#ff0055');
+        superStatus.textContent = 'OFF'; superStatus.setAttribute('fill', '#ff0055');
+        btnHBlock.classList.remove('active'); btnHBlock.setAttribute('fill', '#1a1a1f');
+        hSelector.style.display = 'none';
+        hScaleRing.style.display = 'none';
+        lblHScale.style.display = 'none';
+        btnGraphene.classList.remove('active'); btnGraphene.setAttribute('fill', '#1a1a1f');
+        grapheneSliderPanel.style.display = 'none';
+        lblGrapheneScale.style.display = 'none';
+        btnSuper.classList.remove('active'); btnSuper.setAttribute('fill', '#1a1a1f');
+        superPanel.style.display = 'none';
+        superControlPanel.style.display = 'none';
+        lblSuperScale.style.display = 'none';
+        if (superThetaThumb) superThetaThumb.setAttribute('cx', 215);
+        if (superThetaValue) superThetaValue.textContent = '45°';
+        const gridRect = $('bg-grid-rect');
+        if (gridRect) gridRect.style.display = '';
+        if (crosshairG) crosshairG.style.display = '';
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        rebuild = true;
+      }
+      btn.classList.add('active'); setTimeout(() => btn.classList.remove('active'), 200);
+      updateUI(rebuild);
+    });
+  });
+
+  // Fusion Button
+  btnFusion.addEventListener('click', () => {
+    fusionIdx = (fusionIdx + 1) % ELEMENTS.length;
+    btnFusion.setAttribute('fill', '#ffcc00');
+    setTimeout(() => btnFusion.setAttribute('fill', '#1a1a1f'), 150);
+    if (fusionIdx === 5) {
+      btnGraphene.style.display = 'block';
+    } else {
+      btnGraphene.style.display = 'none';
+      if (grapheneMode) {
+        grapheneMode = false;
+        btnGraphene.classList.remove('active');
+        btnGraphene.setAttribute('fill', '#1a1a1f');
+        grapheneSliderPanel.style.display = 'none';
+        lblGrapheneScale.style.display = 'none';
+        updateUI(true);
+      }
+    }
+    if (elementCloudMode) updateUI(true);
+    else updateUI(false);
+  });
+
+  // Element Cloud Toggle
+  btnElementCloud.addEventListener('click', () => {
+    elementCloudMode = !elementCloudMode;
+    dataTableMode = false;
+    if (elementCloudMode) {
+      grapheneMode = false;
+      btnGraphene.classList.remove('active');
+      btnGraphene.setAttribute('fill', '#1a1a1f');
+      grapheneSliderPanel.style.display = 'none';
+      lblGrapheneScale.style.display = 'none';
+      if (superMode) toggleSuperMode(false);
+    }
+    btnElementCloud.classList.toggle('active', elementCloudMode);
+    if (elementCloudMode) btnElementCloud.setAttribute('fill', '#00ffcc');
+    else btnElementCloud.setAttribute('fill', '#1a1a1f');
+    updateUI(true);
+  });
+
+  // Data Table Toggle
+  btnDataTable.addEventListener('click', () => {
+    dataTableMode = !dataTableMode;
+    elementCloudMode = false;
+    if (dataTableMode) {
+      grapheneMode = false;
+      btnGraphene.classList.remove('active');
+      btnGraphene.setAttribute('fill', '#1a1a1f');
+      grapheneSliderPanel.style.display = 'none';
+      lblGrapheneScale.style.display = 'none';
+      if (superMode) toggleSuperMode(false);
+    }
+    btnDataTable.classList.toggle('active', dataTableMode);
+    if (dataTableMode) btnDataTable.setAttribute('fill', '#00ffcc');
+    else btnDataTable.setAttribute('fill', '#1a1a1f');
+    updateUI(false);
+  });
+
+  // H-BLOCK Button
+  btnHBlock.addEventListener('click', toggleHBlock);
+
+  // H shape selector
+  const H_SHAPES = [[1,0],[2,0],[2,1],[3,0],[3,1],[3,2]];
+  let hShapeIdx = 0;
+  hSelector.addEventListener('click', (e) => {
+    e.stopPropagation();
+    hShapeIdx = (hShapeIdx + 1) % H_SHAPES.length;
+    hOverlayN = H_SHAPES[hShapeIdx][0];
+    hOverlayL = H_SHAPES[hShapeIdx][1];
+    hShapeLabel.textContent = hOverlayN + SUB[hOverlayL];
+    if (elementCloudMode && hBlockOverlay) updateUI(true);
+  });
+
+  // GRAPHENE Button
+  btnGraphene.addEventListener('click', () => {
+    grapheneMode = !grapheneMode;
+    if (grapheneMode) {
+      elementCloudMode = false;
+      dataTableMode = false;
+      if (superMode) toggleSuperMode(false);
+      btnElementCloud.classList.remove('active');
+      btnElementCloud.setAttribute('fill', '#1a1a1f');
+      btnDataTable.classList.remove('active');
+      btnDataTable.setAttribute('fill', '#1a1a1f');
+      
+      btnGraphene.classList.add('active');
+      btnGraphene.setAttribute('fill', '#00ffaa');
+      grapheneSliderPanel.style.display = '';
+      lblGrapheneScale.style.display = '';
+    } else {
+      btnGraphene.classList.remove('active');
+      btnGraphene.setAttribute('fill', '#1a1a1f');
+      grapheneSliderPanel.style.display = 'none';
+      lblGrapheneScale.style.display = 'none';
+    }
+    updateUI(true);
+  });
+
+  // SUPERPOSITION Button
+  btnSuper.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleSuperMode();
+  });
+
+  // Super pause button
+  superPauseBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    superPaused = !superPaused;
+    if (superPaused) {
+      stopSuperAnimation();
+    } else {
+      startSuperAnimation();
+    }
+  });
+
+  // ===== THETA SLIDER =====
+  const THETA_MIN_X = 20;
+  const THETA_MAX_X = 410;
+  const THETA_TRACK_Y = 76;
+  let isThetaDragging = false;
+
+  function updateThetaFromClientX(clientX) {
+    const svgEl = document.getElementById('viewport');
+    const pt = svgEl.createSVGPoint();
+    pt.x = clientX;
+    pt.y = 0;
+    const svgP = pt.matrixTransform(svgEl.getScreenCTM().inverse());
+    let localX = svgP.x - 250;
+    localX = Math.max(THETA_MIN_X, Math.min(THETA_MAX_X, localX));
+    const percent = (localX - THETA_MIN_X) / (THETA_MAX_X - THETA_MIN_X);
+    superMixTheta = percent * (Math.PI / 2);
+    superThetaThumb.setAttribute('cx', localX);
+    superThetaValue.textContent = (superMixTheta * 180 / Math.PI).toFixed(0) + '°';
+    superThetaEl.textContent = (superMixTheta * 180 / Math.PI).toFixed(0) + '°';
+    if (superMode && !superPaused) {
+      // Will be picked up by animation loop
+    } else if (superMode) {
+      superApplyTime();
+      scheduleDraw();
+    }
+  }
+
+  superThetaThumb.addEventListener('pointerdown', (e) => {
+    e.stopPropagation();
+    isThetaDragging = true;
+    superThetaThumb.setPointerCapture(e.pointerId);
+  });
+  superThetaThumb.addEventListener('pointermove', (e) => {
+    if (!isThetaDragging) return;
+    e.stopPropagation();
+    updateThetaFromClientX(e.clientX);
+  });
+  superThetaThumb.addEventListener('pointerup', (e) => {
+    if (!isThetaDragging) return;
+    e.stopPropagation();
+    isThetaDragging = false;
+    superThetaThumb.releasePointerCapture(e.pointerId);
+  });
+
+  superControlPanel.addEventListener('pointerdown', (e) => {
+    if (e.target === superThetaThumb) return;
+    if (e.target === superPauseBtn || superPauseBtn.contains(e.target)) return;
+    if (e.target === superCycleB || superCycleB.contains(e.target)) return;
+    const svgEl = document.getElementById('viewport');
+    const pt = svgEl.createSVGPoint();
+    pt.x = e.clientX;
+    pt.y = e.clientY;
+    const svgP = pt.matrixTransform(svgEl.getScreenCTM().inverse());
+    const localX = svgP.x - 250;
+    const localY = svgP.y - 560;
+    if (localY >= THETA_TRACK_Y - 8 && localY <= THETA_TRACK_Y + 16 && localX >= THETA_MIN_X && localX <= THETA_MAX_X) {
+      updateThetaFromClientX(e.clientX);
+    }
+  });
+
+  // ===== CYCLE STATE B =====
+  superCycleB.addEventListener('click', (e) => {
+    e.stopPropagation();
+    superBIdx = (superBIdx + 1) % SUPER_B_PRESETS.length;
+    superStateB = Object.assign({}, SUPER_B_PRESETS[superBIdx]);
+    if (superMode) generateSuperpositionCloud(scheduleDraw);
+  });
+
+  // ===== GRAPHENE SLIDER DRAG LOGIC =====
+  let isSliderDragging = false;
+  const SLIDER_MIN_X = 20;
+  const SLIDER_MAX_X = 410;
+
+  function updateGrapheneSlider(clientX) {
+    const svgEl = document.getElementById('viewport');
+    const pt = svgEl.createSVGPoint();
+    pt.x = clientX;
+    pt.y = 0;
+    const svgP = pt.matrixTransform(svgEl.getScreenCTM().inverse());
+    
+    let localX = svgP.x - 250;
+    localX = Math.max(SLIDER_MIN_X, Math.min(SLIDER_MAX_X, localX));
+    
+    const percent = (localX - SLIDER_MIN_X) / (SLIDER_MAX_X - SLIDER_MIN_X);
+    const newRings = Math.round(1 + percent * 9);
+    
+    if (newRings !== grapheneRings) {
+      grapheneRings = newRings;
+      grapheneSliderValue.textContent = grapheneRings;
+      grapheneSliderThumb.setAttribute('cx', localX);
+      lblGrapheneScale.textContent = 'Graphene: Rings = ' + grapheneRings;
+      if (grapheneMode) generateCloud(scheduleDraw);
+    }
+  }
+
+  grapheneSliderThumb.addEventListener('pointerdown', (e) => {
+    e.stopPropagation();
+    isSliderDragging = true;
+    grapheneSliderThumb.setPointerCapture(e.pointerId);
+  });
+
+  grapheneSliderThumb.addEventListener('pointermove', (e) => {
+    if (!isSliderDragging) return;
+    e.stopPropagation();
+    updateGrapheneSlider(e.clientX);
+  });
+
+  grapheneSliderThumb.addEventListener('pointerup', (e) => {
+    if (!isSliderDragging) return;
+    e.stopPropagation();
+    isSliderDragging = false;
+    grapheneSliderThumb.releasePointerCapture(e.pointerId);
+  });
+
+  document.getElementById('graphene-slider-panel').addEventListener('pointerdown', (e) => {
+    if (e.target === grapheneSliderThumb) return;
+    const svgEl = document.getElementById('viewport');
+    const pt = svgEl.createSVGPoint();
+    pt.x = e.clientX;
+    pt.y = 0;
+    const svgP = pt.matrixTransform(svgEl.getScreenCTM().inverse());
+    let localX = svgP.x - 250;
+    if (localX >= SLIDER_MIN_X && localX <= SLIDER_MAX_X) {
+      updateGrapheneSlider(e.clientX);
+    }
+  });
+
+  // 3D drag rotation
+  touchOverlay.addEventListener('pointerdown', e => {
+    if (!touchMode || dataTableMode) return;
+    isDragging = true; lastMouseX = e.clientX; lastMouseY = e.clientY;
+    touchOverlay.setPointerCapture(e.pointerId);
+    touchOverlay.style.cursor = 'grabbing';
+  });
+  touchOverlay.addEventListener('pointermove', e => {
+    if (!isDragging) return;
+    rotY += (e.clientX - lastMouseX) * 0.01;
+    rotX += (e.clientY - lastMouseY) * 0.01;
+    rotX = Math.max(-Math.PI / 2 + 0.05, Math.min(Math.PI / 2 - 0.05, rotX));
+    lastMouseX = e.clientX; lastMouseY = e.clientY;
+    scheduleDraw();
+  });
+  touchOverlay.addEventListener('pointerup', e => {
+    isDragging = false; touchOverlay.releasePointerCapture(e.pointerId);
+    touchOverlay.style.cursor = 'grab';
+  });
+
+  // ===== BOOT =====
+  updateUI();
+})();
+]]></script>
+</svg>
