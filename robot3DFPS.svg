@@ -4,7 +4,7 @@
      preserveAspectRatio="xMidYMid meet"
      style="width:100vw;height:100vh;touch-action:none;-webkit-user-select:none;user-select:none;background:#000;display:block;position:fixed;top:0;left:0"
      shape-rendering="geometricPrecision"
-     font-family="Courier New, monospace">
+     font-family="Courier New, monospace" xmlns:c2pa="http://c2pa.org/manifest"><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYToyZDIwMDM5OC00MGJhLTQ5NDMtYjYxYS1mZGM2MzY4Njc0MmUAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaDXptaiZd9H7EaubhVafIQ0AAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDo2NjFlNGM0OS0yMTE2LTRhMTYtYTlmYi1mOTU2NzM3ODE3YzNscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNoHlVfYKJguHSXQhd9ntCIUwAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFgg2LGGZo5cbbYzRw5+qiGstDePq0CpDc6rCp4bVaX96yGkZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaKBbolNyKtW4qFHkDhOfwtAAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRMAAAAAAAAAAAAAAAAZGhhc2hYIIbHT41zVTvKLnYkGSnbS30elM9XXnvWgA0YPZAUE4iZZG5hbWVuanVtYmYgbWFuaWZlc3RqZXhjbHVzaW9uc4GiZXN0YXJ0GQHNZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjJkMjAwMzk4LTQwYmEtNDk0My1iNjFhLWZkYzYzNjg2NzQyZS9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjg0YzRkZWVlLTVjMmItNDcxZC05ZTBhLTAxZmY5NWFkMTA4ZHJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCDYsYZmjlxttjNHDn6qIay0N4+rQKkNzqsKnhtVpf3rIaJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFgglpJp5yJq0el6UG06xGZeb0xwNhYeHUnq5P1b+e/csKGiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggdGAVZ3f77gKrU6xKGAIg22GhtslVeFftEA7Canj+1b10Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQFGwYctP1B4rU83iP/oW3uemgLUWTJ0+WCTSCaBDJVFC736ZJ+gJe7JQWq4g/7a5u35rGSkRa354Ui+3NA1cwFs=</c2pa:manifest></metadata>
   <!-- ============================================================ -->
   <!-- CITY ASSAULT - Pure SVG 3D FPS with Oscilloscope Output      -->
   <!-- Enhanced: Drones, Waves, Health Crystals, Truncated Icosahedra-->
@@ -130,9 +130,9 @@
     <text x="600" y="408" text-anchor="middle" fill="#009900" font-size="13" font-family="monospace">WASD / Arrows = Move</text>
     <text x="600" y="428" text-anchor="middle" fill="#009900" font-size="13" font-family="monospace">Mouse = Look (auto pointer lock on start)</text>
     <text x="600" y="448" text-anchor="middle" fill="#009900" font-size="13" font-family="monospace">Left-Click = Shoot | R = Reload</text>
-    <text x="600" y="472" text-anchor="middle" fill="#008800" font-size="12" font-family="monospace">Xbox: LStick Move | RStick Look | RT Shoot | A Reload</text>
+    <text x="600" y="470" text-anchor="middle" fill="#008800" font-size="12" font-family="monospace">Xbox: LStick Move | RStick Look | RT Shoot | A Reload</text>
     <!-- Features section -->
-    <line x1="350" y1="490" x2="850" y2="490" stroke="#003300" stroke-width="0.5"/>
+    <line x1="350" y1="498" x2="850" y2="498" stroke="#003300" stroke-width="0.5"/>
     <text x="600" y="512" text-anchor="middle" fill="#007700" font-size="12" font-family="monospace">10 waves of enemies: robots + fast attack drones</text>
     <text x="600" y="532" text-anchor="middle" fill="#006600" font-size="11" font-family="monospace">Green/Yellow/Red vector themes by wave phase</text>
     <text x="600" y="552" text-anchor="middle" fill="#005500" font-size="11" font-family="monospace">Drones: truncated icosahedron, bomb blast waves</text>
@@ -140,6 +140,46 @@
     <text x="600" y="592" text-anchor="middle" fill="#003300" font-size="10" font-family="monospace">All rendered lines output as X/Y to Web Audio oscilloscope</text>
     <text x="600" y="610" text-anchor="middle" fill="#002200" font-size="10" font-family="monospace">Hold-position mode: no center snap when buffer empties</text>
     <text x="600" y="630" text-anchor="middle" fill="#001a00" font-size="9" font-family="monospace">Connect L+R audio to oscilloscope for vector display</text>
+    <text x="600" y="487" text-anchor="middle" fill="#008800" font-size="12" font-family="monospace">Touch: Pad = WASD | Drag = Aim | Tap / FIRE = Shoot</text>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- TOUCH CONTROLS (Android / mobile): WASD pad, touch aim, fire  -->
+  <!-- Drawn in raw 1920x1080 screen space, above HUD, hidden until  -->
+  <!-- the first touch. Hit-testing is done in script (multi-touch). -->
+  <!-- ============================================================ -->
+  <g id="TC" display="none" pointer-events="none" font-family="Courier New, monospace" font-weight="bold" text-anchor="middle">
+    <!-- Toggle buttons (top right) -->
+    <g id="TCT">
+      <rect x="1760" y="20" width="150" height="52" rx="6" fill="#020a02" fill-opacity="0.75" stroke="#00ff00" stroke-width="2"/>
+      <text id="tcTxtTouch" x="1835" y="53" fill="#00ff00" font-size="22">TOUCH: ON</text>
+      <g id="tcPadToggle">
+        <rect x="1760" y="84" width="150" height="52" rx="6" fill="#020a02" fill-opacity="0.75" stroke="#00ff00" stroke-width="2"/>
+        <text id="tcTxtPad" x="1835" y="117" fill="#00ff00" font-size="22">WASD: ON</text>
+      </g>
+    </g>
+    <!-- Controls -->
+    <g id="TCM">
+      <!-- WASD pad -->
+      <g id="TCP">
+        <circle cx="270" cy="840" r="190" fill="#00ff00" fill-opacity="0.04" stroke="#00ff00" stroke-opacity="0.35" stroke-width="2"/>
+        <circle id="tcW" cx="270" cy="735" r="52" fill="#00ff00" fill-opacity="0.10" stroke="#00ff00" stroke-opacity="0.7" stroke-width="2.5"/>
+        <circle id="tcS" cx="270" cy="945" r="52" fill="#00ff00" fill-opacity="0.10" stroke="#00ff00" stroke-opacity="0.7" stroke-width="2.5"/>
+        <circle id="tcA" cx="165" cy="840" r="52" fill="#00ff00" fill-opacity="0.10" stroke="#00ff00" stroke-opacity="0.7" stroke-width="2.5"/>
+        <circle id="tcD" cx="375" cy="840" r="52" fill="#00ff00" fill-opacity="0.10" stroke="#00ff00" stroke-opacity="0.7" stroke-width="2.5"/>
+        <text x="270" y="752" fill="#00ff00" fill-opacity="0.9" font-size="46">W</text>
+        <text x="270" y="962" fill="#00ff00" fill-opacity="0.9" font-size="46">S</text>
+        <text x="165" y="857" fill="#00ff00" fill-opacity="0.9" font-size="46">A</text>
+        <text x="375" y="857" fill="#00ff00" fill-opacity="0.9" font-size="46">D</text>
+      </g>
+      <!-- FIRE -->
+      <circle id="tcFire" cx="1690" cy="840" r="105" fill="#ff2200" fill-opacity="0.12" stroke="#ff4400" stroke-opacity="0.8" stroke-width="3.5"/>
+      <circle cx="1690" cy="840" r="78" fill="none" stroke="#ff4400" stroke-opacity="0.35" stroke-width="1.5"/>
+      <text x="1690" y="854" fill="#ff5522" fill-opacity="0.95" font-size="40">FIRE</text>
+      <!-- RELOAD -->
+      <circle id="tcReload" cx="1495" cy="965" r="62" fill="#00ff00" fill-opacity="0.08" stroke="#00ff00" stroke-opacity="0.7" stroke-width="2.5"/>
+      <text x="1495" y="979" fill="#00ff00" fill-opacity="0.9" font-size="38">R</text>
+    </g>
   </g>
   <script><![CDATA[
 (function(){
@@ -153,7 +193,8 @@
    WAVES: 10 waves, escalating robot+drone counts, color themes
    TIMER: HH:MM:SS speedrun timer for competition/recording
    AUDIO: Oscilloscope X/Y output on Web Audio stereo channels
-   INPUT: Mouse (pointer lock), WASD, Xbox controller (Gamepad API)
+   INPUT: Mouse (pointer lock), WASD, Xbox controller (Gamepad API),
+           Android/mobile touch (WASD pad toggle, touch aim, touch fire)
    ASPECT: 16:9 widescreen internal resolution (1920x1080) with 
            mathematically scaled HUD to preserve UI without altering mechanics
    ================================================================== */
@@ -1663,7 +1704,7 @@ function renderHUD() {
   var pDirX = Math.sin(cam.yaw) * 15, pDirZ = Math.cos(cam.yaw) * 15;
   h += '<line x1="' + (mmX + mmS * 0.5) + '" y1="' + (mmY + mmS * 0.5) + '" x2="' + (mmX + mmS * 0.5 + pDirX) + '" y2="' + (mmY + mmS * 0.5 + pDirZ) + '" stroke="#ffffff" stroke-width="1.5"/>';
   h += '<text x="' + (mmX + mmS * 0.5) + '" y="' + (mmY + mmS + 15) + '" text-anchor="middle" fill="#006600" font-size="10" font-family="monospace">TACTICAL MAP</text>';
-  if (active && !document.pointerLockElement && !victory) {
+  if (active && !touchMode && !document.pointerLockElement && !victory) {
     h += '<rect x="310" y="752" width="580" height="30" rx="4" fill="#050505" stroke="#00ff00" stroke-width="0.8" opacity="0.9"/>';
     h += '<text x="600" y="772" text-anchor="middle" fill="#00ff00" font-size="13" font-family="monospace">CLICK TO LOCK MOUSE | Left-Click Shoot | WASD Move | R Reload</text>';
   }
@@ -1775,6 +1816,185 @@ function pollGamepad(dt) {
   }
 }
 
+// ===================== TOUCH CONTROLS (ANDROID / MOBILE) =====================
+// Left pad  = WASD (slide for diagonals), toggle with the WASD button
+// Drag      = aim (any free area, also while holding FIRE)
+// Tap       = single shot, FIRE button = hold to auto-fire, R = reload
+// TOUCH button turns the whole touch overlay on/off.
+var touchMode = false;          // becomes true on first touch
+var touchUIOn = true;           // master toggle
+var touchPadOn = true;          // WASD pad toggle
+var touchMX = 0, touchMZ = 0;   // movement from the pad, same axes as keyboard
+var touchFireCount = 0;         // number of fingers on FIRE
+var touchRoles = {};            // touch id -> role record
+var fsPending = false;
+var TOUCH_SENS = 0.75;          // aim sensitivity: raise = faster
+var TAP_MS = 220, TAP_MOVE = 18;
+var PAD = { x: 270, y: 840, r: 215, dead: 28 };
+var FIREB = { x: 1690, y: 840, r: 125 };
+var RELB = { x: 1495, y: 965, r: 78 };
+var TGL_TOUCH = { x: 1760, y: 20, w: 150, h: 52 };
+var TGL_PAD = { x: 1760, y: 84, w: 150, h: 52 };
+var tcRoot = document.getElementById("TC");
+var tcMain = document.getElementById("TCM");
+var tcPadG = document.getElementById("TCP");
+var tcPadToggle = document.getElementById("tcPadToggle");
+var tcTxtTouch = document.getElementById("tcTxtTouch");
+var tcTxtPad = document.getElementById("tcTxtPad");
+var tcDirEl = { w: document.getElementById("tcW"), a: document.getElementById("tcA"), s: document.getElementById("tcS"), d: document.getElementById("tcD") };
+var tcFireEl = document.getElementById("tcFire");
+var tcReloadEl = document.getElementById("tcReload");
+
+function touchToSvg(cx, cy) {
+  var r = svgEl.getBoundingClientRect();
+  var s = Math.min(r.width / SW, r.height / SH);
+  var ox = (r.width - SW * s) / 2, oy = (r.height - SH * s) / 2;
+  return { x: (cx - r.left - ox) / s, y: (cy - r.top - oy) / s, s: s };
+}
+function inRect(p, b) { return p.x >= b.x && p.x <= b.x + b.w && p.y >= b.y && p.y <= b.y + b.h; }
+function inCircle(p, c) { var dx = p.x - c.x, dy = p.y - c.y; return dx * dx + dy * dy <= c.r * c.r; }
+
+function updateTouchUI() {
+  var show = active && touchMode;
+  tcRoot.setAttribute("display", show ? "" : "none");
+  tcMain.setAttribute("display", touchUIOn ? "" : "none");
+  tcPadG.setAttribute("display", touchPadOn ? "" : "none");
+  tcPadToggle.setAttribute("display", touchUIOn ? "" : "none");
+  tcTxtTouch.textContent = "TOUCH: " + (touchUIOn ? "ON" : "OFF");
+  tcTxtPad.textContent = "WASD: " + (touchPadOn ? "ON" : "OFF");
+}
+function setPadDir(dx, dy) {
+  var r = Math.sqrt(dx * dx + dy * dy);
+  var w = false, s = false, a = false, d = false;
+  if (r > PAD.dead) {
+    var ux = dx / r, uy = dy / r;
+    if (uy < -0.38) w = true;
+    if (uy > 0.38) s = true;
+    if (ux < -0.38) a = true;
+    if (ux > 0.38) d = true;
+  }
+  touchMZ = (w ? 1 : 0) - (s ? 1 : 0);
+  touchMX = (d ? 1 : 0) - (a ? 1 : 0);
+  tcDirEl.w.setAttribute("fill-opacity", w ? "0.55" : "0.10");
+  tcDirEl.s.setAttribute("fill-opacity", s ? "0.55" : "0.10");
+  tcDirEl.a.setAttribute("fill-opacity", a ? "0.55" : "0.10");
+  tcDirEl.d.setAttribute("fill-opacity", d ? "0.55" : "0.10");
+}
+function clearTouchState() {
+  touchRoles = {};
+  touchFireCount = 0;
+  setPadDir(0, 0);
+  tcFireEl.setAttribute("fill-opacity", "0.12");
+  tcReloadEl.setAttribute("fill-opacity", "0.08");
+}
+function tryFullscreen() {
+  fsPending = false;
+  try {
+    var e = document.documentElement;
+    var f = e.requestFullscreen || e.webkitRequestFullscreen;
+    if (f && !document.fullscreenElement) {
+      var p = f.call(e);
+      if (p && p.then) {
+        p.then(function () {
+          try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock("landscape").catch(function () {}); } catch (x) {}
+        }).catch(function () {});
+      }
+    }
+  } catch (ex) {}
+}
+function pollTouch() {
+  if (touchFireCount > 0) playerShoot();
+}
+
+document.addEventListener("touchstart", function (ev) {
+  if (!touchMode) { touchMode = true; updateTouchUI(); }
+  ev.preventDefault();
+  if (!active) { fsPending = true; startGame(); return; }
+  for (var i = 0; i < ev.changedTouches.length; i++) {
+    var t = ev.changedTouches[i];
+    var p = touchToSvg(t.clientX, t.clientY);
+    // toggle buttons are always live
+    if (inRect(p, TGL_TOUCH)) {
+      touchUIOn = !touchUIOn;
+      clearTouchState();
+      updateTouchUI();
+      continue;
+    }
+    if (touchUIOn && inRect(p, TGL_PAD)) {
+      touchPadOn = !touchPadOn;
+      setPadDir(0, 0);
+      for (var k in touchRoles) { if (touchRoles[k].role === "move") delete touchRoles[k]; }
+      updateTouchUI();
+      continue;
+    }
+    if (!touchUIOn) continue; // touch controls disabled: ignore everything else
+    var rec = { role: "look", lx: t.clientX, ly: t.clientY, sx: t.clientX, sy: t.clientY, t0: performance.now(), moved: 0, scale: p.s };
+    if (touchPadOn && inCircle(p, PAD)) {
+      rec.role = "move";
+      setPadDir(p.x - PAD.x, p.y - PAD.y);
+    } else if (inCircle(p, FIREB)) {
+      rec.role = "fire";
+      touchFireCount++;
+      tcFireEl.setAttribute("fill-opacity", "0.5");
+      playerShoot();
+    } else if (inCircle(p, RELB)) {
+      rec.role = "reload";
+      tcReloadEl.setAttribute("fill-opacity", "0.5");
+      if (reloadT <= 0 && ammo < 100) reloadT = 1.8;
+    }
+    touchRoles[t.identifier] = rec;
+  }
+}, { passive: false });
+
+document.addEventListener("touchmove", function (ev) {
+  ev.preventDefault();
+  if (!active) return;
+  for (var i = 0; i < ev.changedTouches.length; i++) {
+    var t = ev.changedTouches[i];
+    var rec = touchRoles[t.identifier];
+    if (!rec) continue;
+    if (rec.role === "move") {
+      var p = touchToSvg(t.clientX, t.clientY);
+      setPadDir(p.x - PAD.x, p.y - PAD.y);
+    } else if (rec.role === "look" || rec.role === "fire") {
+      var dx = (t.clientX - rec.lx) / rec.scale;
+      var dy = (t.clientY - rec.ly) / rec.scale;
+      mouseX += dx * TOUCH_SENS;
+      mouseY += dy * TOUCH_SENS;
+      rec.lx = t.clientX; rec.ly = t.clientY;
+      var mdx = t.clientX - rec.sx, mdy = t.clientY - rec.sy;
+      rec.moved = Math.max(rec.moved, Math.sqrt(mdx * mdx + mdy * mdy));
+    }
+  }
+}, { passive: false });
+
+function onTouchEndLike(ev, cancelled) {
+  ev.preventDefault();
+  // touchend counts as a user gesture on Android Chrome (touchstart does not),
+  // so (re)start the oscilloscope audio here
+  if (active) { initOscilloscope(); resumeAudio(); }
+  if (fsPending) tryFullscreen();
+  for (var i = 0; i < ev.changedTouches.length; i++) {
+    var t = ev.changedTouches[i];
+    var rec = touchRoles[t.identifier];
+    if (!rec) continue;
+    if (rec.role === "move") {
+      setPadDir(0, 0);
+    } else if (rec.role === "fire") {
+      touchFireCount = Math.max(0, touchFireCount - 1);
+      if (touchFireCount === 0) tcFireEl.setAttribute("fill-opacity", "0.12");
+    } else if (rec.role === "reload") {
+      tcReloadEl.setAttribute("fill-opacity", "0.08");
+    } else if (rec.role === "look" && !cancelled && active) {
+      // quick tap in the aim area = single shot
+      if (performance.now() - rec.t0 < TAP_MS && rec.moved < TAP_MOVE) playerShoot();
+    }
+    delete touchRoles[t.identifier];
+  }
+}
+document.addEventListener("touchend", function (ev) { onTouchEndLike(ev, false); }, { passive: false });
+document.addEventListener("touchcancel", function (ev) { onTouchEndLike(ev, true); }, { passive: false });
+
 // ===================== GAME STATE MANAGEMENT =====================
 function startGame() {
   active = true;
@@ -1782,6 +2002,8 @@ function startGame() {
   initOscilloscope();
   resumeAudio();
   generateWorld();
+  clearTouchState();
+  updateTouchUI();
   try {
     if (svgEl.requestPointerLock) svgEl.requestPointerLock();
     else if (svgEl.webkitRequestPointerLock) svgEl.webkitRequestPointerLock();
@@ -1789,6 +2011,8 @@ function startGame() {
 }
 function gameOver() {
   active = false;
+  clearTouchState();
+  updateTouchUI();
   try { document.exitPointerLock(); } catch (ex) {}
   gMenu.style.display = "";
   var deathTimeStr = formatTime(gameTime);
@@ -1843,6 +2067,8 @@ function gameLoop(t) {
   if (keys['s'] || keys['arrowdown']) mz -= 1;
   if (keys['a'] || keys['arrowleft']) mx -= 1;
   if (keys['d'] || keys['arrowright']) mx += 1;
+  mx += touchMX; mz += touchMZ;               // touch WASD pad
+  mx = Math.max(-1, Math.min(1, mx)); mz = Math.max(-1, Math.min(1, mz));
   if (mx !== 0 || mz !== 0) {
     var sinY = Math.sin(cam.yaw), cosY = Math.cos(cam.yaw);
     var wx = (mx * cosY + mz * sinY) * MOVE_SPD * dt;
@@ -1851,6 +2077,7 @@ function gameLoop(t) {
     cam.x = res.x; cam.z = res.z;
   }
   pollGamepad(dt);
+  pollTouch();
   if (fireCD > 0) fireCD -= dt;
   if (reloadT > 0) {
     reloadT -= dt;
