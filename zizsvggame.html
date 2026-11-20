@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DECK GENESIS // MAFIA ARENA v3</title>
+<title>DECK GENESIS // MAFIA ARENA v4</title>
 <style>
   html,body{margin:0;padding:0;background:#04070a;height:100%;overflow:hidden}
   svg#viewport{width:100vw;height:100vh;display:block}
@@ -31,6 +31,9 @@
   .btn-danger rect.b { stroke:#ff0055; }
   .btn-danger text { fill:#ff0055; }
   .btn-danger:hover rect.b { fill:#33000f; stroke:#fff; }
+  .btn-gold rect.b { stroke:#ffcc00; }
+  .btn-gold text { fill:#ffcc00; }
+  .btn-gold:hover rect.b { fill:#332200; stroke:#fff; }
   /* ============ CARDS ============ */
   .card { cursor:grab; }
   .card.dragging { opacity:0.35; cursor:grabbing; }
@@ -139,7 +142,7 @@
     <rect x="-240" y="-2" width="480" height="2" fill="#00ffcc" opacity="0.35"/>
     <rect class="sweep" x="-90" y="-3" width="180" height="4" fill="#00ffcc" opacity="0.9"/>
   </g>
-  <text x="800" y="298" text-anchor="middle" class="hud-dim" style="font-size:20px; letter-spacing:10px;">// MAFIA ARENA v3 //</text>
+  <text x="800" y="298" text-anchor="middle" class="hud-dim" style="font-size:20px; letter-spacing:10px;">// MAFIA ARENA v4 //</text>
   <text x="800" y="336" text-anchor="middle" class="hud-faint" style="font-size:13px; letter-spacing:3px;">TOWN &amp; MAFIA &middot; DETECTIVE &middot; DOCTOR &middot; DAY / NIGHT CYCLE</text>
 
   <g transform="translate(560,390)">
@@ -219,7 +222,7 @@
     </g>
     <g id="hud-btns" transform="translate(1190,20)"></g>
     <text x="1190" y="72" class="hud-faint" style="font-size:10px;">AUTO-SAVE ON &middot; EXPORT = .JSON FILE</text>
-    <text x="1190" y="88" class="hud-faint" style="font-size:10px;">Y2K VECTOR CORE v3.0</text>
+    <text x="1190" y="88" class="hud-faint" style="font-size:10px;">Y2K VECTOR CORE v4.0</text>
   </g>
 
   <!-- CARDS (outer wrapper holds position; inner takes shake class) -->
@@ -277,7 +280,7 @@
 'use strict';
 
 /* ============================================================
-   DECK GENESIS // MAFIA ARENA v3
+   DECK GENESIS // MAFIA ARENA v4
    Y2K vector HUD . mafia party game . single file . zero network
    All built-in artwork is inline SVG so it ALWAYS renders.
    ============================================================ */
@@ -286,10 +289,18 @@ const NS = 'http://www.w3.org/2000/svg';
 const XHTML = 'http://www.w3.org/1999/xhtml';
 const VIEW = document.getElementById('viewport');
 const $ = id => document.getElementById(id);
-const SAVE_KEY = 'deckGenesisMafiaSaveV3';
+const SAVE_KEY = 'deckGenesisMafiaSaveV4';
 const CARD_W = 150, CARD_H = 195;
 const SLOT_RECT = { x: 1065, y: 150, w: 230, h: 270 };
 const DECK_POS = { x: 740, y: 320 };
+
+const TARGET_URLS = [
+  "https://svgfpsaiagents.github.io/svgfpsgameAI/za2play.svg",
+  "https://svgfpsaiagents.github.io/svgfpsgameAI/rotocloud.svg",
+  "https://svgfpsaiagents.github.io/svgfpsgameAI/hopf1.svg",
+  "https://svgfpsaiagents.github.io/svgfpsgameAI/hydrogengrafgame.svg",
+  "https://svgfpsaiagents.github.io/svgfpsgameAI/rotocloudfighter.svg"
+];
 
 function el(tag, attrs, parent) {
   const e = document.createElementNS(NS, tag);
@@ -298,7 +309,6 @@ function el(tag, attrs, parent) {
   return e;
 }
 function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
-/* parse trusted markup strings into SVG nodes */
 function setSVG(parent, markup) {
   const doc = new DOMParser().parseFromString('<svg xmlns="' + NS + '">' + markup + '</svg>', 'image/svg+xml');
   clear(parent);
@@ -330,8 +340,8 @@ function setDisp(node, on) { node.setAttribute('style', on ? '' : 'display:none'
 const G = {
   screen: 'boot',
   cfg: { size: 10 },
-  faces: [],            // [{src}] custom svg data-urls (session)
-  players: [],          // {id,name,role,faction,alive,seed,faceSrc,knownMafia}
+  faces: [],
+  players: [],
   meId: null,
   turn: 1,
   phase: 'DAY',
@@ -363,7 +373,10 @@ const PALETTE = ['#00ffcc','#ffcc00','#ff0055','#00e5ff','#ff7700','#c066ff','#7
 /* ---------------- BUTTON FACTORY ---------------- */
 function mkBtn(parent, x, y, w, h, label, cb, opts) {
   opts = opts || {};
-  const g = el('g', { class: 'btn' + (opts.danger ? ' btn-danger' : ''), transform: 'translate(' + x + ',' + y + ')' }, parent);
+  let cls = 'btn';
+  if (opts.danger) cls += ' btn-danger';
+  if (opts.gold) cls += ' btn-gold';
+  const g = el('g', { class: cls, transform: 'translate(' + x + ',' + y + ')' }, parent);
   if (opts.id) g.setAttribute('id', opts.id);
   el('rect', { class: 'b', width: w, height: h, rx: opts.rx || 0 }, g);
   const fs = opts.fs || 12;
@@ -384,10 +397,8 @@ function setActive(btn, on) {
 }
 
 /* ============================================================
-   EMBEDDED VECTOR ART (inline shapes - always visible)
+   EMBEDDED VECTOR ART
    ============================================================ */
-
-/* portrait: 130x116 local space, seeded procedural mobster bust */
 function portraitMarkup(seed) {
   const r = mulberry32(seed);
   const A = PALETTE[Math.floor(r() * PALETTE.length)];
@@ -396,19 +407,14 @@ function portraitMarkup(seed) {
   p.push('<rect width="130" height="116" fill="#040d0d"/>');
   p.push('<path d="M0 29H130M0 58H130M0 87H130M32 0V116M65 0V116M98 0V116" stroke="#0d2222" stroke-width="1"/>');
   if (r() < 0.55) p.push('<circle cx="65" cy="48" r="' + f(28 + r() * 12) + '" fill="none" stroke="' + A + '" stroke-width="1" opacity="0.3"/>');
-  const hy = 46 + (r() * 4 - 2);           // head center y
-  const ey = hy - 2;                        // eyes y
-  const my = hy + 14;                       // mouth y
-  // bust / shoulders (filled silhouette reaching the frame bottom)
+  const hy = 46 + (r() * 4 - 2);
+  const ey = hy - 2;
+  const my = hy + 14;
   p.push('<path d="M10 116 Q12 ' + f(94 - r() * 4) + ' 48 ' + f(84 - r() * 3) + ' Q65 ' + f(78 - r() * 3) + ' 82 ' + f(84 - r() * 3) + ' Q118 ' + f(94 - r() * 4) + ' 120 116 Z" fill="#0a1a1a" stroke="' + A + '" stroke-width="1.6"/>');
-  // tie + collar
   if (r() < 0.65) p.push('<path d="M60 88 L65 94 L70 88 L67 113 L63 113 Z" fill="' + A + '" opacity="0.9"/>');
   p.push('<path d="M50 86 L63 94 M80 86 L67 94" stroke="' + A + '" stroke-width="1" opacity="0.6" fill="none"/>');
-  // neck connecting head to bust
   p.push('<path d="M57 ' + f(hy + 18) + ' H73 V82 H57 Z" fill="#0c1818" stroke="#e8e8e8" stroke-width="1.6"/>');
-  // head
   p.push('<ellipse cx="65" cy="' + f(hy) + '" rx="20" ry="22" fill="#0c1818" stroke="#e8e8e8" stroke-width="1.8"/>');
-  // eyes
   const eye = Math.floor(r() * 3);
   if (eye === 0) {
     p.push('<circle cx="57" cy="' + f(ey) + '" r="5" fill="' + A + '" opacity="0.25"/><circle cx="73" cy="' + f(ey) + '" r="5" fill="' + A + '" opacity="0.25"/>');
@@ -419,26 +425,23 @@ function portraitMarkup(seed) {
     p.push('<rect x="52" y="' + f(ey - 4) + '" width="26" height="8" fill="rgba(0,0,0,0.4)" stroke="' + A + '" stroke-width="1.4"/><path d="M52 ' + f(ey) + 'H78" stroke="' + A + '" stroke-width="1"/>');
   }
   if (r() < 0.75) p.push('<path d="M53 ' + f(ey - 6) + 'H61 M69 ' + f(ey - 6) + 'H78" stroke="#e8e8e8" stroke-width="1.6"/>');
-  // nose
   p.push('<path d="M65 ' + f(ey + 2) + ' L63 ' + f(ey + 10) + ' H67" stroke="#8a8a8a" stroke-width="1.1" fill="none"/>');
-  // mouth
   const mo = Math.floor(r() * 4);
   if (mo === 0) p.push('<path d="M58 ' + f(my) + 'H72" stroke="#e8e8e8" stroke-width="1.8"/>');
   else if (mo === 1) p.push('<path d="M58 ' + f(my + 1) + ' Q65 ' + f(my - 4) + ' 72 ' + f(my + 1) + '" stroke="#e8e8e8" stroke-width="1.6" fill="none"/>');
   else if (mo === 2) p.push('<path d="M58 ' + f(my) + 'H72 M61 ' + f(my) + ' L60 ' + f(my + 4) + ' M69 ' + f(my) + ' L70 ' + f(my + 4) + '" stroke="#e8e8e8" stroke-width="1.2"/>');
   else p.push('<path d="M59 ' + f(my) + 'H71" stroke="#e8e8e8" stroke-width="1.6"/><path d="M71 ' + f(my - 1) + ' L79 ' + f(my + 3) + '" stroke="#ffffff" stroke-width="2"/>');
   if (r() < 0.4) p.push('<path d="M56 ' + f(my - 3) + ' Q65 ' + f(my + 3) + ' 74 ' + f(my - 3) + '" stroke="#e8e8e8" stroke-width="1.7" fill="none"/>');
-  // hats / hair
   const hat = Math.floor(r() * 5);
-  if (hat === 0) { // fedora
+  if (hat === 0) {
     p.push('<path d="M46 26 Q46 12 65 12 Q84 12 84 26 Z" fill="#101d1d" stroke="' + A + '" stroke-width="1.6"/>');
     p.push('<path d="M41 26 H89" stroke="' + A + '" stroke-width="2.6"/><path d="M46 20 H84" stroke="' + A + '" stroke-width="1" opacity="0.7"/>');
-  } else if (hat === 1) { // flat cap
+  } else if (hat === 1) {
     p.push('<path d="M47 27 Q47 13 65 13 Q83 13 83 27 Z" fill="#101d1d" stroke="' + A + '" stroke-width="1.6"/>');
     p.push('<path d="M65 13 L96 28 L83 27" fill="#101d1d" stroke="' + A + '" stroke-width="1.4"/>');
-  } else if (hat === 2) { // bandana
+  } else if (hat === 2) {
     p.push('<path d="M46 29 Q46 15 65 15 Q84 15 84 29 L84 33 Q65 27 46 33 Z" fill="' + A + '" opacity="0.4" stroke="' + A + '" stroke-width="1"/>');
-  } else if (hat === 3) { // hair
+  } else if (hat === 3) {
     p.push('<path d="M46 ' + f(hy - 2) + ' Q46 ' + f(hy - 24) + ' 65 ' + f(hy - 24) + ' Q84 ' + f(hy - 24) + ' 84 ' + f(hy - 2) + ' Q78 ' + f(hy - 18) + ' 65 ' + f(hy - 17) + ' Q52 ' + f(hy - 18) + ' 46 ' + f(hy - 2) + ' Z" fill="' + A + '" opacity="0.85"/>');
   }
   if (r() < 0.3) p.push('<circle cx="84" cy="' + f(hy + 4) + '" r="2" fill="' + A + '"/>');
@@ -447,7 +450,6 @@ function portraitMarkup(seed) {
   return p.join('');
 }
 
-/* card back art: DG sigil + circuitry */
 function cardBackMarkup() {
   return '<rect width="150" height="195" fill="#020a0c" stroke="#003a38" stroke-width="1.6"/>' +
     '<path d="M0 24 H150 M0 171 H150" stroke="#00ffcc" stroke-width="1" opacity="0.4"/>' +
@@ -460,7 +462,6 @@ function cardBackMarkup() {
     '<path d="M10 12 V4 H18 M132 4 H140 V12 M140 183 V191 H132 M18 191 H10 V183" stroke="#00ffcc" stroke-width="1.4" fill="none" opacity="0.8"/>';
 }
 
-/* full card markup (inline art; custom face image layered on top if present) */
 function cardMarkup(p, showBack) {
   const dead = !p.alive;
   const frameColor = dead ? '#555555' : (p.id === G.meId ? '#ffe98a' : '#00ffcc');
@@ -503,11 +504,12 @@ function cardMarkup(p, showBack) {
   return '<g class="card-inner"><g class="float" style="animation-delay:' + (-(p.id * 0.7) % 4.6).toFixed(2) + 's">' + face + back + '</g></g>' +
     '<rect class="card-hit" width="150" height="195"/>';
 }
+
 /* ============================================================
    BOOT / LOADER SEQUENCE
    ============================================================ */
 const BOOT_LINES = [
-  '> DECK GENESIS BIOS v3.0 ............ OK',
+  '> DECK GENESIS BIOS v4.0 ............ OK',
   '> EMBEDDED VECTOR ART CORE .......... OK',
   '> CARD DEAL ANIMATION ENGINE ........ OK',
   '> LINKING GITHUB BRIDGE ............. OK',
@@ -613,8 +615,13 @@ function renderSetup() {
 function renderLoaderControls() {
   const c = $('su-loader');
   clear(c);
-  mkBtn(c, 16, 62, 210, 36, 'LOAD .SVG FROM DISK', () => $('file-svg').click(), { fs: 12 });
-  el('text', { x: 240, y: 85, class: 'hud-faint', 'font-size': 11.5, text: '...or DRAG & DROP .svg files anywhere on this page' }, c);
+  
+  // AUTOLOAD BUTTON
+  mkBtn(c, 16, 62, 200, 36, 'AUTOLOAD 5 FIGHTERS', fetchTargetUrls, { fs: 12, gold: true });
+  
+  mkBtn(c, 230, 62, 210, 36, 'LOAD .SVG FROM DISK', () => $('file-svg').click(), { fs: 12 });
+  el('text', { x: 460, y: 85, class: 'hud-faint', 'font-size': 11.5, text: '...or DRAG & DROP .svg files anywhere on this page' }, c);
+  
   el('text', { x: 16, y: 126, class: 'hud-dim', 'font-size': 12.5, text: 'GITHUB RAW / DIRECT URL:' }, c);
   const fo1 = el('foreignObject', { x: 16, y: 134, width: 700, height: 30 }, c);
   const in1 = document.createElementNS(XHTML, 'input');
@@ -648,7 +655,7 @@ function renderFaceGrid() {
 }
 
 /* ============================================================
-   SVG FACE LOADING - disk / drag-drop / github
+   SVG FACE LOADING
    ============================================================ */
 function addFace(src) {
   if (G.faces.length >= 24) { toast('FACE DECK FULL (24 MAX)', '#ffcc00'); return false; }
@@ -666,6 +673,30 @@ function setGhStatus(msg, color) {
   s.textContent = msg;
   s.setAttribute('fill', color || '#8fe8dc');
 }
+
+async function fetchTargetUrls() {
+  setGhStatus('AUTOLOADING TARGET FILES...', '#ffcc00');
+  let ok = 0;
+  for (let i = 0; i < TARGET_URLS.length; i++) {
+    const url = TARGET_URLS[i];
+    setGhStatus('FETCHING ' + (i + 1) + '/' + TARGET_URLS.length + ': ' + url.split('/').pop(), '#ffcc00');
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const text = await res.text();
+      if (svgTextToFace(text, url.split('/').pop())) {
+        ok++;
+      }
+    } catch (err) {
+      console.warn('Fetch failed for', url, err);
+      // Fallback: If CORS blocks raw text, we can try to add it as an href directly to an image tag.
+      // However, since we are extracting text, we can't do this easily. We'll just skip.
+    }
+  }
+  setGhStatus('AUTOLOAD COMPLETE: ' + ok + '/' + TARGET_URLS.length + ' LOADED', ok ? '#33ff88' : '#ff0055');
+  renderFaceGrid();
+}
+
 function fetchRawUrls() {
   const input = document.getElementById('gh-url');
   const urls = (input.value || '').split(/\s+/).filter(u => u.startsWith('http'));
@@ -794,7 +825,6 @@ function newGame() {
     if (crew.length) log('YOUR CREW: ' + crew.join(', ') + '.', 'me');
   }
   toast('YOU ARE THE ' + me().role, ROLE_COLOR[me().role]);
-  /* deal flight + flips, then day starts */
   G.dealing = true;
   renderCards(true);
   showBanner('THE DECK IS DEALT', '#00ffcc');
@@ -819,14 +849,12 @@ function voteCounts() {
 
 function renderAll() { renderHUD(); renderCards(false); renderSlot(); renderLog(); }
 
-/* grid position of a card in board-local coords */
 function cardPos(p) {
   const n = G.players.length;
   const cols = n <= 8 ? 4 : 6;
   return { x: (p.id % cols) * 166, y: Math.floor(p.id / cols) * 212 };
 }
 
-/* opts.deal = animate deal flight + flips; instant render otherwise */
 function renderCards(deal) {
   const grid = $('card-grid');
   clear(grid);
@@ -844,7 +872,6 @@ function renderCards(deal) {
     g.addEventListener('pointerdown', ev => startDrag(ev, p));
   });
   if (deal) {
-    // force layout, then fly each card to its slot with a stagger
     void grid.getBoundingClientRect();
     G.players.forEach(function(p) {
       const g = grid.querySelector('.card[data-id="' + p.id + '"]');
@@ -855,7 +882,6 @@ function renderCards(deal) {
         g.style.transform = 'translate(' + pos.x + 'px,' + pos.y + 'px) scale(1) rotate(0deg)';
       }, 60 + p.id * 90);
       addTimer(function() {
-        // flip: back away, face in
         const face = g.querySelector('.card-face');
         const back = g.querySelector('.card-back');
         if (back) back.style.display = 'none';
@@ -885,7 +911,6 @@ function renderHUD() {
   aliveMafia().forEach((p, i) => el('rect', { x: i * 16, y: 0, width: 12, height: 20, fill: '#ff0055', opacity: 0.9 }, mb));
   $('town-count').textContent = aliveTown().length;
   $('mafia-count').textContent = aliveMafia().length;
-  /* sun / moon wireframe icon, spins in each phase change */
   const pi = $('phase-icon'); clear(pi);
   const wrap = el('g', { class: 'spinin' }, pi);
   if (G.phase === 'DAY') {
@@ -960,7 +985,6 @@ function showBanner(text, color) {
   b.classList.add('bannerin');
 }
 
-/* night overlay: rebuilt each night so stars/moon animate in */
 function showNight(nightNum) {
   const ov = $('night-overlay');
   clear(ov);
@@ -1084,7 +1108,7 @@ function castVote(voter, target) {
 function aiDayResolve() {
   if (G.gameOver || G.phase !== 'DAY') return;
   alivePlayers().forEach(function(p) {
-    if (p.id === G.meId && me().alive) return; // player vote already cast
+    if (p.id === G.meId && me().alive) return;
     const pool = alivePlayers().filter(q => q.id !== p.id);
     if (!pool.length) return;
     let target;
@@ -1123,7 +1147,6 @@ function tallyVotes() {
   }
   if (!G.gameOver) addTimer(startNight, 900);
 }
-/* elimination with flip-out / flip-in, stamp, drawn X and board shake */
 function eliminate(p, how) {
   if (!p || !p.alive) return;
   const grid = $('card-grid');
@@ -1147,7 +1170,6 @@ function eliminate(p, how) {
     G.animDead = null;
     saveGame();
     checkWin();
-    if (!G.gameOver && how === 'voted out by the town') { /* startNight scheduled by tallyVotes */ }
   }, old ? 170 : 0);
 }
 function startNight() {
@@ -1369,8 +1391,7 @@ $('file-save').addEventListener('change', (e) => {
 
 runBoot();
 
-/* console debug hook (handy for testing / power users) */
-window.GEN = { G, newGame, applySave, serialize, checkWin, showWinner, resolveNight, startNight, startDay, aiDayResolve, eliminate, fetchRepoSvgs, fetchRawUrls, svgTextToFace };
+window.GEN = { G, newGame, applySave, serialize, checkWin, showWinner, resolveNight, startNight, startDay, aiDayResolve, eliminate, fetchRepoSvgs, fetchRawUrls, svgTextToFace, fetchTargetUrls };
 })();
 ]]></script>
 </svg>
