@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DECK GENESIS // MAFIA ARENA v3</title>
+<style>
+  html,body{margin:0;padding:0;background:#04070a;height:100%;overflow:hidden}
+  svg#viewport{width:100vw;height:100vh;display:block}
+</style>
+</head>
+<body>
+<input type="file" id="file-svg" accept=".svg,image/svg+xml" multiple style="display:none">
+<input type="file" id="file-save" accept=".json,application/json" style="display:none">
+<svg id="viewport" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet">
+<title>DECK GENESIS // MAFIA ARENA</title>
+<style><![CDATA[
+  svg { font-family:'Courier New', ui-monospace, Consolas, monospace; user-select:none; touch-action:none; cursor:crosshair; background:#04070a; }
+  text { font-family:'Courier New', ui-monospace, Consolas, monospace; }
+  .bg-grid { stroke:#151c1c; stroke-width:1; opacity:0.4; }
+  /* ============ Y2K VECTOR HUD ============ */
+  .hud-box { fill:rgba(1,12,14,0.9); stroke:#00ffcc; stroke-width:2; }
+  .hud-line { stroke:#00ffcc; stroke-width:1; fill:none; opacity:0.75; }
+  .hud-title { fill:#00ffcc; letter-spacing:3px; }
+  .hud-dim { fill:#8fe8dc; letter-spacing:1px; }
+  .hud-faint { fill:#4a8f86; letter-spacing:1px; }
+  .btn { cursor:pointer; }
+  .btn rect.b { fill:#000a0e; stroke:#00ffcc; stroke-width:2; transition:fill .15s, stroke .15s; }
+  .btn:hover rect.b { fill:#003328; stroke:#ffffff; }
+  .btn text { fill:#00ffcc; letter-spacing:2px; pointer-events:none; text-anchor:middle; }
+  .btn-danger rect.b { stroke:#ff0055; }
+  .btn-danger text { fill:#ff0055; }
+  .btn-danger:hover rect.b { fill:#33000f; stroke:#fff; }
+  /* ============ CARDS ============ */
+  .card { cursor:grab; }
+  .card.dragging { opacity:0.35; cursor:grabbing; }
+  .card-frame { fill:#02080a; stroke:#00ffcc; stroke-width:1.6; }
+  .card-portrait { fill:#030c0c; }
+  .card-name { fill:#d6f2ec; font-size:13px; text-anchor:middle; letter-spacing:1px; pointer-events:none; font-weight:bold; }
+  .card-role { font-size:11px; text-anchor:middle; letter-spacing:2px; pointer-events:none; font-weight:bold; }
+  .card-hit { fill:transparent; }
+  .card-inner { transition: transform .18s ease; }
+  .card:not(.dead):hover .card-inner { transform: translateY(-9px) scale(1.025); }
+  .card.dead { cursor:default; }
+  .float { animation: floaty 4.6s ease-in-out infinite; }
+  @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+  .flipin { animation: flipK .22s ease-out; }
+  @keyframes flipK { 0% { transform: scaleX(0.05); } 100% { transform: scaleX(1); } }
+  .flipout { animation: flipoutK .16s ease-in forwards; }
+  @keyframes flipoutK { 0% { transform: scaleX(1); } 100% { transform: scaleX(0.05); } }
+  .stamp { font-size:24px; font-weight:bold; fill:#ff2244; letter-spacing:4px; pointer-events:none;
+           transform-box: fill-box; transform-origin: center; }
+  .stampin { animation: stampK .4s cubic-bezier(.2,1.6,.4,1) both; }
+  @keyframes stampK { 0% { transform: scale(2.8) rotate(6deg); opacity:0; } 55% { opacity:1; } 100% { transform: scale(1) rotate(-12deg); opacity:1; } }
+  .drawx { stroke:#ff2244; stroke-width:2.5; stroke-linecap:round; stroke-dasharray:320; }
+  .drawxin { animation: drawxK .5s ease-out both; }
+  @keyframes drawxK { 0% { stroke-dashoffset:320; } 100% { stroke-dashoffset:0; } }
+  .card-dead { fill:rgba(2,2,3,0.74); pointer-events:none; }
+  .popin { animation: popK .3s cubic-bezier(.2,1.8,.4,1) both; transform-box: fill-box; transform-origin: center; }
+  @keyframes popK { 0% { transform: scale(0); } 70% { transform: scale(1.25); } 100% { transform: scale(1); } }
+  .shake { animation: shakeK .45s ease-in-out; }
+  @keyframes shakeK { 0%,100% { transform: translate(0,0); } 20% { transform: translate(-6px,2px); } 40% { transform: translate(5px,-2px); } 60% { transform: translate(-4px,1px); } 80% { transform: translate(3px,-1px); } }
+  /* ============ ACTION SLOT ============ */
+  .slot-rect { fill:rgba(0,255,204,0.04); stroke-width:2; stroke-dasharray:8,6; animation: antsK 1.4s linear infinite; }
+  @keyframes antsK { 0% { stroke-dashoffset:0; } 100% { stroke-dashoffset:-28; } }
+  .slot-label { text-anchor:middle; font-size:21px; letter-spacing:4px; font-weight:bold; }
+  .slot-sub { fill:#8fe8dc; text-anchor:middle; font-size:11.5px; letter-spacing:1px; }
+  .slot-target { fill:#ffcc00; text-anchor:middle; font-size:15px; letter-spacing:2px; }
+  .slot-glow { animation: glowK 1.6s ease-in-out infinite; }
+  @keyframes glowK { 0%,100% { opacity:0.12; } 50% { opacity:0.45; } }
+  /* ============ LOG ============ */
+  #log { height:100%; overflow-y:auto; overflow-x:hidden; font-size:11.5px; color:#9adfd4;
+         letter-spacing:0.5px; line-height:1.5; padding:6px 8px; box-sizing:border-box;
+         scrollbar-width:thin; scrollbar-color:#00ffcc #001010; }
+  #log .hdr { color:#ffcc00; font-weight:bold; letter-spacing:2px; margin-top:6px; }
+  #log .bad { color:#ff6688; }
+  #log .good { color:#5affc4; }
+  #log .me { color:#ffe98a; }
+  #log .sys { color:#5a9f96; }
+  /* ============ OVERLAYS ============ */
+  .game-text { font-size:46px; font-weight:bold; text-anchor:middle; letter-spacing:6px; transform-box: fill-box; transform-origin: center; }
+  .glitch { animation: glitchK .9s steps(2) infinite; }
+  @keyframes glitchK { 0% { transform: translate(0,0); opacity:1; } 25% { transform: translate(-2px,1px); opacity:0.92; } 50% { transform: translate(2px,-1px); opacity:1; } 75% { transform: translate(-1px,2px); opacity:0.9; } 100% { transform: translate(0,0); opacity:1; } }
+  .winpulse { animation: winboxK 2s ease-in-out infinite; }
+  @keyframes winboxK { 0%,100% { stroke-opacity:1; } 50% { stroke-opacity:0.35; } }
+  .game-sub { fill:#cfeee9; font-size:16px; text-anchor:middle; letter-spacing:2px; }
+  .night-text { fill:#9ab8ff; font-size:32px; text-anchor:middle; letter-spacing:10px; opacity:0.9; }
+  .fadein { animation: fadeK 1s ease both; }
+  @keyframes fadeK { 0% { opacity:0; } 100% { opacity:1; } }
+  .moonin { animation: moonK 1.4s ease both; transform-box: fill-box; transform-origin: center; }
+  @keyframes moonK { 0% { transform: translateY(-50px) scale(0.7); opacity:0; } 100% { transform: translateY(0) scale(1); opacity:1; } }
+  .twinkle { animation: twkK 2.4s ease-in-out infinite; }
+  @keyframes twkK { 0%,100% { opacity:0.15; } 50% { opacity:0.9; } }
+  .spinin { animation: spinK .6s cubic-bezier(.2,1.4,.4,1) both; transform-box: fill-box; transform-origin: center; }
+  @keyframes spinK { 0% { transform: rotate(-140deg) scale(0.2); opacity:0; } 100% { transform: rotate(0) scale(1); opacity:1; } }
+  .bannerin { animation: bannerK 1.7s ease both; transform-box: fill-box; transform-origin: center; }
+  @keyframes bannerK { 0% { transform: scale(2.4); opacity:0; } 18% { transform: scale(1); opacity:1; } 70% { opacity:1; } 100% { opacity:0; transform: scale(1.04); } }
+  .sweep { animation: sweepK 2.6s ease-in-out infinite; }
+  @keyframes sweepK { 0% { transform: translateX(-260px); opacity:0; } 15% { opacity:1; } 85% { opacity:1; } 100% { transform: translateX(260px); opacity:0; } }
+  @keyframes blinkK { 0%,49% { opacity:1; } 50%,100% { opacity:0; } }
+  .blink { animation: blinkK 1s step-end infinite; }
+  .toastG { animation: toastK 2.6s forwards; }
+  @keyframes toastK { 0% { opacity:0; } 8% { opacity:1; } 78% { opacity:1; } 100% { opacity:0; } }
+  .drag-ghost text { pointer-events:none; }
+  #bg-sky { transition: fill 1.6s ease; }
+]]></style>
+
+<defs>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" class="bg-grid"/>
+  </pattern>
+  <pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse">
+    <rect width="4" height="1.4" fill="rgba(0,255,204,0.03)"/>
+  </pattern>
+  <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="2.4" result="b"/>
+    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+    <feGaussianBlur stdDeviation="3.2"/>
+  </filter>
+  <radialGradient id="vign" cx="50%" cy="45%" r="75%">
+    <stop offset="0%" stop-color="rgba(0,0,0,0)"/><stop offset="100%" stop-color="rgba(0,0,0,0.55)"/>
+  </radialGradient>
+  <clipPath id="pc"><rect x="10" y="26" width="130" height="116"/></clipPath>
+</defs>
+
+<!-- ============ BACKGROUND ============ -->
+<rect id="bg-sky" width="1600" height="900" fill="#060e0e"/>
+<rect width="1600" height="900" fill="url(#grid)"/>
+<rect width="1600" height="900" fill="url(#scan)" pointer-events="none"/>
+<rect width="1600" height="900" fill="url(#vign)" pointer-events="none"/>
+
+<!-- ============ BOOT / LOADER SCREEN ============ -->
+<g id="screen-boot">
+  <rect width="1600" height="900" fill="rgba(2,7,8,0.94)"/>
+  <text x="800" y="238" text-anchor="middle" class="hud-title" style="font-size:60px; letter-spacing:12px;" filter="url(#glow)">DECK GENESIS</text>
+  <g transform="translate(800,262)">
+    <rect x="-240" y="-2" width="480" height="2" fill="#00ffcc" opacity="0.35"/>
+    <rect class="sweep" x="-90" y="-3" width="180" height="4" fill="#00ffcc" opacity="0.9"/>
+  </g>
+  <text x="800" y="298" text-anchor="middle" class="hud-dim" style="font-size:20px; letter-spacing:10px;">// MAFIA ARENA v3 //</text>
+  <text x="800" y="336" text-anchor="middle" class="hud-faint" style="font-size:13px; letter-spacing:3px;">TOWN &amp; MAFIA &middot; DETECTIVE &middot; DOCTOR &middot; DAY / NIGHT CYCLE</text>
+
+  <g transform="translate(560,390)">
+    <rect width="480" height="196" fill="rgba(0,16,13,0.75)" stroke="#00ffcc" stroke-width="1"/>
+    <g id="boot-log" transform="translate(14,26)"></g>
+    <text x="14" y="184" class="hud-faint blink" style="font-size:11px;">_</text>
+  </g>
+
+  <g transform="translate(560,626)">
+    <rect width="480" height="18" fill="none" stroke="#00ffcc" stroke-width="1"/>
+    <rect id="boot-bar" width="0" height="18" fill="#00ffcc" opacity="0.8"/>
+  </g>
+  <text id="boot-pct" x="1052" y="640" class="hud-dim" style="font-size:13px;">0%</text>
+  <text x="800" y="672" text-anchor="middle" class="hud-faint blink" style="font-size:12px; letter-spacing:3px;">[ CLICK TO SKIP BOOT ]</text>
+
+  <g id="boot-btns" transform="translate(640,706)" style="display:none"></g>
+  <text x="800" y="830" text-anchor="middle" class="hud-faint" style="font-size:11px; letter-spacing:2px;">LOAD SVG CARD FACES FROM GITHUB OR YOUR LOCAL DRIVE &middot; SAVE / RESUME SUPPORTED</text>
+  <text x="800" y="852" text-anchor="middle" class="hud-faint" style="font-size:11px; letter-spacing:2px;">ALL ARTWORK IS EMBEDDED VECTOR - NO NETWORK NEEDED</text>
+</g>
+
+<!-- ============ SETUP SCREEN ============ -->
+<g id="screen-setup" style="display:none">
+  <rect width="1600" height="900" fill="rgba(2,8,9,0.92)"/>
+  <text x="60" y="72" class="hud-title" style="font-size:30px; letter-spacing:8px;">MISSION SETUP</text>
+  <path d="M60 88 H1540" class="hud-line"/>
+
+  <g transform="translate(60,120)">
+    <rect width="440" height="640" class="hud-box"/>
+    <text x="16" y="30" class="hud-title" style="font-size:16px;">DECK CONFIGURATION</text>
+    <line x1="0" y1="46" x2="440" y2="46" class="hud-line"/>
+    <text x="16" y="74" class="hud-dim" style="font-size:13px;">PLAYERS:</text>
+    <g id="su-sizes" transform="translate(100,56)"></g>
+    <text id="su-mix" x="16" y="118" class="hud-dim" style="font-size:13px;"></text>
+    <line x1="0" y1="138" x2="440" y2="138" class="hud-line"/>
+    <text x="16" y="164" class="hud-title" style="font-size:14px;">RULES OF THE ARENA</text>
+    <g id="su-rules" transform="translate(16,186)"></g>
+    <g id="su-left-btns" transform="translate(16,560)"></g>
+  </g>
+
+  <g transform="translate(540,120)">
+    <rect width="1000" height="640" class="hud-box"/>
+    <text x="16" y="30" class="hud-title" style="font-size:16px;">SVG CARD FACE LOADER</text>
+    <line x1="0" y1="46" x2="1000" y2="46" class="hud-line"/>
+    <g id="su-loader"></g>
+    <text id="face-count" x="16" y="330" class="hud-dim" style="font-size:12px;"></text>
+    <g id="face-grid" transform="translate(16,350)"></g>
+    <text x="16" y="612" class="hud-faint" style="font-size:11px;">CUSTOM FACES SIT ON TOP OF THE EMBEDDED PORTRAITS &middot; EVERY CARD IS SECRETLY DEALT TO TOWN OR MAFIA</text>
+  </g>
+
+  <g id="su-start-btn" transform="translate(1150,790)"></g>
+  <text x="540" y="822" class="hud-faint" style="font-size:12px; letter-spacing:2px;">YOU WILL BE DEALT A SECRET ROLE &middot; DRAG CARDS TO THE ACTIVE SLOT EACH PHASE</text>
+</g>
+
+<!-- ============ GAME SCREEN ============ -->
+<g id="screen-game" style="display:none">
+  <!-- HUD -->
+  <g id="hud">
+    <g transform="translate(20,15)">
+      <rect width="380" height="100" class="hud-box"/>
+      <line x1="0" y1="46" x2="380" y2="46" class="hud-line"/>
+      <text x="14" y="32" class="hud-title" style="font-size:17px;">GENESIS // MAFIA</text>
+      <g transform="translate(338,70)"><g id="phase-icon"></g></g>
+      <text x="14" y="66" class="hud-dim" style="font-size:12px;">PHASE: <tspan id="hud-phase" fill="#ffcc00">DAY</tspan></text>
+      <text x="14" y="86" class="hud-dim" style="font-size:12px;">DAY: <tspan id="hud-day" fill="#ffffff">1</tspan></text>
+      <text x="180" y="66" class="hud-dim" style="font-size:12px;">YOU: <tspan id="hud-you" fill="#ffe98a">-</tspan></text>
+      <text x="180" y="86" class="hud-dim" style="font-size:12px;">ALIVE: <tspan id="hud-alive" fill="#ffffff">-</tspan></text>
+    </g>
+    <g transform="translate(450,15)">
+      <rect width="680" height="100" class="hud-box"/>
+      <line x1="0" y1="46" x2="680" y2="46" class="hud-line"/>
+      <text x="16" y="32" class="hud-title" style="font-size:15px;">FACTION BOARD</text>
+      <text x="16" y="80" fill="#00e5ff" style="font-size:14px; letter-spacing:1px;">TOWN <tspan id="town-count">-</tspan></text>
+      <g id="town-blocks" transform="translate(92,62)"></g>
+      <text x="340" y="80" text-anchor="middle" style="font-size:26px; fill:#44606c; font-weight:bold;">VS</text>
+      <g id="mafia-blocks" transform="translate(430,62)"></g>
+      <text x="664" y="80" text-anchor="end" fill="#ff0055" style="font-size:14px; letter-spacing:1px;"><tspan id="mafia-count">-</tspan> MAFIA</text>
+    </g>
+    <g id="hud-btns" transform="translate(1190,20)"></g>
+    <text x="1190" y="72" class="hud-faint" style="font-size:10px;">AUTO-SAVE ON &middot; EXPORT = .JSON FILE</text>
+    <text x="1190" y="88" class="hud-faint" style="font-size:10px;">Y2K VECTOR CORE v3.0</text>
+  </g>
+
+  <!-- CARDS (outer wrapper holds position; inner takes shake class) -->
+  <g transform="translate(40,150)"><g id="card-grid"></g></g>
+
+  <!-- ACTION SLOT -->
+  <g id="slot" transform="translate(1065,150)">
+    <rect id="slot-glowrect" x="14" y="14" width="202" height="242" fill="#00ffcc" filter="url(#soft)" class="slot-glow"/>
+    <rect id="slot-rect" x="10" y="10" width="210" height="250" class="slot-rect"/>
+    <text id="slot-label" x="115" y="108" class="slot-label">STANDBY</text>
+    <text id="slot-sub" x="115" y="136" class="slot-sub"></text>
+    <text id="slot-target" x="115" y="188" class="slot-target"></text>
+    <text id="slot-arrow" x="115" y="236" text-anchor="middle" class="hud-faint blink" style="font-size:18px;">&#9660;</text>
+  </g>
+
+  <!-- LOG -->
+  <g transform="translate(1320,150)">
+    <rect width="264" height="600" class="hud-box"/>
+    <text x="12" y="24" class="hud-title" style="font-size:13px;">CASE FILE</text>
+    <line x1="0" y1="34" x2="264" y2="34" class="hud-line"/>
+    <foreignObject x="4" y="40" width="256" height="556"><div id="log" xmlns="http://www.w3.org/1999/xhtml"></div></foreignObject>
+  </g>
+
+  <!-- DEAL BANNER -->
+  <text id="banner" x="800" y="480" text-anchor="middle" style="font-size:44px; font-weight:bold; letter-spacing:10px; fill:#00ffcc; opacity:0;" filter="url(#glow)" pointer-events="none"></text>
+
+  <!-- TICKER -->
+  <line x1="40" y1="846" x2="1560" y2="846" class="hud-line"/>
+  <text id="ticker" x="40" y="872" class="hud-dim" style="font-size:14px; letter-spacing:2px;"></text>
+  <rect x="24" y="858" width="8" height="16" fill="#00ffcc" class="blink"/>
+
+  <!-- NIGHT OVERLAY (pointer-events pass through) -->
+  <g id="night-overlay" pointer-events="none" style="display:none"></g>
+</g>
+
+<!-- ============ GAME OVER OVERLAY ============ -->
+<g id="game-over" style="display:none">
+  <rect width="1600" height="900" fill="rgba(0,0,0,0.82)" pointer-events="all"/>
+  <g transform="translate(430,260)">
+    <rect width="740" height="340" class="hud-box winpulse" filter="url(#glow)"/>
+    <text id="winner-text" x="370" y="120" class="game-text">TOWN WINS</text>
+    <text id="winner-sub" x="370" y="168" class="game-sub"></text>
+    <g id="go-btns" transform="translate(120,230)"></g>
+  </g>
+</g>
+
+<!-- DRAG LAYER -->
+<g id="drag-layer" pointer-events="none"></g>
+
+<!-- TOASTS (top level, visible on every screen) -->
+<g id="toast" pointer-events="none"></g>
+
+<script><![CDATA[
+(function(){
+'use strict';
+
+/* ============================================================
+   DECK GENESIS // MAFIA ARENA v3
+   Y2K vector HUD . mafia party game . single file . zero network
+   All built-in artwork is inline SVG so it ALWAYS renders.
+   ============================================================ */
+
+const NS = 'http://www.w3.org/2000/svg';
+const XHTML = 'http://www.w3.org/1999/xhtml';
+const VIEW = document.getElementById('viewport');
+const $ = id => document.getElementById(id);
+const SAVE_KEY = 'deckGenesisMafiaSaveV3';
+const CARD_W = 150, CARD_H = 195;
+const SLOT_RECT = { x: 1065, y: 150, w: 230, h: 270 };
+const DECK_POS = { x: 740, y: 320 };
+
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) { if (k === 'text') e.textContent = attrs[k]; else e.setAttribute(k, attrs[k]); }
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function clear(g) { while (g.firstChild) g.removeChild(g.firstChild); }
+/* parse trusted markup strings into SVG nodes */
+function setSVG(parent, markup) {
+  const doc = new DOMParser().parseFromString('<svg xmlns="' + NS + '">' + markup + '</svg>', 'image/svg+xml');
+  clear(parent);
+  const nodes = doc.documentElement.childNodes;
+  for (let i = 0; i < nodes.length; i++) parent.appendChild(document.importNode(nodes[i], true));
+}
+function screenToSVG(x, y) {
+  const pt = VIEW.createSVGPoint(); pt.x = x; pt.y = y;
+  return pt.matrixTransform(VIEW.getScreenCTM().inverse());
+}
+function mulberry32(a) {
+  return function() {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; }
+  return a;
+}
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function setDisp(node, on) { node.setAttribute('style', on ? '' : 'display:none'); }
+
+/* ---------------- GLOBAL STATE ---------------- */
+const G = {
+  screen: 'boot',
+  cfg: { size: 10 },
+  faces: [],            // [{src}] custom svg data-urls (session)
+  players: [],          // {id,name,role,faction,alive,seed,faceSrc,knownMafia}
+  meId: null,
+  turn: 1,
+  phase: 'DAY',
+  await: null,
+  votes: {},
+  votedThisDay: false,
+  night: { kill: null, protect: null, investigated: null, save: false },
+  gameOver: false,
+  winner: null,
+  allRevealed: false,
+  log: [],
+  statusMsg: '',
+  timers: [],
+  dragGhost: null,
+  activeDrag: null,
+  dealing: false,
+  animDead: null,
+  animVote: false
+};
+function addTimer(fn, ms) { const t = setTimeout(fn, ms); G.timers.push(t); return t; }
+function clearTimers() { G.timers.forEach(clearTimeout); G.timers = []; }
+
+/* ---------------- CONSTANTS ---------------- */
+const NAMES = ['TONY','VITO','CARLA','GINO','ROXY','MARLA','SONNY','RALPH','NINA','LOUIE','DANTE','SAL','CONNIE','FRANK','ANGIE','BRUNO','LENA','PIERO','JOEY','CARMINE','ROSA','HANK','MOLLY','EDDIE','JODIE','VIC'];
+const ROLE_SET = { 8: { mafia: 2, det: 1, doc: 1 }, 10: { mafia: 3, det: 1, doc: 1 }, 12: { mafia: 3, det: 1, doc: 1 } };
+const ROLE_COLOR = { MAFIA: '#ff0055', DETECTIVE: '#ffcc00', DOCTOR: '#33ff88', TOWN: '#00e5ff' };
+const PALETTE = ['#00ffcc','#ffcc00','#ff0055','#00e5ff','#ff7700','#c066ff','#7fff9f'];
+
+/* ---------------- BUTTON FACTORY ---------------- */
+function mkBtn(parent, x, y, w, h, label, cb, opts) {
+  opts = opts || {};
+  const g = el('g', { class: 'btn' + (opts.danger ? ' btn-danger' : ''), transform: 'translate(' + x + ',' + y + ')' }, parent);
+  if (opts.id) g.setAttribute('id', opts.id);
+  el('rect', { class: 'b', width: w, height: h, rx: opts.rx || 0 }, g);
+  const fs = opts.fs || 12;
+  el('text', { x: w / 2, y: h / 2 + fs * 0.36, 'font-size': fs, text: label }, g);
+  g.addEventListener('click', (e) => { e.stopPropagation(); cb(e); });
+  return g;
+}
+function mkBtnToggle(parent, x, y, w, h, label, active, cb, opts) {
+  const b = mkBtn(parent, x, y, w, h, label, cb, opts);
+  setActive(b, active);
+  return b;
+}
+function setActive(btn, on) {
+  const r = btn.querySelector('rect.b');
+  const t = btn.querySelector('text');
+  if (on) { r.setAttribute('fill', '#00ffcc'); t.setAttribute('fill', '#001510'); }
+  else { r.setAttribute('fill', '#000a0e'); t.setAttribute('fill', '#00ffcc'); }
+}
+
+/* ============================================================
+   EMBEDDED VECTOR ART (inline shapes - always visible)
+   ============================================================ */
+
+/* portrait: 130x116 local space, seeded procedural mobster bust */
+function portraitMarkup(seed) {
+  const r = mulberry32(seed);
+  const A = PALETTE[Math.floor(r() * PALETTE.length)];
+  const f = n => n.toFixed(1);
+  const p = [];
+  p.push('<rect width="130" height="116" fill="#040d0d"/>');
+  p.push('<path d="M0 29H130M0 58H130M0 87H130M32 0V116M65 0V116M98 0V116" stroke="#0d2222" stroke-width="1"/>');
+  if (r() < 0.55) p.push('<circle cx="65" cy="48" r="' + f(28 + r() * 12) + '" fill="none" stroke="' + A + '" stroke-width="1" opacity="0.3"/>');
+  const hy = 46 + (r() * 4 - 2);           // head center y
+  const ey = hy - 2;                        // eyes y
+  const my = hy + 14;                       // mouth y
+  // bust / shoulders (filled silhouette reaching the frame bottom)
+  p.push('<path d="M10 116 Q12 ' + f(94 - r() * 4) + ' 48 ' + f(84 - r() * 3) + ' Q65 ' + f(78 - r() * 3) + ' 82 ' + f(84 - r() * 3) + ' Q118 ' + f(94 - r() * 4) + ' 120 116 Z" fill="#0a1a1a" stroke="' + A + '" stroke-width="1.6"/>');
+  // tie + collar
+  if (r() < 0.65) p.push('<path d="M60 88 L65 94 L70 88 L67 113 L63 113 Z" fill="' + A + '" opacity="0.9"/>');
+  p.push('<path d="M50 86 L63 94 M80 86 L67 94" stroke="' + A + '" stroke-width="1" opacity="0.6" fill="none"/>');
+  // neck connecting head to bust
+  p.push('<path d="M57 ' + f(hy + 18) + ' H73 V82 H57 Z" fill="#0c1818" stroke="#e8e8e8" stroke-width="1.6"/>');
+  // head
+  p.push('<ellipse cx="65" cy="' + f(hy) + '" rx="20" ry="22" fill="#0c1818" stroke="#e8e8e8" stroke-width="1.8"/>');
+  // eyes
+  const eye = Math.floor(r() * 3);
+  if (eye === 0) {
+    p.push('<circle cx="57" cy="' + f(ey) + '" r="5" fill="' + A + '" opacity="0.25"/><circle cx="73" cy="' + f(ey) + '" r="5" fill="' + A + '" opacity="0.25"/>');
+    p.push('<circle cx="57" cy="' + f(ey) + '" r="2.6" fill="' + A + '"/><circle cx="73" cy="' + f(ey) + '" r="2.6" fill="' + A + '"/>');
+  } else if (eye === 1) {
+    p.push('<path d="M52 ' + f(ey) + 'H61 M69 ' + f(ey) + 'H78" stroke="' + A + '" stroke-width="2.4"/>');
+  } else {
+    p.push('<rect x="52" y="' + f(ey - 4) + '" width="26" height="8" fill="rgba(0,0,0,0.4)" stroke="' + A + '" stroke-width="1.4"/><path d="M52 ' + f(ey) + 'H78" stroke="' + A + '" stroke-width="1"/>');
+  }
+  if (r() < 0.75) p.push('<path d="M53 ' + f(ey - 6) + 'H61 M69 ' + f(ey - 6) + 'H78" stroke="#e8e8e8" stroke-width="1.6"/>');
+  // nose
+  p.push('<path d="M65 ' + f(ey + 2) + ' L63 ' + f(ey + 10) + ' H67" stroke="#8a8a8a" stroke-width="1.1" fill="none"/>');
+  // mouth
+  const mo = Math.floor(r() * 4);
+  if (mo === 0) p.push('<path d="M58 ' + f(my) + 'H72" stroke="#e8e8e8" stroke-width="1.8"/>');
+  else if (mo === 1) p.push('<path d="M58 ' + f(my + 1) + ' Q65 ' + f(my - 4) + ' 72 ' + f(my + 1) + '" stroke="#e8e8e8" stroke-width="1.6" fill="none"/>');
+  else if (mo === 2) p.push('<path d="M58 ' + f(my) + 'H72 M61 ' + f(my) + ' L60 ' + f(my + 4) + ' M69 ' + f(my) + ' L70 ' + f(my + 4) + '" stroke="#e8e8e8" stroke-width="1.2"/>');
+  else p.push('<path d="M59 ' + f(my) + 'H71" stroke="#e8e8e8" stroke-width="1.6"/><path d="M71 ' + f(my - 1) + ' L79 ' + f(my + 3) + '" stroke="#ffffff" stroke-width="2"/>');
+  if (r() < 0.4) p.push('<path d="M56 ' + f(my - 3) + ' Q65 ' + f(my + 3) + ' 74 ' + f(my - 3) + '" stroke="#e8e8e8" stroke-width="1.7" fill="none"/>');
+  // hats / hair
+  const hat = Math.floor(r() * 5);
+  if (hat === 0) { // fedora
+    p.push('<path d="M46 26 Q46 12 65 12 Q84 12 84 26 Z" fill="#101d1d" stroke="' + A + '" stroke-width="1.6"/>');
+    p.push('<path d="M41 26 H89" stroke="' + A + '" stroke-width="2.6"/><path d="M46 20 H84" stroke="' + A + '" stroke-width="1" opacity="0.7"/>');
+  } else if (hat === 1) { // flat cap
+    p.push('<path d="M47 27 Q47 13 65 13 Q83 13 83 27 Z" fill="#101d1d" stroke="' + A + '" stroke-width="1.6"/>');
+    p.push('<path d="M65 13 L96 28 L83 27" fill="#101d1d" stroke="' + A + '" stroke-width="1.4"/>');
+  } else if (hat === 2) { // bandana
+    p.push('<path d="M46 29 Q46 15 65 15 Q84 15 84 29 L84 33 Q65 27 46 33 Z" fill="' + A + '" opacity="0.4" stroke="' + A + '" stroke-width="1"/>');
+  } else if (hat === 3) { // hair
+    p.push('<path d="M46 ' + f(hy - 2) + ' Q46 ' + f(hy - 24) + ' 65 ' + f(hy - 24) + ' Q84 ' + f(hy - 24) + ' 84 ' + f(hy - 2) + ' Q78 ' + f(hy - 18) + ' 65 ' + f(hy - 17) + ' Q52 ' + f(hy - 18) + ' 46 ' + f(hy - 2) + ' Z" fill="' + A + '" opacity="0.85"/>');
+  }
+  if (r() < 0.3) p.push('<circle cx="84" cy="' + f(hy + 4) + '" r="2" fill="' + A + '"/>');
+  if (r() < 0.2) p.push('<path d="M50 ' + f(ey + 12) + ' L60 ' + f(ey + 18) + '" stroke="#ff8899" stroke-width="1.2" opacity="0.8"/>');
+  p.push('<path d="M6 14 V6 H14 M116 6 H124 V14 M124 102 V110 H116 M14 110 H6 V102" stroke="' + A + '" stroke-width="1.5" fill="none" opacity="0.9"/>');
+  return p.join('');
+}
+
+/* card back art: DG sigil + circuitry */
+function cardBackMarkup() {
+  return '<rect width="150" height="195" fill="#020a0c" stroke="#003a38" stroke-width="1.6"/>' +
+    '<path d="M0 24 H150 M0 171 H150" stroke="#00ffcc" stroke-width="1" opacity="0.4"/>' +
+    '<path d="M75 40 L108 60 V100 L75 120 L42 100 V60 Z" fill="none" stroke="#00ffcc" stroke-width="1.6"/>' +
+    '<path d="M75 55 L95 67 V93 L75 105 L55 93 V67 Z" fill="none" stroke="#00ffcc" stroke-width="1" opacity="0.6"/>' +
+    '<text x="75" y="90" text-anchor="middle" fill="#00ffcc" font-size="26" font-weight="bold" letter-spacing="3">DG</text>' +
+    '<path d="M75 120 V135 M60 135 H90" stroke="#00ffcc" stroke-width="1" opacity="0.7"/>' +
+    '<circle cx="60" cy="135" r="2" fill="#00ffcc"/><circle cx="90" cy="135" r="2" fill="#00ffcc"/>' +
+    '<text x="75" y="160" text-anchor="middle" fill="#4a8f86" font-size="9" letter-spacing="3">GENESIS DECK</text>' +
+    '<path d="M10 12 V4 H18 M132 4 H140 V12 M140 183 V191 H132 M18 191 H10 V183" stroke="#00ffcc" stroke-width="1.4" fill="none" opacity="0.8"/>';
+}
+
+/* full card markup (inline art; custom face image layered on top if present) */
+function cardMarkup(p, showBack) {
+  const dead = !p.alive;
+  const frameColor = dead ? '#555555' : (p.id === G.meId ? '#ffe98a' : '#00ffcc');
+  const portrait = '<g class="portrait">' + portraitMarkup(p.seed) + '</g>';
+  const custom = p.faceSrc ? '<image x="10" y="26" width="130" height="116" href="' + p.faceSrc + '" preserveAspectRatio="xMidYMid slice"/>' : '';
+  let roleText, roleFill;
+  if (dead || G.allRevealed) { roleText = p.role; roleFill = ROLE_COLOR[p.role]; }
+  else if (p.id === G.meId) { roleText = 'YOU'; roleFill = '#ffe98a'; }
+  else { roleText = '?????'; roleFill = '#3a6a64'; }
+  const meP = G.players[G.meId];
+  const crew = meP && meP.role === 'MAFIA' && p.role === 'MAFIA' && p.id !== G.meId && !dead;
+  const crewMark = crew ? '<path d="M150 40 L150 58 L134 40 Z" fill="#ff0055" opacity="0.9"/><text x="143" y="72" text-anchor="end" fill="#ff0055" font-size="9" letter-spacing="1" pointer-events="none">CREW</text>' : '';
+  const youB = (p.id === G.meId && !dead) ? '<path d="M0 14 V0 H14 M136 0 H150 V14 M150 181 V195 H136 M14 195 H0 V181" stroke="#ffe98a" stroke-width="2.4" fill="none" pointer-events="none"/>' : '';
+  let deadArt = '';
+  if (dead) {
+    const fresh = G.animDead === p.id;
+    deadArt = '<rect x="10" y="26" width="130" height="116" class="card-dead"/>' +
+      '<path class="drawx' + (fresh ? ' drawxin' : '') + '" d="M12 28 L138 140 M138 28 L12 140" fill="none"/>' +
+      '<text x="75" y="92" class="stamp' + (fresh ? ' stampin' : '') + '">OUT</text>';
+  }
+  const counts = voteCounts();
+  let chip = '';
+  if (G.phase === 'DAY' && counts[p.id]) {
+    chip = '<g transform="translate(133,18)"><g class="' + (G.animVote ? 'popin' : '') + '">' +
+      '<circle r="12" fill="#ffcc00" stroke="#000000" stroke-width="1.5"/>' +
+      '<text y="5" text-anchor="middle" fill="#000000" font-size="13" font-weight="bold" pointer-events="none">' + counts[p.id] + '</text></g></g>';
+  }
+  const face = '<g class="card-face"' + (showBack ? ' style="display:none"' : '') + '>' +
+    '<rect width="150" height="195" class="card-frame" stroke="' + frameColor + '"/>' +
+    '<rect x="10" y="26" width="130" height="116" class="card-portrait"/>' +
+    '<g clip-path="url(#pc)">' + portrait + custom + '</g>' +
+    '<rect x="10" y="26" width="130" height="116" fill="none" stroke="#1f4a46" stroke-width="1" pointer-events="none"/>' +
+    '<path d="M10 44 V26 H28 M122 26 H140 V44 M140 124 V142 H122 M28 142 H10 V124" stroke="#00ffcc" stroke-width="1.2" fill="none" opacity="0.85" pointer-events="none"/>' +
+    '<line x1="10" y1="150" x2="140" y2="150" stroke="#00ffcc" stroke-width="1" opacity="0.5"/>' +
+    '<text x="75" y="168" class="card-name">' + esc(p.name) + '</text>' +
+    '<text x="75" y="184" class="card-role" fill="' + roleFill + '">' + roleText + '</text>' +
+    youB + crewMark + deadArt + chip +
+    '</g>';
+  const back = '<g class="card-back"' + (showBack ? '' : ' style="display:none"') + '>' + cardBackMarkup() + '</g>';
+  return '<g class="card-inner"><g class="float" style="animation-delay:' + (-(p.id * 0.7) % 4.6).toFixed(2) + 's">' + face + back + '</g></g>' +
+    '<rect class="card-hit" width="150" height="195"/>';
+}
+/* ============================================================
+   BOOT / LOADER SEQUENCE
+   ============================================================ */
+const BOOT_LINES = [
+  '> DECK GENESIS BIOS v3.0 ............ OK',
+  '> EMBEDDED VECTOR ART CORE .......... OK',
+  '> CARD DEAL ANIMATION ENGINE ........ OK',
+  '> LINKING GITHUB BRIDGE ............. OK',
+  '> CALIBRATING Y2K VECTOR HUD ........ OK',
+  '> ROLES: MAFIA / DETECTIVE / DOCTOR . OK',
+  '> DAY-NIGHT CYCLE DRIVER ............ OK',
+  '> SYSTEM READY.'
+];
+let bootDone = false;
+function runBoot() {
+  const log = $('boot-log');
+  clear(log);
+  let i = 0;
+  const total = BOOT_LINES.length;
+  function step() {
+    if (bootDone) return;
+    if (i < total) {
+      const t = el('text', { x: 0, y: i * 22, class: 'hud-dim', 'font-size': 12.5, text: BOOT_LINES[i] }, log);
+      t.setAttribute('fill', i === total - 1 ? '#ffcc00' : '#8fe8dc');
+      i++;
+      const pct = Math.round((i / total) * 100);
+      $('boot-bar').setAttribute('width', pct * 4.8);
+      $('boot-pct').textContent = pct + '%';
+      addTimer(step, 240);
+    } else finishBoot();
+  }
+  addTimer(step, 300);
+}
+function finishBoot() {
+  if (bootDone) return;
+  bootDone = true;
+  clearTimers();
+  const log = $('boot-log');
+  clear(log);
+  BOOT_LINES.forEach((l, i) => {
+    const t = el('text', { x: 0, y: i * 22, class: 'hud-dim', 'font-size': 12.5, text: l }, log);
+    t.setAttribute('fill', i === BOOT_LINES.length - 1 ? '#ffcc00' : '#8fe8dc');
+  });
+  $('boot-bar').setAttribute('width', 480);
+  $('boot-pct').textContent = '100%';
+  const btns = $('boot-btns');
+  clear(btns);
+  mkBtn(btns, 0, 0, 150, 44, 'NEW GAME', () => { clearTimers(); openSetup(); }, { fs: 15 });
+  if (hasSave()) mkBtn(btns, 170, 0, 150, 44, 'RESUME', () => { resumeGame(); }, { fs: 15 });
+  setDisp(btns, true);
+}
+$('screen-boot').addEventListener('click', () => { if (!bootDone) finishBoot(); });
+
+/* ============================================================
+   SCREENS
+   ============================================================ */
+function showScreen(name) {
+  G.screen = name;
+  setDisp($('screen-boot'), name === 'boot');
+  setDisp($('screen-setup'), name === 'setup');
+  setDisp($('screen-game'), name === 'game');
+  if (name !== 'game') { setDisp($('game-over'), false); setDisp($('night-overlay'), false); }
+}
+function openSetup() {
+  showScreen('setup');
+  renderSetup();
+}
+
+/* ============================================================
+   SETUP SCREEN
+   ============================================================ */
+function renderSetup() {
+  const sizes = $('su-sizes');
+  clear(sizes);
+  [8, 10, 12].forEach((n, i) => {
+    mkBtnToggle(sizes, i * 110, 0, 100, 34, String(n) + ' CARDS', G.cfg.size === n, () => { G.cfg.size = n; renderSetup(); }, { fs: 12 });
+  });
+  const rs = ROLE_SET[G.cfg.size];
+  const town = G.cfg.size - rs.mafia - rs.det - rs.doc;
+  $('su-mix').textContent = 'ROLES: ' + rs.mafia + ' MAFIA / ' + rs.det + ' DETECTIVE / ' + rs.doc + ' DOCTOR / ' + town + ' TOWN';
+
+  const rules = $('su-rules');
+  clear(rules);
+  [
+    ['NIGHT', '#00e5ff'], ['mafia choose a victim. the doctor protects one life.', '#8fe8dc'],
+    ['the detective scans one suspect for guilt.', '#8fe8dc'],
+    ['DAY', '#ffcc00'], ['the town votes one suspect out - majority rules,', '#8fe8dc'],
+    ['a tie spares everyone. dead roles are revealed.', '#8fe8dc'],
+    ['WIN', '#ff0055'], ['mafia win when they equal the town.', '#8fe8dc'],
+    ['town wins when every mafia is eliminated.', '#8fe8dc'],
+    ['DRAG', '#00ffcc'], ['drag a card into the glowing slot to act.', '#8fe8dc']
+  ].forEach(function(pair, i) {
+    el('text', { x: 0, y: i * 24, 'font-size': 12.5, fill: pair[1], 'letter-spacing': 1, text: pair[0] }, rules);
+  });
+
+  const lb = $('su-left-btns');
+  clear(lb);
+  mkBtn(lb, 0, 0, 190, 40, 'WIPE SAVE DATA', () => { try { localStorage.removeItem(SAVE_KEY); } catch (e) {} toast('SAVE DATA WIPED', '#ffcc00'); }, { danger: true, fs: 12 });
+  mkBtn(lb, 210, 0, 190, 40, 'BACK TO TITLE', () => { showScreen('boot'); }, { fs: 12 });
+
+  renderLoaderControls();
+  renderFaceGrid();
+
+  const sb = $('su-start-btn');
+  clear(sb);
+  mkBtn(sb, 0, 0, 230, 54, 'START GAME', newGame, { fs: 18, rx: 2 });
+}
+function renderLoaderControls() {
+  const c = $('su-loader');
+  clear(c);
+  mkBtn(c, 16, 62, 210, 36, 'LOAD .SVG FROM DISK', () => $('file-svg').click(), { fs: 12 });
+  el('text', { x: 240, y: 85, class: 'hud-faint', 'font-size': 11.5, text: '...or DRAG & DROP .svg files anywhere on this page' }, c);
+  el('text', { x: 16, y: 126, class: 'hud-dim', 'font-size': 12.5, text: 'GITHUB RAW / DIRECT URL:' }, c);
+  const fo1 = el('foreignObject', { x: 16, y: 134, width: 700, height: 30 }, c);
+  const in1 = document.createElementNS(XHTML, 'input');
+  in1.setAttribute('id', 'gh-url');
+  in1.setAttribute('value', 'https://raw.githubusercontent.com/vercel-labs/agent-browser/main/README.md');
+  in1.setAttribute('style', 'width:100%;height:100%;box-sizing:border-box;background:#000;color:#00ffcc;border:1px solid #00ffcc;font-family:"Courier New",monospace;font-size:12px;padding:2px 6px;');
+  fo1.appendChild(in1);
+  mkBtn(c, 730, 134, 110, 30, 'FETCH', fetchRawUrls, { fs: 12 });
+  el('text', { x: 16, y: 196, class: 'hud-dim', 'font-size': 12.5, text: 'GITHUB REPO (owner/name[/subdir]):' }, c);
+  const fo2 = el('foreignObject', { x: 16, y: 204, width: 700, height: 30 }, c);
+  const in2 = document.createElementNS(XHTML, 'input');
+  in2.setAttribute('id', 'gh-repo');
+  in2.setAttribute('value', 'svgfpsaiagents/svgfpsgameAI');
+  in2.setAttribute('style', 'width:100%;height:100%;box-sizing:border-box;background:#000;color:#00ffcc;border:1px solid #00ffcc;font-family:"Courier New",monospace;font-size:12px;padding:2px 6px;');
+  fo2.appendChild(in2);
+  mkBtn(c, 730, 204, 130, 30, 'SCAN REPO', fetchRepoSvgs, { fs: 12 });
+  mkBtn(c, 870, 204, 110, 30, 'CLEAR FACES', () => { G.faces = []; renderFaceGrid(); toast('FACES CLEARED', '#ffcc00'); }, { fs: 12 });
+  el('text', { x: 16, y: 256, id: 'gh-status', class: 'hud-dim', 'font-size': 12, text: '' }, c);
+}
+function renderFaceGrid() {
+  const grid = $('face-grid');
+  clear(grid);
+  const n = G.faces.length;
+  $('face-count').textContent = 'CUSTOM FACES LOADED: ' + n + '/24 ' + (n ? '- dealt onto players at game start' : '- using embedded vector portraits');
+  G.faces.forEach(function(f, i) {
+    const col = i % 12, row = Math.floor(i / 12);
+    const g = el('g', { transform: 'translate(' + col * 80 + ',' + row * 92 + ')' }, grid);
+    el('rect', { width: 72, height: 84, fill: '#020808', stroke: '#00ffcc', 'stroke-width': 1 }, g);
+    el('image', { x: 2, y: 2, width: 68, height: 80, href: f.src, preserveAspectRatio: 'xMidYMid slice' }, g);
+  });
+}
+
+/* ============================================================
+   SVG FACE LOADING - disk / drag-drop / github
+   ============================================================ */
+function addFace(src) {
+  if (G.faces.length >= 24) { toast('FACE DECK FULL (24 MAX)', '#ffcc00'); return false; }
+  G.faces.push({ src });
+  return true;
+}
+function svgTextToFace(text, label) {
+  const t = text.trim();
+  if (!t.includes('<svg')) { toast('NOT AN SVG: ' + (label || 'file'), '#ff0055'); return false; }
+  return addFace('data:image/svg+xml;charset=utf-8,' + encodeURIComponent(t));
+}
+function setGhStatus(msg, color) {
+  const s = document.getElementById('gh-status');
+  if (!s) return;
+  s.textContent = msg;
+  s.setAttribute('fill', color || '#8fe8dc');
+}
+function fetchRawUrls() {
+  const input = document.getElementById('gh-url');
+  const urls = (input.value || '').split(/\s+/).filter(u => u.startsWith('http'));
+  if (!urls.length) { toast('NO VALID URLS', '#ff0055'); return Promise.resolve(); }
+  let ok = 0;
+  const chain = urls.reduce(function(pr, url, i) {
+    return pr.then(function() {
+      setGhStatus('FETCHING ' + (i + 1) + '/' + urls.length + '...', '#ffcc00');
+      return fetch(url).then(function(res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.text();
+      }).then(function(text) {
+        if (svgTextToFace(text, url.split('/').pop())) ok++;
+      }).catch(function() {
+        toast('FETCH FAILED: ' + url.slice(0, 48) + '...', '#ff0055');
+      });
+    });
+  }, Promise.resolve());
+  return chain.then(function() {
+    setGhStatus('FETCHED ' + ok + '/' + urls.length + ' FACES', ok ? '#33ff88' : '#ff0055');
+    renderFaceGrid();
+  });
+}
+function fetchRepoSvgs() {
+  const input = document.getElementById('gh-repo');
+  const parts = (input.value || '').trim().replace(/^https?:\/\/github\.com\//, '').split('/').filter(Boolean);
+  if (parts.length < 2) { toast('USE owner/name[/subdir]', '#ff0055'); return Promise.resolve(); }
+  const repo = parts[0] + '/' + parts[1];
+  const subdir = parts.slice(2).join('/');
+  setGhStatus('SCANNING REPO TREE...', '#ffcc00');
+  let ghBranch = 'main';
+  return fetch('https://api.github.com/repos/' + repo).then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }).then(function(info) {
+    ghBranch = info.default_branch || 'main';
+    return fetch('https://api.github.com/repos/' + repo + '/git/trees/' + ghBranch + '?recursive=1').then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    });
+  }).then(function(tree) {
+    let files = (tree.tree || []).filter(function(f) {
+      return f.type === 'blob' && /\.svg$/i.test(f.path) && (f.size || 0) < 150000 &&
+        (!subdir || f.path.toLowerCase().startsWith(subdir.toLowerCase() + '/'));
+    });
+    files.sort((a, b) => (a.size || 0) - (b.size || 0));
+    files = files.slice(0, 18);
+    if (!files.length) { setGhStatus('NO .SVG FILES FOUND IN REPO', '#ff0055'); return; }
+    let ok = 0;
+    const chain = files.reduce(function(pr, file, i) {
+      return pr.then(function() {
+        setGhStatus('FETCHING ' + (i + 1) + '/' + files.length + ': ' + file.path.split('/').pop().slice(0, 22), '#ffcc00');
+        return fetch('https://raw.githubusercontent.com/' + repo + '/' + ghBranch + '/' + file.path).then(function(raw) {
+          if (!raw.ok) throw new Error('HTTP ' + raw.status);
+          return raw.text();
+        }).then(function(text) {
+          if (svgTextToFace(text, file.path.split('/').pop())) ok++;
+        }).catch(function() { /* skip file */ });
+      });
+    }, Promise.resolve());
+    return chain.then(function() {
+      setGhStatus('DONE - ' + ok + ' FACES ADDED FROM ' + repo, ok ? '#33ff88' : '#ff0055');
+      renderFaceGrid();
+    });
+  }).catch(function() {
+    setGhStatus('REPO SCAN FAILED (RATE LIMIT / NETWORK)', '#ff0055');
+    toast('REPO SCAN FAILED', '#ff0055');
+  });
+}
+$('file-svg').addEventListener('change', (e) => {
+  const files = Array.from(e.target.files || []);
+  files.forEach(function(f) {
+    const reader = new FileReader();
+    reader.onload = ev => { if (svgTextToFace(ev.target.result, f.name)) renderFaceGrid(); };
+    reader.readAsText(f);
+  });
+  if (files.length) toast('READING ' + files.length + ' FILE(S)...', '#ffcc00');
+  e.target.value = '';
+});
+window.addEventListener('dragover', e => e.preventDefault());
+window.addEventListener('drop', e => {
+  e.preventDefault();
+  const files = Array.from((e.dataTransfer && e.dataTransfer.files) || []).filter(f => /\.svg$/i.test(f.name) || f.type === 'image/svg+xml');
+  if (!files.length) return;
+  files.forEach(function(f) {
+    const reader = new FileReader();
+    reader.onload = ev => { if (svgTextToFace(ev.target.result, f.name)) renderFaceGrid(); };
+    reader.readAsText(f);
+  });
+  toast('DROPPED ' + files.length + ' SVG FILE(S)', '#ffcc00');
+});
+/* ============================================================
+   NEW GAME / DEAL
+   ============================================================ */
+function newGame() {
+  clearTimers();
+  const rs = ROLE_SET[G.cfg.size];
+  const roles = [];
+  for (let i = 0; i < rs.mafia; i++) roles.push('MAFIA');
+  for (let i = 0; i < rs.det; i++) roles.push('DETECTIVE');
+  for (let i = 0; i < rs.doc; i++) roles.push('DOCTOR');
+  while (roles.length < G.cfg.size) roles.push('TOWN');
+  const shRoles = shuffle(roles);
+  const shNames = shuffle(NAMES).slice(0, G.cfg.size);
+  G.players = shRoles.map((role, i) => {
+    return {
+      id: i, name: shNames[i], role,
+      faction: role === 'MAFIA' ? 'MAFIA' : 'TOWN',
+      alive: true, seed: 1000 + i * 37 + 5, faceSrc: G.faces.length ? G.faces[i % G.faces.length].src : null,
+      knownMafia: null
+    };
+  });
+  G.meId = Math.floor(Math.random() * G.players.length);
+  G.turn = 1; G.phase = 'DAY'; G.await = null; G.votes = {}; G.votedThisDay = false;
+  G.night = { kill: null, protect: null, investigated: null, save: false };
+  G.gameOver = false; G.winner = null; G.allRevealed = false;
+  G.log = [];
+  showScreen('game');
+  setDisp($('night-overlay'), false);
+  setDisp($('game-over'), false);
+  renderHUDButtons();
+  log('A NEW GAME BEGINS. ' + G.players.length + ' CARDS ARE DEALT.', 'hdr');
+  log('YOU ARE THE ' + me().role + '.', 'me');
+  if (me().role === 'MAFIA') {
+    const crew = G.players.filter(p => p.id !== G.meId && p.role === 'MAFIA').map(p => p.name);
+    if (crew.length) log('YOUR CREW: ' + crew.join(', ') + '.', 'me');
+  }
+  toast('YOU ARE THE ' + me().role, ROLE_COLOR[me().role]);
+  /* deal flight + flips, then day starts */
+  G.dealing = true;
+  renderCards(true);
+  showBanner('THE DECK IS DEALT', '#00ffcc');
+  ticker('DEALING CARDS...');
+  const dealTotal = G.players.length * 90 + 1000;
+  addTimer(() => { G.dealing = false; startDay(true); }, dealTotal);
+}
+
+/* ============================================================
+   RENDERING
+   ============================================================ */
+function me() { return G.players[G.meId]; }
+function alivePlayers() { return G.players.filter(p => p.alive); }
+function aliveMafia() { return G.players.filter(p => p.alive && p.role === 'MAFIA'); }
+function aliveTown() { return G.players.filter(p => p.alive && p.role !== 'MAFIA'); }
+
+function voteCounts() {
+  const counts = {};
+  Object.values(G.votes).forEach(t => { counts[t] = (counts[t] || 0) + 1; });
+  return counts;
+}
+
+function renderAll() { renderHUD(); renderCards(false); renderSlot(); renderLog(); }
+
+/* grid position of a card in board-local coords */
+function cardPos(p) {
+  const n = G.players.length;
+  const cols = n <= 8 ? 4 : 6;
+  return { x: (p.id % cols) * 166, y: Math.floor(p.id / cols) * 212 };
+}
+
+/* opts.deal = animate deal flight + flips; instant render otherwise */
+function renderCards(deal) {
+  const grid = $('card-grid');
+  clear(grid);
+  G.players.forEach(function(p) {
+    const pos = cardPos(p);
+    const g = el('g', { class: 'card' + (p.alive ? '' : ' dead'), 'data-id': p.id }, grid);
+    g.style.transform = 'translate(' + pos.x + 'px,' + pos.y + 'px)';
+    const showBack = !!deal;
+    setSVG(g, cardMarkup(p, showBack));
+    if (deal) {
+      g.style.opacity = '0';
+      g.style.transform = 'translate(' + DECK_POS.x + 'px,' + DECK_POS.y + 'px) scale(0.35) rotate(-9deg)';
+      g.style.transition = 'none';
+    }
+    g.addEventListener('pointerdown', ev => startDrag(ev, p));
+  });
+  if (deal) {
+    // force layout, then fly each card to its slot with a stagger
+    void grid.getBoundingClientRect();
+    G.players.forEach(function(p) {
+      const g = grid.querySelector('.card[data-id="' + p.id + '"]');
+      const pos = cardPos(p);
+      addTimer(function() {
+        g.style.transition = 'transform .62s cubic-bezier(.2,.85,.25,1), opacity .3s ease';
+        g.style.opacity = '1';
+        g.style.transform = 'translate(' + pos.x + 'px,' + pos.y + 'px) scale(1) rotate(0deg)';
+      }, 60 + p.id * 90);
+      addTimer(function() {
+        // flip: back away, face in
+        const face = g.querySelector('.card-face');
+        const back = g.querySelector('.card-back');
+        if (back) back.style.display = 'none';
+        if (face) { face.style.display = ''; face.classList.add('flipin'); }
+      }, 60 + p.id * 90 + 340);
+    });
+    addTimer(function() {
+      grid.querySelectorAll('.card').forEach(function(g) { g.style.transition = 'none'; });
+    }, 60 + G.players.length * 90 + 700);
+  }
+}
+
+function renderHUD() {
+  $('hud-phase').textContent = G.phase;
+  $('hud-phase').setAttribute('fill', G.phase === 'DAY' ? '#ffcc00' : '#7fa8ff');
+  $('hud-day').textContent = G.turn;
+  $('hud-alive').textContent = alivePlayers().length + '/' + G.players.length;
+  const you = me();
+  const yEl = $('hud-you');
+  if (you) {
+    yEl.textContent = you.alive ? you.role : 'DEAD (' + you.role + ')';
+    yEl.setAttribute('fill', you.alive ? ROLE_COLOR[you.role] : '#888888');
+  }
+  const tb = $('town-blocks'); clear(tb);
+  aliveTown().forEach((p, i) => el('rect', { x: i * 16, y: 0, width: 12, height: 20, fill: '#00e5ff', opacity: 0.85 }, tb));
+  const mb = $('mafia-blocks'); clear(mb);
+  aliveMafia().forEach((p, i) => el('rect', { x: i * 16, y: 0, width: 12, height: 20, fill: '#ff0055', opacity: 0.9 }, mb));
+  $('town-count').textContent = aliveTown().length;
+  $('mafia-count').textContent = aliveMafia().length;
+  /* sun / moon wireframe icon, spins in each phase change */
+  const pi = $('phase-icon'); clear(pi);
+  const wrap = el('g', { class: 'spinin' }, pi);
+  if (G.phase === 'DAY') {
+    el('circle', { r: 9, fill: 'none', stroke: '#ffcc00', 'stroke-width': 2 }, wrap);
+    for (let a = 0; a < 8; a++) {
+      const ang = a * Math.PI / 4;
+      el('line', { x1: Math.cos(ang) * 12, y1: Math.sin(ang) * 12, x2: Math.cos(ang) * 17, y2: Math.sin(ang) * 17, stroke: '#ffcc00', 'stroke-width': 1.6 }, wrap);
+    }
+  } else {
+    el('circle', { r: 9, fill: 'none', stroke: '#7fa8ff', 'stroke-width': 2 }, wrap);
+    el('circle', { cx: 5, cy: -4, r: 7.5, fill: '#020a14', stroke: '#7fa8ff', 'stroke-width': 1.2 }, wrap);
+  }
+  $('bg-sky').style.fill = G.phase === 'DAY' ? '#060e0e' : '#030514';
+}
+
+function renderSlot() {
+  const label = $('slot-label'), sub = $('slot-sub'), rect = $('slot-rect'), glow = $('slot-glowrect'), arrow = $('slot-arrow');
+  const conf = {
+    vote:        { label: 'VOTE', sub: 'drag a suspect here to vote them out', color: '#00ffcc' },
+    kill:        { label: 'KILL', sub: 'drag a target here for the hit', color: '#ff0055' },
+    protect:     { label: 'PROTECT', sub: 'drag a soul here to guard tonight', color: '#33ff88' },
+    investigate: { label: 'SCAN', sub: 'drag a suspect here to investigate', color: '#ffcc00' },
+    null:        { label: 'STANDBY', sub: G.phase === 'NIGHT' ? 'the town sleeps...' : 'no action now', color: '#44606c' }
+  }[String(G.await)];
+  label.textContent = conf.label;
+  label.setAttribute('fill', conf.color);
+  rect.setAttribute('stroke', conf.color);
+  rect.setAttribute('fill', G.await ? 'rgba(0,255,204,0.05)' : 'rgba(0,0,0,0.2)');
+  glow.setAttribute('fill', conf.color);
+  glow.style.opacity = G.await ? '' : '0';
+  sub.textContent = conf.sub;
+  setDisp(arrow, !!G.await);
+  const tEl = $('slot-target');
+  let txt = '';
+  if (G.await === 'vote') txt = G.votedThisDay ? 'VOTE LOCKED' : '';
+  if (G.await === 'kill' && G.night.kill !== null) txt = 'TARGET: ' + G.players[G.night.kill].name;
+  if (G.await === 'protect' && G.night.protect !== null) txt = 'GUARDING: ' + G.players[G.night.protect].name;
+  if (G.await === 'investigate' && G.night.investigated !== null) txt = 'SCANNING: ' + G.players[G.night.investigated].name;
+  tEl.textContent = txt;
+}
+
+function renderLog() {
+  const div = $('log');
+  div.innerHTML = G.log.map(l => '<div class="' + (l.c || 'sys') + '">' + esc(l.t) + '</div>').join('');
+  div.scrollTop = div.scrollHeight;
+}
+function log(msg, cls) {
+  G.log.push({ t: msg, c: cls || 'sys' });
+  if (G.log.length > 140) G.log.splice(0, G.log.length - 140);
+  renderLog();
+}
+function ticker(msg) {
+  G.statusMsg = msg;
+  $('ticker').textContent = msg;
+}
+function toast(msg, color) {
+  const host = $('toast');
+  const g = el('g', { class: 'toastG' }, host);
+  const w = Math.max(220, msg.length * 9.5 + 40);
+  const x = 800 - w / 2;
+  const y = 740 - (host.children.length % 3) * 44;
+  el('rect', { x, y, width: w, height: 34, fill: 'rgba(0,10,10,0.92)', stroke: color || '#00ffcc', 'stroke-width': 1.6 }, g);
+  el('text', { x: 800, y: y + 23, 'text-anchor': 'middle', fill: color || '#00ffcc', 'font-size': 14, 'letter-spacing': 2, text: msg }, g);
+  setTimeout(() => { if (g.parentNode) g.remove(); }, 2600);
+}
+function showBanner(text, color) {
+  const b = $('banner');
+  b.textContent = text;
+  b.setAttribute('fill', color || '#00ffcc');
+  b.classList.remove('bannerin');
+  void b.getBBox();
+  b.classList.add('bannerin');
+}
+
+/* night overlay: rebuilt each night so stars/moon animate in */
+function showNight(nightNum) {
+  const ov = $('night-overlay');
+  clear(ov);
+  let s = '<rect width="1600" height="900" fill="rgba(4,6,28,0.5)" class="fadein"/>';
+  const r = mulberry32(nightNum * 77 + 3);
+  for (let i = 0; i < 42; i++) {
+    const x = (r() * 1560 + 20).toFixed(0), y = (r() * 700 + 30).toFixed(0);
+    const d = (r() * 2.4).toFixed(2);
+    s += '<circle cx="' + x + '" cy="' + y + '" r="1.6" fill="#cfe0ff" class="twinkle" style="animation-delay:' + d + 's"/>';
+  }
+  s += '<g transform="translate(800,440)"><g class="moonin" opacity="0.32">' +
+       '<circle r="72" fill="none" stroke="#9ab8ff" stroke-width="2"/>' +
+       '<circle cx="27" cy="-13" r="58" fill="#04061c" stroke="#9ab8ff" stroke-width="1.5"/></g></g>';
+  s += '<text x="800" y="240" class="night-text" filter="url(#glow)">NIGHT ' + nightNum + '</text>';
+  setSVG(ov, s);
+  setDisp(ov, true);
+}
+
+/* ============================================================
+   DRAG & DROP
+   ============================================================ */
+function startDrag(ev, p) {
+  if (G.screen !== 'game' || G.gameOver || G.dealing) return;
+  if (!p.alive) { toast("DEAD CARDS DON'T ACT", '#888888'); return; }
+  if (!G.await) { ticker(G.phase === 'NIGHT' ? 'NOTHING TO DO - AWAITING DAWN' : 'NO ACTION REQUIRED NOW'); return; }
+  ev.preventDefault();
+  G.activeDrag = p;
+  const ghost = el('g', { class: 'drag-ghost' }, $('drag-layer'));
+  const markup = '<g style="transform-box:fill-box;transform-origin:center;transform:rotate(3deg) scale(1.02)">' +
+    '<rect width="150" height="195" fill="rgba(2,10,12,0.94)" stroke="#00ffcc" stroke-width="2"/>' +
+    '<g clip-path="url(#pc)"><g>' + portraitMarkup(p.seed) + '</g>' +
+    (p.faceSrc ? '<image x="10" y="26" width="130" height="116" href="' + p.faceSrc + '" preserveAspectRatio="xMidYMid slice"/>' : '') + '</g>' +
+    '<text x="75" y="162" text-anchor="middle" fill="#d6f2ec" font-size="13" font-weight="bold">' + esc(p.name) + '</text>' +
+    '<text x="75" y="182" text-anchor="middle" fill="#ffcc00" font-size="12" letter-spacing="2">' +
+    ({ vote: 'VOTE', kill: 'KILL', protect: 'PROTECT', investigate: 'SCAN' }[G.await] || '') + '</text></g>';
+  setSVG(ghost, markup);
+  G.dragGhost = ghost;
+  moveGhost(ev);
+  window.addEventListener('pointermove', onDragMove);
+  window.addEventListener('pointerup', onDragEnd, { once: true });
+}
+function moveGhost(ev) {
+  const pt = screenToSVG(ev.clientX, ev.clientY);
+  if (G.dragGhost) G.dragGhost.setAttribute('transform', 'translate(' + (pt.x - CARD_W / 2) + ',' + (pt.y - CARD_H / 2) + ')');
+}
+function onDragMove(ev) { moveGhost(ev); }
+function onDragEnd(ev) {
+  window.removeEventListener('pointermove', onDragMove);
+  const p = G.activeDrag;
+  if (G.dragGhost) { G.dragGhost.remove(); G.dragGhost = null; }
+  G.activeDrag = null;
+  if (!p) return;
+  const pt = screenToSVG(ev.clientX, ev.clientY);
+  const inSlot = pt.x > SLOT_RECT.x && pt.x < SLOT_RECT.x + SLOT_RECT.w && pt.y > SLOT_RECT.y && pt.y < SLOT_RECT.y + SLOT_RECT.h;
+  if (inSlot) handleDrop(p);
+}
+function refuse(msg) { toast(msg, '#ff0055'); }
+function handleDrop(p) {
+  if (G.await === 'vote') {
+    if (G.votedThisDay) { refuse('YOUR VOTE IS LOCKED'); return; }
+    if (p.id === G.meId) { refuse('YOU CANNOT VOTE YOURSELF'); return; }
+    castVote(me(), p);
+  } else if (G.await === 'kill') {
+    if (p.role === 'MAFIA') { refuse("CAN'T HIT YOUR OWN CREW"); return; }
+    G.night.kill = p.id;
+    log('YOU MARK ' + p.name + ' FOR DEATH.', 'me');
+    ticker('THE HIT IS SCHEDULED...');
+    renderSlot();
+    saveGame();
+    addTimer(resolveNight, 1100);
+  } else if (G.await === 'protect') {
+    G.night.protect = p.id;
+    log('YOU STAND GUARD OVER ' + (p.id === G.meId ? 'YOURSELF' : p.name) + ' TONIGHT.', 'me');
+    ticker('PROTECTION IN PLACE...');
+    renderSlot();
+    saveGame();
+    addTimer(resolveNight, 1100);
+  } else if (G.await === 'investigate') {
+    if (p.id === G.meId) { refuse('YOU ALREADY KNOW YOURSELF'); return; }
+    G.night.investigated = p.id;
+    ticker('SCANNING ' + p.name + '...');
+    renderSlot();
+    saveGame();
+    addTimer(resolveNight, 1100);
+  }
+}
+/* ============================================================
+   DAY / NIGHT CYCLE
+   ============================================================ */
+function startDay(first) {
+  if (G.gameOver) return;
+  G.phase = 'DAY';
+  G.votes = {}; G.votedThisDay = false;
+  setDisp($('night-overlay'), false);
+  log('--- DAY ' + G.turn + ' ---', 'hdr');
+  showBanner('DAY ' + G.turn + ' - THE TOWN GATHERS', '#ffcc00');
+  if (me().alive) {
+    G.await = 'vote';
+    ticker('DRAG A CARD TO THE VOTE SLOT');
+  } else {
+    G.await = null;
+    ticker('SPECTATOR MODE - THE TOWN DELIBERATES...');
+    addTimer(aiDayResolve, 2400);
+  }
+  renderAll();
+  saveGame();
+}
+function castVote(voter, target) {
+  G.votes[voter.id] = target.id;
+  if (voter.id === G.meId) {
+    G.votedThisDay = true;
+    log('YOU VOTE FOR ' + target.name + '.', 'me');
+    G.await = null;
+    G.animVote = true;
+    renderHUD(); renderCards(false); renderSlot();
+    G.animVote = false;
+    saveGame();
+    addTimer(aiDayResolve, 900);
+  }
+}
+function aiDayResolve() {
+  if (G.gameOver || G.phase !== 'DAY') return;
+  alivePlayers().forEach(function(p) {
+    if (p.id === G.meId && me().alive) return; // player vote already cast
+    const pool = alivePlayers().filter(q => q.id !== p.id);
+    if (!pool.length) return;
+    let target;
+    if (p.role === 'MAFIA') {
+      const towns = pool.filter(q => q.role !== 'MAFIA');
+      target = towns.length ? pick(towns) : pick(pool);
+    } else if (p.role === 'DETECTIVE' && p.knownMafia !== null && G.players[p.knownMafia] && G.players[p.knownMafia].alive) {
+      target = G.players[p.knownMafia];
+    } else {
+      target = pick(pool);
+    }
+    G.votes[p.id] = target.id;
+    log(p.name + ' votes ' + target.name + '.');
+  });
+  G.animVote = true;
+  renderCards(false);
+  G.animVote = false;
+  tallyVotes();
+}
+function tallyVotes() {
+  const counts = voteCounts();
+  const entries = Object.entries(counts);
+  if (!entries.length) { log('NO VOTES WERE CAST.', 'sys'); startNight(); return; }
+  let max = 0, leaders = [];
+  entries.forEach(function(en) {
+    const id = Number(en[0]), c = en[1];
+    if (c > max) { max = c; leaders = [id]; }
+    else if (c === max) leaders.push(id);
+  });
+  log('TALLY: ' + entries.map(en => G.players[Number(en[0])].name + ' x' + en[1]).join(', ') + '.', 'sys');
+  if (leaders.length > 1) {
+    log('THE TOWN COULD NOT DECIDE - NO ONE WAS VOTED OUT.', 'good');
+    showBanner('NO CONSENSUS', '#8fe8dc');
+  } else {
+    eliminate(G.players[leaders[0]], 'voted out by the town');
+  }
+  if (!G.gameOver) addTimer(startNight, 900);
+}
+/* elimination with flip-out / flip-in, stamp, drawn X and board shake */
+function eliminate(p, how) {
+  if (!p || !p.alive) return;
+  const grid = $('card-grid');
+  const old = grid.querySelector('.card[data-id="' + p.id + '"]');
+  if (old) old.classList.add('flipout');
+  addTimer(function() {
+    p.alive = false;
+    G.animDead = p.id;
+    log(p.name.toUpperCase() + ' WAS ' + how.toUpperCase() + ' - THEY WERE THE ' + p.role + '.',
+        p.role === 'MAFIA' ? 'good' : 'bad');
+    if (p.id === G.meId) {
+      toast('YOU WERE ELIMINATED - SPECTATOR MODE', '#ff0055');
+      log('YOU ARE DEAD. WATCH THE CYCLE UNFOLD.', 'me');
+      ticker('SPECTATOR MODE');
+    } else {
+      showBanner(p.name + ' WAS THE ' + p.role, p.role === 'MAFIA' ? '#33ff88' : '#ff6688');
+    }
+    renderHUD(); renderCards(false); renderSlot(); renderLog();
+    grid.classList.add('shake');
+    addTimer(() => grid.classList.remove('shake'), 500);
+    G.animDead = null;
+    saveGame();
+    checkWin();
+    if (!G.gameOver && how === 'voted out by the town') { /* startNight scheduled by tallyVotes */ }
+  }, old ? 170 : 0);
+}
+function startNight() {
+  if (G.gameOver) return;
+  G.phase = 'NIGHT';
+  G.night = { kill: null, protect: null, investigated: null, save: false };
+  G.await = null;
+  showNight(G.turn);
+  log('--- NIGHT ' + G.turn + ' ---', 'hdr');
+  const you = me();
+  if (you.alive) {
+    if (you.role === 'MAFIA') {
+      G.await = 'kill';
+      ticker('NIGHT - DRAG A CARD TO THE KILL SLOT');
+      log('THE CREW LOOKS TO YOU FOR A TARGET.', 'me');
+    } else if (you.role === 'DOCTOR') {
+      G.await = 'protect';
+      ticker('NIGHT - DRAG A CARD TO THE PROTECT SLOT');
+      log('WHO WILL YOU KEEP BREATHING TONIGHT?', 'me');
+    } else if (you.role === 'DETECTIVE') {
+      G.await = 'investigate';
+      ticker('NIGHT - DRAG A CARD TO THE SCAN SLOT');
+      log('CHOOSE A SUSPECT TO SCAN.', 'me');
+    } else {
+      G.await = null;
+      ticker('NIGHT - THE TOWN SLEEPS...');
+      addTimer(resolveNight, 3000);
+    }
+  } else {
+    G.await = null;
+    ticker('NIGHT - THE MAFIA PROWL...');
+    addTimer(resolveNight, 3000);
+  }
+  renderAll();
+  saveGame();
+}
+function resolveNight() {
+  if (G.gameOver || G.phase !== 'NIGHT') return;
+  const targets = alivePlayers();
+  let killId = G.night.kill;
+  if (killId === null) {
+    const shooters = aliveMafia().filter(p => p.id !== G.meId);
+    const victims = targets.filter(p => p.role !== 'MAFIA');
+    if (shooters.length && victims.length) killId = pick(victims).id;
+  }
+  let protectId = G.night.protect;
+  if (protectId === null) {
+    const docs = alivePlayers().filter(p => p.role === 'DOCTOR' && p.id !== G.meId);
+    if (docs.length && targets.length) protectId = pick(targets).id;
+  }
+  const detId = G.night.investigated;
+  if (detId !== null) {
+    const t = G.players[detId];
+    const res = t.role === 'MAFIA' ? 'GUILTY - MAFIA' : 'INNOCENT - NOT MAFIA';
+    log('SCAN COMPLETE: ' + t.name + ' IS ' + res + '.', t.role === 'MAFIA' ? 'good' : 'me');
+    toast('SCAN: ' + t.name + ' IS ' + res, t.role === 'MAFIA' ? '#33ff88' : '#ffcc00');
+  } else {
+    const dets = alivePlayers().filter(p => p.role === 'DETECTIVE' && p.id !== G.meId);
+    const pool = targets.filter(p => p.role !== 'DETECTIVE');
+    if (dets.length && pool.length) {
+      const t = pick(pool);
+      if (t.role === 'MAFIA') dets[0].knownMafia = t.id;
+    }
+  }
+  G.turn++;
+  G.animDead = null;
+  if (killId !== null) {
+    const victim = G.players[killId];
+    if (protectId === killId) {
+      log('GUNFIRE IN THE DARK - BUT THE DOCTOR WAS THERE. NO ONE DIED.', 'good');
+      toast('THE DOCTOR SAVED A LIFE', '#33ff88');
+      showBanner('THE DOCTOR SAVED A LIFE', '#33ff88');
+    } else {
+      const grid = $('card-grid');
+      const old = grid.querySelector('.card[data-id="' + victim.id + '"]');
+      if (old) old.classList.add('flipout');
+      addTimer(function() {
+        victim.alive = false;
+        G.animDead = victim.id;
+        log('AT DAWN, ' + victim.name + ' WAS FOUND DEAD - THEY WERE THE ' + victim.role + '.',
+            victim.role === 'MAFIA' ? 'good' : 'bad');
+        if (victim.id === G.meId) {
+          toast('YOU WERE KILLED IN THE NIGHT', '#ff0055');
+          log('YOU ARE DEAD. WATCH THE CYCLE UNFOLD.', 'me');
+        }
+        showBanner(victim.name + ' WAS MURDERED', '#ff6688');
+        renderHUD(); renderCards(false); renderSlot(); renderLog();
+        grid.classList.add('shake');
+        addTimer(() => grid.classList.remove('shake'), 500);
+        G.animDead = null;
+        saveGame();
+        if (!checkWin()) addTimer(startDay, 1200);
+      }, old ? 170 : 0);
+      saveGame();
+      return;
+    }
+  } else {
+    log('A QUIET NIGHT - NO BODIES AT DAWN.', 'sys');
+    showBanner('A QUIET NIGHT', '#8fe8dc');
+  }
+  G.await = null;
+  renderAll();
+  saveGame();
+  if (!checkWin()) addTimer(startDay, 1400);
+}
+function checkWin() {
+  const m = aliveMafia().length, t = aliveTown().length;
+  if (m === 0) { showWinner('TOWN', 'Every mafia has been eliminated. Justice under the neon sun.'); return true; }
+  if (m >= t) { showWinner('MAFIA', 'The mafia now equal the town. The streets belong to them.'); return true; }
+  return false;
+}
+function showWinner(winner, reason) {
+  G.gameOver = true;
+  G.winner = winner;
+  G.allRevealed = true;
+  G.await = null;
+  clearTimers();
+  setDisp($('night-overlay'), false);
+  renderCards(false); renderHUD(); renderSlot();
+  const wt = $('winner-text');
+  wt.textContent = winner === 'TOWN' ? 'TOWN WINS' : 'MAFIA WINS';
+  wt.setAttribute('fill', winner === 'TOWN' ? '#00e5ff' : '#ff0055');
+  wt.classList.add('glitch');
+  $('winner-sub').textContent = reason;
+  const gb = $('go-btns');
+  clear(gb);
+  mkBtn(gb, 0, 0, 190, 44, 'PLAY AGAIN', newGame, { fs: 14 });
+  mkBtn(gb, 210, 0, 190, 44, 'MAIN MENU', () => { openSetup(); }, { fs: 14 });
+  setDisp($('game-over'), true);
+  ticker('GAME OVER - ' + winner + ' WINS');
+  showBanner(winner + ' WINS', winner === 'TOWN' ? '#00e5ff' : '#ff0055');
+  log('=== ' + winner + ' WINS ===', winner === 'TOWN' ? 'good' : 'bad');
+  saveGame();
+}
+
+/* ============================================================
+   SAVE / LOAD
+   ============================================================ */
+function serialize() {
+  return {
+    v: 3,
+    cfg: G.cfg,
+    players: G.players.map(p => ({ id: p.id, name: p.name, role: p.role, faction: p.faction, alive: p.alive, seed: p.seed, faceSrc: p.faceSrc, knownMafia: p.knownMafia })),
+    meId: G.meId, turn: G.turn, phase: G.phase, await: G.await,
+    votes: G.votes, votedThisDay: G.votedThisDay, night: G.night,
+    gameOver: G.gameOver, winner: G.winner, allRevealed: G.allRevealed,
+    log: G.log.slice(-90), statusMsg: G.statusMsg
+  };
+}
+function saveGame() {
+  if (G.screen !== 'game' || !G.players.length) return;
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(serialize())); } catch (e) { /* quota */ }
+}
+function hasSave() { try { return !!localStorage.getItem(SAVE_KEY); } catch (e) { return false; } }
+function applySave(obj) {
+  if (!obj || obj.v !== 3 || !Array.isArray(obj.players) || !obj.players.length) throw new Error('bad save');
+  clearTimers();
+  G.cfg = obj.cfg || { size: obj.players.length };
+  G.players = obj.players;
+  G.meId = obj.meId; G.turn = obj.turn; G.phase = obj.phase;
+  G.await = obj.await; G.votes = obj.votes || {}; G.votedThisDay = !!obj.votedThisDay;
+  G.night = obj.night || { kill: null, protect: null, investigated: null, save: false };
+  G.gameOver = !!obj.gameOver; G.winner = obj.winner || null; G.allRevealed = !!obj.allRevealed;
+  G.log = Array.isArray(obj.log) ? obj.log : [];
+  showScreen('game');
+  setDisp($('night-overlay'), G.phase === 'NIGHT' && !G.gameOver);
+  if (G.phase === 'NIGHT' && !G.gameOver) showNight(G.turn);
+  setDisp($('game-over'), false);
+  renderHUDButtons();
+  renderAll();
+  ticker(obj.statusMsg || 'GAME RESTORED');
+  toast('GAME RESTORED', '#ffcc00');
+  if (G.gameOver && G.winner) {
+    showWinner(G.winner, G.winner === 'TOWN' ? 'Every mafia has been eliminated. (restored)' : 'The mafia now equal the town. (restored)');
+  } else if (!G.await) {
+    if (G.phase === 'DAY') addTimer(aiDayResolve, 2200);
+    else addTimer(resolveNight, 2600);
+  }
+  saveGame();
+}
+function resumeGame() {
+  try { applySave(JSON.parse(localStorage.getItem(SAVE_KEY))); }
+  catch (e) { toast('SAVE UNREADABLE - STARTING NEW', '#ff0055'); openSetup(); }
+}
+function exportSave() {
+  if (!G.players.length) { toast('NO GAME TO EXPORT', '#ff0055'); return; }
+  const blob = new Blob([JSON.stringify(serialize(), null, 2)], { type: 'application/json' });
+  const a = document.createElementNS(XHTML, 'a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'mafia_arena_save.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  toast('SAVE EXPORTED AS .JSON', '#ffcc00');
+}
+function importSave(file) {
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try { applySave(JSON.parse(ev.target.result)); }
+    catch (e) { toast('INVALID SAVE FILE', '#ff0055'); }
+  };
+  reader.readAsText(file);
+}
+
+/* ============================================================
+   HUD BUTTONS + INIT
+   ============================================================ */
+function renderHUDButtons() {
+  const hb = $('hud-btns');
+  clear(hb);
+  mkBtn(hb, 0, 0, 92, 30, 'SAVE', () => { saveGame(); toast('GAME SAVED', '#33ff88'); });
+  mkBtn(hb, 100, 0, 92, 30, 'EXPORT', exportSave);
+  mkBtn(hb, 200, 0, 92, 30, 'IMPORT', () => $('file-save').click());
+  mkBtn(hb, 300, 0, 92, 30, 'MENU', () => { saveGame(); clearTimers(); openSetup(); });
+}
+$('file-save').addEventListener('change', (e) => {
+  const f = (e.target.files || [])[0];
+  if (f) importSave(f);
+  e.target.value = '';
+});
+
+runBoot();
+
+/* console debug hook (handy for testing / power users) */
+window.GEN = { G, newGame, applySave, serialize, checkWin, showWinner, resolveNight, startNight, startDay, aiDayResolve, eliminate, fetchRepoSvgs, fetchRawUrls, svgTextToFace };
+})();
+]]></script>
+</svg>
+</body>
+</html>
