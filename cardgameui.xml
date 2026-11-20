@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="viewport" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet">
+<title>DECK GENESIS // SVG CARD ENGINE // OFFLINE</title>
+<style><![CDATA[
+  svg { background:#050505; font-family:'Courier New',monospace; user-select:none; touch-action:none; cursor:crosshair; }
+  .bg-grid { stroke:#1a1a1a; stroke-width:1; opacity:0.4; }
+  .card { cursor:grab; transition: transform 0.2s, filter 0.2s; }
+  .card:hover { filter: drop-shadow(0 0 15px rgba(0,255,204,0.8)); }
+  .card-frame { fill:#020202; stroke:#00ffcc; stroke-width:2; rx:8; }
+  .card-title { fill:#00ffcc; font-size:12px; font-weight:bold; text-anchor:middle; pointer-events:none; letter-spacing:1px; }
+  .hud-text { fill:#00ffcc; font-size:14px; font-weight:bold; letter-spacing:2px; }
+  .hud-dim { fill:#00ffcc; font-size:10px; opacity:0.6; letter-spacing:1px; }
+  .arena-slot { fill:rgba(0,255,204,0.05); stroke:#00ffcc; stroke-width:2; stroke-dasharray:5,5; transition: all 0.3s; }
+  .arena-slot.active { fill:rgba(0,255,204,0.15); stroke-dasharray:none; stroke-width:3; }
+  .btn { fill:#111; stroke:#00ffcc; stroke-width:1; cursor:pointer; transition: fill 0.2s; }
+  .btn:hover { fill:#222; }
+  .btn-text { fill:#00ffcc; font-size:12px; font-weight:bold; pointer-events:none; text-anchor:middle; }
+  .ghost-card { opacity:0.5; pointer-events:none; filter: drop-shadow(0 0 20px #00ffcc); }
+]]></style>
+
+<defs>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" class="bg-grid"/>
+  </pattern>
+</defs>
+
+<rect width="1600" height="900" fill="url(#grid)"/>
+
+<!-- ================= TOP HUD ================= -->
+<g id="hud" transform="translate(20, 20)">
+  <text class="hud-text" y="20">DECK GENESIS // v1.0</text>
+  <text class="hud-dim" y="40">STATUS: <tspan id="status-txt" fill="#ffcc00">READY</tspan></text>
+  <text class="hud-dim" y="55">CARDS LOADED: <tspan id="count-txt" fill="#fff">0</tspan> / 20</text>
+  <text class="hud-dim" y="70">FPS: <tspan id="fps-txt" fill="#fff">60</tspan></text>
+</g>
+
+<!-- ================= ARENA (BATTLE SLOTS) ================= -->
+<g id="arena" transform="translate(400, 120)">
+  <rect x="0" y="0" width="800" height="400" fill="rgba(0,0,0,0.5)" stroke="#333" stroke-width="2" rx="10"/>
+  <text x="400" y="-10" class="hud-text" text-anchor="middle" style="font-size:16px;">BATTLE ARENA</text>
+  
+  <!-- Player 1 Slot -->
+  <rect x="50" y="50" width="300" height="300" class="arena-slot" id="slot-p1"/>
+  <text x="200" y="40" class="hud-dim" text-anchor="middle">PLAYER 1</text>
+
+  <!-- VS Divider -->
+  <text x="400" y="220" class="hud-text" text-anchor="middle" style="font-size:40px; fill:#ff0055;">VS</text>
+
+  <!-- Player 2 Slot -->
+  <rect x="450" y="50" width="300" height="300" class="arena-slot" id="slot-p2"/>
+  <text x="600" y="40" class="hud-dim" text-anchor="middle">PLAYER 2</text>
+</g>
+
+<!-- ================= THE DECK (ROW OF 20) ================= -->
+<g id="deck-row" transform="translate(50, 600)">
+  <text y="-20" class="hud-text">DECK</text>
+</g>
+
+<!-- Layer for dragging ghosts -->
+<g id="drag-layer" pointer-events="none"></g>
+
+<script><![CDATA[
+(function(){
+  'use strict';
+
+  const CARD_COUNT = 20;
+  const CARD_W = 120, CARD_H = 160;
+  const ARENA_W = 300, ARENA_H = 300;
+  
+  // To test offline, name your files "card0.svg", "card1.svg", etc.
+  const FILE_NAMES = [
+    "https://svgfpsaiagents.github.io/svgfpsgameAI/rotocloud.svg",
+    "https://svgfpsaiagents.github.io/svgfpsgameAI/rotocloudfighter.svg"
+  ];
+
+  const STATE = {
+    activeDrag: null,
+    dragGhost: null,
+    p1Card: null,
+    p2Card: null
+  };
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const $ = id => document.getElementById(id);
+  
+  function el(tag, attrs) {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+
+  const deckRow = $('deck-row');
+  const dragLayer = $('drag-layer');
+  const statusTxt = $('status-txt');
+  const countTxt = $('count-txt');
+
+  // ================================================================
+  // CARD INITIALIZATION
+  // ================================================================
+  function initCards() {
+    for (let i = 0; i < CARD_COUNT; i++) {
+      const url = FILE_NAMES[i] || FILE_NAMES[0]; 
+      const isLoaded = i < FILE_NAMES.length;
+      
+      const col = i % 10;
+      const row = Math.floor(i / 10);
+      const startX = col * (CARD_W + 15);
+      const startY = row * (CARD_H + 15);
+
+      const g = el('g', { class: 'card', 'data-id': i, 'data-orig-x': startX, 'data-orig-y': startY });
+      g.setAttribute('transform', `translate(${startX}, ${startY})`);
+      
+      g.appendChild(el('rect', { width: CARD_W, height: CARD_H, class: 'card-frame' }));
+      
+      const title = el('text', { x: CARD_W/2, y: 20, class: 'card-title' });
+      title.textContent = isLoaded ? `CARD ${i}` : "EMPTY";
+      g.appendChild(title);
+
+      if (isLoaded) {
+        const fo = el('foreignObject', { x: 5, y: 25, width: CARD_W - 10, height: CARD_H - 30 });
+        const iframe = document.createElementNS('http://www.w3.org/1999/xhtml', 'iframe');
+        iframe.setAttribute('src', url);
+        iframe.setAttribute('width', '100%');
+        iframe.setAttribute('height', '100%');
+        iframe.setAttribute('style', 'border:none; border-radius:4px; pointer-events:none; background:#000;');
+        fo.appendChild(iframe);
+        g.appendChild(fo);
+      } else {
+        g.appendChild(el('rect', { x: 5, y: 25, width: CARD_W - 10, height: CARD_H - 30, fill: '#0a0a0a', stroke: '#222', 'stroke-dasharray': '4,4' }));
+      }
+
+      g.addEventListener('pointerdown', (ev) => startDrag(ev, i));
+      deckRow.appendChild(g);
+    }
+    countTxt.textContent = FILE_NAMES.length;
+  }
+
+  // ================================================================
+  // DRAG & DROP
+  // ================================================================
+  function startDrag(ev, id) {
+    const cardNode = deckRow.querySelector(`[data-id="${id}"]`);
+    if (!cardNode) return;
+    
+    ev.preventDefault();
+    
+    // If card is in arena, pull it back to deck first
+    if (STATE.p1Card === id) resetArenaSlot(1);
+    if (STATE.p2Card === id) resetArenaSlot(2);
+
+    STATE.activeDrag = id;
+    
+    // Create a lightweight ghost card for dragging
+    const ghost = el('g', { class: 'ghost-card' });
+    ghost.appendChild(el('rect', { width: CARD_W, height: CARD_H, class: 'card-frame' }));
+    
+    // Add visual preview of what is inside
+    const fo = el('foreignObject', { x: 5, y: 25, width: CARD_W - 10, height: CARD_H - 30 });
+    const cloneDiv = document.createElementNS('http://www.w3.org/1999/xhtml', 'div');
+    cloneDiv.style.width = '100%';
+    cloneDiv.style.height = '100%';
+    cloneDiv.style.background = 'rgba(0,255,204,0.2)';
+    cloneDiv.style.borderRadius = '4px';
+    fo.appendChild(cloneDiv);
+    ghost.appendChild(fo);
+    
+    STATE.dragGhost = ghost;
+    dragLayer.appendChild(ghost);
+    
+    // Dim original
+    cardNode.style.opacity = '0.3';
+
+    updateGhostPosition(ev);
+    window.addEventListener('pointermove', onDragMove);
+    window.addEventListener('pointerup', onDragEnd);
+  }
+
+  function updateGhostPosition(ev) {
+    if (!STATE.dragGhost) return;
+    const pt = screenToSVG(ev.clientX, ev.clientY);
+    STATE.dragGhost.setAttribute('transform', `translate(${pt.x - CARD_W/2}, ${pt.y - CARD_H/2})`);
+  }
+
+  function onDragMove(ev) {
+    updateGhostPosition(ev);
+  }
+
+  function onDragEnd(ev) {
+    window.removeEventListener('pointermove', onDragMove);
+    window.removeEventListener('pointerup', onDragEnd);
+
+    const id = STATE.activeDrag;
+    if (id === null) return;
+
+    const cardNode = deckRow.querySelector(`[data-id="${id}"]`);
+    cardNode.style.opacity = '1';
+    if (STATE.dragGhost) { STATE.dragGhost.remove(); STATE.dragGhost = null; }
+
+    const pt = screenToSVG(ev.clientX, ev.clientY);
+    
+    // Check if dropped in Arena
+    const arenaP1 = $('slot-p1').getBoundingClientRect();
+    const arenaP2 = $('slot-p2').getBoundingClientRect();
+    
+    // Convert arena screen coords to SVG coords
+    const p1Svg = screenToSVG(arenaP1.left, arenaP1.top);
+    const p2Svg = screenToSVG(arenaP2.left, arenaP2.top);
+    const aW = 300; // Arena slot width in SVG space
+    const aH = 300;
+
+    let dropped = false;
+
+    if (pt.x > p1Svg.x && pt.x < p1Svg.x + aW && pt.y > p1Svg.y && pt.y < p1Svg.y + aH) {
+      if (STATE.p1Card === id) { // Already there
+        dropped = true;
+      } else {
+        playCard(id, 1);
+        dropped = true;
+      }
+    } 
+    else if (pt.x > p2Svg.x && pt.x < p2Svg.x + aW && pt.y > p2Svg.y && pt.y < p2Svg.y + aH) {
+      if (STATE.p2Card === id) {
+        dropped = true;
+      } else {
+        playCard(id, 2);
+        dropped = true;
+      }
+    }
+
+    // If not dropped in arena, return to deck
+    if (!dropped) {
+      const ox = cardNode.getAttribute('data-orig-x');
+      const oy = cardNode.getAttribute('data-orig-y');
+      cardNode.setAttribute('transform', `translate(${ox}, ${oy})`);
+      cardNode.style.filter = '';
+    }
+
+    STATE.activeDrag = null;
+  }
+
+  // ================================================================
+  // ARENA LOGIC
+  // ================================================================
+  function playCard(id, player) {
+    const cardNode = deckRow.querySelector(`[data-id="${id}"]`);
+    const iframe = cardNode.querySelector('iframe');
+    
+    // Remove from previous slot if needed
+    if (player === 1 && STATE.p1Card !== null) resetArenaSlot(1);
+    if (player === 2 && STATE.p2Card !== null) resetArenaSlot(2);
+
+    // Move the actual card node to the arena visually
+    const slot = $(`slot-p${player}`);
+    const sx = parseFloat(slot.getAttribute('x'));
+    const sy = parseFloat(slot.getAttribute('y'));
+    const arenaContainer = $('arena');
+
+    // We move the card node into the arena group so coordinates are relative to it
+    arenaContainer.appendChild(cardNode);
+
+    // Scale the card to fit the 300x300 slot
+    const scaleX = ARENA_W / CARD_W;
+    const scaleY = ARENA_H / CARD_H;
+    // Center it in the slot
+    const targetX = sx + (ARENA_W - CARD_W * scaleX) / 2;
+    const targetY = sy + (ARENA_H - CARD_H * scaleY) / 2;
+
+    cardNode.setAttribute('transform', `translate(${sx}, ${sy}) scale(${scaleX}, ${scaleY})`);
+    
+    // Update title to be huge
+    const title = cardNode.querySelector('.card-title');
+    title.setAttribute('y', 40);
+    title.setAttribute('style', 'font-size: 24px;');
+
+    slot.setAttribute('class', 'arena-slot active');
+    if (player === 1) { STATE.p1Card = id; statusTxt.textContent = 'P1 READY'; }
+    if (player === 2) { STATE.p2Card = id; statusTxt.textContent = 'P2 READY'; }
+  }
+
+  function resetArenaSlot(player) {
+    let id = player === 1 ? STATE.p1Card : STATE.p2Card;
+    if (id === null) return;
+
+    const cardNode = deckRow.querySelector(`[data-id="${id}"]`);
+    const slot = $(`slot-p${player}`);
+    const ox = cardNode.getAttribute('data-orig-x');
+    const oy = cardNode.getAttribute('data-orig-y');
+
+    // Move back to deck
+    deckRow.appendChild(cardNode);
+    cardNode.setAttribute('transform', `translate(${ox}, ${oy})`);
+    
+    // Reset text
+    const title = cardNode.querySelector('.card-title');
+    title.setAttribute('y', 20);
+    title.setAttribute('style', 'font-size: 12px;');
+
+    slot.setAttribute('class', 'arena-slot');
+    
+    if (player === 1) STATE.p1Card = null;
+    if (player === 2) STATE.p2Card = null;
+    statusTxt.textContent = 'READY';
+  }
+
+  // ================================================================
+  // HELPERS
+  // ================================================================
+  function screenToSVG(x, y) {
+    const svg = $('viewport');
+    const pt = svg.createSVGPoint();
+    pt.x = x; pt.y = y;
+    return pt.matrixTransform(svg.getScreenCTM().inverse());
+  }
+
+  let lastTime = performance.now(), frames = 0;
+  function updateFPS() {
+    frames++;
+    const now = performance.now();
+    if (now - lastTime >= 1000) {
+      $('fps-txt').textContent = frames;
+      frames = 0;
+      lastTime = now;
+    }
+    requestAnimationFrame(updateFPS);
+  }
+
+  // ================================================================
+  // BOOT
+  // ================================================================
+  initCards();
+  updateFPS();
+})();
+]]></script>
+</svg>
