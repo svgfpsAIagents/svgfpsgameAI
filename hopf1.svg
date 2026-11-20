@@ -1,0 +1,758 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+viewBox="0 0 1600 900" width="1600" height="900"
+font-family="Inter, -apple-system, 'Segoe UI', system-ui, sans-serif">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="0.35" y2="1">
+    <stop offset="0" stop-color="#070b16"/>
+    <stop offset="0.45" stop-color="#0b1224"/>
+    <stop offset="1" stop-color="#060911"/>
+  </linearGradient>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M40 0 L0 0 L0 40" fill="none" stroke="#16233c" stroke-width="1"/>
+  </pattern>
+  <radialGradient id="haloCyan" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#22d3ee" stop-opacity="0.18"/>
+    <stop offset="1" stop-color="#22d3ee" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="haloPink" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#f472b6" stop-opacity="0.15"/>
+    <stop offset="1" stop-color="#f472b6" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="haloGreen" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#a3e635" stop-opacity="0.12"/>
+    <stop offset="1" stop-color="#a3e635" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#101a30"/>
+    <stop offset="1" stop-color="#0a101d"/>
+  </linearGradient>
+  <linearGradient id="panelEdge" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2a4a72" stop-opacity="0.9"/>
+    <stop offset="1" stop-color="#16253c" stop-opacity="0.7"/>
+  </linearGradient>
+  <linearGradient id="hairline" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#22d3ee" stop-opacity="0"/>
+    <stop offset="0.5" stop-color="#22d3ee" stop-opacity="0.8"/>
+    <stop offset="1" stop-color="#22d3ee" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="triFill" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#22d3ee" stop-opacity="0.28"/>
+    <stop offset="0.5" stop-color="#a78bfa" stop-opacity="0.20"/>
+    <stop offset="1" stop-color="#f472b6" stop-opacity="0.28"/>
+  </linearGradient>
+  <linearGradient id="sliderA" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#0ea5b7"/><stop offset="1" stop-color="#22d3ee"/>
+  </linearGradient>
+  <linearGradient id="sliderB" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#a21caf"/><stop offset="1" stop-color="#f472b6"/>
+  </linearGradient>
+  <linearGradient id="sliderC" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#4d7c0f"/><stop offset="1" stop-color="#a3e635"/>
+  </linearGradient>
+  <filter id="glow2" x="-80%" y="-80%" width="260%" height="260%">
+    <feGaussianBlur stdDeviation="2"/>
+  </filter>
+  <filter id="glow4" x="-80%" y="-80%" width="260%" height="260%">
+    <feGaussianBlur stdDeviation="4"/>
+  </filter>
+  <filter id="glow8" x="-80%" y="-80%" width="260%" height="260%">
+    <feGaussianBlur stdDeviation="8"/>
+  </filter>
+</defs>
+
+
+<!-- ================= BACKGROUND ================= -->
+<rect width="1600" height="900" fill="url(#bg)"/>
+<rect width="1600" height="900" fill="url(#grid)" opacity="0.45"/>
+<ellipse cx="380" cy="360" rx="520" ry="420" fill="url(#haloCyan)"/>
+<ellipse cx="1230" cy="400" rx="520" ry="420" fill="url(#haloPink)"/>
+
+
+<!-- ================= HEADER ================= -->
+<text x="48" y="46" font-size="24" font-weight="650" fill="#e8eefc" letter-spacing="-0.3">
+Hopf fibration · 3D spatial vector visualiser
+</text>
+<text x="48" y="70" font-size="13" fill="#7286a4" letter-spacing="0.2">
+Jones vectors on S³  →  Poincaré sphere S²  ·  drag either sphere to orbit  ·  Pancharatnam / Berry phase
+</text>
+<g>
+  <rect x="1420" y="30" width="132" height="30" rx="15" fill="#0c1526" stroke="#1d3552"/>
+  <circle cx="1441" cy="45" r="5" fill="#34d399">
+    <animate attributeName="opacity" values="1;0.2;1" dur="1.8s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="1441" cy="45" r="5" fill="#34d399" filter="url(#glow4)" opacity="0.7">
+    <animate attributeName="opacity" values="0.7;0;0.7" dur="1.8s" repeatCount="indefinite"/>
+  </circle>
+  <text x="1456" y="49.5" font-size="11.5" fill="#9fb3cd" letter-spacing="1.6" font-weight="600">LIVE · S³</text>
+</g>
+<rect x="24" y="88" width="1552" height="1" fill="url(#hairline)" opacity="0.55"/>
+
+
+<!-- ================= LEFT PANEL : POINCARÉ S² ================= -->
+<g>
+  <rect x="24" y="104" width="760" height="524" rx="18" fill="url(#panel)" stroke="url(#panelEdge)" stroke-width="1.2"/>
+  <rect x="24" y="104" width="760" height="524" rx="18" fill="none" stroke="#22d3ee" stroke-opacity="0.07" stroke-width="2"/>
+  <text x="52" y="142" font-size="14.5" font-weight="650" fill="#cfe0f5" letter-spacing="0.2">Poincaré sphere · S²</text>
+  <text x="52" y="162" font-size="11.5" fill="#6b7a95">geodesic triangle ABC  ·  solid angle Ω</text>
+  <text id="yawL" x="756" y="142" font-size="11" fill="#5d6f8c" text-anchor="end" font-family="ui-monospace, Menlo, monospace">yaw 0°</text>
+  <text id="pitchL" x="756" y="160" font-size="11" fill="#5d6f8c" text-anchor="end" font-family="ui-monospace, Menlo, monospace">pitch 0°</text>
+
+
+  <!-- soft halo -->
+  <circle cx="404" cy="380" r="222" fill="#0f2a44" opacity="0.55"/>
+  <circle cx="404" cy="380" r="222" fill="url(#haloCyan)" opacity="0.6"/>
+
+
+  <!-- 3D scene: wireframe + triangle + states -->
+  <g id="sceneL"></g>
+
+
+  <!-- bottom strip -->
+  <rect x="52" y="568" width="704" height="1" fill="#1b2c46"/>
+  <text x="52" y="596" font-size="11.5" fill="#6b7a95">
+    <tspan fill="#67e8f9">●</tspan> A (H)
+    <tspan dx="10" fill="#f9a8d4">●</tspan> B (θ,φ)
+    <tspan dx="10" fill="#bef264">●</tspan> C (θ',φ')
+    <tspan dx="10">—</tspan>
+    <tspan dx="6">Pancharatnam phase = arg⟨A|B⟩⟨B|C⟩⟨C|A⟩</tspan>
+  </text>
+  <text id="visL" x="756" y="596" font-size="11.5" fill="#5d6f8c" text-anchor="end" font-family="ui-monospace, Menlo, monospace">V = 0.0000</text>
+</g>
+
+
+<!-- ================= RIGHT PANEL : HOPF FIBRES ================= -->
+<g>
+  <rect x="808" y="104" width="768" height="524" rx="18" fill="url(#panel)" stroke="url(#panelEdge)" stroke-width="1.2"/>
+  <rect x="808" y="104" width="768" height="524" rx="18" fill="none" stroke="#f472b6" stroke-opacity="0.07" stroke-width="2"/>
+  <text x="836" y="142" font-size="14.5" font-weight="650" fill="#cfe0f5" letter-spacing="0.2">Hopf fibres · S¹ over S²</text>
+  <text x="836" y="162" font-size="11.5" fill="#6b7a95">stereographic projection S³ → R³  ·  any two distinct fibres link once</text>
+  <text id="yawR" x="1548" y="142" font-size="11" fill="#5d6f8c" text-anchor="end" font-family="ui-monospace, Menlo, monospace">yaw 0°</text>
+  <text id="pitchR" x="1548" y="160" font-size="11" fill="#5d6f8c" text-anchor="end" font-family="ui-monospace, Menlo, monospace">pitch 0°</text>
+
+
+  <circle cx="1192" cy="380" r="210" fill="url(#haloPink)" opacity="0.7"/>
+  <g id="sceneR"></g>
+
+
+  <rect x="836" y="568" width="712" height="1" fill="#1b2c46"/>
+  <text x="1192" y="596" font-size="11.5" fill="#6b7a95" text-anchor="middle">
+    <tspan fill="#67e8f9">●</tspan> fibre over A
+    <tspan dx="10" fill="#f9a8d4">●</tspan> fibre over B
+    <tspan dx="10" fill="#bef264">●</tspan> fibre over C
+    <tspan dx="10">—</tspan>
+    <tspan dx="6">each fibre ≅ S¹</tspan>
+  </text>
+</g>
+
+
+<!-- ================= BOTTOM PANEL : CONTROLS ================= -->
+<g>
+  <rect x="24" y="648" width="1552" height="228" rx="18" fill="url(#panel)" stroke="url(#panelEdge)" stroke-width="1.2"/>
+  <rect x="24" y="648" width="1552" height="228" rx="18" fill="none" stroke="#a78bfa" stroke-opacity="0.07" stroke-width="2"/>
+  <text x="52" y="682" font-size="14.5" font-weight="650" fill="#cfe0f5" letter-spacing="0.2">Loop phase · Pancharatnam</text>
+  <text x="248" y="682" font-size="11.5" fill="#6b7a95">controls</text>
+
+
+  <!-- Slider 1: θ_B -->
+  <g id="slider1">
+    <text x="52" y="714" font-size="11.5" fill="#9fb3cd" letter-spacing="0.4">θ  (polar) · state B</text>
+    <text id="s1v" x="700" y="714" font-size="12" fill="#67e8f9" text-anchor="end" font-family="ui-monospace, Menlo, monospace">100°</text>
+    <rect x="52" y="728" width="648" height="6" rx="3" fill="#132238"/>
+    <rect id="s1fill" x="52" y="728" height="6" rx="3" fill="url(#sliderA)" width="360"/>
+    <circle id="s1knob" cx="412" cy="731" r="8.5" fill="#0a1220" stroke="#22d3ee" stroke-width="2.5"/>
+  </g>
+  <!-- Slider 2: φ_B -->
+  <g id="slider2">
+    <text x="52" y="768" font-size="11.5" fill="#9fb3cd" letter-spacing="0.4">φ  (azimuth) · state B</text>
+    <text id="s2v" x="700" y="768" font-size="12" fill="#f9a8d4" text-anchor="end" font-family="ui-monospace, Menlo, monospace">120°</text>
+    <rect x="52" y="782" width="648" height="6" rx="3" fill="#132238"/>
+    <rect id="s2fill" x="52" y="782" height="6" rx="3" fill="url(#sliderB)" width="216"/>
+    <circle id="s2knob" cx="268" cy="785" r="8.5" fill="#0a1220" stroke="#f472b6" stroke-width="2.5"/>
+  </g>
+  <!-- Slider 3: φ_C -->
+  <g id="slider3">
+    <text x="52" y="822" font-size="11.5" fill="#9fb3cd" letter-spacing="0.4">φ  (azimuth) · state C</text>
+    <text id="s3v" x="700" y="822" font-size="12" fill="#bef264" text-anchor="end" font-family="ui-monospace, Menlo, monospace">250°</text>
+    <rect x="52" y="836" width="648" height="6" rx="3" fill="#132238"/>
+    <rect id="s3fill" x="52" y="836" height="6" rx="3" fill="url(#sliderC)" width="450"/>
+    <circle id="s3knob" cx="502" cy="839" r="8.5" fill="#0a1220" stroke="#a3e635" stroke-width="2.5"/>
+  </g>
+
+
+  <!-- Readout card 1: Pancharatnam phase -->
+  <g>
+    <rect x="760" y="696" width="384" height="80" rx="12" fill="#0c1526" stroke="#1d3552"/>
+    <rect x="760" y="696" width="3" height="80" rx="1.5" fill="#22d3ee"/>
+    <text x="782" y="720" font-size="10.5" fill="#6b7a95" letter-spacing="1.1" font-weight="600">PANCHARATNAM PHASE</text>
+    <text id="rPhase" x="782" y="751" font-size="25" fill="#e6feff" font-family="ui-monospace, Menlo, monospace" letter-spacing="-0.6">−59.583°</text>
+    <text x="1122" y="751" font-size="11" fill="#5d6f8c" text-anchor="end" font-family="ui-monospace, Menlo, monospace">arg⟨A|B⟩⟨B|C⟩⟨C|A⟩</text>
+    <circle cx="782" cy="764" r="3" fill="#22d3ee" opacity="0.8">
+      <animate attributeName="opacity" values="0.8;0.2;0.8" dur="2.6s" repeatCount="indefinite"/>
+    </circle>
+    <text x="792" y="767.5" font-size="10.5" fill="#5d6f8c">Bargmann phase of loop A→B→C→A (Berry phase = −this)</text>
+  </g>
+  <!-- Readout card 2: solid angle -->
+  <g>
+    <rect x="1160" y="696" width="384" height="80" rx="12" fill="#0c1526" stroke="#1d3552"/>
+    <rect x="1160" y="696" width="3" height="80" rx="1.5" fill="#a78bfa"/>
+    <text x="1182" y="720" font-size="10.5" fill="#6b7a95" letter-spacing="1.1" font-weight="600">GEODESIC SOLID ANGLE Ω</text>
+    <text id="rOmega" x="1182" y="751" font-size="25" fill="#e9e2ff" font-family="ui-monospace, Menlo, monospace" letter-spacing="-0.6">119.165°</text>
+    <text id="rOmegaSr" x="1522" y="751" font-size="11" fill="#5d6f8c" text-anchor="end" font-family="ui-monospace, Menlo, monospace">2.0798 sr</text>
+    <text x="1182" y="767.5" font-size="10.5" fill="#5d6f8c">triangle ABC on S²</text>
+  </g>
+  <!-- Readout card 3: predicted -Ω/2 -->
+  <g>
+    <rect x="760" y="784" width="384" height="80" rx="12" fill="#0c1526" stroke="#1d3552"/>
+    <rect x="760" y="784" width="3" height="80" rx="1.5" fill="#34d399"/>
+    <text x="782" y="808" font-size="10.5" fill="#6b7a95" letter-spacing="1.1" font-weight="600">PREDICTED +Ω/2</text>
+    <text id="rPred" x="782" y="839" font-size="25" fill="#dcfce7" font-family="ui-monospace, Menlo, monospace" letter-spacing="-0.6">−59.583°</text>
+    <text id="rDelta" x="1122" y="839" font-size="11" fill="#5d6f8c" text-anchor="end" font-family="ui-monospace, Menlo, monospace">Δ 0.00e+0°</text>
+    <rect x="782" y="848" width="88" height="12" rx="6" fill="#0f2e22" stroke="#1c6b4a"/>
+    <text id="rAgree" x="826" y="857" font-size="9.5" fill="#4ade80" text-anchor="middle" letter-spacing="1">AGREES ✓</text>
+  </g>
+  <!-- Readout card 4: visibility -->
+  <g>
+    <rect x="1160" y="784" width="384" height="80" rx="12" fill="#0c1526" stroke="#1d3552"/>
+    <rect x="1160" y="784" width="3" height="80" rx="1.5" fill="#f472b6"/>
+    <text x="1182" y="808" font-size="10.5" fill="#6b7a95" letter-spacing="1.1" font-weight="600">LOOP VISIBILITY V</text>
+    <text id="rVis" x="1182" y="839" font-size="25" fill="#ffe9f6" font-family="ui-monospace, Menlo, monospace" letter-spacing="-0.6">0.1649</text>
+    <text x="1522" y="839" font-size="11" fill="#5d6f8c" text-anchor="end" font-family="ui-monospace, Menlo, monospace">|⟨A|B⟩⟨B|C⟩⟨C|A⟩|</text>
+    <text x="1182" y="857" font-size="10.5" fill="#5d6f8c">interferometric fringe contrast</text>
+  </g>
+</g>
+
+
+<!-- ================= FOOTER ================= -->
+<text x="800" y="894" font-size="10.5" fill="#3f4f68" text-anchor="middle" letter-spacing="0.6">
+Idealised deterministic model · Pancharatnam 1956 / Berry 1984 · Hopf map π: S³ → S², fibre ≅ S¹
+</text>
+
+
+<!-- ================= INTERACTIVE SCRIPT ================= -->
+<script><![CDATA[
+(function(){
+  const SVG_NS = "http://www.w3.org/2000/svg";
+  const sceneL = document.getElementById("sceneL");
+  const sceneR = document.getElementById("sceneR");
+
+
+  // ---------- 3D math ----------
+  const rad = d => d * Math.PI / 180;
+  const deg = r => r * 180 / Math.PI;
+
+
+  function rotY(p, a){ const c=Math.cos(a), s=Math.sin(a); return [c*p[0]+s*p[2], p[1], -s*p[0]+c*p[2]]; }
+  function rotX(p, a){ const c=Math.cos(a), s=Math.sin(a); return [p[0], c*p[1]-s*p[2], s*p[1]+c*p[2]]; }
+  function rotZ(p, a){ const c=Math.cos(a), s=Math.sin(a); return [c*p[0]-s*p[1], s*p[0]+c*p[1], p[2]]; }
+  function add(a,b){ return [a[0]+b[0], a[1]+b[1], a[2]+b[2]]; }
+  function sub(a,b){ return [a[0]-b[0], a[1]-b[1], a[2]-b[2]]; }
+  function scale(a,k){ return [a[0]*k, a[1]*k, a[2]*k]; }
+  function dot(a,b){ return a[0]*b[0]+a[1]*b[1]+a[2]*b[2]; }
+  function cross(a,b){ return [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]]; }
+  function norm(a){ const l=Math.hypot(a[0],a[1],a[2])||1; return [a[0]/l,a[1]/l,a[2]/l]; }
+
+
+  // Stereographic projection S³ → R³ from north pole (0,0,0,1)
+  // S³ point (x1,y1,x2,y2) with x1²+y1²+x2²+y2²=1
+  // map to (x1,y1,x2) / (1 - y2)
+  function stereo(z1, z2){
+    // z1 = x1 + i y1, z2 = x2 + i y2
+    const x1 = z1[0], y1 = z1[1], x2 = z2[0], y2 = z2[1];
+    const d = 1 - y2 + 1e-9;
+    return [x1/d, y1/d, x2/d];
+  }
+
+
+  // Jones vector → S³ point (z1, z2)
+  // |ψ⟩ = [cos(θ/2), e^{iφ} sin(θ/2)]
+  function jonesToS3(thetaDeg, phiDeg){
+    const t = rad(thetaDeg)/2, p = rad(phiDeg);
+    const c = Math.cos(t), s = Math.sin(t);
+    return [[c, 0], [s*Math.cos(p), s*Math.sin(p)]];
+  }
+
+
+  // ---------- View state ----------
+  const viewL = { yaw: 0, pitch: 0 };
+  const viewR = { yaw: 0, pitch: 0 };
+
+
+  // ---------- States ----------
+  const stateA = { theta: 0, phi: 0 };     // H polarization: Jones [1,0] (north pole)
+  const stateB = { theta: 100, phi: 120 };
+  const stateC = { theta: 70,  phi: 250 };
+
+
+  // Poincaré sphere coords. Jones vector |ψ⟩ = [cos(θ/2), e^{iφ} sin(θ/2)]
+  // maps to Stokes vector S = (sin θ cos φ, sin θ sin φ, cos θ), i.e. the
+  // Poincaré polar angle IS θ (no doubling). θ=0 → H, θ=180° → V.
+  function toPoincare(thetaJ, phiJ){
+    const t = rad(thetaJ), p = rad(phiJ);
+    return [Math.sin(t)*Math.cos(p), Math.sin(t)*Math.sin(p), Math.cos(t)];
+  }
+
+
+  // ---------- Render Poincaré sphere ----------
+  const LCX = 404, LCY = 380, LR = 210;
+
+
+  function projectSphere(p3, view){
+    let p = rotY(p3, rad(view.yaw));
+    p = rotX(p, rad(view.pitch));
+    // orthographic
+    return { x: LCX + p[0]*LR, y: LCY - p[1]*LR, z: p[2] };
+  }
+
+
+  function renderLeft(){
+    while(sceneL.firstChild) sceneL.removeChild(sceneL.firstChild);
+
+
+    const A3 = toPoincare(stateA.theta, stateA.phi);
+    const B3 = toPoincare(stateB.theta, stateB.phi);
+    const C3 = toPoincare(stateC.theta, stateC.phi);
+
+
+    // Latitudes (circles at constant z)
+    const lats = [-0.8, -0.4, 0, 0.4, 0.8];
+    lats.forEach(z => {
+      const r = Math.sqrt(1 - z*z);
+      const pts = [];
+      for(let i=0;i<=72;i++){
+        const a = i/72 * 2*Math.PI;
+        const p = projectSphere([r*Math.cos(a), r*Math.sin(a), z], viewL);
+        pts.push(p);
+      }
+      // split into front/back
+      drawCircleFromPts(pts, "#3b6a9e", 1, 0.42);
+    });
+
+
+    // Meridians
+    for(let i=0;i<6;i++){
+      const a = i/6 * Math.PI;
+      const pts = [];
+      for(let j=0;j<=72;j++){
+        const t = j/72 * 2*Math.PI;
+        const x = Math.cos(t)*Math.sin(a);
+        const y = Math.cos(t)*Math.cos(a);
+        const z = Math.sin(t);
+        const p = projectSphere([x,y,z], viewL);
+        pts.push(p);
+      }
+      drawCircleFromPts(pts, "#3b6a9e", 1, 0.42);
+    }
+
+
+    // Silhouette
+    const sil = makeEl("circle", { cx:LCX, cy:LCY, r:LR, fill:"none", stroke:"#4d82bd", "stroke-width":1.6, opacity:0.75 });
+    sceneL.appendChild(sil);
+    const sil2 = makeEl("circle", { cx:LCX, cy:LCY, r:LR, fill:"none", stroke:"#22d3ee", "stroke-width":3, opacity:0.10 });
+    sceneL.appendChild(sil2);
+
+
+    // Poles
+    [1,-1].forEach(z => {
+      const p = projectSphere([0,0,z], viewL);
+      const c = makeEl("circle", { cx:p.x, cy:p.y, r:3.2, fill:"#7fb2e8", opacity:0.9 });
+      sceneL.appendChild(c);
+    });
+
+
+    // Geodesic triangle: great-circle arcs between A,B,C
+    // For each pair, sample great circle arc
+    const pairs = [[A3,B3],[B3,C3],[C3,A3]];
+    const triPts = [];
+    pairs.forEach(([p1,p2]) => {
+      const arc = greatCircleArc(p1, p2, 40);
+      arc.forEach(pt => triPts.push(projectSphere(pt, viewL)));
+      triPts.push(null); // break
+    });
+    // fill
+    const fillPts = [];
+    pairs.forEach(([p1,p2]) => {
+      greatCircleArc(p1,p2,40).forEach(pt => fillPts.push(projectSphere(pt, viewL)));
+    });
+    const fillD = "M" + fillPts.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" L") + " Z";
+    const fill = makeEl("path", { d:fillD, fill:"url(#triFill)", opacity:0.55, "fill-rule":"evenodd" });
+    sceneL.appendChild(fill);
+
+
+    // edges dashed
+    let dEdge = "";
+    pairs.forEach(([p1,p2]) => {
+      const arc = greatCircleArc(p1,p2,40);
+      arc.forEach((pt,i) => {
+        const pp = projectSphere(pt, viewL);
+        dEdge += (i===0?"M":"L") + pp.x.toFixed(1) + "," + pp.y.toFixed(1) + " ";
+      });
+    });
+    const edge = makeEl("path", { d:dEdge, fill:"none", stroke:"#c4b5fd", "stroke-width":2, "stroke-dasharray":"10 7", "stroke-linejoin":"round", opacity:0.9 });
+    sceneL.appendChild(edge);
+    const edgeGlow = makeEl("path", { d:dEdge, fill:"none", stroke:"#a78bfa", "stroke-width":5, "stroke-linejoin":"round", opacity:0.28, filter:"url(#glow4)" });
+    sceneL.appendChild(edgeGlow);
+
+
+    // States A,B,C
+    const states = [
+      { p:A3, color:"#22d3ee", light:"#e6feff", label:"A", tag:"H" },
+      { p:B3, color:"#f472b6", light:"#ffe9f6", label:"B", tag:`θ ${stateB.theta}° φ ${stateB.phi}°` },
+      { p:C3, color:"#a3e635", light:"#f4ffdc", label:"C", tag:`θ ${stateC.theta}° φ ${stateC.phi}°` }
+    ];
+    states.forEach(s => {
+      const pp = projectSphere(s.p, viewL);
+      const g = makeEl("g", {});
+      const halo = makeEl("circle", { cx:pp.x, cy:pp.y, r:9, fill:s.color, opacity:0.28, filter:"url(#glow4)" });
+      g.appendChild(halo);
+      const core = makeEl("circle", { cx:pp.x, cy:pp.y, r:8.5, fill:s.color, filter:"url(#glow4)" });
+      g.appendChild(core);
+      const dot = makeEl("circle", { cx:pp.x, cy:pp.y, r:4.4, fill:s.light });
+      g.appendChild(dot);
+      const txt = makeEl("text", { x:pp.x+22, y:pp.y-4, "font-size":14, "font-weight":650, fill:s.color });
+      txt.textContent = s.label;
+      g.appendChild(txt);
+      const sub = makeEl("text", { x:pp.x+22, y:pp.y+12, "font-size":10, fill:"#5d7f92", "font-family":"ui-monospace, Menlo, monospace" });
+      sub.textContent = s.tag;
+      g.appendChild(sub);
+      sceneL.appendChild(g);
+    });
+
+
+    // Ω label
+    const centroid = projectSphere(norm(add(add(A3,B3),C3)), viewL);
+    const omegaLbl = makeEl("text", { x:centroid.x, y:centroid.y+4, "font-size":13, fill:"#8b7fd4", "text-anchor":"middle", opacity:0.85, "font-family":"ui-monospace, Menlo, monospace" });
+    omegaLbl.textContent = "Ω";
+    sceneL.appendChild(omegaLbl);
+  }
+
+
+  function greatCircleArc(p1, p2, n){
+    // angle between
+    const d = dot(p1,p2);
+    const ang = Math.acos(Math.max(-1, Math.min(1, d)));
+    if(ang < 1e-6) return [p1];
+    const out = [];
+    for(let i=0;i<=n;i++){
+      const t = i/n;
+      const a = t*ang;
+      // Rodrigues: p1*cos(a) + (p2 - p1*cos(ang))/sin(ang) * sin(a)
+      const sa = Math.sin(ang);
+      const v = sub(p2, scale(p1, Math.cos(ang)));
+      const vn = scale(v, 1/sa);
+      const pt = add(scale(p1, Math.cos(a)), scale(vn, Math.sin(a)));
+      out.push(norm(pt));
+    }
+    return out;
+  }
+
+
+  function drawCircleFromPts(pts, color, width, opacity){
+    // split into front (z>0) and back (z<0) segments
+    let dFront = "", dBack = "";
+    let curFront = [], curBack = [];
+    for(let i=0;i<pts.length;i++){
+      const p = pts[i];
+      if(p.z >= 0){
+        curFront.push(p);
+        if(curBack.length){ dBack += pathFromPts(curBack); curBack = []; }
+      } else {
+        curBack.push(p);
+        if(curFront.length){ dFront += pathFromPts(curFront); curFront = []; }
+      }
+    }
+    if(curFront.length) dFront += pathFromPts(curFront);
+    if(curBack.length) dBack += pathFromPts(curBack);
+    if(dBack){
+      const e = makeEl("path", { d:dBack, fill:"none", stroke:color, "stroke-width":width, opacity:opacity*0.5 });
+      sceneL.appendChild(e);
+    }
+    if(dFront){
+      const e = makeEl("path", { d:dFront, fill:"none", stroke:color, "stroke-width":width, opacity:opacity });
+      sceneL.appendChild(e);
+    }
+  }
+  function pathFromPts(pts){
+    if(!pts.length) return "";
+    let d = "M" + pts[0].x.toFixed(1) + "," + pts[0].y.toFixed(1);
+    for(let i=1;i<pts.length;i++) d += " L" + pts[i].x.toFixed(1) + "," + pts[i].y.toFixed(1);
+    return d;
+  }
+
+
+  // ---------- Render Hopf fibres ----------
+  const RCX = 1192, RCY = 380, RR = 210;
+
+
+  function projectFibre(p3, view){
+    let p = rotY(p3, rad(view.yaw));
+    p = rotX(p, rad(view.pitch));
+    return { x: RCX + p[0]*RR, y: RCY - p[1]*RR, z: p[2] };
+  }
+
+
+  // Compute a Hopf fibre (S¹) over a point on S²
+  // Given S² point u, find a preimage (z1,z2) ∈ S³, then fibre = {(e^{iα}z1, e^{iα}z2)}
+  // Stereographically project each point → R³ curve
+  function hopfFibre(u, nSamples){
+    // Find preimage: u = (sinΘ cosΦ, sinΘ sinΦ, cosΘ) on S²
+    // Corresponds to Jones [cos(Θ/2), e^{iΦ} sin(Θ/2)]
+    const Theta = Math.acos(Math.max(-1, Math.min(1, u[2])));
+    const Phi = Math.atan2(u[1], u[0]);
+    const c = Math.cos(Theta/2), s = Math.sin(Theta/2);
+    const z1_0 = [c, 0];
+    const z2_0 = [s*Math.cos(Phi), s*Math.sin(Phi)];
+    const pts = [];
+    for(let i=0;i<=nSamples;i++){
+      const a = i/nSamples * 2*Math.PI;
+      const ca = Math.cos(a), sa = Math.sin(a);
+      // e^{iα} z1 = (ca*z1r - sa*z1i, sa*z1r + ca*z1i)
+      const z1 = [ca*z1_0[0] - sa*z1_0[1], sa*z1_0[0] + ca*z1_0[1]];
+      const z2 = [ca*z2_0[0] - sa*z2_0[1], sa*z2_0[0] + ca*z2_0[1]];
+      const p = stereo(z1, z2);
+      pts.push(p);
+    }
+    return pts;
+  }
+
+
+  // Collect all segments from all fibres, sort by depth, draw
+  function renderRight(){
+    while(sceneR.firstChild) sceneR.removeChild(sceneR.firstChild);
+
+
+    const A3 = toPoincare(stateA.theta, stateA.phi);
+    const B3 = toPoincare(stateB.theta, stateB.phi);
+    const C3 = toPoincare(stateC.theta, stateC.phi);
+
+
+    const fibres = [
+      { u:A3, color:"#22d3ee", light:"#e6feff", glow:"#22d3ee" },
+      { u:B3, color:"#f472b6", light:"#ffe9f6", glow:"#f472b6" },
+      { u:C3, color:"#a3e635", light:"#f4ffdc", glow:"#a3e635" }
+    ];
+
+
+    // Build segments per fibre
+    const segs = [];
+    fibres.forEach(f => {
+      const pts3 = hopfFibre(f.u, 120);
+      const pts2 = pts3.map(p => projectFibre(p, viewR));
+      for(let i=0;i<pts2.length-1;i++){
+        const a = pts2[i], b = pts2[i+1];
+        const zavg = (a.z + b.z)/2;
+        segs.push({ a, b, z:zavg, color:f.color, glow:f.glow, light:f.light });
+      }
+    });
+    // sort back-to-front
+    segs.sort((x,y) => x.z - y.z);
+
+
+    segs.forEach(s => {
+      const depthFactor = 0.4 + 0.6 * ((s.z + 1.5)/3); // normalise
+      const opBack = Math.max(0.15, Math.min(1, depthFactor));
+      const sw = 1.4 + 1.2 * ((s.z + 1.5)/3);
+      // glow layer for front
+      if(s.z > 0){
+        const g = makeEl("line", { x1:s.a.x, y1:s.a.y, x2:s.b.x, y2:s.b.y, stroke:s.glow, "stroke-width":sw*3, opacity:0.18, "stroke-linecap":"round", filter:"url(#glow4)" });
+        sceneR.appendChild(g);
+      }
+      const l = makeEl("line", { x1:s.a.x, y1:s.a.y, x2:s.b.x, y2:s.b.y, stroke:s.color, "stroke-width":sw, opacity:opBack, "stroke-linecap":"round" });
+      sceneR.appendChild(l);
+    });
+
+
+    // Central core glow
+    const core = makeEl("circle", { cx:RCX, cy:RCY, r:5, fill:"#8fb6ff", opacity:0.85, filter:"url(#glow4)" });
+    sceneR.appendChild(core);
+  }
+
+
+  // ---------- Readouts ----------
+  function complexMul(a,b){ return [a[0]*b[0]-a[1]*b[1], a[0]*b[1]+a[1]*b[0]]; }
+  function complexConj(a){ return [a[0], -a[1]]; }
+  function complexArg(a){ return Math.atan2(a[1], a[0]); }
+  function complexAbs(a){ return Math.hypot(a[0], a[1]); }
+
+
+  // Inner product ⟨a|b⟩ = conj(a1)*b1 + conj(a2)*b2
+  function inner(ja, jb){
+    const t1 = complexMul(complexConj(ja[0]), jb[0]);
+    const t2 = complexMul(complexConj(ja[1]), jb[1]);
+    return [t1[0]+t2[0], t1[1]+t2[1]];
+  }
+
+
+  function updateReadouts(){
+    const jA = jonesToS3(stateA.theta, stateA.phi);
+    const jB = jonesToS3(stateB.theta, stateB.phi);
+    const jC = jonesToS3(stateC.theta, stateC.phi);
+
+
+    // Pancharatnam phase for the loop A→B→C→A = arg(⟨A|B⟩⟨B|C⟩⟨C|A⟩)
+    const ab = inner(jA, jB);
+    const bc = inner(jB, jC);
+    const ca = inner(jC, jA);
+    const prod = complexMul(complexMul(ab, bc), ca);
+    const phase = complexArg(prod);
+
+
+    // Solid angle of spherical triangle ABC
+    // Use Girard's theorem: Ω = A + B + C - π, where A,B,C are interior angles
+    // Or use Oosterom-Strackee formula: tan(Ω/2) = |a·(b×c)| / (1 + a·b + b·c + c·a)
+    const a = toPoincare(stateA.theta, stateA.phi);
+    const b = toPoincare(stateB.theta, stateB.phi);
+    const c = toPoincare(stateC.theta, stateC.phi);
+    // Signed: sign(a·(b×c)) > 0 when A→B→C is counter-clockwise seen from outside.
+    const num = dot(a, cross(b,c));
+    const den = 1 + dot(a,b) + dot(b,c) + dot(c,a);
+    const omegaSigned = 2 * Math.atan2(num, den);
+
+
+    // Visibility V = |⟨A|B⟩⟨B|C⟩⟨C|A⟩|
+    const v = complexAbs(prod);
+
+
+    // Update DOM
+    document.getElementById("rPhase").textContent = formatAngle(phase);
+    document.getElementById("rOmega").textContent = formatAngle(Math.abs(omegaSigned));
+    document.getElementById("rOmegaSr").textContent = (Math.abs(omegaSigned)).toFixed(4) + " sr";
+    const pred = omegaSigned/2;   // arg of forward Bargmann product = +Ω/2 (Berry phase of the loop = −Ω/2)
+    document.getElementById("rPred").textContent = formatAngle(pred);
+    const delta = phase - pred;
+    // normalise delta to [-π,π]
+    const dn = ((delta + Math.PI) % (2*Math.PI) + 2*Math.PI) % (2*Math.PI) - Math.PI;
+    const dnDeg = dn*180/Math.PI;
+    document.getElementById("rDelta").textContent = "Δ " + dnDeg.toExponential(2) + "°";
+    const ok = Math.abs(dnDeg) < 1e-6;
+    const badge = document.getElementById("rAgree");
+    badge.textContent = ok ? "AGREES ✓" : "DISAGREES ✗";
+    badge.setAttribute("fill", ok ? "#4ade80" : "#f87171");
+    document.getElementById("rVis").textContent = v.toFixed(4);
+    document.getElementById("visL").textContent = "V = " + v.toFixed(4);
+  }
+
+
+  function formatAngle(rad){
+    let d = rad * 180 / Math.PI;
+    // normalise to [-180,180]
+    d = ((d + 180) % 360 + 360) % 360 - 180;
+    const sign = d < 0 ? "−" : "";
+    return sign + Math.abs(d).toFixed(3) + "°";
+  }
+
+
+  // ---------- Helpers ----------
+  function makeEl(tag, attrs){
+    const e = document.createElementNS(SVG_NS, tag);
+    for(const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+
+
+  // ---------- Drag to orbit ----------
+  function attachDrag(panel, view, yawEl, pitchEl){
+    let dragging = false, lastX=0, lastY=0;
+    panel.addEventListener("mousedown", e => { dragging = true; lastX = e.clientX; lastY = e.clientY; e.preventDefault(); });
+    window.addEventListener("mousemove", e => {
+      if(!dragging) return;
+      const dx = e.clientX - lastX, dy = e.clientY - lastY;
+      lastX = e.clientX; lastY = e.clientY;
+      view.yaw += dx * 0.5;
+      view.pitch += dy * 0.5;
+      view.pitch = Math.max(-89, Math.min(89, view.pitch));
+      yawEl.textContent = "yaw " + Math.round(view.yaw) + "°";
+      pitchEl.textContent = "pitch " + Math.round(view.pitch) + "°";
+      renderLeft(); renderRight();
+    });
+    window.addEventListener("mouseup", () => dragging = false);
+    // touch
+    panel.addEventListener("touchstart", e => {
+      if(e.touches.length!==1) return;
+      dragging = true; lastX = e.touches[0].clientX; lastY = e.touches[0].clientY;
+    }, {passive:true});
+    window.addEventListener("touchmove", e => {
+      if(!dragging || e.touches.length!==1) return;
+      const dx = e.touches[0].clientX - lastX, dy = e.touches[0].clientY - lastY;
+      lastX = e.touches[0].clientX; lastY = e.touches[0].clientY;
+      view.yaw += dx * 0.5;
+      view.pitch += dy * 0.5;
+      view.pitch = Math.max(-89, Math.min(89, view.pitch));
+      yawEl.textContent = "yaw " + Math.round(view.yaw) + "°";
+      pitchEl.textContent = "pitch " + Math.round(view.pitch) + "°";
+      renderLeft(); renderRight();
+    }, {passive:true});
+    window.addEventListener("touchend", () => dragging = false);
+  }
+
+
+  attachDrag(sceneL.parentNode, viewL, document.getElementById("yawL"), document.getElementById("pitchL"));
+  attachDrag(sceneR.parentNode, viewR, document.getElementById("yawR"), document.getElementById("pitchR"));
+
+
+  // ---------- Sliders ----------
+  function attachSlider(fillId, knobId, valId, min, max, init, onChange){
+    const fill = document.getElementById(fillId);
+    const knob = document.getElementById(knobId);
+    const val = document.getElementById(valId);
+    const x0 = 52, w = 648;
+    let dragging = false;
+    function set(v){
+      v = Math.max(min, Math.min(max, v));
+      const t = (v - min)/(max - min);
+      fill.setAttribute("width", (t*w).toFixed(1));
+      knob.setAttribute("cx", (x0 + t*w).toFixed(1));
+      val.textContent = Math.round(v) + "°";
+      onChange(v);
+    }
+    function fromX(clientX){
+      const svg = knob.ownerSVGElement;
+      const pt = svg.createSVGPoint();
+      pt.x = clientX; pt.y = 0;
+      const sp = pt.matrixTransform(svg.getScreenCTM().inverse());
+      const t = (sp.x - x0)/w;
+      return min + t*(max - min);
+    }
+    knob.addEventListener("mousedown", e => { dragging = true; e.preventDefault(); });
+    fill.parentNode.addEventListener("mousedown", e => {
+      dragging = true;
+      set(fromX(e.clientX));
+    });
+    window.addEventListener("mousemove", e => { if(dragging) set(fromX(e.clientX)); });
+    window.addEventListener("mouseup", () => dragging = false);
+    // touch
+    knob.addEventListener("touchstart", e => { dragging = true; }, {passive:true});
+    fill.parentNode.addEventListener("touchstart", e => {
+      dragging = true;
+      if(e.touches.length===1) set(fromX(e.touches[0].clientX));
+    }, {passive:true});
+    window.addEventListener("touchmove", e => {
+      if(dragging && e.touches.length===1) set(fromX(e.touches[0].clientX));
+    }, {passive:true});
+    window.addEventListener("touchend", () => dragging = false);
+    set(init);
+  }
+
+
+  attachSlider("s1fill", "s1knob", "s1v", 0, 180, 100, v => { stateB.theta = v; renderAll(); });
+  attachSlider("s2fill", "s2knob", "s2v", 0, 360, 120, v => { stateB.phi = v; renderAll(); });
+  attachSlider("s3fill", "s3knob", "s3v", 0, 360, 250, v => { stateC.phi = v; renderAll(); });
+
+
+  function renderAll(){ renderLeft(); renderRight(); updateReadouts(); }
+
+
+  // ---------- Initial render ----------
+  renderAll();
+
+
+  // Subtle idle animation: slowly drift yaw for visual life
+  let t0 = performance.now();
+  function tick(now){
+    const dt = (now - t0)/1000; t0 = now;
+    // very gentle auto-rotation only when not interacting
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+]]></script>
+</svg>
