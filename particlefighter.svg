@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" id="viewport" width="100%" height="100%" viewBox="0 0 1280 800" preserveAspectRatio="xMidYMid meet">
-<title>PARTICLE FIGHTERS // ROTOCLOUD // 6 VOLUMETRIC FIGHTERS · 2 PLAYER · TEKKEN CAMERA · DAY/NIGHT · 3RD PERSON MODE · CHARACTER SELECT · DOUBLE-PRESS WUXIA MOVES · CRYSTAL MEGA SWORD · ATON RA BOSS</title>
+<title>PARTICLE FIGHTERS v2 // OPEN WORLD SPIDER WAVES // POLYGON-NODE CHARACTERS // // ROTOCLOUD // 6 VOLUMETRIC FIGHTERS · 2 PLAYER · TEKKEN CAMERA · DAY/NIGHT · 3RD PERSON MODE · CHARACTER SELECT · DOUBLE-PRESS WUXIA MOVES · CRYSTAL MEGA SWORD · ATON RA BOSS</title>
 <style><![CDATA[
   html,body{margin:0;padding:0;background:#03060a;overflow:hidden;height:100%;}
   svg{background:#03060a;font-family:'Courier New',Courier,monospace;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;cursor:crosshair;}
@@ -138,7 +138,7 @@ function attackPose(id,s,st,en,dur){
  if(s<en)return K;
  return mixPose(K,B,smooth((s-en)/(dur-en)));}
 // locomotion: guard stance + leg cycle. vf = forward speed along facing, vs = side speed
-function moveClip(t,vf,vs){
+function moveClip0(t,vf,vs){
  const sp=Math.hypot(vf,vs),amp=clamp(sp/2.6,0,1),ph=t*2*Math.PI*(1.1+0.7*amp)*(vf<-0.1?-1:1);
  const s=Math.sin(ph),c=Math.cos(ph),B=stance(t);
  const r=B.rot;
@@ -168,9 +168,7 @@ function mirror(f){return [f(1),f(-1)];}
 const ARCH={
  op:{name:'OPERATOR',S:1,W:1,hp:100,spd:1,dmg:1,reach:1,aggr:.5,ideal:1.5,pw:['plasma','nova'],rm:{},
   pal:{fill:[.16,.44,.47],fill2:[.12,.3,.34],edge:[.15,1.15,.95],acc:[1.2,.88,.16],eye:[.2,1.4,1.2]},fx:{shim:.012,jit:0,rise:0},hot:[1.4,1.2,.5],
-  ex:()=>[ball('head',[0,1.64,0],.125,[1.05,.75,1.1],'acc',.04),{t:'cap',bone:'chest',a:[0,1.12,-.155],b:[0,1.38,-.155],r0:.1,r1:.1,col:'edge',sh:.02},
-   {t:'cap',bone:'gun',a:[.322,.859,.07],b:[.322,.84,.4],r0:.035,r1:.03,col:'edge',sh:.012,kind:1},{t:'cap',bone:'gun',a:[.322,.84,.4],b:[.322,.8,.62],r0:.016,r1:.016,col:'acc',sh:.006,kind:1},
-   {t:'cap',bone:'gun',a:[.3,.9,0],b:[.3,.95,-.25],r0:.022,r1:.022,col:'edge',sh:.006,kind:1}]},
+  ex:()=>[ball('head',[0,1.64,0],.125,[1.05,.75,1.1],'acc',.04),{t:'cap',bone:'chest',a:[0,1.12,-.155],b:[0,1.38,-.155],r0:.1,r1:.1,col:'edge',sh:.02}]},
  ember:{name:'EMBER BRUTE',S:1.22,W:1.3,hp:130,spd:.85,dmg:1.25,reach:1.1,aggr:.65,ideal:1.6,pw:['fire','pillar'],rm:{torso:1.15,limb:1.2,hand:1.5},
   pal:{fill:[.55,.12,.04],fill2:[.9,.3,.05],edge:[1.5,.8,.1],acc:[1.6,1.1,.3],eye:[1.8,1.6,.5]},fx:{shim:.02,jit:0,rise:1},hot:[1.6,.8,.2],
   ex:()=>[...mirror(s=>cone('head',[s*.07,1.66,0],[s*.24,1.93,.04],.045,'acc',.012)),...mirror(s=>ball(s>0?'rArm':'lArm',[s*.215,1.46,0],.15,[1,.8,1],'fill2',.03)),
@@ -247,14 +245,18 @@ function buildCloud(key,N){
   const colE=s.col&&pal[s.col]?pal[s.col]:null;
   for(let i=0;i<cnt&&k<N;i++,k++){
    let px,py,pz,edge=false,t=.5;
-   if(s.t==='cap'){t=Math.random();const th=Math.random()*6.2832,r=s.r0+(s.r1-s.r0)*t,c=Math.cos(th),sn=Math.sin(th);
+   if(s.t==='cap'&&A.poly&&s.col==='fill'&&A.poly.shape==='bolt'){t=Math.random();s._k=s._k||Array.from({length:7},()=>[rnd(-1,1),rnd(-1,1)]);const q=t*5,i0=Math.floor(q),fr=q-i0,k0=s._k[i0],k1=s._k[i0+1],rr=Math.max(s.r0,s.r1)*A.poly.k,ox=(k0[0]+(k1[0]-k0[0])*fr)*rr,oz=(k0[1]+(k1[1]-k0[1])*fr)*rr;
+    px=s.a[0]+ax[0]*L*t+ux*ox+wx*oz+rnd(-.008,.008);py=s.a[1]+ax[1]*L*t+uy*ox+wy*oz+rnd(-.008,.008);pz=s.a[2]+ax[2]*L*t+uz*ox+wz*oz+rnd(-.008,.008);edge=fr<.1||fr>.9||Math.random()<.04;}
+   else if(s.t==='cap'&&A.poly&&s.col==='fill'){const PD=polyData(A.poly.shape),n=Math.max(1,Math.round(L/(Math.max(s.r0,s.r1)*1.5))),j=Math.random()*n|0;t=(j+.5)/n;const rr=(s.r0+(s.r1-s.r0)*t)*A.poly.k,c=[s.a[0]+ax[0]*L*t,s.a[1]+ax[1]*L*t,s.a[2]+ax[2]*L*t],q=polySample(PD,c,rr,j*1.7+s.a[0]*5,A.poly.node);px=q[0];py=q[1];pz=q[2];edge=q[3];}
+   else if(s.t==='cap'){t=Math.random();const th=Math.random()*6.2832,r=s.r0+(s.r1-s.r0)*t,c=Math.cos(th),sn=Math.sin(th);
     px=s.a[0]+ax[0]*L*t+(ux*c+wx*sn)*r;py=s.a[1]+ax[1]*L*t+(uy*c+wy*sn)*r;pz=s.a[2]+ax[2]*L*t+(uz*c+wz*sn)*r;
     const eb=s.edgeBand||0;edge=(eb&&(t<eb||t>1-eb))||Math.random()<.03;}
+   else if(s.t==='sph'&&A.poly&&s.col==='fill'&&A.poly.shape!=='bolt'){const q=polySample(polyData(A.poly.shape),s.c,s.r*1.1,.6,A.poly.node*1.5,s.sc);px=q[0];py=q[1];pz=q[2];edge=q[3]||(s.head&&pz>s.c[2]+s.r*.5&&Math.random()<.5);}
    else if(s.t==='sph'){let vx,vy,vz,l;do{vx=rnd(-1,1);vy=rnd(-1,1);vz=rnd(-1,1);l=vx*vx+vy*vy+vz*vz;}while(l>1||l<1e-4);l=Math.sqrt(l);vx/=l;vy/=l;vz/=l;
     px=s.c[0]+vx*s.r*s.sc[0];py=s.c[1]+vy*s.r*s.sc[1];pz=s.c[2]+vz*s.r*s.sc[2];
     edge=Math.random()<(s.spark||.02);if(s.head&&vz>.55&&py>1.585&&py<1.64)edge=true;}
    else if(s.t==='ring'){const th=Math.random()*6.2832;px=s.c[0]+Math.cos(th)*s.r+rnd(-.012,.012);py=s.c[1]+rnd(-.012,.012);pz=s.c[2]+Math.sin(th)*s.r;edge=true;}
-   else{const th=Math.random()*6.2832,rr=.1+Math.random()*.22;px=Math.cos(th)*rr;py=rnd(.15,1.0);pz=Math.sin(th)*rr;edge=true;}
+   else{const q=auraPt(A.aura);px=q[0];py=q[1];pz=q[2];edge=true;}
    const lc=Q.rotVecConj(rq,[px-bp[0],py-bp[1],pz-bp[2]]);
    pos[k*3]=lc[0];pos[k*3+1]=lc[1];pos[k*3+2]=lc[2];
    let w1=0;if(s.blend&&t<.18)w1=.5*(1-t/.18);
@@ -417,6 +419,8 @@ function buildWorld(){
    for(let j=0;j<70;j++){const t=Math.random(),th=Math.random()*6.2832,rr=.16*(1-t);push(x+ox+tx*t+Math.cos(th)*rr,t*h,z+oz+tz*t+Math.sin(th)*rr,col,3);}}}
  for(let i=0;i<9000;i++){const a=Math.random()*6.2832,rad=12+Math.random()*34;push(Math.cos(a)*rad,Math.random()*.55,Math.sin(a)*rad,[.2+Math.random()*.2,.55+Math.random()*.2,.15],5);}
  for(let i=0;i<500;i++){const a=Math.random()*6.2832,rad=4+Math.random()*30;push(Math.cos(a)*rad,.6+Math.random()*2.5,Math.sin(a)*rad,[1.4,1.2,.3],4);}
+ for(let i=0;i<90;i++){const a=Math.random()*6.2832,rad=70+Math.random()*850,x=Math.cos(a)*rad,z=Math.sin(a)*rad,h=3+Math.random()*6,s=.8+Math.random()*1.2;for(let j=0;j<50;j++){const t=Math.random(),th=Math.random()*6.2832,rr=.2*s*(1-t*.5);push(x+Math.cos(th)*rr,t*h,z+Math.sin(th)*rr,[.32,.2,.1],0);}sph(x,h,z,(1.3+Math.random())*s,170,[[.85,.4,.1],[.15,.6,.2],[.3,.5,.9],[.7,.3,.8]][i%4],1,.8);} // far-world landmarks
+ for(let i=0;i<70;i++){const a=Math.random()*6.2832,rad=60+Math.random()*880,r=.8+Math.random()*2;sph(Math.cos(a)*rad,r*.4,Math.sin(a)*rad,r,120,[.34,.34,.37],2,.7);}
  worldCount=P.length/3;
  const mk=(arr)=>{const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(arr),gl.STATIC_DRAW);return b;};
  worldVbo=[mk(P),mk(Cc),mk(K)];
@@ -487,7 +491,7 @@ function makeFighter(w,name,key,slot){
  e.add(new C('Animator',{t:0,blendFrom:null,blendT:1,prev:'',last:null,pose:null}));
  e.add(new C('Cloud'));
  return e;}
-function setArch(e,key){const F=e.get('Fighter');F.key=key;F.A=ARCH[key];F.S=F.A.S;F.max=F.A.hp;F.hp=F.max;ensureCloud(key);}
+function setArch(e,key){const F=e.get('Fighter');F.key=key;F.A=ARCH[key];F.S=F.A.S;F.max=F.A.hp;F.hp=F.max;if(M.mode==='TPS'&&F.slot===0){F.max=OW.START_HP;F.hp=OW.START_HP;}ensureCloud(key);}
 const HOT={p1:['rHand','rFore'],p2:['lHand','lFore'],p3:['rHand','rFore','rArm'],k1:['rFoot','rShin','rThigh']};
 function startAtk(f,id){f.state='atk';f.st=0;f.mv=id;f.hitDone=false;f.spawned=false;f.queue=null;f.slashDone=false;f.tick=0;f.dpApex=false;f.dpLand=null;
  if(id==='pw1'||id==='pw2'){const pid=f.A.pw[id==='pw1'?0:1],p=PW[pid];f.en-=p.cost;f.mdef={pw:pid,st:p.fx,en:p.fx+(p.hold||.18),dur:p.dur,anim:p.anim};}
@@ -863,7 +867,7 @@ function slashFx(T,F,id){GFX.push({type:'slash',t:0,dur:.28,pos:[T.pos[0],T.pos[
 // ----- crystal + particle mega sword -----
 const CRY={on:false,pos:[0,0,0],t:0,life:0,next:6};
 function crystalY(){const f=clamp(CRY.t/.9,0,1);return 1.05+(1-f*f)*8+Math.sin(world.t*2.4)*.12*f;}
-function spawnCrystal(){const a=Math.random()*TAU,r=rnd(1.2,5.6);CRY.on=true;CRY.pos=[Math.cos(a)*r,0,Math.sin(a)*r];CRY.t=0;CRY.life=16;note('✦ SPECIAL CRYSTAL ✦',1.8);statusMsg('GRAB THE CRYSTAL · 20s PARTICLE MEGA SWORD');
+function spawnCrystal(){const a=Math.random()*TAU,tp=M.mode==='TPS',r=tp?rnd(14,38):rnd(1.2,5.6),o=tp?world.entities[0].get('Transform').pos:[0,0,0];CRY.on=true;CRY.pos=[o[0]+Math.cos(a)*r,0,o[2]+Math.sin(a)*r];CRY.t=0;CRY.life=16;note('✦ SPECIAL CRYSTAL ✦',1.8);statusMsg('GRAB THE CRYSTAL · 20s PARTICLE MEGA SWORD');
  for(let i=0;i<60;i++)emit([CRY.pos[0],rnd(0,8),CRY.pos[2]],[rnd(-1,1),rnd(-1,1),rnd(-1,1)],rb(Math.random(),1.6),.8,3,1,0);}
 function giveSword(e){const F=e.get('Fighter'),T=e.get('Transform');F.sword=20;F.swTip=null;
  burst([T.pos[0],T.pos[1]+1.2*F.S,T.pos[2]],120,10,[1.9,1.9,1.9],rb(Math.random(),1.8),1,3.6,0);CAM.shake=Math.max(CAM.shake,.15);
@@ -875,8 +879,8 @@ function swordFrame(e){const T=e.get('Transform'),F=e.get('Fighter'),R=e.get('Ri
  return {base:base,ax:ax,S:F.S,tip:V3.add(base,V3.scale(ax,SWL*F.S))};}
 function resetRoundExtras(){CRY.on=false;CRY.next=rnd(5,9);for(const e of world.entities.slice(0,2)){const F=e.get('Fighter');F.sword=0;F.inv=0;F.dpCd=0;F.dpReq=null;F.swTip=null;F.dpLand=null;}}
 function updateExtras(dt,w){
- if(M.mode!=='FIGHT')return;
- const E=[w.entities[0],w.entities[1]];
+ if(M.mode!=='FIGHT'&&M.mode!=='TPS')return;
+ const E=M.mode==='TPS'?[w.entities[0]]:[w.entities[0],w.entities[1]];
  if(M.state==='fight'){
   if(!CRY.on){CRY.next-=dt;if(CRY.next<=0)spawnCrystal();}
   else{CRY.t+=dt;CRY.life-=dt;const cy=crystalY();
@@ -1112,7 +1116,7 @@ function sysInput(dt,w){
   s1.mx+=p0.ax[0]+dpx;s1.my+=-p0.ax[1]+dpy;s1.block=s1.block||p0.btn[4];
   if(pressed(p0,2))s1.press.punch=1;if(pressed(p0,0))s1.press.kick=1;if(pressed(p0,3)||pressed(p0,6))s1.press.p1=1;if(pressed(p0,1)||pressed(p0,7))s1.press.p2=1;if(pressed(p0,5))s1.press.jump=1;}
  s1.mx=clamp(s1.mx,-1,1);s1.my=clamp(s1.my,-1,1);
- if(M.mode==='TPS'){F0.in.press={punch:0,kick:0,p1:0,p2:0,jump:0};TPSI.mx=s1.mx;TPSI.my=s1.my;TPSI.jump=!!s1.press.jump||TPSI.jump;TPSI.run=!!(KEY.ShiftLeft||KEY.ShiftRight)||(p0.on&&p0.btn[1]);
+ if(M.mode==='TPS'){fighterInput(F0,s1,B);TPSI.mx=s1.mx;TPSI.my=s1.my;TPSI.jump=!!s1.press.jump||TPSI.jump;TPSI.run=!!(KEY.ShiftLeft||KEY.ShiftRight)||(p0.on&&p0.btn[1]);
   TPS.fire=!!(INPUTLOOK.fire||KEY.KeyJ||(p0.on&&(p0.btn[7]||p0.btn[2])));if(p0.on&&pressed(p0,3))tpsReload();return;}
  if(M.state==='fight'&&!M.auto1){fighterInput(F0,s1,B);}
  // P2
@@ -1136,8 +1140,8 @@ function toggle2P(){M.twoP=!M.twoP;M.wins=[0,0];M.round=1;if(M.mode==='FIGHT')st
 function cycleOpp(d){let n=M.opp;do{n=(n+d+7)%7;}while(n===6&&!PROG.aton);pickChar(1,n);}
 function cycleP1(){let n=(M.p1+1)%7;if(n===6&&!PROG.aton)n=0;pickChar(0,n);}
 function setMode(m){M.mode=m;const e0=world.entities[0],T=e0.get('Transform'),F=e0.get('Fighter');
- if(m==='TPS'){setArch(e0,ALL_KEYS[M.p1]);T.pos=[0,0,0];T.yaw=0;F.state='free';F.vx=F.vz=0;F.dis=0;CAM.yaw=Math.PI;CAM.pitch=.17;CAM.dist=3.4;TPS.init();statusMsg('3RD PERSON · WASD · CLICK = FIRE · R RELOAD');}
- else{setArch(e0,ALL_KEYS[M.p1]);M.wins=[0,0];M.round=1;startRound();statusMsg('FIGHT MODE');}}
+ if(m==='TPS'){setArch(e0,ALL_KEYS[M.p1]);T.pos=[0,0,0];T.yaw=0;F.state='free';F.vx=F.vz=0;F.dis=0;CAM.yaw=Math.PI;CAM.pitch=.17;CAM.dist=5.6;OW.enter();}
+ else{OW.leave();setArch(e0,ALL_KEYS[M.p1]);M.wins=[0,0];M.round=1;startRound();statusMsg('FIGHT MODE');}}
 function resetMatch(){M.wins=[0,0];M.round=1;world.entities[0].get('Fighter').en=30;world.entities[1].get('Fighter').en=30;if(M.mode==='FIGHT')startRound();}
 function nextStage(){M.stage=(M.stage+1)%3;statusMsg('STAGE · '+['MOUNTAINS','CITY EDGE','METROPOLIS'][M.stage]);}
 function raySphere(o,d,c,r){const oc=V3.sub(o,c),b=V3.dot(oc,d),cc=V3.dot(oc,oc)-r*r,disc=b*b-cc;if(disc<0)return -1;const t=-b-Math.sqrt(disc);return t>0?t:-1;}
@@ -1146,8 +1150,8 @@ const TPSI={mx:0,my:0,jump:false,run:false};
 const TPS={ready:false,fire:false,ammo:30,max:30,last:-1,rel:0,score:0,drones:[],recoil:0,hit:0,
  init:function(){if(this.ready){this.drones.forEach(d=>d.alive=true);return;}this.ready=true;
   for(let i=0;i<5;i++){const a=i/5*6.28+Math.random()*.6,r=7+Math.random()*5.5;this.drones.push({pos:[Math.cos(a)*r,0,Math.sin(a)*r],bob:Math.random()*6.28,alive:true,t:0});}}};
-function tpsReload(){if(TPS.rel<=0&&TPS.ammo<TPS.max){TPS.rel=1.4;statusMsg('RELOADING…');}}
-function updateTPS(dt,w){
+function tpsReload0(){if(TPS.rel<=0&&TPS.ammo<TPS.max){TPS.rel=1.4;statusMsg('RELOADING…');}}
+function updateTPS0(dt,w){
  const e=w.entities[0],T=e.get('Transform'),F=e.get('Fighter'),R=e.get('Rig'),B=camBasis();
  const mx=TPSI.mx,my=TPSI.my,m=Math.min(1,Math.hypot(mx,my));
  let wx=B.r[0]*mx+B.f[0]*my,wz=B.r[1]*mx+B.f[1]*my;const wl=Math.hypot(wx,wz);if(wl>.001){wx/=wl;wz/=wl;}
@@ -1162,7 +1166,7 @@ function updateTPS(dt,w){
  if(TPS.fire&&TPS.rel<=0&&w.t-TPS.last>.11){if(TPS.ammo<=0)tpsReload();else{TPS.ammo--;TPS.last=w.t;TPS.recoil=1;tpsShoot(T,R);}}
  for(const d of TPS.drones){d.bob+=dt*1.6;if(!d.alive){d.t+=dt;if(d.t>1.6){const a=Math.random()*6.28,rr=7+Math.random()*5.5;d.pos=[Math.cos(a)*rr,0,Math.sin(a)*rr];d.alive=true;d.t=0;}}}
  TPS.hit-=dt;}
-function tpsShoot(T,R){
+function tpsShoot0(T,R){
  const gi=BIDX.gun,fy=T.yaw,mz=[R.pos[gi*3]+Math.sin(fy)*.5,R.pos[gi*3+1]+.0,R.pos[gi*3+2]+Math.cos(fy)*.5];
  const dir=V3.norm(V3.sub(CAM.target,CAM.eye));let bt=40,hd=null;
  for(const d of TPS.drones){if(!d.alive)continue;const t=raySphere(CAM.eye,dir,[d.pos[0],1.2+Math.sin(d.bob)*.18,d.pos[2]],.62);if(t>0&&t<bt){bt=t;hd=d;}}
@@ -1171,7 +1175,7 @@ function tpsShoot(T,R){
  burst(mz,12,8,[1.4,1,.3],[1.2,.6,.2],.1,3,0);
  if(hd){hd.alive=false;hd.t=0;TPS.score++;TPS.hit=.15;burst([hd.pos[0],1.2,hd.pos[2]],110,10,[1.4,.3,.1],[1.5,1.2,.3],.8,3.5,0);statusMsg('TARGET ELIMINATED · SCORE '+TPS.score);}
  else if(bt<40)burst(hp,10,5,[1.2,1,.5],[.5,1,1],.3,2.5,2);}
-function drawDrones(VP){const P=prog.fxc;gl.useProgram(P.p);gl.uniformMatrix4fv(P.u.uVP,false,VP);gl.uniform3fv(P.u.uCam,CAM.eye);gl.uniform1f(P.u.uPt,DPRV);gl.uniform1f(P.u.uTime,world.t);bindA(P.a.aA,fxcVbo,4);
+function drawDrones0(VP){const P=prog.fxc;gl.useProgram(P.p);gl.uniformMatrix4fv(P.u.uVP,false,VP);gl.uniform3fv(P.u.uCam,CAM.eye);gl.uniform1f(P.u.uPt,DPRV);gl.uniform1f(P.u.uTime,world.t);bindA(P.a.aA,fxcVbo,4);
  for(const d of TPS.drones){if(!d.alive)continue;const pos=[d.pos[0],1.2+Math.sin(d.bob)*.18,d.pos[2]];
   drawFXC(VP,{mode:2,pos:pos,r:.5,h:0,t:0,a:1,c1:[.9,.08,.2],c2:[1.5,.4,1],n:4500});drawFXC(VP,{mode:2,pos:pos,r:.28,h:0,t:0,a:1,c1:[1.5,.9,1],c2:[1.5,.4,.9],n:1500});}
  gl.disableVertexAttribArray(P.a.aA);}
@@ -1179,7 +1183,7 @@ function drawDrones(VP){const P=prog.fxc;gl.useProgram(P.p);gl.uniformMatrix4fv(
 function updateCamera(dt,w){
  const e0=w.entities[0],e1=w.entities[1],aT=e0.get('Transform'),bT=e1.get('Transform');
  if(M.mode==='TPS'){CAM.yaw-=INPUTLOOK.dx*.0055;CAM.pitch=clamp(CAM.pitch+INPUTLOOK.dy*.0055,-.08,1.25);INPUTLOOK.dx=INPUTLOOK.dy=0;
-  const tgt=[aT.pos[0],aT.pos[1]+1.18,aT.pos[2]],k=clamp(dt*6,0,1);for(let i=0;i<3;i++)CAM.target[i]+=(tgt[i]-CAM.target[i])*k;
+  const tgt=[aT.pos[0],aT.pos[1]+1.18*e0.get('Fighter').S,aT.pos[2]],k=clamp(dt*6,0,1);for(let i=0;i<3;i++)CAM.target[i]+=(tgt[i]-CAM.target[i])*k;
   const cp=Math.cos(CAM.pitch),sp=Math.sin(CAM.pitch),dd=CAM.dist*CAMMENU.zoom;
   CAM.eye=[CAM.target[0]+dd*Math.sin(CAM.yaw)*cp,CAM.target[1]+dd*sp,CAM.target[2]+dd*Math.cos(CAM.yaw)*cp];CAM.fov+=(55-CAM.fov)*Math.min(1,dt*4);return;}
  const dx=bT.pos[0]-aT.pos[0],dz=bT.pos[2]-aT.pos[2],sep=Math.hypot(dx,dz),mid=[(aT.pos[0]+bT.pos[0])/2,0,(aT.pos[2]+bT.pos[2])/2];
@@ -1206,9 +1210,8 @@ function aimArms(pose,an,F,dt){
 function fighterPose(e,dt){
  const T=e.get('Transform'),F=e.get('Fighter'),an=e.get('Animator');an.t+=dt;const t=an.t;
  const fd=faceDir(T),vf=F.vx*fd[0]+F.vz*fd[1],vs=F.vx*fd[1]-F.vz*fd[0];let pose,key=F.state;
- if(M.mode==='TPS'){key='tps';pose=moveClip(t,vf,vs);const l=pose.rot;l.rArm=[.9,0,0];}
- else switch(F.state){
-  case 'atk':pose=F.mdef.dp?dpPose(F,t):attackPose(F.mdef.anim,F.st,F.mdef.st,F.mdef.en,F.mdef.dur);key='atk'+F.mv;break;
+ switch(F.state){
+  case 'atk':pose=F.mdef.dp?dpPose(F,t):(F.mdef.anim==='k1'?kickPose(F,F.st):attackPose(F.mdef.anim,F.st,F.mdef.st,F.mdef.en,F.mdef.dur));key='atk'+F.mv;break;
   case 'hit':pose=mixPose(stance(t),POSES.hit,F.air?1:(.15+.85*clamp(1-F.st/(F.stun+1e-3),0,1))*smooth(F.st/.05));break;
   case 'down':{const s=clamp(F.st/.75,0,1),k=s<.15?s/.15:(s>.6?1-(s-.6)/.4:1);pose=mixPose(stance(t),POSES.ko,smooth(k));break;}
   case 'ko':pose=mixPose(stance(t),POSES.ko,smooth(F.st/.45));break;
@@ -1217,7 +1220,6 @@ function fighterPose(e,dt){
  if(key!==an.prev){if(an.last)an.blendFrom=copyPose(an.last);an.blendT=0;an.prev=key;}
  if(an.blendT<1&&an.blendFrom){an.blendT=Math.min(1,an.blendT+dt/.09);pose=mixPose(an.blendFrom,pose,smooth(an.blendT));}
  pose=copyPose(pose);an.last=copyPose(pose);
- if(M.mode==='TPS')aimArms(pose,an,F,dt);
  return pose;}
 function sysAnim(dt,w){
  const n=M.mode==='TPS'?1:2;
@@ -1238,7 +1240,7 @@ function drawFighter(e,VP,other){
  const tw=other&&other.key===F.key&&F.slot===1;gl.uniform3f(U.uMul,tw?1.5:(fz?.75:1),tw?.5:(fz?.9:1),tw?1.3:(fz?1.1:1));
  gl.uniform3fv(U.uHotCol,A.hot);gl.uniform1f(U.uTime,world.t);gl.uniform1f(U.uShim,A.fx.shim);gl.uniform1f(U.uJit,A.fx.jit);gl.uniform1f(U.uRise,A.fx.rise);
  gl.uniform1f(U.uS,A.S);gl.uniform1f(U.uW,A.W);gl.uniform1f(U.uPulse,F.pulse);gl.uniform1f(U.uBurst,F.burst);gl.uniform1f(U.uDis,F.dis);
- gl.uniform1f(U.uGun,(M.mode==='TPS'&&F.key==='op')?1:0);gl.uniform1f(U.uOrb,A.fx.orb||0);gl.uniform1f(U.uAlpha,c.fade);
+ gl.uniform1f(U.uGun,0);gl.uniform1f(U.uOrb,A.fx.orb||0);gl.uniform1f(U.uAlpha,c.fade);
  gl.uniform1f(U.uPt,clamp(Math.pow(1e6/Math.max(c.count,1e4),.35),1,2.2)*(DPRV>1?DPRV*.8:1));
  bindA(P.a.aPos,c.vbo[0],3);bindA(P.a.aCol,c.vbo[1],3);bindA(P.a.aSkin,c.vbo[2],4);bindA(P.a.aEx,c.vbo[3],3);
  gl.drawArrays(gl.POINTS,0,c.count);
@@ -1247,7 +1249,7 @@ function sysRender(dt,w){
  if(!gl)return;DRAWCALLS=0;EN=0;const cv=$('gl-canvas');gl.viewport(0,0,cv.width,cv.height);gl.clearColor(0,0,0,1);gl.depthMask(true);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
  const asp=cv.width/Math.max(1,cv.height);
  let eye=CAM.eye;if(CAM.shake>.001){eye=[eye[0]+rnd(-1,1)*CAM.shake,eye[1]+rnd(-1,1)*CAM.shake,eye[2]+rnd(-1,1)*CAM.shake];CAM.shake*=Math.max(0,1-dt*7);}
- M4.perspective(CAM.fov*Math.PI/180,asp,.1,400,_P);M4.lookAt(eye,CAM.target,[0,1,0],_V);M4.mul(_P,_V,_VP);
+ M4.perspective(CAM.fov*Math.PI/180,asp,.1,1400,_P);M4.lookAt(eye,CAM.target,[0,1,0],_V);M4.mul(_P,_V,_VP);
  gl.disable(gl.BLEND);gl.disable(gl.DEPTH_TEST);gl.depthMask(false);
  // sky
  const f=V3.norm(V3.sub(CAM.target,eye)),r=V3.norm(V3.cross(f,[0,1,0])),u=V3.cross(r,f),S=prog.sky,city=[0,.55,1][M.stage];
@@ -1256,7 +1258,7 @@ function sysRender(dt,w){
  gl.uniform3fv(S.u.uSunDir,TOD.sunDir);gl.uniform3fv(S.u.uMoonDir,TOD.moonDir);gl.uniform3fv(S.u.uFog,TOD.fog);gl.uniform3fv(S.u.uMtn,TOD.mtn);
  bindA(S.a.aPos,skyVbo,2);gl.drawArrays(gl.TRIANGLES,0,3);gl.disableVertexAttribArray(S.a.aPos);
  // ground
- const Gp=prog.ground;gl.useProgram(Gp.p);gl.uniformMatrix4fv(Gp.u.uVP,false,_VP);gl.uniform3fv(Gp.u.uG,TOD.ground);gl.uniform3fv(Gp.u.uFog,TOD.fog);
+ const Gp=prog.ground;gl.useProgram(Gp.p);gl.uniformMatrix4fv(Gp.u.uVP,false,M.mode==='TPS'?OW.followVP(_VP):_VP);gl.uniform3fv(Gp.u.uG,TOD.ground);gl.uniform3fv(Gp.u.uFog,TOD.fog);
  bindA(Gp.a.aPos,groundVbo,3);gl.drawArrays(gl.TRIANGLES,0,groundCount);gl.disableVertexAttribArray(Gp.a.aPos);
  gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE);
  const Fp=prog.floor;gl.useProgram(Fp.p);gl.uniformMatrix4fv(Fp.u.uVP,false,_VP);gl.uniform1f(Fp.u.uTime,w.t);
@@ -1268,10 +1270,10 @@ function sysRender(dt,w){
  bindA(Wp.a.aPos,worldVbo[0],3);bindA(Wp.a.aCol,worldVbo[1],3);bindA(Wp.a.aK,worldVbo[2],2);gl.drawArrays(gl.POINTS,0,worldCount);
  gl.disableVertexAttribArray(Wp.a.aPos);gl.disableVertexAttribArray(Wp.a.aCol);gl.disableVertexAttribArray(Wp.a.aK);
  // fighters
- const E0=w.entities[0],E1=w.entities[1];drawFighter(E0,_VP,E1.get('Fighter'));if(M.mode==='FIGHT')drawFighter(E1,_VP,E0.get('Fighter'));
+ const E0=w.entities[0],E1=w.entities[1];drawFighter(E0,_VP,E1.get('Fighter'));if(M.mode==='FIGHT')drawFighter(E1,_VP,E0.get('Fighter'));if(M.mode==='TPS')drawSpiders(_VP);
  // effects
  gl.depthMask(false);gl.blendFunc(gl.SRC_ALPHA,gl.ONE);
- if(M.mode==='FIGHT')drawGFX(_VP);else drawDrones(_VP);
+ drawGFX(_VP);if(M.mode==='TPS')drawDrones(_VP);
  drawProps(_VP);drawFXP(_VP);
  gl.depthMask(true);gl.disable(gl.BLEND);
 }
@@ -1429,12 +1431,258 @@ function loop(ts){
  for(const s of world.systems)s.update(s.real?dt:SDT,world);
  _perfT+=dt;if(FPS<22&&_perfT>4&&tierIdx>0){_perfT=0;tierIdx--;refreshClouds();statusMsg('AUTO-PERF · '+TIERS[tierIdx].toLocaleString('en-US')+' PTS');}}
 function sys(name,fn,real){world.systems.push({name:name,update:fn,real:!!real});}
+// =====================================================================================
+// ===== UPGRADE v2 · polygon-node bodies · science auras · unique kicks · OPEN WORLD ===
+// =====================================================================================
+// ---- 1. POLYHEDRA (nodes = vertices, struts = edges) used to BUILD each character before particle-ising ----
+const POLYC={};
+function edgesOf(V){let m=1e9;for(let i=0;i<V.length;i++)for(let j=i+1;j<V.length;j++)m=Math.min(m,Math.hypot(V[i][0]-V[j][0],V[i][1]-V[j][1],V[i][2]-V[j][2]));
+ const E=[];for(let i=0;i<V.length;i++)for(let j=i+1;j<V.length;j++)if(Math.hypot(V[i][0]-V[j][0],V[i][1]-V[j][1],V[i][2]-V[j][2])<m*1.03)E.push([i,j]);return E;}
+function polyData(shape){if(POLYC[shape])return POLYC[shape];const phi=(1+Math.sqrt(5))/2;let V=[];
+ if(shape==='cube'){for(const x of[-1,1])for(const y of[-1,1])for(const z of[-1,1])V.push([x,y,z]);}
+ else if(shape==='tetra')V=[[1,1,1],[1,-1,-1],[-1,1,-1],[-1,-1,1]];
+ else if(shape==='octa')V=[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]];
+ else if(shape==='dodeca'){for(const x of[-1,1])for(const y of[-1,1])for(const z of[-1,1])V.push([x,y,z]);for(const a of[-1/phi,1/phi])for(const b of[-phi,phi])V.push([0,a,b],[a,b,0],[b,0,a]);}
+ else{const I=[];for(const a of[-1,1])for(const b of[-phi,phi])I.push([0,a,b],[a,b,0],[b,0,a]);
+  if(shape==='ico')V=I;else{for(const[i,j]of edgesOf(I))for(const t of[1/3,2/3])V.push([I[i][0]+(I[j][0]-I[i][0])*t,I[i][1]+(I[j][1]-I[i][1])*t,I[i][2]+(I[j][2]-I[i][2])*t]);}} // bucky = truncated icosahedron (60 nodes)
+ V=V.map(v=>{const l=Math.hypot(v[0],v[1],v[2]);return [v[0]/l,v[1]/l,v[2]/l];});
+ return POLYC[shape]={V:V,E:edgesOf(V)};}
+function polySample(P,c,r,ang,nf,sc){let x,y,z,node=false;
+ if(Math.random()<nf){const v=P.V[Math.random()*P.V.length|0];x=v[0]+rnd(-.1,.1);y=v[1]+rnd(-.1,.1);z=v[2]+rnd(-.1,.1);node=true;}
+ else{const e=P.E[Math.random()*P.E.length|0],a=P.V[e[0]],b=P.V[e[1]],u=Math.random();x=a[0]+(b[0]-a[0])*u;y=a[1]+(b[1]-a[1])*u;z=a[2]+(b[2]-a[2])*u;}
+ const ca=Math.cos(ang),sa=Math.sin(ang),X=x*ca+z*sa,Z=-x*sa+z*ca;sc=sc||[1,1,1];
+ return [c[0]+X*r*sc[0],c[1]+y*r*sc[1],c[2]+Z*r*sc[2],node];}
+// per-character construction: each fighter is made of a different polygon family
+ARCH.op.poly={shape:'cube',k:1.3,node:.1};      // OPERATOR  – cubic armour blocks
+ARCH.ember.poly={shape:'tetra',k:1.7,node:.12}; // EMBER     – tetrahedral flame shards
+ARCH.frost.poly={shape:'dodeca',k:1.35,node:.14};// FROST     – dodecahedron ice crystals
+ARCH.volt.poly={shape:'bolt',k:1.6,node:.1};    // VOLT      – jagged lightning bolts
+ARCH.void.poly={shape:'ico',k:1.35,node:.12};   // VOID      – icosahedral lattice
+ARCH.golem.poly={shape:'bucky',k:1.45,node:.1}; // GOLEM     – buckminsterfullerene balls
+ARCH.op.aura='vortex';ARCH.ember.aura='plume';ARCH.frost.aura='dendrite';ARCH.volt.aura='lichten';ARCH.void.aura='spiral';ARCH.golem.aura='lattice';ARCH.aton.aura='dipole';
+for(const k in ARCH){const A=ARCH[k],ex0=A.ex;A.ex=function(){const L=ex0();if(!L.some(s=>s.t==='aura'))L.push({t:'aura',col:'edge',sh:.09});return L;};}
+// ---- 2. SCIENCE-BASED AURA EMITTERS (replace the plain cylinder) ----
+// vortex = counter-rotating toroidal vortex pair (dusty plasma) · plume = thermal convection · dendrite = 6-fold snow-crystal growth
+// lichten = Lichtenberg discharge tree · spiral = log-spiral accretion disc · lattice = Abrikosov triangular vortex lattice · dipole = magnetic field lines r=L·sin²θ
+const _LD=[];for(let i=0;i<14;i++){const a=Math.random()*6.28,b=Math.acos(rnd(-.6,1));_LD.push([Math.sin(b)*Math.cos(a),Math.cos(b),Math.sin(b)*Math.sin(a)]);}
+function auraPt(k){const th=Math.random()*6.2832,u=Math.random();
+ switch(k){
+ case 'vortex':{const y=u<.5?.6:1.3,R=.3,p=Math.random()*6.2832,rr=.07;return [Math.cos(th)*(R+Math.cos(p)*rr),y+Math.sin(p)*rr*1.5,Math.sin(th)*(R+Math.cos(p)*rr)];}
+ case 'plume':{const y=.05+u*1.7,r=(.1+.3*Math.sin(Math.min(1,u*1.4)*Math.PI*.8))*Math.sqrt(Math.random());return [Math.cos(th)*r,y,Math.sin(th)*r];}
+ case 'dendrite':{const arm=Math.floor(Math.random()*6)*1.0472,d=.05+Math.random()*.42,st=Math.floor(d/.09),bl=.06*(1-d/.5)*(Math.random()),sd=(Math.random()<.5?1:-1)*1.0472*(Math.random()<.6?1:0),a=arm+(bl>0?0:0);
+  const x=Math.cos(a)*d+Math.cos(a+sd)*bl*(st%2),z=Math.sin(a)*d+Math.sin(a+sd)*bl*(st%2);return [x,(u<.5?.62:1.25)+rnd(-.02,.02),z];}
+ case 'lichten':{const v=_LD[Math.random()*_LD.length|0],d=.06+Math.random()*.5,s=Math.random()<.5?0:rnd(-.12,.12)*d*3;return [v[0]*d+s*v[2],.95+v[1]*d*1.2,v[2]*d-s*v[0]];}
+ case 'spiral':{const r=.12+u*.46,a=3.2*Math.log(r/.1)+(Math.random()<.5?0:Math.PI)+rnd(-.12,.12),x=Math.cos(a)*r,z=Math.sin(a)*r,tl=.35;return [x,1.1+z*tl+rnd(-.02,.02),z*Math.cos(tl)];}
+ case 'lattice':{let i,j,x,z;do{i=(Math.random()*7|0)-3;j=(Math.random()*7|0)-3;x=.14*(i+j/2);z=.14*j*.866;}while(Math.hypot(x,z)>.46);return [x+rnd(-.012,.012),.05+Math.random()*1.55,z+rnd(-.012,.012)];}
+ case 'dipole':{const L=[.35,.5,.65][Math.random()*3|0],t=rnd(.2,Math.PI-.2),r=L*Math.sin(t)*Math.sin(t)*1.5;return [r*Math.sin(t)*Math.cos(th),1.15+r*Math.cos(t)*1.3,r*Math.sin(t)*Math.sin(th)];}
+ default:{const rr=.1+u*.22;return [Math.cos(th)*rr,.15+Math.random()*.85,Math.sin(th)*rr];}}}
+// ---- 3. UNIQUE SIGNATURE KICKS (kickPose replaces the single shared kick) ----
+MV.k1={st:.2,en:.36,dur:.72,dmg:9,reach:1.9,kb:3.4,stun:.36,lunge:1.5,anim:'k1'};
+const KICKS={
+ op:{n:'LEAPING SPIN ROUNDHOUSE',air:.62,sy:1,sx:0,th:[-1.5,0,-.35],sh:.12,fw:.25,arm:{rArm:[.3,0,-1.4],lArm:[.4,0,1.4],rFore:[.2,0,0],lFore:[.2,0,0]},land:-.5,
+  l:{rThigh:[-1.6,0,-.1],rShin:[1.8,0,0],lThigh:[.3,0,.1],lShin:[1.7,0,0],rArm:[.5,0,-.2],rFore:[1.2,0,0],lArm:[1.1,0,.4],lFore:[1.6,0,0],spine:[.5,0,0],head:[-.3,0,0]}}, // lands in a hero kneel
+ ember:{n:'DRAGON AXE KICK',air:.15,sy:0,sx:0,th:[-2.7,0,-.1],sh:.05,fw:.3,arm:{rArm:[1.5,0,-.2],lArm:[2.6,0,.3]},land:-.32,l:{rThigh:[-.6,0,-.1],rShin:[.7,0,0],lThigh:[.6,0,.1],lShin:[.9,0,0],spine:[.55,0,0],rArm:[1.2,0,-.6],lArm:[.5,0,.8]}},
+ frost:{n:'CRYSTAL PIROUETTE',air:.25,sy:1,sx:0,th:[-.25,0,-1.6],sh:.04,fw:0,arm:{rArm:[0,0,-1.7],lArm:[0,0,1.7]},land:-.05,l:{rThigh:[-.2,0,-.1],lThigh:[.9,0,.2],rShin:[.3,0,0],lShin:[.2,0,0],rArm:[0,0,-1.5],lArm:[0,0,1.5],spine:[-.1,0,0]}},
+ volt:{n:'THUNDER DIVE KICK',air:.3,sy:0,sx:-.28,th:[-1.3,0,-.15],sh:.08,fw:.8,arm:{rArm:[.2,0,-1.1],lArm:[.3,0,1.1]},land:-.4,l:{rThigh:[-1.2,0,-.1],rShin:[1.4,0,0],lThigh:[.2,0,.1],lShin:[1.4,0,0],rArm:[1.6,0,-.3],lArm:[.2,0,.5],spine:[.4,0,0]}},
+ void:{n:'GRAVITY BACKFLIP',air:.75,sy:0,sx:1,th:[-1.9,0,0],sh:.1,fw:-.15,arm:{rArm:[.4,0,-.6],lArm:[.4,0,.6]},land:-.38,l:{rThigh:[-1.3,0,-.2],rShin:[1.6,0,0],lThigh:[.4,0,.2],lShin:[1.5,0,0],rArm:[.3,0,-1],lArm:[.3,0,1],spine:[.3,0,0]}},
+ golem:{n:'TITAN STOMP',air:.05,sy:0,sx:0,th:[-1.95,0,-.05],sh:.2,fw:.2,dip:-.12,arm:{rArm:[.9,0,-.9],lArm:[.9,0,.9]},land:-.28,l:{rThigh:[-.7,0,-.2],lThigh:[-.4,0,.25],rShin:[.8,0,0],lShin:[.8,0,0],rArm:[.6,0,-1],lArm:[.6,0,1],spine:[.3,0,0]}},
+ aton:{n:'ECLIPSE SWEEP',air:0,sy:1,sx:0,th:[-.15,0,-1.5],sh:.05,fw:.1,dip:-.55,arm:{rArm:[.2,0,-1.2],lArm:[.2,0,1.2]},land:-.45,l:{rThigh:[-1.4,0,-.5],rShin:[1.9,0,0],lThigh:[.4,0,.2],lShin:[1.9,0,0],rArm:[.9,0,-.4],lArm:[.9,0,.5],spine:[.4,0,0]}}};
+function kickPose(F,s){const m=F.mdef,k=KICKS[F.key]||KICKS.op,B=stance(s);
+ const Wp=ov(S0,[0,-.3,0],{rThigh:[.6,0,-.1],rShin:[1.3,0,0],lThigh:[-.5,0,.1],lShin:[1.2,0,0],spine:[.3,0,0],chest:[.2,0,0],rArm:[.6,0,-.2],lArm:[.7,0,.4]});
+ if(s<m.st)return mixPose(B,Wp,smooth(s/m.st));
+ const act=m.en+.1;
+ if(s<act){const u=clamp((s-m.st)/(act-m.st),0,1),e=smooth(u),sw=Math.sin(u*Math.PI);
+  const p=ov(S0,[0,-.1+k.air*sw+(k.dip||0)*sw,k.fw*e],Object.assign({rThigh:k.th,rShin:[k.sh,0,0],lThigh:[.3,0,.1],lShin:[.7,0,0],rFoot:[.4,0,0],spine:[-.15,0,0]},k.arm));
+  p.rot.hips=[.05-k.sx*6.2832*e,k.sy*6.2832*e,0];return u<.18?mixPose(Wp,p,smooth(u/.18)):p;}
+ const P1=copyPose(kickPose(F,act-1e-4));P1.rot.hips=[.05,0,0];const L=ov(S0,[0,k.land,0],k.l),end=m.dur-.14;
+ if(s<act+.1)return mixPose(P1,L,smooth((s-act)/.1));if(s<end)return L;return mixPose(L,B,smooth((s-end)/(m.dur-end)));}
+// ---- 4. BETTER LOCOMOTION (original clip kept as moveClip0; adds lean, arm counter-swing, breathing) ----
+function moveClip(t,vf,vs){const B=moveClip0(t,vf,vs),sp=Math.hypot(vf,vs),amp=clamp(sp/2.6,0,1),ph=t*6.2832*(1.1+.7*amp)*(vf<-.1?-1:1),s=Math.sin(ph),c=Math.cos(ph),r=B.rot;
+ r.spine=[r.spine[0]+.16*amp,r.spine[1]+.06*amp*s,r.spine[2]+.03*amp*c];r.chest=[r.chest[0]+.06*amp+.02*Math.sin(t*1.7),r.chest[1]-.14*amp*s,r.chest[2]];
+ r.rArm=[r.rArm[0]+.28*amp*c,r.rArm[1],r.rArm[2]];r.lArm=[r.lArm[0]-.28*amp*c,r.lArm[1],r.lArm[2]];r.head=[r.head[0]-.08*amp,r.head[1]+.1*amp*s,r.head[2]];return B;}
+// ---- 5. OPEN WORLD ----
+const OW={active:false,SP:[],SPB:[],crystals:[],wave:0,wt:0,kills:0,pInv:0,_pf:false,hud:null,
+ START_HP:1000,            // player HP at the start of the open world
+ WORLD_R:M.arena*100,      // roamable radius (original arena 11.5 x 100)
+ MOVE_BOOST:1.5,           // extra walking speed for the huge map
+ CRYSTAL_HP:500,           // HP given by each green crystal
+ CRYSTAL_COUNT:10,
+ // >>> RANDOM CRYSTAL SPAWN AREA: green HP crystals appear randomly within this radius of the world centre. LOWER IT (e.g. 120) to make them easier to find.
+ CRYSTAL_SPAWN_RADIUS:350,
+ CRYSTAL_RESPAWN:40,       // seconds before a collected crystal reappears somewhere else
+ GIANTS_LOW:1,             // green swarm only attacks when living giants <= this
+ MAX_ALIVE:26,WAVE_PAUSE:5,LOCK_RANGE:34};
+// WAVES: g = giant black, m = striker yellow/black, s = swarm green. Waves past the end of the list keep scaling gently.
+const WAVES=[{g:1,m:0,s:4},{g:1,m:2,s:6},{g:2,m:2,s:8},{g:2,m:4,s:10},{g:3,m:5,s:12}];
+// ---- Spider ECS: archetypes derive from one rigged base model ----
+const SPIDER_BASE={sc:1,hp:100,spd:3,N:2000,ps:2.4,behave:'ranged',
+ col:{body:[.03,.03,.04],leg:[.05,.05,.06],sheen:[.3,.3,.38],eye:[2.4,.1,.06],mark:null},
+ atk:{dmg:40,cd:2.4,wind:.7,speed:22,range:42,min:12,r:.6,c1:[1.7,.2,.9],c2:[.5,.1,2],n:2600},melee:{dmg:35,cd:1.3}};
+const SPIDER_CLASSES={
+ giant:Object.assign({},SPIDER_BASE,{id:'giant',sc:2.25,hp:260,spd:3.4}),                          // CLASS 1 · large black plasma spiders (2x ATON RA height)
+ striker:Object.assign({},SPIDER_BASE,{id:'striker',sc:1.1,hp:90,spd:6.4,N:1200,ps:2,              // CLASS 2 · half size, rapid yellow/black, weaker plasma
+  col:{body:[.03,.03,.03],leg:[.05,.05,.04],sheen:[.5,.4,.1],eye:[2.4,.1,.06],mark:[1.5,1.1,.08]},
+  atk:{dmg:11,cd:.55,wind:.15,speed:30,range:28,min:6,r:.3,c1:[1.7,1.3,.1],c2:[1.9,.6,.1],n:1300},melee:{dmg:12,cd:.8}}),
+ swarm:Object.assign({},SPIDER_BASE,{id:'swarm',sc:.45,hp:28,spd:5.8,N:450,ps:1.7,behave:'lurk',    // CLASS 3 · small green swarm, lurks until giants are few
+  col:{body:[.08,.7,.15],leg:[.04,.3,.08],sheen:[.5,1.4,.5],eye:[2,.1,.06],mark:null},atk:null,melee:{dmg:7,cd:.7}})};
+const SP_RIG=['thorax','abdomen','head'];for(let i=0;i<8;i++){SP_RIG.push('leg'+i+'_femur','leg'+i+'_tibia');} // 19-bone skeleton
+const SP_HIP=[.42,.15,-.15,-.42],SP_FOOT=[[1.75,1.6],[2.0,.7],[2.0,-.6],[1.75,-1.6]],SP_L1=1.25,SP_L2=1.75;
+function spiderTemplate(cls){if(cls._tpl)return cls._tpl;const N=cls.N,seg=new Uint8Array(N),a=new Float32Array(N*4),col=new Float32Array(N*3);let k=0;const C=cls.col;
+ const put=(sg,p,q,r,s,c)=>{if(k>=N)return;seg[k]=sg;a[k*4]=p;a[k*4+1]=q;a[k*4+2]=r;a[k*4+3]=s;const b=.8+Math.random()*.4,sh=Math.random()<.07;const cc=sh?C.sheen:c;col[k*3]=cc[0]*b;col[k*3+1]=cc[1]*b;col[k*3+2]=cc[2]*b;k++;};
+ const ell=(sg,n,rx,ry,rz,colf)=>{for(let i=0;i<n;i++){let x,y,z,l;do{x=rnd(-1,1);y=rnd(-1,1);z=rnd(-1,1);l=x*x+y*y+z*z;}while(l>1||l<1e-4);l=Math.sqrt(l);const f=Math.random()<.8?1/l:(.7+.3*Math.random())/l;
+   put(sg,x*f*rx,y*f*ry,z*f*rz,0,colf(x,y,z));}};
+ const nTh=Math.round(N*.2),nAb=Math.round(N*.24),nHd=Math.round(N*.06),nF=Math.round(N*.033),nT=Math.round(N*.0295);
+ ell(0,nTh,.42,.38,.55,()=>C.mark&&Math.random()<.25?C.mark:C.body);
+ ell(1,nAb,.62,.6,.85,(x,y,z)=>C.mark&&Math.floor((z+1)*3)%2?C.mark:C.body);
+ const eyes=[[.1,.1,.27],[-.1,.1,.27],[.17,.14,.2],[-.17,.14,.2],[.05,.2,.25],[-.05,.2,.25],[.2,.05,.15],[-.2,.05,.15]];
+ const ne=Math.min(nHd>>1,eyes.length*6);for(let i=0;i<ne;i++){const e=eyes[i%8],v=V3.norm([rnd(-1,1),rnd(-1,1),rnd(-1,1)]);put(2,e[0]+v[0]*.05,e[1]+v[1]*.05,e[2]+v[2]*.05,0,C.eye);}
+ ell(2,nHd-ne,.26,.24,.3,()=>C.body);
+ for(let i=0;i<8;i++){for(let j=0;j<2;j++){const n=j?nT:nF,sg=3+i*2+j;for(let q=0;q<n;q++){const t=Math.random(),th=Math.random()*6.2832,r=j?(.07-.05*t):(.09-.02*t);
+   put(sg,t,Math.cos(th),Math.sin(th),r,(j&&C.mark&&t<.14)?C.mark:C.leg);}}}
+ while(k<N)put(0,rnd(-.3,.3),rnd(-.3,.3),rnd(-.4,.4),0,C.body);
+ return cls._tpl={seg:seg,a:a,col:col};}
+function createSpider(key,x,z){const cls=SPIDER_CLASSES[key],e=world.create('spider');
+ e.add(new C('Transform',{pos:[x,0,z],yaw:Math.random()*6.28}));
+ const legs=[];for(let i=0;i<8;i++){const side=i<4?-1:1,j=i%4;legs.push({side:side,hz:SP_HIP[j],fx:SP_FOOT[j][0],fz:SP_FOOT[j][1],foot:[x,0,z],from:null,to:null,s:0,on:false,g:(j+(i<4?0:1))%2});}
+ e.add(new C('SpiderRig',{legs:legs,bones:SP_RIG,h:key==='swarm'?.45:1,bodyY:cls.sc*1.18,ph:0,pitch:0,init:false,spd:0}));
+ e.add(new C('Health',{hp:cls.hp,max:cls.hp}));
+ e.add(new C('SpiderAI',{cls:cls,key:key,mode:'idle',cd:rnd(.5,2),cd2:0,charge:0,flash:0,freeze:0,stun:0,kx:0,kz:0,strafe:Math.random()<.5?1:-1,st:rnd(1,3),dead:false,dt:0,lunge:0}));
+ OW.SP.push(e);return e;}
+function spiderGait(e,dt){const T=e.get('Transform'),R=e.get('SpiderRig'),A=e.get('SpiderAI'),sc=A.cls.sc,cy=Math.cos(T.yaw),sy=Math.sin(T.yaw);
+ let stepping=[0,0];for(const l of R.legs)if(l.on)stepping[l.g]++;
+ for(const l of R.legs){const rx=T.pos[0]+l.side*l.fx*sc*cy+l.fz*sc*sy,rz=T.pos[2]-l.side*l.fx*sc*sy+l.fz*sc*cy;
+  if(!R.init){l.foot=[rx,0,rz];}
+  const tx=rx+Math.sin(T.yaw)*R.spd*.2,tz=rz+Math.cos(T.yaw)*R.spd*.2;
+  if(l.on){l.s+=dt/clamp(.34/(1+R.spd*.12),.1,.3);if(l.s>=1){l.on=false;l.foot=l.to.slice();if(sc>1.5&&Math.random()<.3)burst([l.foot[0],.05,l.foot[2]],3,2,[.4,.35,.3],[.2,.2,.2],.4,2,-1);}
+   else{const q=smooth(l.s);l.foot=[l.from[0]+(l.to[0]-l.from[0])*q,Math.sin(l.s*Math.PI)*.55*sc,l.from[2]+(l.to[2]-l.from[2])*q];}}
+  else if(Math.hypot(l.foot[0]-tx,l.foot[2]-tz)>.5*sc&&stepping[1-l.g]===0){l.on=true;l.s=0;l.from=l.foot.slice();l.to=[tx,0,tz];stepping[l.g]++;}}
+ R.init=true;R.ph+=R.spd*dt/sc*2.2;}
+const _SA=new Float32Array(30000*8);let _spN=0,spVbo=null;
+function spiderCloud(e){const T=e.get('Transform'),R=e.get('SpiderRig'),A=e.get('SpiderAI'),cls=A.cls,tp=spiderTemplate(cls),sc=cls.sc,N=cls.N;if(_spN+N>30000)return;
+ const yy=T.yaw,sY=Math.sin(yy),cY=Math.cos(yy),sp=Math.sin(R.pitch),cp=Math.cos(R.pitch),f=[sY*cp,sp,cY*cp],r=[cY,0,-sY],u=[-sY*sp,cp,-cY*sp];
+ const by=R.bodyY*R.h+Math.sin(R.ph)*.05*sc,B=[T.pos[0],by,T.pos[2]],br=1+.03*Math.sin(world.t*2.4);
+ const cen=[B,[B[0]-f[0]*1.05*sc+u[0]*.28*sc,B[1]-f[1]*1.05*sc+u[1]*.28*sc,B[2]-f[2]*1.05*sc+u[2]*.28*sc],[B[0]+f[0]*.78*sc+u[0]*.05*sc,B[1]+f[1]*.78*sc+u[1]*.05*sc,B[2]+f[2]*.78*sc+u[2]*.05*sc]];
+ const SA=[],SB=[],SU=[],SW=[],SL=[];
+ for(let i=0;i<8;i++){const l=R.legs[i],H=[B[0]+r[0]*l.side*.38*sc+f[0]*l.hz*sc,B[1]-.08*sc+f[1]*l.hz*sc,B[2]+r[2]*l.side*.38*sc+f[2]*l.hz*sc];
+  let dx=l.foot[0]-H[0],dy=l.foot[1]-H[1],dz=l.foot[2]-H[2],d=Math.hypot(dx,dy,dz);const L1=SP_L1*sc,L2=SP_L2*sc,mx=L1+L2-.02*sc;let F2=l.foot;
+  if(d>mx){const k=mx/d;dx*=k;dy*=k;dz*=k;d=mx;F2=[H[0]+dx,H[1]+dy,H[2]+dz];}
+  const n=[dx/d,dy/d,dz/d],aa=(L1*L1-L2*L2+d*d)/(2*d),h=Math.sqrt(Math.max(0,L1*L1-aa*aa)),dt=n[1];let pp=[-n[0]*dt,1-n[1]*dt,-n[2]*dt];const pl=Math.hypot(pp[0],pp[1],pp[2])||1;pp=[pp[0]/pl,pp[1]/pl,pp[2]/pl];
+  const K=[H[0]+n[0]*aa+pp[0]*h,H[1]+n[1]*aa+pp[1]*h,H[2]+n[2]*aa+pp[2]*h];
+  for(const [a,b] of [[H,K],[K,F2]]){const v=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],L=Math.hypot(v[0],v[1],v[2])||1,ax=[v[0]/L,v[1]/L,v[2]/L];let uu=[ax[2],0,-ax[0]];let ul=Math.hypot(uu[0],uu[2]);if(ul<.01){uu=[1,0,0];ul=1;}uu=[uu[0]/ul,0,uu[2]/ul];
+   const ww=[ax[1]*uu[2]-ax[2]*uu[1],ax[2]*uu[0]-ax[0]*uu[2],ax[0]*uu[1]-ax[1]*uu[0]];SA.push(a);SB.push(v);SU.push(uu);SW.push(ww);SL.push(L);}}
+ const fl=A.flash,fz=A.freeze>0,dd=A.dead?A.dt:0,al=A.dead?Math.max(0,1-dd/1.5):1,sz=cls.ps*(.7+.3*Math.sqrt(sc));let o=_spN*8;
+ for(let k=0;k<N;k++){const sg=tp.seg[k],q=k*4,a0=tp.a[q],a1=tp.a[q+1],a2=tp.a[q+2],a3=tp.a[q+3];let x,y,z;
+  if(sg<3){const c=cen[sg],s2=sg===1?br:1,lx=a0*sc*s2,ly=a1*sc*s2,lz=a2*sc*s2;x=c[0]+r[0]*lx+u[0]*ly+f[0]*lz;y=c[1]+u[1]*ly+f[1]*lz;z=c[2]+r[2]*lx+u[2]*ly+f[2]*lz;}
+  else{const si=sg-3,A0=SA[si],V=SB[si],t=a0,rr=a3*sc;x=A0[0]+V[0]*t+(SU[si][0]*a1+SW[si][0]*a2)*rr;y=A0[1]+V[1]*t+(SU[si][1]*a1+SW[si][1]*a2)*rr;z=A0[2]+V[2]*t+(SU[si][2]*a1+SW[si][2]*a2)*rr;}
+  if(dd>0){const g=dd*dd*3;x+=(tp.a[q]*dd*2.5);z+=(tp.a[q+2]*dd*2.5);y=Math.max(.05,y-g*.5+Math.abs(tp.a[q+1])*dd*1.5);}
+  let cr=tp.col[k*3],cg=tp.col[k*3+1],cb=tp.col[k*3+2];
+  if(fl>0){cr+=fl*1.6;cg+=fl*.3;cb+=fl*.3;}if(fz){cr*=.5;cg=cg*.8+.25;cb=cb*.8+.9;}
+  _SA[o]=x;_SA[o+1]=y;_SA[o+2]=z;_SA[o+3]=cr;_SA[o+4]=cg;_SA[o+5]=cb;_SA[o+6]=al;_SA[o+7]=sz;o+=8;}
+ _spN+=N;}
+function drawSpiders(VP){if(!OW.active||!OW.SP.length)return;_spN=0;for(const e of OW.SP)spiderCloud(e);if(!_spN)return;
+ if(!spVbo)spVbo=gl.createBuffer();const P=prog.pts;gl.useProgram(P.p);gl.uniformMatrix4fv(P.u.uVP,false,VP);gl.uniform3fv(P.u.uCam,CAM.eye);gl.uniform1f(P.u.uPt,DPRV);
+ gl.bindBuffer(gl.ARRAY_BUFFER,spVbo);gl.bufferData(gl.ARRAY_BUFFER,_SA.subarray(0,_spN*8),gl.DYNAMIC_DRAW);
+ bindA(P.a.aP,spVbo,3,32,0);bindA(P.a.aC,spVbo,4,32,12);bindA(P.a.aS,spVbo,1,32,28);gl.drawArrays(gl.POINTS,0,_spN);
+ gl.disableVertexAttribArray(P.a.aP);gl.disableVertexAttribArray(P.a.aC);gl.disableVertexAttribArray(P.a.aS);}
+function drawDrones(VP){const P=prog.fxc;gl.useProgram(P.p);gl.uniformMatrix4fv(P.u.uVP,false,VP);gl.uniform3fv(P.u.uCam,CAM.eye);gl.uniform1f(P.u.uPt,DPRV);gl.uniform1f(P.u.uTime,world.t);bindA(P.a.aA,fxcVbo,4);
+ for(const b of OW.SPB)drawFXC(VP,{mode:2,pos:b.p,r:b.r,h:0,t:0,a:1,c1:b.c1,c2:b.c2,n:b.n});
+ for(const c of OW.crystals){if(c.hide>0)continue;drawFXC(VP,{mode:2,pos:[c.x,1.3+Math.sin(c.b)*.2,c.z],r:.4,h:0,t:0,a:1,c1:[.2,1.6,.6],c2:[1.6,1.9,1.2],n:3000});}
+ gl.disableVertexAttribArray(P.a.aA);}
+// ---- game logic ----
+function owCrystalPos(c,near){let x,z;if(near){const a=Math.random()*6.28,r=rnd(40,90);x=Math.cos(a)*r;z=Math.sin(a)*r;}else{const a=Math.random()*6.28,r=Math.sqrt(Math.random())*OW.CRYSTAL_SPAWN_RADIUS;x=Math.cos(a)*r;z=Math.sin(a)*r;}c.x=x;c.z=z;c.hide=0;}
+OW.enter=function(){OW.active=true;for(const e of OW.SP.slice())owRemove(e);OW.SPB.length=0;OW.wave=0;OW.wt=2.5;OW.kills=0;OW.pInv=0;
+ const F=world.entities[0].get('Fighter');F.max=OW.START_HP;F.hp=OW.START_HP;F.en=60;F.sword=0;M.state='fight';
+ OW.crystals=[];for(let i=0;i<OW.CRYSTAL_COUNT;i++){const c={x:0,z:0,b:Math.random()*6,hide:0};owCrystalPos(c,i<2);OW.crystals.push(c);}
+ CRY.on=false;CRY.next=rnd(8,14);owHud();statusMsg('OPEN WORLD · WASD MOVE · J/K PUNCH/KICK · U/I POWERS · FIND GREEN CRYSTALS (+'+OW.CRYSTAL_HP+' HP)');};
+OW.leave=function(){OW.active=false;for(const e of OW.SP.slice())owRemove(e);OW.SPB.length=0;if(OW.hud)OW.hud.g.style.display='none';};
+function owRemove(e){const i=OW.SP.indexOf(e);if(i>=0)OW.SP.splice(i,1);const j=world.entities.indexOf(e);if(j>1)world.entities.splice(j,1);}
+function owHud(){if(OW.hud)return;const root=$('viewport'),g=el('g',{'pointer-events':'none'},root);
+ const bg=el('rect',{x:440,y:12,width:400,height:12,rx:4,fill:'rgba(0,0,0,.55)',stroke:'rgba(0,255,208,.4)'},g),fill=el('rect',{x:440,y:12,width:400,height:12,rx:4,fill:'#33ff99'},g);
+ const t1=el('text',{x:640,y:42,'text-anchor':'middle',class:'stat'},g),t2=el('text',{x:640,y:60,'text-anchor':'middle',class:'amb'},g);OW.hud={g:g,fill:fill,t1:t1,t2:t2};}
+function owSpawnWave(){OW.wave++;const b=WAVES[Math.min(OW.wave-1,WAVES.length-1)],ex=Math.max(0,OW.wave-WAVES.length),T=world.entities[0].get('Transform');
+ const want={giant:b.g+(ex>>1),striker:b.m+ex,swarm:b.s+ex*2};let total=0;
+ for(const key of['giant','striker','swarm']){const n=Math.min(want[key],Math.max(0,OW.MAX_ALIVE-total));total+=n;const base=Math.random()*6.28;
+  for(let i=0;i<n;i++){const a=base+(key==='swarm'?(i%4)*.35+ (i>>2)*1.6:i/Math.max(1,n)*6.28),r=key==='giant'?rnd(50,70):rnd(38,58);createSpider(key,clamp(T.pos[0]+Math.cos(a)*r,-OW.WORLD_R,OW.WORLD_R),clamp(T.pos[2]+Math.sin(a)*r,-OW.WORLD_R,OW.WORLD_R));}}
+ statusMsg('WAVE '+OW.wave+' · '+want.giant+' GIANT · '+want.striker+' STRIKER · '+want.swarm+' SWARM');}
+function owPickTarget(T){let best=null,bd=OW.LOCK_RANGE;for(const e of OW.SP){const A=e.get('SpiderAI');if(A.dead)continue;const p=e.get('Transform').pos,d=Math.hypot(p[0]-T.pos[0],p[2]-T.pos[2])-A.cls.sc;if(d<bd){bd=d;best=e;}}return best;}
+function hurtSpider(e,dmg,kx,kz,frz){const H=e.get('Health'),A=e.get('SpiderAI'),T=e.get('Transform');if(A.dead)return;H.hp-=dmg;A.flash=1;A.stun=.18;A.kx=kx*.6;A.kz=kz*.6;if(frz>0)A.freeze=frz;
+ burst([T.pos[0],A.cls.sc*1.2,T.pos[2]],10,5,[1.6,.3,.3],[1,1,1],.35,3,3);
+ if(H.hp<=0){A.dead=true;A.dt=0;OW.kills++;burst([T.pos[0],A.cls.sc*1.2,T.pos[2]],70,9,[1.2,.2,1.6],[.4,.1,1],.9,3.5,1);CAM.shake=Math.max(CAM.shake,A.cls.sc>1.5?.3:.1);
+  world.entities[0].get('Fighter').en=Math.min(100,world.entities[0].get('Fighter').en+(A.cls.sc>1.5?25:6));}}
+function hurtPlayer(dmg,fx,fz){const e=world.entities[0],F=e.get('Fighter'),T=e.get('Transform');if(OW.pInv>0||F.hp<=0)return;
+ if(F.block&&F.state==='free'){dmg*=.15;burst([T.pos[0],T.pos[1]+1.1*F.S,T.pos[2]],12,4,[.3,.8,1.6],[.6,1.2,2],.3,3,0);}
+ else{F.flash=1;burst([T.pos[0],T.pos[1]+1.1*F.S,T.pos[2]],16,6,[1.5,.4,1.2],[1,1,1],.4,3,3);CAM.shake=Math.max(CAM.shake,.1+dmg*.004);
+  if(dmg>=25&&F.state!=='atk'){F.state='hit';F.st=0;F.stun=.28;F.mv=null;const l=Math.hypot(T.pos[0]-fx,T.pos[2]-fz)||1;F.vx=(T.pos[0]-fx)/l*3;F.vz=(T.pos[2]-fz)/l*3;}}
+ F.hp=Math.max(0,F.hp-dmg);OW.pInv=.15;}
+function updateTPS(dt,w){const e=w.entities[0],px=w.entities[1],T=e.get('Transform'),F=e.get('Fighter'),T1=px.get('Transform'),F1=px.get('Fighter');
+ if(!OW.active)OW.enter();M.state='fight';F.slot=0;F1.slot=1;OW.pInv-=dt;
+ const fire=!!INPUTLOOK.fire;if(fire&&!OW._pf)F.in.press.punch=1;OW._pf=fire;
+ const tg=owPickTarget(T);
+ if(tg){const p=tg.get('Transform').pos;T1.pos=[p[0],0,p[2]];F1.S=tg.get('SpiderAI').cls.sc*.9;}
+ else{T1.pos=[T.pos[0]-Math.sin(CAM.yaw)*40,0,T.pos[2]-Math.cos(CAM.yaw)*40];F1.S=1;}
+ F1.hp=F1.max=1e9;F1.state='free';F1.y=0;F1.air=false;F1.inv=0;F1.block=false;F1.vx=F1.vz=0;F1.freeze=F1.slow=0;
+ updateFighter(e,px,dt,true);
+ const dmg=1e9-F1.hp;if(dmg>0&&tg){const l=Math.hypot(F1.vx,F1.vz)||1;hurtSpider(tg,dmg,F1.vx,F1.vz,F1.freeze);if(F1.slow>0)tg.get('SpiderAI').freeze=Math.max(tg.get('SpiderAI').freeze,F1.slow);}
+ F1.hp=1e9;F1.state='free';F1.freeze=F1.slow=0;
+ if(F.state==='free'&&!F.air){const k=OW.MOVE_BOOST-1;T.pos[0]+=F.vx*dt*k;T.pos[2]+=F.vz*dt*k;if(!tg&&Math.hypot(F.vx,F.vz)>.3)T.yaw=lerpAngle(T.yaw,Math.atan2(F.vx,F.vz),Math.min(1,dt*10));}
+ const r=Math.hypot(T.pos[0],T.pos[2]);if(r>OW.WORLD_R){T.pos[0]*=OW.WORLD_R/r;T.pos[2]*=OW.WORLD_R/r;}
+ F.en=Math.min(100,F.en+3*dt);
+ for(let i=0;i<3;i++)emit([T.pos[0]+rnd(-25,25),.03,T.pos[2]+rnd(-25,25)],[0,rnd(.2,.8),0],[.2,.9,.8],rnd(1.5,3),2,0,0); // ground motes: speed reference in the vast world
+ updateExtras(dt,w);
+ // HP crystals
+ for(const c of OW.crystals){c.b+=dt*2;if(c.hide>0){c.hide-=dt;if(c.hide<=0)owCrystalPos(c,false);continue;}
+  const d=Math.hypot(c.x-T.pos[0],c.z-T.pos[2]);
+  if(d<2.4){F.max=Math.max(F.max,F.hp+OW.CRYSTAL_HP);F.hp+=OW.CRYSTAL_HP;c.hide=OW.CRYSTAL_RESPAWN;burst([c.x,1.3,c.z],110,9,[.2,1.6,.6],[1.6,1.9,1.2],.9,3.4,0);CAM.shake=Math.max(CAM.shake,.12);statusMsg('◆ HP CRYSTAL +'+OW.CRYSTAL_HP+' HP ◆');}
+  else if(d<140&&Math.random()<.5)emit([c.x+rnd(-.3,.3),rnd(1,10),c.z+rnd(-.3,.3)],[0,rnd(1,3),0],[.3,1.6,.8],1,2.6,.3,0);}
+ if(F.hp<=0){statusMsg('DOWNED · WAVE RESTARTS');F.hp=OW.START_HP;F.max=Math.max(F.max,OW.START_HP);T.pos=[0,0,0];F.state='free';for(const s of OW.SP.slice())owRemove(s);OW.SPB.length=0;OW.wave=Math.max(0,OW.wave-1);OW.wt=4;}}
+function tpsShoot(){}function tpsReload(){}
+function owBolt(e,A,P,Pv){const T=e.get('Transform'),cls=A.cls,a=cls.atk,sc=cls.sc,mz=[T.pos[0]+Math.sin(T.yaw)*.9*sc,e.get('SpiderRig').bodyY*e.get('SpiderRig').h+.1*sc,T.pos[2]+Math.cos(T.yaw)*.9*sc],d=Math.hypot(P[0]-mz[0],P[2]-mz[2]),tt=d/a.speed*.6;
+ const tgt=[P[0]+Pv[0]*tt,P[1]+1.1,P[2]+Pv[1]*tt],v=V3.scale(V3.norm(V3.sub(tgt,mz)),a.speed);
+ OW.SPB.push({p:mz,v:v,dmg:a.dmg,r:a.r*(sc>1.5?1:1),life:3.2,c1:a.c1,c2:a.c2,n:a.n,from:[T.pos[0],T.pos[2]]});burst(mz,10,4,a.c1,a.c2,.3,3,0);}
+function spiderSystem(dt,w){if(M.mode!=='TPS'||!OW.active){if(OW.hud)OW.hud.g.style.display='none';return;}
+ const pe=w.entities[0],PT=pe.get('Transform'),PF=pe.get('Fighter'),P=[PT.pos[0],PT.pos[1],PT.pos[2]],Pv=[PF.vx,PF.vz];
+ let giants=0,alive=0;for(const e of OW.SP){const A=e.get('SpiderAI');if(!A.dead){alive++;if(A.key==='giant')giants++;}}
+ if(alive===0){OW.wt-=dt;if(OW.wt<=0){owSpawnWave();OW.wt=OW.WAVE_PAUSE;}}
+ for(const e of OW.SP.slice()){const T=e.get('Transform'),R=e.get('SpiderRig'),A=e.get('SpiderAI'),cls=A.cls;
+  if(A.dead){A.dt+=dt;if(A.dt>1.5)owRemove(e);continue;}
+  A.cd-=dt;A.cd2-=dt;A.flash=Math.max(0,A.flash-dt*4);A.stun-=dt;A.freeze-=dt;A.lunge=Math.max(0,A.lunge-dt*3);A.st-=dt;if(A.st<=0){A.st=rnd(2,4);A.strafe*=-1;}
+  const dx=P[0]-T.pos[0],dz=P[2]-T.pos[2],d=Math.hypot(dx,dz)||1,toP=Math.atan2(dx,dz);let want=0,hv=1,crouch=1;
+  const active=cls.behave!=='lurk'||giants<=OW.GIANTS_LOW;
+  if(!active){hv=.15;crouch=.45;want=0;A.mode='lurk';}
+  else if(cls.atk){const a=cls.atk;
+   if(A.charge>0){A.charge-=dt;hv=.1;R.pitch+=(.5-R.pitch)*Math.min(1,dt*10);if(A.charge<=0){owBolt(e,A,P,Pv);A.cd=a.cd;}}
+   else{R.pitch+=(0-R.pitch)*Math.min(1,dt*6);
+    if(d>a.range){A.mode='chase';want=1;}else if(d<a.min*cls.sc*.5||(d<a.min)){A.mode='retreat';want=-.8;}else{A.mode='strafe';want=.25;}
+    if(A.cd<=0&&d<a.range&&d>cls.sc*1.5)A.charge=a.wind;
+    if(d<cls.sc*1.9+.8&&A.cd2<=0){A.cd2=cls.melee.cd;A.lunge=1;hurtPlayer(cls.melee.dmg,T.pos[0],T.pos[2]);}}}
+  else{A.mode='rush';want=d>cls.sc*1.4?1:0;crouch=.8;if(d<cls.sc*1.6+.7&&A.cd2<=0){A.cd2=cls.melee.cd;A.lunge=1;hurtPlayer(cls.melee.dmg,T.pos[0],T.pos[2]);}}
+  const sl=A.freeze>0?.4:1,stun=A.stun>0?0:1;let ha=toP;if(A.mode==='strafe')ha=toP+A.strafe*1.4;else if(A.mode==='retreat')ha=toP+Math.PI;
+  T.yaw=lerpAngle(T.yaw,A.mode==='strafe'||A.mode==='retreat'||A.charge>0?toP:ha,Math.min(1,dt*5));
+  const sp=cls.spd*(want===0?0:Math.abs(want))*hv*sl*stun;R.spd+=(sp-R.spd)*Math.min(1,dt*5);
+  const mvx=Math.sin(ha)*(want<0?1:Math.sign(want||1)),mvz=Math.cos(ha)*(want<0?1:Math.sign(want||1));
+  T.pos[0]+=mvx*R.spd*dt+A.kx*dt;T.pos[2]+=mvz*R.spd*dt+A.kz*dt;A.kx*=Math.max(0,1-dt*6);A.kz*=Math.max(0,1-dt*6);
+  for(const o of OW.SP){if(o===e)continue;const q=o.get('Transform').pos,ox=T.pos[0]-q[0],oz=T.pos[2]-q[2],od=Math.hypot(ox,oz),mn=(cls.sc+o.get('SpiderAI').cls.sc)*.55;if(od<mn&&od>.001){T.pos[0]+=ox/od*(mn-od)*.3;T.pos[2]+=oz/od*(mn-od)*.3;}}
+  const mind=cls.sc*.9+.5;if(d<mind){T.pos[0]-=dx/d*(mind-d)*.5;T.pos[2]-=dz/d*(mind-d)*.5;}
+  R.h+=(crouch-R.h)*Math.min(1,dt*4);if(A.charge<=0)R.pitch+=(-A.lunge*.25-R.pitch)*Math.min(1,dt*8);
+  spiderGait(e,dt);}
+ for(let i=OW.SPB.length-1;i>=0;i--){const b=OW.SPB[i];b.life-=dt;b.p[0]+=b.v[0]*dt;b.p[1]+=b.v[1]*dt;b.p[2]+=b.v[2]*dt;
+  emit(b.p,[rnd(-1,1),rnd(-1,1),rnd(-1,1)],b.c1,.35,2.6,2,0);
+  const pd=Math.hypot(b.p[0]-P[0],b.p[1]-(P[1]+1.1*PF.S),b.p[2]-P[2]);
+  if(pd<b.r+.7*PF.S){hurtPlayer(b.dmg,b.from[0],b.from[1]);burst(b.p,24,7,b.c1,b.c2,.5,3.4,0);OW.SPB.splice(i,1);}
+  else if(b.life<=0||b.p[1]<.05){burst(b.p,12,5,b.c1,b.c2,.4,3,0);OW.SPB.splice(i,1);}}
+ // HUD
+ const h=OW.hud;if(h){h.g.style.display='';h.fill.setAttribute('width',(400*clamp(PF.hp/PF.max,0,1)).toFixed(1));
+  h.t1.textContent='HP '+Math.ceil(PF.hp)+'/'+Math.ceil(PF.max)+' · EN '+Math.floor(PF.en)+' · WAVE '+OW.wave+' · KILLS '+OW.kills+' · '+alive+' SPIDERS';
+  let bc=null,bd=1e9;for(const c of OW.crystals){if(c.hide>0)continue;const dd=Math.hypot(c.x-PT.pos[0],c.z-PT.pos[2]);if(dd<bd){bd=dd;bc=c;}}
+  if(bc){const rel=wrapAng(CAM.yaw+Math.PI-Math.atan2(bc.x-PT.pos[0],bc.z-PT.pos[2])),idx=(Math.round(rel/(Math.PI/4))+8)%8;h.t2.textContent='◆ HP CRYSTAL '+['↑','↗','→','↘','↓','↙','←','↖'][idx]+' '+Math.round(bd)+'m';}else h.t2.textContent='';}}
+OW.followVP=function(VP){const g=new Float32Array(VP),T=world.entities[0].get('Transform').pos;for(let i=0;i<4;i++)g[12+i]=VP[12+i]+VP[i]*T[0]+VP[8+i]*T[2];return g;};
+
 function boot(){
  world=new World();
  makeFighter(world,'operator','op',0);makeFighter(world,'rival',ARCH_KEYS[1],1);
  world.create('camera').add(new C('OrbitCam',{}));world.create('skybox').add(new C('Sky',{}));world.create('arena').add(new C('WorldCloud',{}));
- sys('IN',sysInput,true);sys('FIGHT',sysFight);sys('PROJ',function(dt){if(M.mode==='FIGHT'){updateProj(dt);updateGFX(dt);}});sys('FX',function(dt){stepFX(dt);});
- sys('ANIM',sysAnim);sys('TOD',function(dt){if(TOD.auto)TOD.hour+=dt*.35;updateTOD();},true);sys('CAM',updateCamera,true);sys('RENDER',sysRender,true);sys('HUD',sysHUD,true);
+ sys('IN',sysInput,true);sys('FIGHT',sysFight);sys('PROJ',function(dt){updateProj(dt);updateGFX(dt);});sys('FX',function(dt){stepFX(dt);});
+ sys('ANIM',sysAnim);sys('SPIDERS',spiderSystem);sys('TOD',function(dt){if(TOD.auto)TOD.hour+=dt*.35;updateTOD();},true);sys('CAM',updateCamera,true);sys('RENDER',sysRender,true);sys('HUD',sysHUD,true);
  let ok=true;try{initGL();}catch(err){ok=false;console.error(err);}
  doResize();window.addEventListener('resize',doResize);attachInput();updateTOD();
  if(ok){setArch(world.entities[0],'op');setArch(world.entities[1],ARCH_KEYS[1]);}else statusMsg('WEBGL UNAVAILABLE');
