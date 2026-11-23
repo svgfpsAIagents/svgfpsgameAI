@@ -274,7 +274,11 @@ ARCH.aton={name:'ATON RA',S:1.55,W:1.12,hp:230,spd:.8,dmg:1.55,reach:1.2,aggr:.8
    ...mirror(s=>[-1,0,1].map(j=>claw(s>0?'rHand':'lHand',s,j))).flat(),
    ...mirror(s=>sp(s>0?'rThigh':'lThigh',[s*.115,.69,0],.118,[1,1.25,1])),
    ...mirror(s=>sp(s>0?'rShin':'lShin',[s*.1,.33,0],.078,[1,1.45,1])),
-   ...mirror(s=>({t:'cap',bone:s>0?'rFoot':'lFoot',a:[s*.1,.1,-.07],b:[s*.1,.045,.34],r0:.095,r1:.022,col:'fill',sh:.1,edgeBand:.1}))];},
+   ...mirror(s=>{const f=s>0?'rFoot':'lFoot',x=s*.1;
+    return [pl(f,[x,.075,0],.095,'pyr','fill',.042,[1.5,.62,1.7],0),
+     pl(f,[x,.062,.17],.062,'pyr','fill',.026,[1.3,.55,2.0],0),
+     pl(f,[x,.06,-.05],.07,'ico','fill',.017,[1.15,.8,1.05],0),
+     pl(f,[x,.052,.3],.05,'ico','fill',.015,[1.15,.72,1.4],0)];}).flat()];},
  ex:()=>[{t:'aura',col:'acc',sh:.1},{t:'aura',col:'edge',sh:.08}]};
 
 function buildCloud(key,N){
@@ -1133,15 +1137,22 @@ function refreshClouds(){const used={};world.entities.slice(0,2).forEach(e=>{use
 function cycleTier(d){tierIdx=(tierIdx+d+TIERS.length)%TIERS.length;refreshClouds();}
 // ----- input -----
 const KEY={},TOUCH={joy:{on:false,x:0,z:0},block:false,id:-1,bx:0,by:0};
-const PADS=[{on:false,prev:[],ax:[0,0,0,0],btn:[],id:''},{on:false,prev:[],ax:[0,0,0,0],btn:[],id:''}];
+const PADS=[{on:false,gi:-1,prev:[],ax:[0,0,0,0],btn:[],id:''},{on:false,gi:-1,prev:[],ax:[0,0,0,0],btn:[],id:''}];
 const CAMMENU={open:false,sel:0,zoom:1,stickT:0};
 let TOUCHMODE=COARSE,HELPSHOW=true,MENUSHOW=(typeof window!=='undefined'&&window.innerWidth>=900),FREEZE_ACT=false;
 const SNAP=['plasma'];
 function pollPads(){
  const list=navigator.getGamepads?navigator.getGamepads():[],c=[];
- for(let i=0;i<list.length;i++)if(list[i]&&list[i].connected)c.push(list[i]);
- for(let s=0;s<2;s++){const P=PADS[s],g=c[s];P.prevB=P.btn;
-  if(!g){P.on=false;P.ax=[0,0,0,0];P.btn=[];continue;}
+ for(let i=0;i<list.length;i++){const g=list[i];if(g&&g.connected)c.push(g);}
+ // stable player slots: a pad keeps the slot it first joined (tracked by its browser-unique index),
+ // so P1/P2 never swap when the enumeration order changes or a pad disconnects and rejoins
+ const rest=[];
+ for(let i=0;i<c.length;i++){const gi=c[i].index;if(PADS[0].gi!==gi&&PADS[1].gi!==gi)rest.push(c[i]);}
+ for(let s=0;s<2;s++){const P=PADS[s];let g=null;
+  for(let i=0;i<c.length;i++)if(c[i].index===P.gi)g=c[i];
+  if(!g){g=rest.shift()||null;if(g)P.gi=g.index;}
+  P.prevB=P.btn;
+  if(!g){P.on=false;P.ax=[0,0,0,0];P.btn=[];P.gi=-1;continue;}
   const dz=v=>Math.abs(v)<.16?0:v;P.on=true;P.id=(g.id||'PAD').replace(/\(.*\)/,'').slice(0,20);
   P.ax=[dz(g.axes[0]||0),dz(g.axes[1]||0),dz(g.axes[2]||0),dz(g.axes[3]||0)];P.btn=g.buttons.map(b=>b.pressed||b.value>.6);}}
 function pressed(P,i){return P.btn[i]&&!(P.prevB&&P.prevB[i]);}
@@ -1156,6 +1167,7 @@ function sysInput(dt,w){
  // global pad actions (P1 pad)
  const p0=PADS[0];
  if(!SEL.open&&PADS[1].on&&pressed(PADS[1],10))openSel();
+ if(!SEL.open&&M.mode==='FIGHT'&&!M.twoP&&PADS[1].on&&pressed(PADS[1],9)){M.twoP=true;M.wins=[0,0];M.round=1;startRound();statusMsg('PAD 2 JOINED · 2 PLAYER');}
  if(p0.on&&!SEL.open){if(pressed(p0,10))openSel();if(pressed(p0,8))toggleCamMenu();if(pressed(p0,9))togglePause();if(pressed(p0,11)&&!CAMMENU.open)nextView();
   if(CAMMENU.open){CAMMENU.stickT-=dt;
    if(pressed(p0,12)||(p0.ax[1]<-.6&&CAMMENU.stickT<=0)){camMenuMove(-1);CAMMENU.stickT=.25;}
@@ -1398,7 +1410,7 @@ function buildHUD(w,h){
  // help
  const hg=el('g',{transform:'translate(12,'+(h-246)+')'},root);HUDR.helpG=hg;el('rect',{width:Math.min(w-24,860),height:150,rx:8,class:'pnl'},hg);el('text',{x:12,y:15,class:'t2',text:'CONTROLS'},hg);
  ['PAD  LS/D-PAD MOVE · X/SQ PUNCH · A/CROSS KICK · Y/TRI POWER 1 · B/O POWER 2 · LB BLOCK · RB JUMP',
-  'PAD  BACK/SHARE = CAMERA MENU · R3 NEXT VIEW · START PAUSE · 2ND PAD = PLAYER 2',
+  'PAD  BACK/SHARE = CAMERA MENU · R3 NEXT VIEW · START PAUSE · 2ND PAD = PLAYER 2 (PRESS START TO JOIN)',
   'P1   WASD MOVE · J PUNCH · K KICK · U POWER 1 · I POWER 2 · L BLOCK · SPACE JUMP',
   'P2   ARROWS · , PUNCH · / KICK · ; POWER 1 · \' POWER 2 · R-SHIFT BLOCK · . JUMP',
   'KEYS C CAMERA MENU · V VIEW · T TIME · Y 1P/2P · O OPPONENT · G 3RD PERSON · F PARTICLES · H HELP · X CHARACTER SELECT · B P1 CPU',
@@ -1479,7 +1491,8 @@ function attachInput(){
  cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end);
  cv.addEventListener('wheel',function(e){CAMMENU.zoom=clamp(CAMMENU.zoom*(1+e.deltaY*.0008),.6,1.6);e.preventDefault();},{passive:false});
  cv.addEventListener('contextmenu',function(e){e.preventDefault();});
- window.addEventListener('gamepadconnected',function(e){statusMsg('GAMEPAD: '+(e.gamepad.id||'').slice(0,28));});
+ window.addEventListener('gamepadconnected',function(e){const jd=(e.gamepad.id||'').slice(0,28);
+  statusMsg('GAMEPAD: '+jd+(PADS[0].on&&!PADS[1].on&&!M.twoP&&M.mode==='FIGHT'?' · PAD 2 PRESS START TO JOIN':''));});
 }
 let SDT=0,_lastT=0,_perfT=0;
 function sysFight(dt,w){
