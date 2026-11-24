@@ -378,7 +378,7 @@ function mx(g,h,t){return[lerp(g[0],h[0],t),lerp(g[1],h[1],t),lerp(g[2],h[2],t)]
 // Each leg's full cycle = stance + swing = TWO steps, hence PI (not TAU) per step-length.
 function gaitPh(amp,spd,dt){const stepL=1.73*sin(.62*clamp(amp,.45,.95))+.12;return spd*dt*PI/max(.25,stepL);}
 // foot grounding: after solve, drop body so the lowest foot sole touches the floor
-function footLow(e){let m=1e9;for(const b of[8,10]){const y=bonePt(e,b,[0,-.52,0])[1];if(y<m)m=y;}return m;}
+function footLow(e){let m=1e9;for(const b of[8,10]){const y=bonePt(e,b,[0,-.52,0])[1]-e.T.y;if(y<m)m=y;}return m;}
 function groundAdj(e){const y=footLow(e);if(y<-.02||y>.03){e.R.dy=clamp(e.R.dy-y*.9,-.55,.3);solve(e);}}
 
 
@@ -415,7 +415,7 @@ function poseBeast(R,o){const r=R.rot;r.fill(0);const S=(i,x,y,z)=>{r[i*3]=x;r[i
  S(10,.25-.5*max(0,-s)*a,0,0);S(13,.25-.5*max(0,s)*a,0,0);
  // death collapse: slump to the floor on one side
  if(dead>0){const d=dead;for(let i=0;i<NB*3;i++)r[i]=lerp(r[i],DPB[i],d);R.dy=lerp(R.dy,-.74,d);r[2]=1.05*d;}}
-function footLowB(e){let m=1e9;for(const b of[10,13]){const y=bonePt(e,b,[0,-.12,-.2])[1];if(y<m)m=y;}return m;}
+function footLowB(e){let m=1e9;for(const b of[10,13]){const y=bonePt(e,b,[0,-.12,-.2])[1]-e.T.y;if(y<m)m=y;}return m;}
 function groundAdjB(e){const y=footLowB(e);if(y<-.02||y>.03){e.R.dy=clamp(e.R.dy-y*.9,-.6,.3);solveB(e);}}
 
 
@@ -454,7 +454,7 @@ function poseReaver(R,o){const r=R.rot;r.fill(0);const S=(i,x,y,z)=>{r[i*3]=x;r[
  S(9,.2*s2h*a,-.12*s*a,.25+.1*s*a); // tail whip
  R.dy=-abs(s)*.045*a-.04*(1-a)-.14*lk;
  if(dead>0){const d=dead;for(let i=0;i<NB*3;i++)r[i]=lerp(r[i],0,d);R.dy=lerp(R.dy,-.34,d);r[2]=.9*d;}} // flips on its side
-function footLowC(e,BT,feet,loc){let m=1e9;for(const b of feet){const y=bonePt(e,b,loc)[1];if(y<m)m=y;}return m;}
+function footLowC(e,BT,feet,loc){let m=1e9;for(const b of feet){const y=bonePt(e,b,loc)[1]-e.T.y;if(y<m)m=y;}return m;}
 function groundAdjC(e,BT,feet,loc){const y=footLowC(e,BT,feet,loc);if(y<-.02||y>.03){e.R.dy=clamp(e.R.dy-y*.9,-.6,.3);solveC(e,BT);}}
 
 // ===== MAPS · uniform-lattice particle surfaces =====
@@ -817,8 +817,8 @@ function spawnDrone(forceHigh){if(world.ents.filter(e=>e.Dr&&!e.AI.dead&&!e.Dr.p
  let x=P.x,z=P.z,y=24,ok=false;
  for(let i=0;i<12&&!ok;i++){const a=Math.random()*TAU,r=rnd(24,46);x=clamp(P.x+cos(a)*r,pb[0],pb[1]);z=clamp(P.z+sin(a)*r,pb[2],pb[3]);
   y=high?(MAPD.ceil?MAPD.ceil-2.4:rnd(24,42)):supportAt(x,z,P.y+.5,.4)+2.2;
-  if(!inCol(x,y,z)&&!inCol(x,y+1,z))ok=true;} // never materialize inside a skyscraper, terrace slab or bunker wall
- if(!ok){y=MAPD.ceil?MAPD.ceil-2.4:24;if(inCol(x,y,z)||inCol(x,y+1,z))return null;}
+  if(!dHit(x,y,z,2.2))ok=true;} // never materialize inside (or hugging) a skyscraper, terrace slab or bunker wall
+ if(!ok){y=MAPD.ceil?MAPD.ceil-2.4:24;if(dHit(x,y,z,2.2))return null;}
  const e=world.spawn({T:{x,y,z,yaw:rnd(0,6),vx:0,vy:0,vz:0},B:{key:'drone'},sc:1.05,Hp:{hp:140,max:140,fl:0},
   AI:{dead:false,stun:0,hurtT:0,dt:0,cd:0,sd:1,st:1,ph:0,amp:0,wu:0,wm:1,burst:0,bt:0,kx:0,kz:0,att:0,pat:0,lurkAmt:0,seed:e0id()},
   Dr:{state:0,t:rnd(0,5),lt:rnd(3,7),fireCd:rnd(1,2.5),bombCd:rnd(5,9),hoverY:y,ty:y,tx:x,tz:z,bank:0,pyaw:0,sd:Math.random()<.5?1:-1,bomb:0,hx:x,hz:z,blk:0}});
@@ -827,7 +827,7 @@ let _eid=100;const e0id=()=>++_eid;
 function pickDroneDest(e){const T=e.T,high=Math.random()<.55,P=PL.T,pb=playBox();
  for(let i=0;i<12;i++){const a=Math.random()*TAU,r=rnd(10,44),x=clamp(high?rnd(pb[0],pb[1]):P.x+cos(a)*r,pb[0],pb[1]),z=clamp(high?rnd(pb[2],pb[3]):P.z+sin(a)*r,pb[2],pb[3]);
   let y=high?(MAPD.ceil?MAPD.ceil-2.6:rnd(24,42)):supportAt(x,z,P.y+.5,.4)+rnd(1.8,2.8);
-  if(!inCol(x,y,z)&&!inCol(x,y+.9,z)){e.Dr.tx=x;e.Dr.ty=y;e.Dr.tz=z;e.Dr.state=1;return;}}
+  if(!dHit(x,y,z,3)){e.Dr.tx=x;e.Dr.ty=y;e.Dr.tz=z;e.Dr.state=1;return;}}
  e.Dr.state=1;e.Dr.tx=T.x;e.Dr.ty=MAPD.ceil?MAPD.ceil-2.6:30;e.Dr.tz=T.z;}
 function droneBeam(a,b,c){BEAMS.push({a:[a[0],a[1],a[2]],b:[b[0],b[1],b[2]],c,life:.16,m:.16});
  // damage along the beam (player only — the drones hunt the player)
@@ -852,6 +852,12 @@ function activateStoredDrones(lim){let n=0,cap=DMAXM-world.ents.filter(e=>e.Dr&&
  return n;}
 // same box eject math as resolve() but WITHOUT the walker world-clamp — drones must keep full
 // access to the whole district box (the walker clamp caps z at 80, unreachable for city targets)
+// DRONE VOLUME COLLISION: a drone occupies y-.55 .. y+.95 and a horizontal radius; boxes carry an optional underside y0
+function dHit(x,y,z,r){for(const b of COL){const lo=b.y0||0;if(y+.95<=lo||y-.55>=b.h)continue;if(x>b.x0-r&&x<b.x1+r&&z>b.z0-r&&z<b.z1+r)return b;}return null;}
+// push a drone out of whatever it overlaps by the SHORTEST way (4 horizontal faces, roof, or underside); repeats for stacked / adjacent boxes
+function dEject(T,r){for(let it=0;it<6;it++){const b=dHit(T.x,T.y,T.z,r);if(!b)return;
+  const lo=b.y0||0,c=[T.x-(b.x0-r),(b.x1+r)-T.x,T.z-(b.z0-r),(b.z1+r)-T.z,b.h+.6-T.y,lo>0?T.y-(lo-1.0):1e9];let k=0;for(let i=1;i<6;i++)if(c[i]<c[k])k=i;
+  if(k===0)T.x=b.x0-r-.02;else if(k===1)T.x=b.x1+r+.02;else if(k===2)T.z=b.z0-r-.02;else if(k===3)T.z=b.z1+r+.02;else if(k===4)T.y=b.h+.65;else T.y=lo-1.05;}}
 function dresolve(T,r){for(const b of COL){if(T.y>=b.h-.55)continue;if(b.y0&&T.y+1.7<=b.y0)continue;
  const cx=clamp(T.x,b.x0,b.x1),cz=clamp(T.z,b.z0,b.z1),dx=T.x-cx,dz=T.z-cz,d=hypot(dx,dz);if(d>=r)continue;
  if(d>1e-4){T.x+=dx/d*(r-d);T.z+=dz/d*(r-d);}
@@ -878,22 +884,30 @@ function droneSys(dt){for(const e of world.q('Dr')){const T=e.T,D=e.Dr,H=e.Hp;D.
   // the hover point — collision-checked so the orbit never clips a tower, slab or hillside
   T.y=D.hoverY+sin(D.t*1.35+D.sd*2)*.45;T.yaw+=dt*.55*D.sd;D.bank=lerp(D.bank,0,dt*3);
   if(D.hx!==undefined){const oa=D.t*.45*D.sd,ox2=D.hx+cos(oa)*3.4,oz2=D.hz+sin(oa)*3.4,sg=supportAt(ox2,oz2,T.y+.2,.4);
-   if(!inCol(ox2,T.y,oz2)&&!inCol(ox2,T.y+.9,oz2)&&T.y>sg+1.4){T.x=ox2;T.z=oz2;}}
+   if(!dHit(ox2,T.y,oz2,1.5)&&T.y>sg+1.4){T.x=ox2;T.z=oz2;}}
   D.fireCd-=dt;if(D.fireCd<=0){droneFire(e);D.fireCd=rnd(1.7,3.2);}
   D.bombCd-=dt;if(D.bombCd<=0){droneBomb(e);D.bombCd=rnd(7,12);}
   D.lt-=dt;if(D.lt<=0)pickDroneDest(e);}
  else{ // MOVE: fast translation in x,y,z — skyline-aware: slide along building walls (horizontal
   // resolve), climb over the blocker ahead, re-task if a route stays blocked, hug terrain when low
   const dx=D.tx-T.x,dy=D.ty-T.y,dz=D.tz-T.z,d=hypot(dx,dy,dz)||1,sp=min(17,d*2.2);
-  T.x+=dx/d*sp*dt;T.y+=dy/d*sp*dt;T.z+=dz/d*sp*dt;
+  const wall=dHit(T.x+dx/d*2.4,T.y-.7,T.z+dz/d*2.4,1.5),sx=dx/d*sp*dt,sy2=wall?max(0,dy/d*sp*dt):dy/d*sp*dt,sz=dz/d*sp*dt,R=1.5;let moved=false; // blocked ahead: never sink back down while going over it
+  // swept motion: full step, else slide along x or z (wall hugging), else vertical only
+  if(!dHit(T.x+sx,T.y+sy2,T.z+sz,R)){T.x+=sx;T.y+=sy2;T.z+=sz;moved=true;}
+  else if(!dHit(T.x+sx,T.y+sy2,T.z,R)){T.x+=sx;T.y+=sy2;moved=Math.abs(sx)>1e-4;}
+  else if(!dHit(T.x,T.y+sy2,T.z+sz,R)){T.z+=sz;T.y+=sy2;moved=Math.abs(sz)>1e-4;}
+  else if(!dHit(T.x+sx,T.y,T.z+sz,R)){T.x+=sx;T.z+=sz;moved=true;} // glide level across a roof edge instead of dipping into it
+  else if(!dHit(T.x+sx,T.y,T.z,R)){T.x+=sx;moved=Math.abs(sx)>1e-4;}
+  else if(!dHit(T.x,T.y,T.z+sz,R)){T.z+=sz;moved=Math.abs(sz)>1e-4;}
+  else if(!dHit(T.x,T.y+sy2,T.z,R)){T.y+=sy2;}
+  // walled in horizontally: climb straight up (clear of the blocker's roof) and track how long it has been stuck
+  if(wall&&!moved){const up=T.y+9*dt;if(!dHit(T.x,up,T.z,R))T.y=up;D.blk+=dt*.3;if(D.blk>3.5){D.blk=0;pickDroneDest(e);}}else if(wall){T.y+=3*dt;D.blk=max(0,D.blk-dt);}else D.blk=0;
   const yawT=atan2(dx,dz);D.bank=lerp(D.bank,clamp(lerpAng(T.yaw,yawT,1)*1.2,-.45,.45),dt*4);T.yaw=lerpAng(T.yaw,yawT,min(1,dt*3.2));
-  dresolve(T,1.35); // respect skyscraper / terrace / bunker collisions in the horizontal plane (resolve's own box-eject math minus its walker world-clamp, which would wall city drones off past z=80)
-  const ax=T.x+dx/d*3.2,az=T.z+dz/d*3.2;
-  if(inCol(ax,T.y,az)||inCol(ax,T.y+.8,az)){T.y+=7.5*dt;D.blk+=dt;if(D.blk>2.6){D.blk=0;pickDroneDest(e);}}else D.blk=0; // climb over the bunker / skyline
+  dEject(T,R); // belt and braces: if anything ever overlaps (spawn, slab rising, lift), shortest-way ejection
   const gnd=supportAt(T.x,T.z,T.y+.2,.4);if(T.y<gnd+1.5)T.y=gnd+1.5; // hug the road/bunker when low
   if(d<2.2){if(Math.random()<.45)pickDroneDest(e); // PATROL: chain another leg instead of settling
    else{D.state=0;D.lt=rnd(4,9);D.hoverY=T.y;D.hx=T.x;D.hz=T.z;}}}
- const ceil=MAPD.ceil;T.y=clamp(T.y,1.2,(ceil?ceil-1.2:46));T.x=clamp(T.x,-BX,BX);T.z=clamp(T.z,-BZ,BZ);
+ const ceil=MAPD.ceil;T.y=clamp(T.y,1.2,(ceil?ceil-1.2:104));T.x=clamp(T.x,-BX,BX);T.z=clamp(T.z,-BZ,BZ);dEject(T,1.5);
  // proximity fuse: green bomb detonates early if the player drifts under it
  if(D.bomb>0){D.bomb-=dt;if(hypot(PL.T.x-T.x,PL.T.z-T.z)<3&&PL.T.y<T.y)droneBomb(e);}}
  world.sweep();}
