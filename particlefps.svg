@@ -1194,14 +1194,14 @@ function camSys(dt){const p=PL.Pl,T=PL.T,cp=cos(p.pit),f=[sin(p.yaw)*cp,sin(p.pi
 // Three masked, suited bodyguards with their OWN 17-bone skeleton rig (pelvis, spine, chest, neck, head,
 // shoulder->elbow->wrist x2, hip->knee->ankle x2) bound to dense lit particles exactly like the soldier.
 // Full fitted black military ski-mask, white shirt, black bow tie, black suit. They arrive from the sky at
-// WAVE 10 and every other wave after it (12, 14, ...), live 3:13, roam with a confident power walk, hunt
+// WAVE 10 for 60 s, then only when the player finds a YELLOW CRYSTAL (each one = +60 s and +power, stacking), roam with a confident power walk, hunt
 // soldiers / monsters / the boss with fists and a jumping SPINNING KICK, shoot drones down with blue+green
 // particle bolts from their eyes, and only cross onto an island/district when close to the player.
 // A single yellow particle crystal (roof or ground, city only) appears every wave after wave 10:
 // touch it to call the squad in (or refresh a squad that is already on the field).
 // ECS: entity = {T,R,B,Hp,sc,Al}; systems: allySys (AI) -> allyAnim (rig) -> gather (render)
 // =====================================================================================
-const ALLY_LIFE=193,ALLY_N=3;
+const ALLY_LIFE=60,ALLY_MAX=300,ALLY_N=3;const allyPM=()=>1+.35*max(0,(G.allyPow||1)-1); // cumulative crystal power -> damage multiplier
 const ALLY_BLUE=[.3,1.5,3],ALLY_GREEN=[.5,3,.7];
 // bones: pelvis0 spine1 chest2 neck3 head4 lUa5 lFa6 lHd7 rUa8 rFa9 rHd10 lTh11 lSh12 lFt13 rTh14 rSh15 rFt16
 const ALLY_BN=[['pelvis',-1,0,1.07,0],['spine',0,0,.08,0],['chest',1,0,.18,0],['neck',2,0,.33,0],['head',3,0,.1,0],
@@ -1298,11 +1298,12 @@ function spawnAlly(x,z,slot){const P=PL.T,y=supportAt(x,z,P.y+.6,.4),drop=(MAPD&
   Al:{life:ALLY_LIFE,fade:0,slot,air:drop>0,land:0,ph:rnd(0,6),amp:0,tgt:null,tt:rnd(0,.3),rt:0,rx:x,rz:z,fcd:.4,vol:5,eyeT:0,aimS:0,gd:0,kick:-1,kd:.8,ky0:0,ks:1,kh:false,kvx:0,kvz:0,kcd:rnd(.5,2),
    pn:-1,ps:0,pcd:0,pHit:false,cb:0,stuck:0,sdT:0,sd:1,lst:0,ign:0,ignT:0,o:{ph:0,amp:0,air:0,land:0,aim:0,hp:0,gd:0,pn:-1,ps:0,kk:-1}}});
  if(drop===0)allyWarp(x,y,z,50);return e;}
-function deployAllies(){const P=PL.T,pb=playBox(),live=world.q('Al').filter(e=>e.Al.fade<=0);let n=0;
- for(const e of live){e.Al.life=ALLY_LIFE;allyWarp(e.T.x,e.T.y,e.T.z,40);}
+function deployAllies(stack){const P=PL.T,pb=playBox(),live=world.q('Al').filter(e=>e.Al.fade<=0);let n=0,nl=ALLY_LIFE;
+ if(live.length){nl=stack?min(ALLY_MAX,Math.max(...live.map(e=>e.Al.life))+ALLY_LIFE):Math.max(...live.map(e=>e.Al.life));G.allyPow=stack?(G.allyPow||1)+1:(G.allyPow||1);}else G.allyPow=1;
+ for(const e of live){e.Al.life=nl;allyWarp(e.T.x,e.T.y,e.T.z,40);}
  const base=rnd(0,TAU);
  for(let i=0;live.length+n<ALLY_N&&i<30;i++){const a=base+i*2.09+rnd(-.4,.4),r=rnd(4,7.5),x=clamp(P.x+cos(a)*r,pb[0],pb[1]),z=clamp(P.z+sin(a)*r,pb[2],pb[3]),sp=clearSpawnSpot(x,z,supportAt(x,z,P.y+.6,.4),pb);
-  if(!sp)continue;spawnAlly(sp[0],sp[1],live.length+n);n++;}
+  if(!sp)continue;spawnAlly(sp[0],sp[1],live.length+n).Al.life=nl;n++;}
  AU.sfx('nova',.8);G.shake=max(G.shake,.25);return n;}
 function allyMove(e,vx,vz,dt){const T=e.T,A=e.Al,P=PL.T,ox=T.x,oz=T.z;T.x+=vx*dt;T.z+=vz*dt;resolve(T,.45*e.sc);
  const zn=zoneAt(T.x,T.z),zo=zoneAt(ox,oz); // islands / districts: only enter while close to the player
@@ -1328,7 +1329,7 @@ function allyRoamSpot(e){const P=PL.T,pb=playBox(),T=e.T,A=e.Al;let bx=A.rx,bz=A
  A.rx=bx;A.rz=bz;}
 function allyEyes(e,tg){const T=e.T,drone=!!tg.Dr,ay=drone?tg.T.y+.4:tg.T.y+1.1*tg.sc;
  for(let i=0;i<2;i++){const m=bonePt(e,4,[i?.034:-.034,.125,.115]),d=V.nrm(V.sub([tg.T.x,ay,tg.T.z],m)),c1=i?ALLY_GREEN:ALLY_BLUE,c2=i?ALLY_BLUE:ALLY_GREEN;
-  world.spawn({T:{x:m[0],y:m[1],z:m[2]},Pj:{vx:d[0]*52+rnd(-.5,.5),vy:d[1]*52+rnd(-.5,.5),vz:d[2]*52+rnd(-.5,.5),own:0,dmg:15,r:.23,c1,c2,life:2.3,splash:0,hm:tg}});
+  world.spawn({T:{x:m[0],y:m[1],z:m[2]},Pj:{vx:d[0]*52+rnd(-.5,.5),vy:d[1]*52+rnd(-.5,.5),vz:d[2]*52+rnd(-.5,.5),own:0,dmg:15*allyPM(),r:.23,c1,c2,life:2.3,splash:0,hm:tg}});
   burst(m,8,5,c1,c2,.22,.05,0);}
  const h=bonePt(e,4,[0,.125,.2]);flashL(h,5,[.4,1.8,1.8],.1);sfxAt('blast',[T.x,T.y,T.z],.3);}
 function allyKick(e,tg,d){const T=e.T,A=e.Al;A.kick=0;A.kd=.8;A.ky0=T.yaw;A.ks=Math.random()<.5?1:-1;A.kh=false;T.vy=8.9;A.air=true;A.pn=-1;
@@ -1336,11 +1337,11 @@ function allyKick(e,tg,d){const T=e.T,A=e.Al;A.kick=0;A.kd=.8;A.ky0=T.yaw;A.ks=M
  burst([T.x,T.y+.1,T.z],16,5,ALLY_BLUE,ALLY_GREEN,.4,.06,2);sfxAt('dash',[T.x,T.y,T.z],.6);}
 function allyKickHit(e){const T=e.T;let hit=false;
  for(const en of world.q('AI')){if(en.AI.dead)continue;const dx=en.T.x-T.x,dz=en.T.z-T.z,d=hypot(dx,dz);
-  if(d<3.2+.4*en.sc&&abs(en.T.y-T.y)<3.2){hit=true;hurtEnemy(en,95,dx/(d||1)*13,dz/(d||1)*13,false);burst([en.T.x,en.T.y+1.1*en.sc,en.T.z],36,9,ALLY_BLUE,ALLY_GREEN,.45,.06,0);flashL([en.T.x,en.T.y+1.2,en.T.z],7,[.5,2,1.6],.2);}}
+  if(d<3.2+.4*en.sc&&abs(en.T.y-T.y)<3.2){hit=true;hurtEnemy(en,95*allyPM(),dx/(d||1)*13,dz/(d||1)*13,false);burst([en.T.x,en.T.y+1.1*en.sc,en.T.z],36,9,ALLY_BLUE,ALLY_GREEN,.45,.06,0);flashL([en.T.x,en.T.y+1.2,en.T.z],7,[.5,2,1.6],.2);}}
  ring(T.x,T.z,2.6,34,ALLY_BLUE,ALLY_GREEN,1.2);if(hit){sfxAt('big',[T.x,T.y,T.z],.7);G.shake=max(G.shake,.18/(1+hypot(T.x-PL.T.x,T.z-PL.T.z)/20));}else sfxAt('melee',[T.x,T.y,T.z],.5);}
 function allyPunchHit(e){const T=e.T,fx=sin(T.yaw),fz=cos(T.yaw);let hit=false;
  for(const en of world.q('AI')){if(en.AI.dead)continue;const dx=en.T.x-T.x,dz=en.T.z-T.z,d=hypot(dx,dz);
-  if(d<2.7*(.6+.4*en.sc)&&(dx*fx+dz*fz)/(d||1)>.3&&abs(en.T.y-T.y)<2.6){hit=true;hurtEnemy(en,26,dx/(d||1)*3.5,dz/(d||1)*3.5,false);burst([en.T.x,en.T.y+1.2*en.sc,en.T.z],20,7,ALLY_BLUE,ALLY_GREEN,.3,.05,0);}}
+  if(d<2.7*(.6+.4*en.sc)&&(dx*fx+dz*fz)/(d||1)>.3&&abs(en.T.y-T.y)<2.6){hit=true;hurtEnemy(en,26*allyPM(),dx/(d||1)*3.5,dz/(d||1)*3.5,false);burst([en.T.x,en.T.y+1.2*en.sc,en.T.z],20,7,ALLY_BLUE,ALLY_GREEN,.3,.05,0);}}
  sfxAt('melee',[T.x,T.y,T.z],hit?.6:.3);}
 function allyThink(e,al,dt){const T=e.T,A=e.Al,o=A.o,P=PL.T,base=ARCH.ally.s,px0=T.x,pz0=T.z;
  A.fcd-=dt;A.kcd-=dt;A.pcd-=dt;A.eyeT-=dt;A.tt-=dt;A.ignT-=dt;A.land=max(0,A.land-dt*2.2);A.life-=dt;
@@ -1396,21 +1397,22 @@ function allyThink(e,al,dt){const T=e.T,A=e.Al,o=A.o,P=PL.T,base=ARCH.ally.s,px0
  A.gd+=(((melee||A.pn>=0||A.kick>=0)?1:0)-A.gd)*min(1,dt*8);A.aimS+=((fire?1:0)-A.aimS)*min(1,dt*9);
  o.ph=A.ph;o.amp=A.amp;o.air=(A.air&&A.kick<0)?1:0;o.land=A.land;o.aim=(A.pn<0&&A.kick<0)?A.aimS:0;o.hp=hpit;o.gd=A.gd;o.pn=A.pn;o.ps=A.ps;o.kk=A.kick;}
 function allySys(dt){
- const cr=G.allyCrystal;if(cr&&!cr.kill){G.cfl=(G.cfl||0)-dt;if(G.cfl<=0){G.cfl=.4;flashL([cr.T.x,cr.T.y,cr.T.z],8,[2.4,1.8,.25],.4);}}
- const al=world.q('Al');if(!al.length)return;
+ G.cfl=(G.cfl||0)-dt;if(G.cfl<=0){G.cfl=.4;const cs=allyCrystals().sort((a,b)=>hypot(a.T.x-PL.T.x,a.T.z-PL.T.z)-hypot(b.T.x-PL.T.x,b.T.z-PL.T.z));for(let i=0;i<min(2,cs.length);i++)flashL([cs[i].T.x,cs[i].T.y,cs[i].T.z],8,[2.4,1.8,.25],.4);}
+ const al=world.q('Al');if(!al.length){G.allyPow=0;return;}
  for(const p of world.q('Pj')){const j=p.Pj;if(!j.hm)continue;const t=j.hm;if(t.kill||!t.AI||t.AI.dead){j.hm=null;continue;}
   const ty=t.Dr?t.T.y+.4:t.T.y+1.1*t.sc,dx=t.T.x-p.T.x,dy=ty-p.T.y,dz=t.T.z-p.T.z,L=hypot(dx,dy,dz)||1,sp=hypot(j.vx,j.vy,j.vz)||1,k=min(1,dt*7);
   j.vx+=(dx/L*sp-j.vx)*k;j.vy+=(dy/L*sp-j.vy)*k;j.vz+=(dz/L*sp-j.vz)*k;}
  for(const e of al)allyThink(e,al,dt);}
 // ---------- YELLOW CRYSTAL · one per wave after wave 10, city only, roof or ground ----------
-function spawnAllyCrystal(){const old=G.allyCrystal;if(old)old.kill=true;const P=PL.T,ind=MAPD&&MAPD.ind;let spot=null,roof=false;
+const allyCrystals=()=>world.q('Pk').filter(e=>e.Pk.k==='ally');
+function spawnAllyCrystal(){const P=PL.T,ind=MAPD&&MAPD.ind;let spot=null,roof=false;
  if(!ind&&Math.random()<.55){const cand=COL.filter(b=>!b.y0&&b.h>=5&&b.h<=38&&b.x1-b.x0>=3&&b.z1-b.z0>=3&&b.x0>-BX+6&&b.x1<BX-6&&b.z0>-BZ+6&&b.z1<BZ-6);
   for(let i=0;i<40&&cand.length&&!spot;i++){const b=cand[floor(Math.random()*cand.length)],x=rnd(b.x0+1,b.x1-1),z=rnd(b.z0+1,b.z1-1),y=supportAt(x,z,b.h+.6,.3);
    if(y>=b.h-.01&&y<=b.h+.8&&!inCol(x,y+.9,z)&&!inCol(x,y+.2,z)&&!zoneAt(x,z)){spot=[x,y,z];roof=true;}}}
  for(let i=0;i<80&&!spot;i++){const x=rnd(-BX+8,BX-8),z=rnd(-BZ+8,BZ-8),y=supportAt(x,z,.6,.4);
   if(y<1.5&&!inCol(x,y+.9,z)&&!inCol(x,y+.2,z)&&!zoneAt(x,z)&&hypot(x-P.x,z-P.z)>14)spot=[x,y,z];}
  if(!spot)return null;
- G.allyCrystal=world.spawn({T:{x:spot[0],y:spot[1]+.95,z:spot[2]},Pk:{k:'ally',b:rnd(0,6),roof}});
+ world.spawn({T:{x:spot[0],y:spot[1]+.95,z:spot[2]},Pk:{k:'ally',b:rnd(0,6),roof}});
  burst([spot[0],spot[1]+1,spot[2]],40,6,[2.6,2,.2],[2.8,2.5,.8],.7,.06,0);flashL([spot[0],spot[1]+1.2,spot[2]],10,[2.4,1.8,.25],.6);
  if(roof&&PL.Pl.flyT<=0){const a=rnd(0,TAU),x=P.x+cos(a)*5,z=P.z+sin(a)*5; // roof crystal => a flight crystal drops nearby so the roof is reachable
   if(!inCol(x,supportAt(x,z,P.y+.6,.4)+1,z))world.spawn({T:{x,y:supportAt(x,z,P.y+.6,.4)+1.3,z},Pk:{k:'fly',b:rnd(0,6)}});}
@@ -1434,17 +1436,17 @@ function drawAllyCrystal(put,T,k){const b=k.b,gl=.8+.3*sin(b*2.6),ca=cos(b*.7),s
  put(cx,cy-.9,cz,0,0,0,.9,.7,.1,.5);}
 // ---------- wave hook, pickup, HUD ----------
 function allyWaveHook(){const w=G.wave;let add='';
- if(w>=10&&(w-10)%2===0){deployAllies();add+=' · SKELETON ALLIES DEPLOYED · 3:13';}
- if(w>=11){const r=spawnAllyCrystal();if(r)add+=' · YELLOW CRYSTAL ON THE '+(r.roof?'ROOF':'GROUND');}
+ if(w===10){deployAllies(false);add+=' · SKELETON ALLIES ARRIVE · 1:00';}
+ if(w>=11){const r=spawnAllyCrystal();if(r)add+=' · YELLOW CRYSTAL ON THE '+(r.roof?'ROOF':'GROUND')+' · '+allyCrystals().length+' ON THE MAP';}
  if(add){G.msg+=add;G.msgT=max(G.msgT,4);}}
-function allyActivate(){const n=deployAllies();G.msg='YELLOW CRYSTAL · SKELETON ALLIES ACTIVE · 3:13';G.msgT=3;G.allyCrystal=null;return n;}
+function allyActivate(){const n=deployAllies(true);G.msg='YELLOW CRYSTAL · ALLIES +1:00 · POWER ×'+(G.allyPow||1);G.msgT=3;return n;}
 function allyHud(){const root=$('hud');if(!root||!PL)return;
  if(!H.ally||!H.ally.parentNode){H.ally=el('text',{x:VW/2,y:VH*.1+42,'text-anchor':'middle',class:'dim',text:''},root);H.ally.style.fill='#9fe8c8';
   H.cry=el('text',{x:VW/2,y:VH*.1+58,'text-anchor':'middle',class:'dim',text:''},root);H.cry.style.fill='#ffd84a';}
  let t1='',t2='';
- if(G.started){const al=world.q('Al');if(al.length){const lf=max(0,Math.max(...al.map(e=>e.Al.life))),m=floor(lf/60),s=floor(lf%60);t1='SKELETON ALLIES ×'+al.length+' · '+m+':'+(s<10?'0':'')+s;}
-  const c=G.allyCrystal;if(c&&!c.kill){const dx=c.T.x-PL.T.x,dz=c.T.z-PL.T.z,rel=((atan2(dx,dz)-PL.Pl.yaw+PI)%TAU+TAU)%TAU-PI,ar=['↑','↖','←','↙','↓','↘','→','↗'][((Math.round(rel/(PI/4))%8)+8)%8];
-   t2='YELLOW CRYSTAL '+ar+' '+Math.round(hypot(dx,dz))+'m · '+(c.Pk.roof?'ROOF':'GROUND');}}
+ if(G.started){const al=world.q('Al');if(al.length){const lf=max(0,Math.max(...al.map(e=>e.Al.life))),m=floor(lf/60),s=floor(lf%60);t1='SKELETON ALLIES ×'+al.length+' · '+m+':'+(s<10?'0':'')+s+' · POWER ×'+(G.allyPow||1);}
+  const cl=allyCrystals().sort((a,b)=>hypot(a.T.x-PL.T.x,a.T.z-PL.T.z)-hypot(b.T.x-PL.T.x,b.T.z-PL.T.z)),c=cl[0];if(c){const dx=c.T.x-PL.T.x,dz=c.T.z-PL.T.z,rel=((atan2(dx,dz)-PL.Pl.yaw+PI)%TAU+TAU)%TAU-PI,ar=['↑','↖','←','↙','↓','↘','→','↗'][((Math.round(rel/(PI/4))%8)+8)%8];
+   t2='YELLOW CRYSTALS ×'+cl.length+' · NEAREST '+ar+' '+Math.round(hypot(dx,dz))+'m · '+(c.Pk.roof?'ROOF':'GROUND');}}
  H.ally.textContent=t1;H.cry.textContent=t2;}
 
 // ===== RENDER · lit particle points -> RT -> ACES tonemap -> masked split-tone grade (LDR-safe, no multiply) =====
